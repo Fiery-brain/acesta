@@ -43,4 +43,5 @@ jobs:
 
 
       - name: Run tests 🧪
+        working-directory: ./acesta_front
         run: npm run test
