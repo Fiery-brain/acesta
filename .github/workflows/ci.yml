@@ -38,6 +38,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies 👨🏻‍💻
+        working-directory: ./acesta_front
         run: npm ci
 
 
