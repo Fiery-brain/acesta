@@ -8,7 +8,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Аналитический сервис для развития внутреннего туризма на основе цифрового следа.' }
+      { hid: 'description', name: 'description', content: 'Аналитический сервис для развития внутреннего туризма на основе цифрового следа в сети Интернет.' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
