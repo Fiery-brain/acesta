@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import LandingFooter from '@/components/LandingFooter.vue'
+import LandingFooter from '~/components/LandingFooter.vue'
 
 describe('LandingFooter', () => {
     test('is a Vue instance', () => {

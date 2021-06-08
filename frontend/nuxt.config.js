@@ -15,7 +15,7 @@ export default {
       { rel: 'stylesheet', href: '/css/bootstrap.min.css' }
     ],
     script: [
-      {src: '/js/bootstrap.bundle.min.js'}
+      { src: '/js/bootstrap.bundle.min.js' }
     ]
   },
 
@@ -28,17 +28,31 @@ export default {
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
+  //components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
   ],
 
+  loading: {
+    continuous: true,
+    color: 'LightGreen',
+    failedColor: 'IndianRed'
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    '@nuxtjs/sentry',
+    '@nuxtjs/yandex-metrika'
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  env: {
+    //test: '123'
   }
 }
