@@ -43,5 +43,5 @@ jobs:
 
 
       - name: Run tests 🧪
-        working-directory: ./frontent
+        working-directory: ./frontend
         run: npm run test
