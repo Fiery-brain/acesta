@@ -3,8 +3,7 @@ require('dotenv').config()
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Аналитический сервис для развития внутреннего туризма — аsecta',
-    titleTemplate: '%s. Аналитический сервис для развития внутреннего туризма — аsecta',
+    titleTemplate: '%sАналитический сервис для развития внутреннего туризма — аsecta',
     htmlAttrs: {
       lang: 'ru'
     },
