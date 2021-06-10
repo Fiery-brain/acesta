@@ -31,6 +31,4 @@ export default {
 </script>
 
 <style scoped>
-p{line-height: 2}
-.page-content{margin-top:6em!important;min-height: 75vh}
 </style>

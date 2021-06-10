@@ -40,7 +40,8 @@ h3{color:#BA4D6A}
 .yellow{color:#EFBE1B!important}
 .yellow:hover{color:#f6c931!important}
 .lh-1d8{position:relative;bottom:.15em;line-height:1.804}
-.page-content{margin-top:6em!important;min-height: 75vh}
+.page-content{margin-top:6em;min-height: 92vh;height:100%}
+.page-content p{line-height: 2}
 @media (max-width:500px){
   .btn{font-size:.8em;}
 }

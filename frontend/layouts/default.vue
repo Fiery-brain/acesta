@@ -43,6 +43,7 @@ select{border:1px #ccc solid;font-size:.85em;color:#666;border-radius:.25em}
 table{font-size: .83em}
 .value-title{font-weight: 500}
 .value{font-size: 2.2em;color: #666}
+.dashboard .page-content {margin-top:0;min-height: 94vh;}
 @media (min-width:1001px) {
   .dashboard{padding-left:12.0em}
 }
