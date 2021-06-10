@@ -11,7 +11,6 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarExtra" aria-controls="navbarExtra" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div class="collapse navbar-collapse ms-auto w-100 justify-content-end" id="navbarExtra">
         <ul class="navbar-nav">
           <li class="nav-item me-3">
@@ -42,4 +41,3 @@ svg.logo{position:relative;left:4px;bottom:15px}
 .navbar{background-color:#2D4733}
 .navbar .container{padding-left:0;padding-right:0}
 </style>
-
