@@ -10,7 +10,9 @@
 import LandingNavigation from "~/components/LandingNavigation";
 import LandingFooter from "~/components/LandingFooter";
 export default {
-  components: {LandingNavigation, LandingFooter}
+  components: {
+    LandingNavigation,
+    LandingFooter}
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div class="container page-content">
     <div class="row">
       <div class="col-md-8 offset-md-2">
-        <h3 class="my-4">Условия использования</h3>
+        <h3 class="my-4">{{ title }}</h3>
         <p>Настоящий документ представляет собой предложение Сервиса, заключить договор на изложенных ниже условиях:</p>
         <ol>
           <li>
@@ -53,7 +53,18 @@
 
 <script>
 export default {
-  layout: 'landing'
+  layout: 'landing',
+  auth: false,
+  data() {
+    return {
+      title: 'Пользовательское соглашение'
+    }
+  },
+  head() {
+    return {
+      title: this.title
+    }
+  },
 }
 </script>
 

@@ -4,6 +4,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Аналитический сервис для развития внутреннего туризма — аsecta',
+    titleTemplate: '%s. Аналитический сервис для развития внутреннего туризма — аsecta',
     htmlAttrs: {
       lang: 'ru'
     },
@@ -51,9 +52,16 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
+    '@nuxtjs/toast',
     '@nuxtjs/sentry',
     '@nuxtjs/yandex-metrika'
   ],
+
+  router: {
+    middleware: [
+        'auth'
+    ]
+  },
 
   axios: {
     proxy: true,
@@ -72,47 +80,91 @@ export default {
       login: '/login',
       logout: '/',
       callback: '/login',
-      home: '/'
+      home: '/dashboard'
     },
     strategies: {
       local: {
         scheme: 'refresh',
           token: {
             property: 'access_token',
-                maxAge: 1800,
-                global: true,
+            maxAge: 1800,
+            global: true,
           },
           refreshToken: {
             property: 'refresh_token',
-                data: 'refresh_token',
-                maxAge: 60 * 60 * 24 * 30
+            data: 'refresh_token',
+            maxAge: 60 * 60 * 24 * 30
           },
           user: {
             property: 'user',
-            // autoFetch: true
           },
           endpoints: {
             login: { url: '/api/auth/login', method: 'post' },
             refresh: { url: '/api/auth/refresh', method: 'post' },
-            user: { url: '/api/user', method: 'get' },
-            logout: { url: '/api/auth/logout', method: 'post' }
-
-          },
-          tokenType: 'Token',
-          tokenName: 'Authorization',
-          // autoLogout: false
+            user: { url: '/api/auth/user', method: 'get' },
+            logout: { url: '/api/auth/logout', method: 'post' },
+          }
       },
-      google: {clientId: process.env.GOOGLE_CLIENT_ID},
+      // cookie: {
+      //   cookie: {
+      //     // (optional) If set we check this cookie exsistence for loggedIn check
+      //     name: 'XSRF-TOKEN',
+      //   },
+      //   endpoints: {
+      //     // (optional) If set, we send a get request to this endpoint before login
+      //     csrf: {
+      //       url: ''
+      //     }
+      //   }
+      // },
+      google: {
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        scope: ['profile', 'email'],
+        codeChallengeMethod: ""
+      },
       facebook: {
         endpoints: {
           userInfo: 'https://graph.facebook.com/v6.0/me?fields=id,name,picture{url}'
         },
         clientId: process.env.FACEBOOK_CLIENT_ID,
-            scope: ['public_profile', 'email']
+        scope: ['public_profile', 'email']
       },
       vk: {scheme: '~/schemes/vk', },
-      yandex: {scheme: '~/schemes/yandex', },
+      yandex: {
+        scheme: 'oauth2',
+        endpoints: {
+          authorization: 'https://oauth.yandex.ru/authorize',
+          token: undefined,
+          logout: '/logout'
+        },
+        token: {
+          property: 'access_token',
+          type: 'Bearer',
+          maxAge: 1800
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 30
+        },
+        responseType: 'token',
+        grantType: 'authorization_code',
+        accessType: undefined,
+        //redirectUri: undefined,
+        logoutRedirectUri: '/',
+        clientId: process.env.YANDEX_CLIENT_ID,
+        scope: ['profile', 'email'],
+        state: 'UNIQUE_AND_NON_GUESSABLE',
+        codeChallengeMethod: '',
+        responseMode: '',
+        acrValues: '',
+        // autoLogout: false
+      },
     }
+  },
+
+  toast: {
+    position: 'top-right',
+    duration: 2000
   },
 
   sentry: {
