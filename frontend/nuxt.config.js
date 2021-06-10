@@ -133,7 +133,7 @@ export default {
       yandex: {
         scheme: 'oauth2',
         endpoints: {
-          authorization: 'https://oauth.yandex.ru/authorize',
+          authorization: process.env.YANDEX_CLIENT_URL,
           token: undefined,
           logout: '/logout'
         },
