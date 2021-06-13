@@ -587,6 +587,7 @@
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">Тепловая карта популярности туробъектов домашнего региона в регионах</li>
+              <li class="list-group-item">Сезонная подстройка аналитики</li>
               <li class="list-group-item">Целевые группы потенциальной аудитории по регионам</li>
               <li class="list-group-item">Рейтинг привлекательности регионов для туристов</li>
             </ul>
@@ -603,6 +604,7 @@
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">Тепловая карта популярности туробъектов домашнего региона в регионах и городах</li>
+              <li class="list-group-item">Сезонная подстройка аналитики</li>
               <li class="list-group-item">Целевые группы потенциальной аудитории по регионам и городам</li>
               <li class="list-group-item">Рейтинг привлекательности регионов и городов для туристов</li>
               <li class="list-group-item">Анализ и прогноз популярности достопримечательностей в регионах и городах</li>
