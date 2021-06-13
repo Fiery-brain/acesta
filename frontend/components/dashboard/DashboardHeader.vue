@@ -12,10 +12,15 @@
         <select
             v-if="region"
             name="region"
-            v-on:change="setRegion($event)"
+            v-on:change="setRegionCode($event.target.value); refreshPage()"
             class="w-100 mt-2 float-md-end region-chooser"
             title="Домашний регион">
-          <option v-for="region in regions" :key="region.code" :value="region.code">{{ region.title }}</option>
+          <option
+              v-for="region in regions"
+              :key="region.code"
+              :value="region.code"
+              :selected="region.code == getRegionCode"
+          >{{ region.title }}</option>
         </select>
       </div>
     </div>
@@ -23,15 +28,22 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: "DashboardHeader",
   async mounted() {
-    this.regions = await this.$axios.$get('/api/home_regions/')
+    this.regions = await this.$auth.user.regions
   },
   data() {
     return {
       regions: []
-      }
+    }
+  },
+  computed: {
+    ...mapGetters({
+      getRegionCode: 'region/getRegionCode'
+    })
   },
   props: {
     title: {
@@ -48,10 +60,12 @@ export default {
     },
   },
   methods: {
-    setRegion: function(e, region) {
-      // TODO
-      // console.log(e.target.value)
-    }
+    refreshPage() {
+      this.$nuxt.refresh()
+    },
+    ...mapActions({
+      setRegionCode: 'region/setRegionCode'
+    })
   }
 }
 </script>

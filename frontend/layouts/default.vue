@@ -44,6 +44,7 @@ table{font-size: .83em}
 .value-title{font-weight: 500}
 .value{font-size: 2.2em;color: #666}
 .dashboard .page-content {margin-top:0;min-height: 94vh;}
+select[name="regions"] option{font-size: 1rem}
 @media (min-width:1001px) {
   .dashboard{padding-left:12.0em}
 }
