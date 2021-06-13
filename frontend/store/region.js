@@ -1,21 +1,21 @@
 export const state = () => ({
-    regionCode: ''
+  regionCode: ''
 })
 
 export const actions = {
-    setRegionCode: (context, code) => {
-        context.commit('updateRegionCode', code)
-    },
+  setRegionCode: (context, code) => {
+    context.commit('updateRegionCode', code)
+  },
 }
 
 export const mutations = {
-    updateRegionCode: (state, code) => {
-        state.regionCode = code
-    }
+  updateRegionCode: (state, code) => {
+    state.regionCode = code
+  }
 }
 
 export const getters = {
-    getRegionCode: state => {
-        return state.regionCode
-    }
+  getRegionCode: state => {
+    return state.regionCode
+  }
 }
