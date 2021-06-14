@@ -27,7 +27,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~plugins/date_format.js'
+    '~plugins/date_format.js',
+    '~plugins/number_format.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -64,7 +65,6 @@ export default {
   },
 
   axios: {
-    baseURL: 'http://127.0.0.1:3002/',
     proxy: true,
     credentials: true,
     retry: {
