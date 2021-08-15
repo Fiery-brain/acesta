@@ -100,10 +100,10 @@ export default {
             property: 'user',
           },
           endpoints: {
-            login: { url: '/api/auth/login', method: 'post' },
-            refresh: { url: '/api/auth/refresh', method: 'post' },
-            user: { url: '/api/auth/user', method: 'get' },
-            logout: { url: '/api/auth/logout', method: 'post' },
+            login: { url: '/api/auth/login/', method: 'post' },
+            refresh: { url: '/api/auth/refresh/', method: 'post' },
+            user: { url: '/api/auth/user/', method: 'get' },
+            logout: { url: '/api/auth/logout/', method: 'post' },
           }
       },
       // cookie: {
