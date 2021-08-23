@@ -3,21 +3,23 @@ require('dotenv').config()
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%sАналитический сервис для развития внутреннего туризма — аsecta',
+    titleTemplate: '%sАналитика для экспертов в сфере туризма — аsecta',
     htmlAttrs: {
       lang: 'ru'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Аналитический сервис для развития внутреннего туризма на основе цифрового следа в сети Интернет.' }
+      { hid: 'description', name: 'description', content: 'Аналитический для экспертов в сфере туризма на основе цифрового следа в Интернет.' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: '/css/bootstrap.min.css' }
+      { rel: 'stylesheet', href: '/css/bootstrap.min.css' },
+      // { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css' }
     ],
     script: [
-      { src: '/js/bootstrap.bundle.min.js' }
+      { src: '/js/bootstrap.bundle.min.js' },
+      // { src: "https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js", type: "text/javascript" }
     ]
   },
 
@@ -28,7 +30,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~plugins/date_format.js',
-    '~plugins/number_format.js'
+    '~plugins/number_format.js',
+    '~plugins/axios.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -43,6 +46,7 @@ export default {
     systemvars: true
   },
 
+  // Loading config: https://nuxtjs.org/docs/2.x/features/loading
   loading: {
     continuous: true,
     color: 'LightGreen',
@@ -52,59 +56,69 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/proxy',
     '@nuxtjs/auth-next',
     '@nuxtjs/toast',
     '@nuxtjs/sentry',
     '@nuxtjs/yandex-metrika'
   ],
 
+  // Router config: https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-router
   router: {
     middleware: [
         'auth'
-    ]
+    ],
+    linkExactActiveClass: 'menu-item-active'
   },
 
+  // Axios config: https://axios.nuxtjs.org/options
   axios: {
+    baseURL: process.env.BASE_URL,
     proxy: true,
     credentials: true,
     retry: {
       retries: 3
-    }
+    },
+    debug: true
   },
 
   proxy: {
-    '/api/': { target: process.env.API_URL, pathRewrite: {'^/api/': ''}, changeOrigin: true }
+  //   //'http://example.com:8000/api/books/*/**.json',
+  //   //`{{ process.env.API_URL }}/api/*`,
+    '/api/': { target: process.env.API_URL, pathRewrite: {'^/api/': ''} } //, changeOrigin: true
   },
 
   auth: {
     redirect: {
-      login: '/login',
+      login: '/login/',
       logout: '/',
-      callback: '/login',
-      home: '/dashboard'
+      callback: '/login/',
+      home: '/dashboard/'
     },
     strategies: {
       local: {
         scheme: 'refresh',
-          token: {
-            property: 'access_token',
-            maxAge: 1800,
-            global: true,
-          },
-          refreshToken: {
-            property: 'refresh_token',
-            data: 'refresh_token',
-            maxAge: 60 * 60 * 24 * 30
-          },
-          user: {
-            property: 'user',
-          },
-          endpoints: {
-            login: { url: '/api/auth/login/', method: 'post' },
-            refresh: { url: '/api/auth/refresh/', method: 'post' },
-            user: { url: '/api/auth/user/', method: 'get' },
-            logout: { url: '/api/auth/logout/', method: 'post' },
-          }
+        token: {
+          property: 'access_token',
+          maxAge: 1800,
+          global: true,
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 30
+        },
+        user: {
+          property: '',
+        },
+        endpoints: {
+          login: { url: '/api/auth/login/', method: 'post' },
+          refresh: { url: '/api/auth/token/refresh/', method: 'post' },
+          user: { url: '/api/auth/user/', method: 'get' },
+          logout: { url: '/api/auth/logout/', method: 'post' },
+        },
+        //tokenRequired: true,
+        tokenType: 'bearer'
       },
       // cookie: {
       //   cookie: {
@@ -165,7 +179,7 @@ export default {
 
   toast: {
     position: 'top-right',
-    duration: 2000
+    duration: 5000
   },
 
   sentry: {
