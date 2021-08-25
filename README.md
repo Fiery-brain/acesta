@@ -6,7 +6,7 @@
 [![Requirements Status](https://requires.io/github/Fiery-brain/acesta/requirements.svg?branch=main)](https://requires.io/github/Fiery-brain/acesta/requirements/?branch=main)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-# Аналитика для экспертов в сфере туризма
+# Аналитика для экспертов в туризме
 
 Принимаем заявки на подключение к сервису:
 
