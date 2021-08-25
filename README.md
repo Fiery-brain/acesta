@@ -7,3 +7,7 @@
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 # Аналитика для экспертов в сфере туризма
+
+Принимаем заявки на подключение к сервису на сайте:
+
+[https://fiery-brain.github.io/acesta/](https://fiery-brain.github.io/acesta/)
