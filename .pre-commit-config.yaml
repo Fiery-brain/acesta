@@ -1,0 +1,46 @@
+exclude: 'frontend|docs|node_modules|migrations|.git|.tox'
+default_stages: [commit]
+fail_fast: true
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: pretty-format-json
+      - id: check-xml
+      - id: check-merge-conflict
+
+  - repo: https://github.com/psf/black
+    files: ^backend/
+    rev: 20.8b1
+    hooks:
+      - id: black
+
+  - repo: https://github.com/asottile/reorder_python_imports
+    files: ^backend/
+    rev: v2.3.6
+    hooks:
+      - id: reorder-python-imports
+
+  - repo: https://gitlab.com/pycqa/flake8
+    files: ^backend/
+    rev: 3.8.4
+    hooks:
+      - id: flake8
+        args: ['--config=setup.cfg']
+
+  - repo: https://github.com/pre-commit/mirrors-autopep8
+    files: ^backend/
+    rev: ''
+    hooks:
+      - id: autopep8
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    files: ^frontend/
+    rev: ''
+    hooks:
+      - id: eslint
