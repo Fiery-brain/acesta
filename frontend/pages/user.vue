@@ -25,11 +25,11 @@
 import 'vue-select/dist/vue-select.css';
 
 import DashboardHeader from "../components/dashboard/DashboardHeader";
-import UserDataEdit from "../components/dashboard/user/UserDataEdit";
-import UserSubscriptionEdit from "../components/dashboard/user/UserSubscriptionEdit";
-import UserPasswordChange from "../components/dashboard/user/UserPasswordChange";
-import UserSocialAccountsEdit from "../components/dashboard/user/UserSocialAccountsEdit";
-import UserEmailChange from "../components/dashboard/user/UserEmailChange";
+import UserDataEdit from "../components/dashboard/UserDataEdit";
+import UserSubscriptionEdit from "../components/dashboard/UserSubscriptionEdit";
+import UserPasswordChange from "../components/dashboard/UserPasswordChange";
+import UserSocialAccountsEdit from "../components/dashboard/UserSocialAccountsEdit";
+import UserEmailChange from "../components/dashboard/UserEmailChange";
 
 export default {
   data() {

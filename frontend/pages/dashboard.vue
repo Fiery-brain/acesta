@@ -17,10 +17,10 @@
 
 <script>
 import DashboardHeader from "~/components/dashboard/DashboardHeader";
-import DashboardMainStats from "~/components/dashboard/main/DashboardMainStats";
-import DashboardMainHeatMap from "~/components/dashboard/main/DashboardMainHeatMap";
-import DashboardMainGroups from "~/components/dashboard/main/DashboardMainGroups";
-import DashboardMainRating from "~/components/dashboard/main/DashboardMainRating";
+import DashboardMainStats from "~/components/dashboard/DashboardMainStats";
+import DashboardMainHeatMap from "~/components/dashboard/DashboardMainHeatMap";
+import DashboardMainGroups from "~/components/dashboard/DashboardMainGroups";
+import DashboardMainRating from "~/components/dashboard/DashboardMainRating";
 export default {
   data() {
     return {

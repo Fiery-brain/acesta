@@ -9,6 +9,7 @@
 <script>
 import DashboardMenu from "~/components/dashboard/DashboardMenu";
 import DashboardFooter from "~/components/dashboard/DashboardFooter";
+
 export default {
   components: {
     DashboardMenu,
@@ -19,7 +20,7 @@ export default {
 
 <style>
 .dashboard{background-color:#EAEBEA;min-height: 100vh}
-a{color:#97D077}
+a{color:#6c995d}
 a:hover{color:#a0de7d}
 .block{background-color:#f8f8f8}
 .sub-title{color:#BA4D6A;font-size:1.2em;font-weight:400}

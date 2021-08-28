@@ -75,36 +75,29 @@ export default {
   data() {
     return {
       title: 'Профиль пользователя',
-      user:{
+      user: {
         first_name: this.$auth.user.first_name,
         middle_name: this.$auth.user.middle_name,
         last_name: this.$auth.user.last_name,
         company: this.$auth.user.company,
         position: this.$auth.user.position,
-        //email: this.$auth.user.email,
         phone: this.$auth.user.phone,
-        //regions: this.$auth.user.regions,
         city: this.$auth.user.city,
       },
-      //regions: [],
       cities: [],
     }
   },
 
   methods: {
     async saveUser() {
-      console.log(this.user.city)
-      console.log(this.user.regions, typeof(this.user.regions))
       let data = {
         first_name: this.user.first_name,
         middle_name: this.user.middle_name,
         last_name: this.user.last_name,
         company: this.user.company,
         position: this.user.position,
-        //email: this.user.email,
         phone: this.user.phone,
         city: this.user.city,
-        //regions: this.user.regions,
       };
       await this.$axios
         .$patch("/api/auth/user/", data)

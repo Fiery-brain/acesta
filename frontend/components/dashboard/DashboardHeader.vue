@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-6">
         <p class="title">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="#2D4733" width="24" viewBox="0 0 18 18">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="#2D4733" width="24" viewBox="0 0 18 18" class="me-1">
             <path :d="path" color="#000" />
           </svg> {{ title }}
         </p>
@@ -12,14 +12,14 @@
         <select
             v-if="region"
             name="region"
-            v-on:change="setRegionCode($event.target.value); refreshPage()"
+            v-on:change="setRegionCode($event.target.value)"
             class="w-100 mt-2 float-md-end region-chooser"
             title="Домашний регион">
           <option
               v-for="region in regions"
               :key="region.code"
               :value="region.code"
-              :selected="region.code == getRegionCode"
+              :selected="region.code === $auth.user.last_region"
           >{{ region.title }}</option>
         </select>
       </div>
@@ -28,23 +28,22 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-
 export default {
   name: "DashboardHeader",
-  async mounted() {
-    this.regions = await this.$auth.user.regions
-  },
-  data() {
-    return {
-      regions: []
+  computed: {
+    regions: function () {
+      if (this.$auth.loggedIn) {
+        return this.$auth.user.regions
+      } else {
+        return []
+      }
     }
   },
-  computed: {
-    ...mapGetters({
-      getRegionCode: 'region/getRegionCode'
-    })
-  },
+  // data() {
+  //   return {
+  //     regions: []
+  //   }
+  // },
   props: {
     title: {
       type: String,
@@ -60,12 +59,15 @@ export default {
     },
   },
   methods: {
-    refreshPage() {
-      this.$nuxt.refresh()
-    },
-    ...mapActions({
-      setRegionCode: 'region/setRegionCode'
-    })
+    setRegionCode(code) {
+      this.$axios
+        .patch('/api/auth/user/', {'last_region': code})
+        .then(() => this.$store.dispatch('main_stats/loadMainStats', true))
+        .then(() => this.$nuxt.refresh())
+        .catch((err) => {
+            this.$toast.error(`Во время сохранения текущего региона произошла ошибка: ${err}`)
+        })
+    }
   }
 }
 </script>

@@ -7,12 +7,14 @@
 </template>
 
 <script>
-import LandingNavigation from "~/components/LandingNavigation";
-import LandingFooter from "~/components/LandingFooter";
+import LandingNavigation from "../components/LandingNavigation";
+import LandingFooter from "../components/LandingFooter";
+
 export default {
   components: {
-    LandingNavigation,
-    LandingFooter}
+   LandingNavigation,
+   LandingFooter
+  }
 }
 </script>
 
