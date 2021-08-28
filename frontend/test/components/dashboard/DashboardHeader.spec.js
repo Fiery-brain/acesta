@@ -26,12 +26,3 @@ describe('DashboardHeader', () => {
         expect(wrapper.vm).toBeTruthy()
     })
 })
-
-// authMock.loggedIn = false
-//
-// describe('DashboardHeader', () => {
-//     test('is a Vue instance', () => {
-//         const wrapper = mount(DashboardHeader, options)
-//         expect(wrapper.vm).toBeTruthy()
-//     })
-// })
