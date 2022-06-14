@@ -15,7 +15,7 @@
     "@nuxtjs/sentry": "5.1.7",
     "@nuxtjs/toast": "^3.3.1",
     "@nuxtjs/yandex-metrika": "^1.4.0",
-    "core-js": "^3.22.8",
+    "core-js": "^3.23.1",
     "lodash.merge": "^4.6.2",
     "nuxt": "2.15.8",
     "vue": "^2.6.13",
