@@ -12,7 +12,7 @@
   "dependencies": {
     "@nuxtjs/auth-next": "^5.0.0-1648802546.c9880dc",
     "@nuxtjs/axios": "^5.13.6",
-    "@nuxtjs/sentry": "5.1.7",
+    "@nuxtjs/sentry": "7.0.4",
     "@nuxtjs/toast": "^3.3.1",
     "@nuxtjs/yandex-metrika": "^1.4.0",
     "core-js": "^3.23.4",
