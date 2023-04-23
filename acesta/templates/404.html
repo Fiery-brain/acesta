@@ -1,0 +1,11 @@
+{% extends request.user.is_authenticated|yesno:'dashboard/base.html,outside.html' %}
+
+{% block title %}Ошибка 404. {% endblock %}
+
+{% block page_title %}Страница не найдена{% endblock %}
+
+{% block part_title %}<h1 class="mt-5 text-muted">Страница не найдена</h1>{% endblock %}
+
+{% block content %}
+  <p>Такая страница не&nbsp;найдена на&nbsp;ервере. Воспользуйтесь меню для&nbsp;продолжения работы.</p>
+{% endblock content %}

@@ -1,0 +1,11 @@
+{% extends request.user.is_authenticated|yesno:'dashboard/base.html,outside.html' %}
+
+{% block title %}Ошибка 403. {% endblock %}
+
+{% block page_title %}Доступ запрещен{% endblock %}
+
+{% block part_title %}<h1 class="mt-5 text-muted">Доступ запрещен</h1>{% endblock %}
+
+{% block content %}
+  <p>Доступ к&nbsp;этой странице запрещен. Если вы считаете это ошибкой, напишите нам.</p>
+{% endblock content %}
