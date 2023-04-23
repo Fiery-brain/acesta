@@ -1,0 +1,141 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load plotly_dash %}
+{% load stats %}
+
+{% block title %}Регион {{ request.user.current_region }}. {% endblock %}
+
+{% block css_external %}
+  <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+  {% plotly_header %}
+  {{ block.super }}
+{% endblock %}
+
+{% block modals %}
+  {{ block.super }}
+  {% if request.GET.group == '' or request.GET.group %}
+    <div class="modal fade" id="addSight" tabindex="-1" role="dialog" aria-labelledby="addSightLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <form action="{% url 'support' %}" method="post">
+            <div class="modal-header bg-light">
+              <h5 class="modal-title" id="addSightLabel"><svg fill="#429388" class="me-2" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#tourism"></use></svg>Добавление точек притяжения</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% csrf_token %}
+                <div>
+                  <textarea required class="form-control" name="message" id="textMessage" rows="10" autocomplete="off"></textarea>
+                  <div id="messageHelp" class="form-text text-muted ms-2">Опишите подробно точки притяжения, которые хотите добавить в&nbsp;анализ</div>
+                </div>
+                {{ support_form.user }}
+                {{ support_form.subject }}
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Отправить</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="row pt-4">
+    <div class="col-12 col-lg-5 d-flex flex-column">
+      <div class="place-blocks overflow-auto d-inline-flex flex-lg-wrap pt-2 pe-0">
+        {% place_block value=request.user.current_region.rank value_name="ранг" total=4 border_class_base="border-rank" border_class=request.user.current_region.rank text_class_base="text-rank" text_class=request.user.current_region.rank desc="по туристическому потенциалу" tooltip_text="Ранг региона по&nbsp;туристическому потенциалу рассчитывается по&nbsp;количеству значимых точек притяжения. Самый высокий ранг — 4, самый низкий — 0" %}
+        {% place_block value=amount_rating_place total=places_amount border_class_base="border-accent-secondary" text_class_base="text-accent-secondary" desc="по количеству точек притяжения" tooltip_text="" %}
+        {% if interest_rating_place %}
+          {% place_block value=interest_rating_place total=places_amount border_class_base="border-accent-primary" text_class_base="text-accent-primary" desc="по интересу к&nbsp;турпродуктам" tooltip_text="Место региона в&nbsp;рейтинге по&nbsp;интересу определяется по&nbsp;количеству запросов его точек притяжения за&nbsp;месяц" %}
+        {% endif %}
+        {% for place in outstanding_places %}
+          {% with desc="по количеству "|add:place.group_title_gen|safe %}
+            {% place_block value=place.place total=places_amount border_class_base="border-" border_class=place.group text_class_base="text-" text_class=place.group desc=desc tooltip_text="" %}
+          {% endwith %}
+        {% endfor %}
+      </div>
+      {% if strong_types %}
+        <p class="mt-3">
+          В&nbsp;регионе лучше всего развит{% if strong_types|length > 1 %}ы{% endif %}
+          {% for type in strong_types %}<b class="text-nowrap text-rank4">{{ type }}</b>{% if not forloop.last %}{% if strong_types|length|add:"-1" == forloop.counter %} и&nbsp;{% else %}, {% endif %}{% endif %}{% endfor %} туризм{% if weak_types %}, меньше
+          {% for type in weak_types %}<b class="text-nowrap text-rank0">{{ type }}</b>{% if not forloop.last %}{% if weak_types|length|add:"-1" == forloop.counter %} и&nbsp;{% else %}, {% endif %}{% endif %}{% endfor %} туризм{% endif %}
+        </p>
+      {% endif %}
+    </div>
+    <div class="col-12 col-lg-7 pt-3 pe-lg-0">
+      <div class="d-flex sight-stat-app-title">
+        <h3 class="mb-0">Точки притяжения</h3>
+        {% if request.GET.group == '' or request.GET.group %}
+          <a href="{% url 'region' %}" class="btn btn-sm ms-2 d-flex flex-wrap align-content-center" role="button">
+            <svg data-bs-toggle="tooltip" title="Показать график" fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#graph"></use></svg>
+          </a>
+        {% else %}
+          <a href="{% url 'region' %}?group=" class="btn btn-sm ms-2 d-flex flex-wrap align-content-center" role="button">
+            <svg data-bs-toggle="tooltip" title="Показать список точек притяжения" fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#list"></use></svg>
+          </a>
+        {% endif %}
+      </div>
+    {% if request.GET.group == '' or request.GET.group %}
+      <div class=" mt-3">
+        <div class="container sight-list-container">
+          <div class="row">
+            <div class="col-2 col-lg-3 ps-0 d-flex flex-wrap align-content-center">
+              <a href="#" data-bs-toggle="modal" data-bs-target="#addSight" class="btn btn-outline-primary fw-bold mb-2 text-nowrap" ><svg fill="#34766A" width="18" height="18" class="me-lg-1"><use href="{% static 'img/sprite.svg' %}#add"></use></svg><span class="d-none d-md-inline">Добавить</span></a>
+            </div>
+            <div class="col-10 col-lg-9 px-0 d-flex flex-wrap justify-content-end align-content-center mb-2">
+              <form action="" id="groupSelector">
+                <select id="groupType" name="group">
+                  <option value="">все разделы</option>
+                  {% for group in sight_groups %}
+                    <option value="{{ group.name }}"{% if group.name == request.GET.group %} selected{% endif %}>{{ group.title }}</option>
+                  {% endfor %}
+                </select>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 ps-0 overflow-auto sight-list mt-1">
+              <table class="table table-responsive">
+                {% for sight in region_sights %}
+                <tr>
+                  <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ sight.group.title }}"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ sight.group.name }}"></use></svg></a></td>
+                  <td class="ps-1">
+                    <small class="sight-title">{{ sight }}</small>
+                  </td>
+                  <td width="254">
+                    <div class="text-muted">
+                      <small class="d-inline-flex sight-location">
+                        {% if sight.city and sight.code.region_type != REGION_TYPE_FEDERAL_CITY %}
+                          {{ sight.city }}
+                        {% else %}
+                          {{ sight.code }}
+                        {% endif %}
+                      </small>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="sight-stat-app">
+        {% plotly_direct name="sightStats" %}
+      </div>
+    {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'js/sight.group.selector.js' %}"></script>
+  <script src="{% static 'js/plotly-locale-ru-latest.js' %}"></script>
+  {% plotly_footer %}
+  <script src="{% static 'js/sight.stats.loader.js' %}"></script>
+{% endblock %}

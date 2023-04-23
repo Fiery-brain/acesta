@@ -1,0 +1,261 @@
+{% extends 'outside.html' %}
+{% load static %}
+
+{% block title %}О сервисе. {% endblock %}
+
+{% block page_title %}О сервисе{% endblock %}
+
+{% block modals %}
+  {{ block.super }}
+  <div class="modal fade" id="support" tabindex="-1" role="dialog" aria-labelledby="supportLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form action="{% url 'support' %}" method="post">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title" id="supportLabel"><svg fill="#429388" class="me-2" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>Обращение в&nbsp;техподдержку</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              {% csrf_token %}
+              <div>
+                <textarea required class="form-control" name="message" id="textMessage" rows="10" autocomplete="off"></textarea>
+                <div id="messageHelp" class="form-text text-muted ms-2">Опишите подробно свою проблему, чтобы мы&nbsp;быстрее могли ее&nbsp;решить</div>
+              </div>
+              {{ support_form.user }}
+              {{ support_form.subject }}
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Отправить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="row pt-3">
+    <div class="col-12 col-md-4 p-0">
+      <div id="help-pills-container" class="px-lg-33">
+        <ul class="nav nav-pills flex-column" id="help-pills" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active ps-3" id="pills-goal-tab" data-bs-toggle="pill" data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1" aria-selected="true">Цель</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link ps-3" id="pills-interface-tab" data-bs-toggle="pill" data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-2" aria-selected="false">Интерфейс</a>
+          </li>
+          {% if request.user.is_authenticated %}
+            <li class="nav-item" role="presentation">
+              <a class="nav-link ps-3" id="pills-data-tab" data-bs-toggle="pill" data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3" aria-selected="false">Данные</a>
+            </li>
+          {% endif %}
+          <li class="nav-item" role="presentation">
+            <a class="nav-link ps-3" id="pills-differences-tab" data-bs-toggle="pill" data-bs-target="#pills-4" type="button" role="tab" aria-controls="pills-4" aria-selected="false">Различия версий</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link ps-3" id="pills-faq-tab" data-bs-toggle="pill" data-bs-target="#pills-5" type="button" role="tab" aria-controls="pills-5" aria-selected="false">Вопросы и&nbsp;ответы</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-12 col-md-8 mt-3 mt-md-0">
+      <div class="tab-content" id="help-pillsContent">
+        <div class="tab-pane fade show active" id="pills-1" role="tabpanel" aria-labelledby="pills-1-tab">
+          <h2 class="mb-3">Цель сервиса</h2>
+          <p>Цель сервиса — создать инструмент для оценки туристического потенциала, нахождения точек роста и&nbsp;разработки эффективных стратегий развития на&nbsp;уровне точки притяжения, города, региона</p>
+        </div>
+        <div class="tab-pane fade" id="pills-2" role="tabpanel" aria-labelledby="pills-2-tab">
+          <h2 class="mb-3">Интерфейс сервиса</h2>
+          <p>Аналитические отчеты доступны только зарегистрированному пользователю после авторизации.</p>
+          <h3 class="mt-4">Раздел «Регион»</h3>
+          <p class="mt-4">Общая информация о регионе. Ранг, места в&nbsp;рейтинге, выдающиеся показатели, точки роста, а&nbsp;также точки притяжения по&nbsp;видам туризма в&nbsp;виде графика:</p>
+          <img src="{% static 'img/screen/region_sights_graph.png' %}" class="border border-light w-100 mb-3">
+          <p class="mt-4">Точки притяжения по&nbsp;видам туризма списком и&nbsp;возможность подать заявку на&nbsp;добавление своих:</p>
+          <img src="{% static 'img/screen/region_sights_list.png' %}" class="border border-light w-100 mb-3">
+          <h3 class="mt-4">Раздел «Интерес»</h3>
+          <p class="mt-4">Интерес к&nbsp;региону с&nbsp;фильтром по&nbsp;видам туризма и&nbsp;информация о&nbsp;потенциальной аудитории:</p>
+          <img src="{% static 'img/screen/interest_region.png' %}" class="border border-light w-100 mb-3">
+          <p class="mt-4">Интерес к&nbsp;точкам притяжения с&nbsp;фильтром по&nbsp;видам туризма и&nbsp;информация о&nbsp;потенциальной аудитории:</p>
+          <img src="{% static 'img/screen/interest_sights.png' %}" class="border border-light w-100 mb-3">
+          <h3 class="mt-4">Раздел «Рейтинг»</h3>
+          <p class="mt-4">Рейтинг регионов общий и&nbsp;по&nbsp;видам туризма:</p>
+          <img src="{% static 'img/screen/rating_regions.png' %}" class="border border-light w-100 mb-3">
+          <p class="mt-4">Рейтинг точек притяжения общий и&nbsp;по&nbsp;видам туризма:</p>
+          <img src="{% static 'img/screen/rating_sights.png' %}" class="border border-light w-100 mb-3">
+          <h3 class="mt-4">Выбор региона</h3>
+          <p class="mt-4">Активный регион. Изменение региона происходит при&nbsp;переходе по&nbsp;ссылке:</p>
+          <img src="{% static 'img/screen/region_link.png' %}" class="border border-light w-100 mb-3">
+          <p class="mt-4">Доступные для выбора регионы выделены зеленым. При&nbsp;выборе региона, выделенного серым произойдет переход на&nbsp;создание заявки на&nbsp;расширение доступа:</p>
+          <img src="{% static 'img/screen/region_selection.png' %}" class="border border-light w-100 mb-3">
+        </div>
+        {% if request.user.is_authenticated %}
+          <div class="tab-pane fade" id="pills-3" role="tabpanel" aria-labelledby="pills-3-tab">
+            <h2 class="mb-3">Данные</h2>
+            <p>Для построения отчетов используем цифровой след туриста в&nbsp;Интернет: данные <b>Яндекс.Подбор Слов</b>, <b>ВКонтакте</b>, открытые источники для загрузки информации точках притяжения. Для&nbsp;нормализации данных используем <b>Росстат</b>.</p>
+            <h3 class="mt-4">График обновления данных</h3>
+            <table class="table table-hover table-responsive mt-3">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Частота</th>
+                  <th>Время обновления</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Сезонная подстройка семантических ядер</td>
+                  <td>ежеквартально</td>
+                  <td>начало второго месяца квартала</td>
+                </tr>
+                <tr>
+                  <td>Интерес</td>
+                  <td>ежемесячно</td>
+                  <td>середина месяца</td>
+                </tr>
+                <tr>
+                  <td>Рейтинги</td>
+                  <td>ежемесячно</td>
+                  <td>середина месяца</td>
+                </tr>
+                <tr>
+                  <td>Потенциальная аудитория</td>
+                  <td>раз в&nbsp;полгода</td>
+                  <td>январь и&nbsp;июль</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>В случае невозможности очередного получения данных из внешних источников отчеты будут содержать данные за период, когда обновление было возможно.</p>
+            <h3 class="mt-4">Методика построения отчетов</h3>
+            <ol class="mt-3">
+              <li class="mt-2">Создаем список точек притяжения туристов для&nbsp;региона и&nbsp;разбиваем его по&nbsp;видам туризма</li>
+              <li class="mt-2">Для каждой точки подбираем основной запрос для поисковика</li>
+              <li class="mt-2">Для каждого запроса загружаем семантическое ядро точки притяжения</li>
+              <li class="mt-2">По топ-3 семантического ядра каждой точки загружаем количество запросов и&nbsp;региональную популярность</li>
+              <li class="mt-2">Агрегируем данные об&nbsp;интересе для&nbsp;городов и&nbsp;регионов в&nbsp;разбивке по&nbsp;видам туризма</li>
+            </ol>
+            <h3 class="mt-5">Погрешность</h3>
+            Статистические отчеты имеют неизбежную погрешность. Эта погрешность получается из-за работы с&nbsp;естественным языком и&nbsp;искусственной привязки точек притяжения к&nbsp;региону в&nbsp;тексте запроса. Однако&nbsp;команда все время работает над&nbsp;повышением точности всеми возможными способами.
+          </div>
+        {% endif %}
+        <div class="tab-pane fade" id="pills-4" role="tabpanel" aria-labelledby="pills-4-tab">
+          <h2 class="mb-3">Различия базовой и&nbsp;расширенной версии</h2>
+          <h3 class="mt-4">Раздел «Регион»</h3>
+          <p>Не различается в&nbsp;базовой и&nbsp;расширенной версии</p>
+          <h3 class="mt-4">Раздел «Интерес»</h3>
+          <p>В базовой версии отсутствует информация об&nbsp;интересе к&nbsp;городам и&nbsp;точкам притяжения, а&nbsp;также интерес к&nbsp;региону из&nbsp;городов и&nbsp;аудитория городов:</p>
+          <img src="{% static 'img/screen/interest_difference.png' %}" class="border border-light w-100 mb-3">
+          <h3 class="mt-4">Раздел «Рейтинг»</h3>
+          <p>В базовой версии отсутствуют рейтинги городов и&nbsp;точек притяжения:</p>
+          <img src="{% static 'img/screen/rating_difference.png' %}" class="border border-light w-100 mb-5">
+        </div>
+        <div class="tab-pane fade" id="pills-5" role="tabpanel" aria-labelledby="pills-5-tab">
+          <h2 class="mb-3">Вопросы и&nbsp;ответы</h2>
+          <div class="accordion my-4" id="FAQ">
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="headingZero">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
+                  Какие регионы охватывает сервис?
+                </button>
+              </h3>
+              <div id="collapseZero" class="accordion-collapse collapse show" aria-labelledby="headingZero" data-bs-parent="#FAQ">
+                <div class="accordion-body">
+                  Сервис охватывает регионы Российской Федерации
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Что такое ранг региона по&nbsp;туристическому потенциалу?
+                </button>
+              </h3>
+              <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#FAQ">
+                <div class="accordion-body">
+                  Каждому региону в&nbsp;системе присвоен свой ранг. Ранг рассчитывается по&nbsp;количеству значимых точек притяжения. Самый высокий ранг — 4, самый низкий — 0
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Может ли измениться ранг региона при&nbsp;изменении количества точек притяжения?
+                </button>
+              </h3>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#FAQ">
+                <div class="accordion-body">
+                  Да, ранг может измениться
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  С&nbsp;каким количеством регионов я могу работать в&nbsp;базовом доступе?
+                </button>
+              </h3>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#FAQ">
+                <div class="accordion-body">
+                  В&nbsp;базовом доступе вы можете работать с&nbsp;регионом, который указали домашним при&nbsp;регистрации
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                  Я могу получить полный доступ сразу к&nbsp;нескольким регионам?
+                </button>
+              </h3>
+              <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#FAQ">
+                <div class="accordion-body">
+                  Да, для этого создайте заявку на&nbsp;расширение доступа на&nbsp;странице <a href="{% url 'user' %}">Пользователя</a>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                  Могу ли я опубликовать ваши аналитические данные на&nbsp;сайте или&nbsp;где-то еще?
+                </button>
+              </h3>
+              <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#FAQ">
+                <div class="accordion-body">
+                  Нет
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                  Я могу добавить в&nbsp;анализ новую точку притяжения?
+                </button>
+              </h3>
+              <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#FAQ">
+                <div class="accordion-body">
+                  Да. Создайте заявку на&nbsp;добавление новой точки притяжения на&nbsp;странице <a href="{% url 'region' %}?group=">Регион</a>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header" id="headingSeven">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                  Что делать, если мне нужен отчет, которого нет в&nbsp;интерфейсе?
+                </button>
+              </h3>
+              <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#FAQ">
+                <div class="accordion-body">
+                  Создайте заявку на&nbsp;создание отчета на&nbsp;странице <a href="{% url 'price' %}">Услуги</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          Не нашли ответ на&nbsp;свой вопрос?
+          {% if request.user.is_authenticated %}
+            <a href="#" data-bs-toggle="modal" data-bs-target="#support" >Напишите нам</a>
+          {% else %}
+            <a href="https://t.me/eugena/" target="_blank">Запишитесь на&nbsp;консультацию</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

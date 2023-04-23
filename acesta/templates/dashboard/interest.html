@@ -1,0 +1,31 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load plotly_dash %}
+
+{% block title %}Интерес к&nbsp;региону {{ request.user.current_region }}. {% endblock %}
+
+{% block css_external %}
+  <link rel="stylesheet" href="{% static 'css/jquery.splitter.css' %}">
+  {% plotly_header %}
+  {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+  <div id="content">
+    <div id="interest-container" class="overflow-hidden">
+      {% plotly_direct name="interest" %}
+    </div>
+    <div id="audience-container" class="d-flex mt-3 mt-lg-0 pt-lg-0">
+      {% plotly_app_bootstrap name="audience" %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/plotly-locale-ru-latest.js' %}"></script>
+  <script src="{% static 'js/jquery.splitter.js' %}"></script>
+  {% plotly_footer %}
+  <script src="{% static 'js/dashboard.interest.js' %}"></script>
+{% endblock %}

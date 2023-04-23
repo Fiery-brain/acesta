@@ -1,0 +1,338 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% load user %}
+
+
+{% block title %}Моя страница. {% endblock %}
+
+{% block css_external %}
+  <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block modals %}
+  {{ block.super }}
+  <div class="modal fade" id="newOrder" tabindex="-1" role="dialog" aria-labelledby="newOrderLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form action="{% url 'order' %}" method="post">
+          <div class="modal-header bg-accent">
+            <h5 class="modal-title" id="newOrderLabel"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg> Заявка на&nbsp;полный доступ</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              {% csrf_token %}
+              <div class="form-floating mb-2">
+                  <select class="form-select" required name="regions" id="inputRegions" multiple>
+                  {% for id, region in order_form.regions.field.choices %}
+                    <option value="{{ id }}"{% if code == id %} selected{% endif %}>{{ region.code }}{{ region }}</option>
+                  {% endfor %}
+                </select>
+                <label for="inputRegions" class="form-label">Регионы</label>
+              </div>
+              <div class="form-floating mb-2">
+                <input type="number" required class="form-control" min="1" name="period" id="inputPeriod" value="{{ order_form.period.value }}" placeholder="Период *" title="Период">
+                <label for="inputPeriod" class="form-label">Период (мес)</label>
+              </div>
+              {{ order_form.user }}
+              <div class="sums">
+                <div class="text-nowrap text-end text-muted mt-3 fs-6">
+                    Сумма: <span id="cost" class="fw-bold"></span> ₽
+                    <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
+                      <p class='mb-1 text-nowrap'><small>Регион 4 ранга: <b>{{ prices.rank_4 }} ₽</b>/мес</small></p>
+                      <p class='mb-1 text-nowrap'><small>Регион 3 ранга: <b>{{ prices.rank_3 }} ₽</b>/мес</small></p>
+                      <p class='mb-1 text-nowrap'><small>Регион 2 ранга: <b>{{ prices.rank_2 }} ₽</b>/мес</small></p>
+                      <p class='mb-0 text-nowrap'><small>Регион 1 ранга: <b>{{ prices.rank_1 }} ₽</b>/мес</small></p>"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
+                </div>
+                <div class="text-nowrap text-end text-muted mt-2 fs-6">
+                  Скидка: <span id="discount" class="fw-bold"></span>%
+                      <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
+                      <p class='mb-1 text-nowrap'><small><b>{{ discounts.gt_6_discount}}%</b> при заказе от&nbsp;&nbsp;6&nbsp;месяцев</small></p>
+                      <p class='mb-0 text-nowrap'><small><b>{{ discounts.gt_12_discount}}%</b> при заказе от&nbsp;12&nbsp;месяцев</small></p>"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
+                </div>
+                <div class="text-nowrap text-end mt-2 fs-5">
+                  Итого: <span id="total" class="fw-bold"></span> ₽
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary btn-lg px-4"><svg fill="#ffffff" class="me-2" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg>Создать</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="changePasswordLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form action="{% if request.user.has_usable_password %}{% url 'account_change_password'%}{% else %}{% url 'account_set_password'%}{% endif %}" method="post">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title" id="changePasswordLabel"><svg fill="#429388" class="me-2" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#password"></use></svg>{% if request.user.has_usable_password %}Изменение{% else %}Установка{% endif%} пароля</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              {% csrf_token %}
+              {% if request.user.has_usable_password %}
+              <div class="form-floating mb-2">
+                <input type="password" required minlength="8" class="form-control" name="oldpassword" id="inputOldPassword" value="" autocomplete="off">
+                <label for="inputOldPassword" class="form-label">Текущий пароль</label>
+              </div>
+              {% endif %}
+              <div class="form-floating mb-2">
+                <input type="password" required minlength="8" class="form-control" name="password1" id="inputPassword1" value="" autocomplete="off">
+                <label for="inputPassword1" class="form-label">Новый пароль</label>
+              </div>
+              <div class="form-floating">
+                <input type="password" required minlength="8" class="form-control" name="password2" id="inputPassword2" value="" autocomplete="off">
+                <label for="inputPassword2" class="form-label">Подтверждение пароля</label>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-primary px-4"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg>Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="changeEmail" tabindex="-1" role="dialog" aria-labelledby="changeEmailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form action="{% url 'account_change_email'%}" method="post" autocomplete="off">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title" id="changeEmailLabel"><svg fill="#429388" class="me-2" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#email"></use></svg>Изменение email</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% csrf_token %}
+            <div class="form-floating mb-2">
+              <input type="email" required class="form-control" name="email" id="inputEmail" autocomplete="off">
+              <label for="inputEmail" class="form-label">Новый email</label>
+              <small id="emailHelp" class="form-text text-muted ms-2">Ваш email {{ request.user.email }}</small>
+            </div>
+            <div class="form-floating">
+              <input type="password" required class="form-control" name="oldpassword" id="inputEmailPassword" autocomplete="off">
+              <label for="inputEmailPassword" class="form-label">Текущий пароль</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-primary px-4"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg>Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="changeSocial" tabindex="-1" role="dialog" aria-labelledby="changeSocialLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title" id="changeSocialLabel"><svg fill="#429388" class="me-2" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#social"></use></svg>Редактирование доступов</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              {% get_social_accounts request.user as accounts %}
+              {% get_providers as socialaccount_providers %}
+              <table class="table table-responsive">
+                {% for provider in socialaccount_providers %}
+                  <tr>
+                    <td class="text-nowrap"><svg class="me-2" width="36" height="36"><use href="{% static 'img/sprite.svg' %}#{{ provider.name|lower }}"></use></svg>{{ provider.name }}
+                    </td>
+                    <td>
+                      {% if provider.name|lower in accounts %}
+                        <button type="button" title="Добавить доступ" class="btn btn-outline-primary rounded-50" disabled><svg fill="#9dc3bf" width="14" height="16"><use href="/static/img/sprite.svg#add"></use></svg></button>
+                      {% else %}
+                        <a type="button" title="Добавить доступ" class="btn btn-outline-primary rounded-50" href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"><svg fill="#429388" width="14" height="16"><use href="/static/img/sprite.svg#add"></use></svg></a>
+                      {% endif %}
+                    </td>
+                      {% if request.user.has_usable_password %}
+                        <td>
+                          {% if provider.name|lower in accounts %}
+                            <form method="post" action="{% url 'socialaccount_connections' %}">
+                              {% csrf_token %}
+                              {% with base_account=accounts|get_prop:provider.name %}
+                              <input class="d-none" id="id_account_{{ base_account.0.id }}" type="text" name="account" value="{{ base_account.0.id }}"/>
+                              <button type="submit" title="Удалить доступ" class="btn btn-outline-primary rounded-50"><svg fill="#429388" width="14" height="16"><use href="/static/img/sprite.svg#delete"></use></svg></button>
+                              {% endwith %}
+                            </form>
+                          {% else %}
+                            <button type="button" title="Удалить доступ" class="btn btn-outline-primary rounded-50" disabled><svg fill="#9dc3bf" width="14" height="16"><use href="/static/img/sprite.svg#delete"></use></svg></button>
+                          {% endif %}
+                        </td>
+                      {% endif %}
+                  </tr>
+                {% endfor %}
+              </table>
+          </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="row pt-4">
+    <div class="col-12 pe-lg-4 pt-2 pt-lg-1 col-lg-5 bg-lignt profile">
+      <div class="d-flex align-items-end justify-content-between mb-1">
+        <h3 class="fs-4 display-inline-block">Данные</h3>
+        <div class="mb-2">
+          <span data-bs-toggle="modal" data-bs-target="#changePassword">
+            <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Изменить пароль" class="btn btn-outline-primary rounded-50"><svg fill="#429388" width="14" height="14"><use href="{% static 'img/sprite.svg' %}#password"></use></svg></button>
+          </span>
+          {% if request.user.has_usable_password %}
+            <span data-bs-toggle="modal" data-bs-target="#changeEmail">
+              <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Изменить email" class="btn btn-outline-primary rounded-50"><svg fill="#429388" width="14" height="14"><use href="{% static 'img/sprite.svg' %}#email"></use></svg></button>
+            </span>
+          {% endif %}
+          <span data-bs-toggle="modal" data-bs-target="#changeSocial">
+            <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Редактировать доступы через социальные сети" class="btn btn-outline-primary rounded-50"><svg fill="#429388" width="14" height="16"><use href="{% static 'img/sprite.svg' %}#social"></use></svg></button>
+          </span>
+        </div>
+      </div>
+      <form id="profileForm" class="has-masked" action="" method="post">
+        {% csrf_token %}
+        <div class="form-floating mb-2">
+          <input type="text" required class="form-control" name="last_name" id="inputLastName" value="{{ user_form.last_name.value }}" pattern="[А-Яа-яЁё ]+">
+          <label for="inputLastName" class="form-label">Фамилия</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="text" required class="form-control" name="first_name" id="inputFirstName" value="{{ user_form.first_name.value }}" pattern="[А-Яа-яЁё ]+">
+          <label for="inputFirstName" class="form-label">Имя</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="text" required class="form-control" name="middle_name" id="inputMiddleName" value="{{ user_form.middle_name.value }}" pattern="[А-Яа-яЁё ]+">
+          <label for="inputMiddleName" class="form-label">Отчество</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="text" class="form-control" name="company" id="inputCompany" value="{{ user_form.company.value|default_if_none:'' }}">
+          <label for="inputCompany" class="form-label">Компания{% if not  user_form.company.value %} (не обязательно){% endif %}</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="text" class="form-control" name="position" id="inputPosition" value="{{ user_form.position.value|default_if_none:'' }}">
+          <label for="inputPosition" class="form-label">Должность{% if not  user_form.position.value %} (не обязательно){% endif %}</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="tel" pattern="\+[0-9]\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" class="form-control" name="phone" id="inputPhone" value="{{ user_form.phone.value|default_if_none:'' }}" title="Телефон" data-mask="+0(000) 000-00-00">
+          <label for="inputPhone" class="form-label">Телефон{% if not  user_form.phone.value %} (не обязательно){% endif %}</label>
+        </div>
+        <div class="form-floating mb-2">
+          <select class="form-select" name="city" id="inputCity">
+            {% for id, city in user_form.city.field.choices %}
+              <option value="{{ id }}"{% if user_form.city.value == id %} selected{% endif %}>{{ city }}</option>
+            {% endfor %}
+          </select>
+          <label for="inputCity">Город {% if not  user_form.city.value %}(не обязательно){% endif %}</label>
+        </div>
+        <div class="mt-3">
+          <button type="submit" class="btn btn-lg btn-outline-primary px-4"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg> Сохранить</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-12 ps-2 ps-lg-4 pt-5 pt-lg-0 col-lg-7">
+      <div class="d-md-flex justify-content-between align-items-end">
+        <h3 class="fs-4">Доступные регионы</h3>
+        <button type="button" class="btn btn-lg btn-accent mb-1 d-none d-lg-inline position-relative btn-expand px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg> Расширить доступ</button>
+      </div>
+      <div class="overflow-auto mt-1 table-fixed-head allowed-regions">
+        <table class="table table-hover table-responsive">
+          <thead>
+            <tr>
+              <th scope="col">Регион</th>
+              <th class="text-center text-nowrap"scope="col">Ранг</th>
+              <th class="text-center d-none d-lg-table-cell" scope="col">Окончание</th>
+              <th class="text-center" scope="col">Доступ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ request.user.region }}</td>
+              <td class="text-center">{{ request.user.region.rank }}</td>
+              <td class="text-center d-none d-lg-table-cell">
+                {% if request.user.region in request.user.regions.all %}
+                  {{ user.period_info|get_prop:request.user.region.code|get_prop:"end"|default_if_none:""|slice:10 }}
+                {% endif %}
+              </td>
+              <td class="text-center">
+                {% if request.user.region in request.user.regions.all or request.user.region.rank == 0 %}
+                  <span class="badge bg-accent text-dark">Полный</span>
+                {% else %}
+                  <span class="badge bg-basic">Базовый</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% for region in request.user.regions.all %}
+              {% if region != request.user.region %}
+                <tr>
+                  <td>{{ region }}</td>
+                  <td class="text-center">{{ region.rank }}</td>
+                  <td class="text-center d-none d-lg-table-cell">{{ user.period_info|get_prop:region.code|get_prop:"end"|default_if_none:""|slice:10 }}</td>
+                  <td class="text-center"><span class="badge bg-accent text-dark">Полный</span></td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+            {% for region in open_regions %}
+              {% if region != request.user.region %}
+                <tr>
+                  <td>{{ region }}</td>
+                  <td class="text-center">{{ region.rank }}</td>
+                  <td class="text-center d-none d-lg-table-cell"></td>
+                  <td class="text-center"><span class="badge bg-accent text-dark">Полный</span></td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-lg btn-accent d-lg-none mt-1 px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg> Расширить доступ</button>
+      <h3 class="fs-4 pt-5">Заявки</h3>
+      <div class="overflow-auto mt-2 table-fixed-head orders">
+        {% if request.user.user_orders.all %}
+          <table class="table table-hover table-responsive">
+            <thead>
+              <tr>
+                <th class="d-none d-xl-table-cell" scope="col">Дата</th>
+                <th scope="col">Регионы</th>
+                <th class="text-center text-nowrap" scope="col">Период, мес</th>
+                <th class="text-end d-none d-xl-table-cell" scope="col">Сумма, ₽</th>
+                <th class="text-center" scope="col">Статус</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in request.user.user_orders.all %}
+                <tr>
+                  <td class="d-none d-xl-table-cell">{{ order.modified|date:"SHORT_DATE_FORMAT" }}</td>
+                  <td>
+                    {% for region in order.regions.all %}
+                      {{ region.title }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                  </td>
+                  <td class="text-center">{{ order.period }}</td>
+                  <td class="text-end d-none d-xl-table-cell">{{ order.total }}</td>
+                  <td class="text-center text-nowrap"><span class="badge bg-{{ order.state }}">{{ order.get_state_display }}</span></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="text-muted">Здесь вы сможете отслеживать выполнение заявок на&nbsp;полный доступ</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+  <script src="{% static 'js/jquery.number.min.js' %}"></script>
+  <script src="{% static 'js/regions.selector.js' %}"></script>
+  <script src="{% static 'js/city.selector.js' %}"></script>
+  <script>
+    const costUrl = "{% url 'costs' %}";
+    const csrfToken = "{{ csrf_token }}";
+  </script>
+  <script src="{% static 'js/user.update.costs.js' %}"></script>
+  <script src="{% static 'js/user.clear.phone.mask.js' %}"></script>
+  {% if open_order %}
+    <script src="{% static 'js/user.open.order.modal.js' %}"></script>
+  {% endif %}
+{% endblock %}

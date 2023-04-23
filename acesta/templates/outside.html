@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block modals %}
+{% endblock %}
+
+{% block body %}
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white navbar-outside">
+    <div class="container">
+      <a class="navbar-brand mt-3" href="{% url 'index' %}" title="{{ TITLE }}">
+        <svg height="52" viewBox="0 0 686 270" fill="none">
+          <g id="acesta">
+            <use fill="#4B4A4A" href="{% static 'img/sprite.svg' %}#logo-text"></use>
+            <g id="flower">
+              <use href="{% static 'img/sprite.svg' %}#logo-flower"></use>
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from="0 601 84"
+                to="360 601 84"
+                begin="bg.mouseover"
+                end="bg.mouseout"
+                dur="5s"
+                repeatCount="indefinite" />
+            </g>
+            <use href="{% static 'img/sprite.svg' %}#logo-base"></use>
+            <rect id="bg" width="686" height="270" fill="white" opacity="0"/>
+          </g>
+        </svg>
+        <h5 class="logo-tags">{{ HASH_TAGS }}</h5>
+      </a>
+      {% with url=request.resolver_match.url_name %}
+        <ul class="navbar-nav align-items-end mt-3">
+          <li class="nav-item">
+            <a class="btn btn-lg btn-outline-accent px-4" href="{% if url == 'account_login' %}{% url 'account_signup' %}{% elif url == 'account_signup' %}{% url 'account_login' %}{% else %}{% url 'region' %}{% endif %}" title="{% if url == 'account_login' %}Зарегистрироваться{% else %}Войти{% endif %}">
+              <svg fill="#b7072a" width="22" height="22" class="me-md-2"><use href="{% static 'img/sprite.svg' %}#{% if url == 'account_login' %}sign-up{% else %}sign-in{% endif %}"></use></svg><span class="d-none d-md-inline">{% if url == 'account_login' %}Зарегистрироваться{% else %}Войти{% endif %}</span>
+            </a>
+          </li>
+        </ul>
+      {% endwith %}
+    </div>
+  </nav>
+  <div class="wrapper bg-white d-flex flex-column justify-content-between">
+    <div class="container pb-5 container-outside">
+      <div class="row">
+        <div class="col pt-5">
+        <h1>{% block page_title %}{% endblock %}</h1>
+        </div>
+      </div>
+      {% block content %}{% endblock %}
+    </div>
+    {% include 'include/footer.html' %}
+  </div>
+{% endblock %}

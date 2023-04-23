@@ -1,0 +1,501 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load stats %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+{% endblock %}
+
+{% block body %}
+  <svg width="0" height="0" viewBox="0 0 0 0" class="position-absolute">
+    <defs>
+        <radialGradient id="bg-green" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 65 -65 0 80 75)">
+        <stop stop-color="#60958C"/>
+        <stop offset=".827" stop-color="#34766A"/>
+      </radialGradient>
+      <radialGradient id="bg-yellow" cx="0" cy="0" r="1" gradientTransform="matrix(0 65 -65 0 80 75)" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#FFDB93"/>
+        <stop offset=".827" stop-color="#FFB84C"/>
+      </radialGradient>
+      <radialGradient id="bg-red" cx="0" cy="0" r="1" gradientTransform="matrix(0 65 -65 0 81 75)" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F57F96"/>
+        <stop offset=".827" stop-color="#C84A62"/>
+      </radialGradient>
+      <radialGradient id="bg-cover-green" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(99.6709 99.6704) rotate(90) scale(88.4868)">
+        <stop stop-color="#34766A" stop-opacity="0.34"/>
+        <stop offset="0.0001" stop-color="#79C4B8"/>
+        <stop offset="0.895458" stop-color="#34766A"/>
+      </radialGradient>
+      <linearGradient id="bg-cover-base-green" x1="99.0131" y1="186.184" x2="99.0131" y2="286.841" gradientUnits="userSpaceOnUse">
+        <stop offset="0.206896" stop-color="#3A9488"/>
+        <stop offset="1" stop-color="#3A9488" stop-opacity="0.37"/>
+      </linearGradient>
+      <radialGradient id="bg-cover-yellow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(99.6709 99.6704) rotate(90) scale(88.4868)">
+        <stop offset="0.0001" stop-color="#FFD98E"/>
+        <stop offset="0.895458" stop-color="#FAB222"/>
+      </radialGradient>
+      <linearGradient id="bg-cover-base-yellow" x1="99.0131" y1="186.184" x2="99.0131" y2="286.841" gradientUnits="userSpaceOnUse">
+        <stop offset="0.206896" stop-color="#FAB222"/>
+        <stop offset="1" stop-color="#FAB222" stop-opacity="0.37"/>
+      </linearGradient>
+      <radialGradient id="bg-cover-red" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(99.6709 99.6704) rotate(90) scale(88.4868)">
+        <stop offset="0.0001" stop-color="#DB8696"/>
+        <stop offset="0.895458" stop-color="#C84A62"/>
+      </radialGradient>
+      <linearGradient id="bg-cover-base-red" x1="99.0131" y1="186.184" x2="99.0131" y2="286.841" gradientUnits="userSpaceOnUse">
+        <stop offset="0.206896" stop-color="#C84A62"/>
+        <stop offset="1" stop-color="#C84A62" stop-opacity="0.37"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <div class="wrapper d-flex flex-column justify-content-between">
+    <div class="container-fluid px-0">
+      <nav class="navbar fixed-top navbar-expand-lg bg-white navbar-light">
+        <div class="container">
+          <svg class="logo" viewBox="0 0 686 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="acesta">
+              <use fill="#4B4A4A" href="{% static 'img/sprite.svg' %}#logo-text"></use>
+              <g id="flower">
+                <use href="{% static 'img/sprite.svg' %}#logo-flower"></use>
+                <animateTransform
+                  attributeName="transform"
+                  attributeType="XML"
+                  type="rotate"
+                  from="0 601 84"
+                  to="360 601 84"
+                  begin="bg.mouseover"
+                  end="bg.mouseout"
+                  dur="5s"
+                  repeatCount="indefinite" />
+              </g>
+              <use href="{% static 'img/sprite.svg' %}#logo-base"></use>
+              <rect id="bg" width="686" height="270" fill="white" opacity="0"/>
+            </g>
+          </svg>
+          <div class="justify-content-end">
+            <div class="d-none d-md-block">
+              <a class="btn btn-accent btn-lg px-5 ms-5 my-3 text-nowrap" href="{% url 'region' %}"><svg fill="#ffffff" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
+            </div>
+            <div class="d-block d-md-none">
+              <a class="btn btn-accent px-4 my-3 text-nowrap" href="{% url 'region' %}"><svg fill="#ffffff" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="container-fluid hero-outside-container">
+        <div class="screen-block hero">
+          <div class="container">
+            <div class="row content">
+              <div class="col-12 col-lg-5 d-flex align-items-center">
+                <div class="hero-text">
+                  <div><small class="text-green">{{ HASH_TAGS }}</small></div>
+                  <h1>Раскрываем<br><span class="text-nowrap colored">туристический</span> <span class="text-accent-primary">потенциал</span></h1>
+                  <p>Наш аналитический сервис помогает бизнесу и&nbsp;органам власти оценить потенциальную аудиторию объектов туристического интереса и&nbsp;разработать стратегии развития на&nbsp;уровне точки притяжения, города, региона
+                  </p>
+                  <a class="btn btn-accent btn-lg px-5 text-nowrap" href="{% url 'region' %}"><svg fill="#FFFFFF" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
+                </div>
+              </div>
+              <div class="col-12 col-md-7 d-none d-lg-block">
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+      <div class="screen-block situation">
+        <div class="container">
+          <div class="row content">
+            <div class="col flex-wrap d-flex align-content-center">
+              <div class="container bg-white p-5 situation-data my-3">
+                <div class="row">
+                  <div class="col mb-3">
+                    <h2 class="d-inline-block mt-2">Текущая ситуация</h2>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-lg-6">
+                    <h4 class="mb-0 text-{{ tourism_type_name }}">#{{ tourism_type }}</h4>
+                    <h3 class="mb-3">Самые привлекательные регионы</h3>
+                    {% for region in top_regions %}
+                      <div class="d-flex align-content-center mb-3 ms-2">
+                        <div class="{{ region.place|get_medal_class }}">{{ region.place }}</div>
+                        <div class="d-flex flex-wrap align-content-center">
+                          <img class="blazon-icon ms-4 me-2" width src="{% static 'img/blazon/'|add:region.home_code.code|add:'.svg' %}">
+                        </div>
+                        <div class="d-flex flex-wrap align-content-center">
+                          <h5 class="opacity-75">{{ region.home_code.title }}</h5>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="col-12 col-lg-6">
+                    <h4 class="mb-0 mt-4 mt-lg-0 text-{{ sight_group_name }}">#{{ sight_group }}</h4>
+                    <h3 class="mb-3">Самые популярные точки притяжения</h3>
+                    {% for sight in top_sights %}
+                      <div class="d-flex align-content-center mb-3 ms-2">
+                        <div class="{{ sight.place|get_medal_class }}">{{ sight.place }}</div>
+                        <div class="d-flex flex-column ms-4">
+                          <div class="mt-1">
+                            <h5 class="opacity-75">{{ sight.sight.title }}</h5>
+                          </div>
+                          <small class="text-muted">{{ sight.sight.code.title }}</small>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col text-end">
+                    <a class="more-data text-end fw-bold mt-4 mt-lg-3" href="{% url 'region' %}">Больше данных »</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-block audience">
+        <div class="container h-100">
+          <div class="row title h-25">
+            <div class="col mt-5 pt-3 mt-lg-0">
+              <h2 class="d-inline-block">Сервис используют</h2>
+            </div>
+          </div>
+          <div class="row content d-flex align-items-center h-75">
+            <div class="col-lg-4 mt-4 mt-lg-0 pe-3">
+              <svg class="audience-icon me-2" viewBox="0 0 160 180">
+                <use href="{% static 'img/sprite.svg' %}#bg_green_circle"></use>
+                <circle cx="81" cy="75" r="65" fill="url(#bg-green)"/>
+                <use href="{% static 'img/sprite.svg' %}#government"></use>
+              </svg>
+              <div class="audience-text">
+                <h3 class="text-green">Государственная власть</h3>
+                <p>используют сервис для&nbsp;изучения потенциальной аудитории, привлечения пользователей на&nbsp;региональные порталы, разработки стратегий развития туризма</p>
+              </div>
+            </div>
+            <div class="col-lg-4 mt-4 mt-lg-0 pe-3">
+              <svg class="audience-icon me-2" viewBox="0 0 160 180">
+                <use href="{% static 'img/sprite.svg' %}#bg_yellow_circle"></use>
+                <circle cx="81" cy="75" r="65" fill="url(#bg-yellow)"/>
+                <use href="{% static 'img/sprite.svg' %}#business"></use>
+              </svg>
+              <div class="audience-text">
+                <h3 class="text-yellow">Туристический бизнес</h3>
+                <p>использует сервис, чтобы предлагать рынку востребованные туристические продукты, повысить эффективность рекламных кампаний и&nbsp;бизнеса в&nbsp;целом</p>
+              </div>
+            </div>
+            <div class="col-lg-4 mt-4 mt-lg-0 pe-3 mb-5 mb-lg-0">
+              <svg class="audience-icon me-2" viewBox="0 0 160 180">
+                <use href="{% static 'img/sprite.svg' %}#bg_red_circle"></use>
+                <circle cx="81" cy="75" r="65" fill="url(#bg-red)"/>
+                <use href="{% static 'img/sprite.svg' %}#market"></use>
+              </svg>
+              <div class="audience-text">
+                <h3 class="text-red">Маркетинговые агентства</h3>
+                <p>используют сервис, как дополнительный источник данных для&nbsp;построения аналитических отчетов и&nbsp;построения стратегий развития по&nbsp;запросам клиентов</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-block cover">
+        <div class="container h-100">
+          <div class="row title h-25">
+            <div class="col mt-5 mt-lg-0">
+              <h2 class="d-inline-block">Охват</h2>
+            </div>
+          </div>
+          <div class="row content cover-container">
+            <div class="col-12 col-md-4 d-flex flex-wrap pt-5 pt-lg-0 ps-5 ps-lg-0 justify-content-start justify-content-md-end align-content-center h-100">
+              <div class="text-center">
+                <div class="cover-data">{{ tourism_types_cnt }}</div>
+                <svg class="bg-cover-data" viewBox="0 0 200 314" fill="none">
+                  <use fill="#FAB222" href="{% static 'img/sprite.svg' %}#bg-cover-stroke"></use>
+                  <use fill="url(#bg-cover-yellow)" href="{% static 'img/sprite.svg' %}#bg-cover"></use>
+                  <use href="{% static 'img/sprite.svg' %}#bg-cover-shadow"></use>
+                  <use fill="url(#bg-cover-base-yellow)" href="{% static 'img/sprite.svg' %}#bg-cover-base"></use>
+                  <use href="{% static 'img/sprite.svg' %}#cover-text-tourism-types"></use>
+                </svg>
+              </div>
+            </div>
+            <div class="col-12 col-lg-4 d-flex py-0 pe-5 pe-lg-0 justify-content-end justify-content-lg-center h-100">
+              <div class="text-center">
+                <div class="cover-data">{{ regions_cnt }}</div>
+                <svg class="bg-cover-data" viewBox="0 0 200 313" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <use fill="#C84A62" href="{% static 'img/sprite.svg' %}#bg-cover-stroke"></use>
+                <use fill="url(#bg-cover-red)" href="{% static 'img/sprite.svg' %}#bg-cover"></use>
+                <use href="{% static 'img/sprite.svg' %}#bg-cover-shadow"></use>
+                <use fill="url(#bg-cover-base-red)" href="{% static 'img/sprite.svg' %}#bg-cover-base"></use>
+                <use href="{% static 'img/sprite.svg' %}#cover-text-regions"></use>
+                </svg>
+              </div>
+            </div>
+            <div class="col-12 col-md-4 d-flex flex-wrap pb-5 pb-lg-0 ps-5 ps-lg-0 justify-content-start justify-content-md-end justify-content-lg-start align-content-center h-100">
+              <div class="text-center">
+                <div class="cover-data">{{ sights_cnt }}</div>
+                <svg class="bg-cover-data" viewBox="0 0 200 313" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <use fill="#3A9488" href="{% static 'img/sprite.svg' %}#bg-cover-stroke"></use>
+                  <use fill="url(#bg-cover-green)" href="{% static 'img/sprite.svg' %}#bg-cover"></use>
+                  <use href="{% static 'img/sprite.svg' %}#bg-cover-shadow"></use>
+                  <use fill="url(#bg-cover-base-green)" href="{% static 'img/sprite.svg' %}#bg-cover-base"></use>
+                  <use href="{% static 'img/sprite.svg' %}#cover-text-sights"></use>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-block features">
+        <div class="container h-100">
+          <div class="row title h-25">
+            <div class="col mt-5 mt-lg-0">
+              <h2 class="text-white">Особенности</h2>
+            </div>
+          </div>
+          <div class="row content d-flex align-items-center h-75">
+            <div class="col-lg-4 mt-5 mt-lg-0 pe-3">
+                <svg class="feature-icon me-2" viewBox="0 0 160 180">
+                  <use href="{% static 'img/sprite.svg' %}#bg_red_circle"></use>
+                  <circle cx="81" cy="75" r="65" fill="url(#bg-red)"/>
+                  <use href="{% static 'img/sprite.svg' %}#medal"></use>
+                </svg>
+                <div class="feature">
+                  <h3 class="text-red">Доказанная эффективность</h3>
+                  <p>Наша сервис внедрен и&nbsp;работает в&nbsp;25&nbsp;регионах России. Сервис позволил разработать стратегии развития туризма и&nbsp;повысить туристический поток в&nbsp;регионах</p>
+              </div>
+            </div>
+            <div class="col-lg-4 mt-5 mt-lg-0 pe-3">
+              <svg class="feature-icon me-2" viewBox="0 0 160 180">
+                <use href="{% static 'img/sprite.svg' %}#bg_green_circle"></use>
+                <circle cx="81" cy="75" r="65" fill="url(#bg-green)"/>
+                <use href="{% static 'img/sprite.svg' %}#cost"></use>
+              </svg>
+              <div class="feature">
+                <h3 class="text-green">Демократичные цены</h3>
+                <p>В отличие от&nbsp;аналитических систем, представленных на&nbsp;рынке, мы предлагаем сервис по&nbsp;доступной цене. Базовый доступ останется бесплатным</p>
+              </div>
+            </div>
+            <div class="col-lg-4 mt-5 mt-lg-0 pe-3 mb-5 mb-lg-0">
+              <svg class="feature-icon me-2" viewBox="0 0 160 180">
+                <use href="{% static 'img/sprite.svg' %}#bg_yellow_circle"></use>
+                <circle cx="81" cy="75" r="65" fill="url(#bg-yellow)"/>
+                <use href="{% static 'img/sprite.svg' %}#instantly"></use>
+              </svg>
+              <div class="feature">
+                <h3 class="text-yellow">Мгновенное подключение</h3>
+                <p>Работа с&nbsp;нашей аналитикой начинается сразу после регистрации и&nbsp;выбора тарифа. Чтобы начать работу не&nbsp;нужны долгие переговоры и&nbsp;ввод сервиса в&nbsp;эксплуатацию</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-block reviews">
+        <div class="container h-100">
+          <div class="row title h-25">
+            <div class="col mt-5 mt-lg-0">
+              <h2 class="d-inline-block">Пользователи о нас</h2>
+            </div>
+          </div>
+          <div class="row content d-flex align-items-center h-75">
+            <div class="row">
+              <div id="reviewsCarousel" class="carousel carousel-dark slide" data-bs-touch="false" data-bs-interval="false">
+                <div class="carousel-inner">
+                  <div class="carousel-item py-3 active">
+                    <div class="d-flex justify-content-center">
+                      <div class="bg-white p-3 p-lg-5 review mb-5 mb-lg-0 w-75">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-12 col-lg-4">
+                              <img class="photo w-100" src="{% static 'img/photo_goreglyad.jpg' %}">
+                              <h3 class="mt-3 fw-bold">Людмила Горегляд</h3>
+                              <p class="title mb-1">директор центра развития туризма и&nbsp;культуры</p>
+                              <small>Липецкая область</small>
+                            </div>
+                            <div class="col-12 col-lg-8 mt-4 mt-lg-0 quote-container">
+                              <blockquote class="px-0">
+                                Нам требовалось решение, позволяющее составить цифровой портрет туриста и&nbsp;выстраивать на&nbsp;его основе маркетинговую стратегию продвижения региона на&nbsp;туристском рынке.
+                                <p class="mt-3">Внедряя «Анализ цифрового следа туриста» мы&nbsp;решали следующие проблемы: низкая осведомленность потенциальной туристической аудитории, присутствующей в&nbsp;цифровом пространстве о&nbsp;туристических предложениях Липецкой области; недостаточность инструментария для&nbsp;проведения оценки объёма потенциальной целевой аудитории для&nbsp;автоматической разбивки её&nbsp;на&nbsp;группы и&nbsp;оценки спроса на&nbsp;конкретные туристические услуги; отсутствие аналитики по&nbsp;показателям нормализованного цифрового присутствия по&nbsp;регионам, его&nbsp;изменения, объема аудитории. </p>
+                              <p class="mt-3">Благодаря данным решения мы&nbsp;выявили новую целевую аудиторию, заинтересованную в&nbsp;туристических поездках, провели маркетинговую кампанию, что позволило увеличить туристический поток на&nbsp;20% по&nbsp;сравнению с&nbsp;предыдущим годом. </p>
+                              </blockquote>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-item py-3">
+                    <div class="d-flex justify-content-center">
+                      <div class="bg-white p-3 p-lg-5 review mb-5 mb-lg-0 w-75">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-12 col-lg-4">
+                              <img class="photo w-100" src="{% static 'img/photo_fetisov.jpg' %}">
+                              <h3 class="mt-3 fw-bold">Игорь Фетисов</h3>
+                              <p class="title mb-1">министр информационных технологий и&nbsp;связи</p>
+                              <small>Челябинская область</small>
+                            </div>
+                            <div class="col-12 col-lg-8 mt-4 mt-lg-0 quote-container">
+                              <blockquote class="px-0">
+                                Туристический потенциал Челябинской области по-настоящему велик, но&nbsp;не&nbsp;до&nbsp;конца реализован. Наша задача — сделать Южный Урал «туристической Меккой», и&nbsp;«Анализ цифрового следа туриста» был создан чтобы приблизить нас к&nbsp;нашей цели. Он позволяет оптимизировать затраты на&nbsp;продвижение туристических ресурсов региона, рекламировать туристические объекты Челябинской области представителям различных групп населения в&nbsp;зависимости от&nbsp;местоположения, пола, возраста, семейного статуса, наличия детей, а&nbsp;также исходя из&nbsp;их&nbsp;интересов и&nbsp;дохода.<br>
+                              <p class="mt-3">Решение позволит региону привлечь как можно больше внутренних и&nbsp;внешних туристов, которые по&nbsp;достоинству оценят красоту нашей области. </p>
+                              </blockquote>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-item py-3">
+                    <div class="d-flex justify-content-center">
+                      <div class="bg-white p-3 p-lg-5 review mb-5 mb-lg-0 w-75">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-12 col-lg-4">
+                              <img class="photo w-100" src="{% static 'img/photo_djarimova.jpg' %}">
+                              <h3 class="mt-3 fw-bold">Бэла Джаримова</h3>
+                              <p class="title mb-1">заместитель председателя Комитета Республики Адыгея по&nbsp;туризму и&nbsp;курортам</p>
+                              <small>Республика Адыгея</small>
+                            </div>
+                            <div class="col-12 col-lg-8 mt-4 mt-lg-0 quote-container">
+                              <blockquote class="px-0">
+                                Одной из задач нового национального проекта «Туризм и&nbsp;индустрия гостеприимства» является совершенствование государственного управления в&nbsp;сфере туризма на&nbsp;основе цифровых решений. Комитет Республики Адыгея по&nbsp;туризму и&nbsp;курортам внедрил практику «Анализ цифрового следа туриста». В&nbsp;результате работы с&nbsp;решением подтвердили ранние данные мониторинга туристского потока. При&nbsp;дальнейшем использовании решение четко отразило сезонную динамику спроса на&nbsp;поездки в&nbsp;Адыгею.
+                                <p class="mt-3">Решение имеет удобный простой интерфейс, аналитические данные регулярно обновляются. Существует техническая возможность предоставления доступа в&nbsp;личный кабинет представителям бизнеса Республики Адыгея. Вместе с&nbsp;этим, Комитет регулярно размещает данные аналитики на&nbsp;своих страницах в&nbsp;социальных сетях, чтобы и&nbsp;туристический бизнес видел тренды и&nbsp;фокус туристского спроса. Это помогает им&nbsp;не&nbsp;только спланировать рекламные кампании, но&nbsp;и&nbsp;скорректировать количество и&nbsp;качество предоставляемых услуг.</p>
+                              <p class="mt-3">Использование приложения позволяет легче планировать и&nbsp;принимать стратегические решения в&nbsp;направлениях туризма в&nbsp;регионе.</p>
+                              </blockquote>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Предыдущий</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Следующий</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-block faq">
+        <div class="container h-100">
+          <div class="row title h-25">
+            <div class="col mt-5 mt-lg-0">
+              <h2 class="d-inline-block">Вопросы и&nbsp;ответы</h2>
+            </div>
+          </div>
+          <div class="row content d-flex justify-content-center align-items-center h-75">
+            <div class="accordion w-75 mt-4 mb-5" id="FAQ">
+              <div class="accordion-item">
+                <h3 class="accordion-header" id="headingZero">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
+                    Какие регионы охватывает сервис?
+                  </button>
+                </h3>
+                <div id="collapseZero" class="accordion-collapse collapse show" aria-labelledby="headingZero" data-bs-parent="#FAQ">
+                  <div class="accordion-body">
+                    Сервис охватывает регионы Российской Федерации
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header" id="headingOne">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Какие данные есть в&nbsp;системе?
+                  </button>
+                </h3>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#FAQ">
+                  <div class="accordion-body">
+                    В&nbsp;системе есть данные об&nbsp;интересе к&nbsp;туристическим продуктам, информация об&nbsp;объеме и&nbsp;характеристиках потенциальной аудитории в&nbsp;сфере туризма, а&nbsp;также рейтинги регионов, городов и&nbsp;точек притяжения
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Какие виды туризма охватывает сервис?
+                  </button>
+                </h3>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#FAQ">
+                  <div class="accordion-body">
+                    <div class="container mt-1 mb-2">
+                      <div class="row">
+                        <div class="col-12 col-lg-5 offset-lg-1">
+                          <ul class="list-unstyled mb-0">
+                          {% for t in tourism_types|slice:tourism_types_col_qty %}
+                            <li class="mt-2"><svg width="24" height="24" class="me-1"><use href="{% static 'img/sprite.svg' %}#{{ t.0 }}"></use></svg>{{ t.1 }}</li>
+                          {% endfor %}
+                          </ul>
+                        </div>
+                        <div class="col-12 col-lg-5">
+                          <ul class="list-unstyled mb-0">
+                          {% with t_slice=tourism_types_col_qty|add:":" %}
+                            {% for t in tourism_types|slice:t_slice %}
+                              <li class="mt-2"><svg width="24" height="24" class="me-1"><use href="{% static 'img/sprite.svg' %}#{{ t.0 }}"></use></svg>{{ t.1 }}</li>
+                            {% endfor %}
+                          {% endwith %}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header" id="headingThree">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Какие источники данных используются?
+                  </button>
+                </h3>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#FAQ">
+                  <div class="accordion-body">
+                    Для построения отчетов использует цифровой след туриста в&nbsp;Интернет: открытые данные и&nbsp;данные социальных сетей
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header" id="headingFour">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    Чем отличаются бесплатная и&nbsp;платная версия?
+                  </button>
+                </h3>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#FAQ">
+                  <div class="accordion-body">
+                    В&nbsp;бесплатной версии те&nbsp;же&nbsp;отчеты, что и&nbsp;в&nbsp;платной, но отсутствует разбивка по&nbsp;городам и&nbsp;точкам притяжения
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header" id="headingFive">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    От&nbsp;чего зависит стоимость подписки?
+                  </button>
+                </h3>
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#FAQ">
+                  <div class="accordion-body">
+                    Стоимость зависит от&nbsp;ранга региона по&nbsp;туристическому потенциалу. Чтобы узнать ранг интересующего региона и&nbsp;стоимость, <a href="{% url 'region' %}">войдите&nbsp;в&nbsp;систему</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid px-0">
+      <div class="row develop-tourism-with-acesta">
+        <div class="col-8 offset-2 offset-sm-4 col-md-6 offset-md-6 d-flex align-items-center">
+          <div class="content">
+            <h3 class="w-75">Развивайте туристическую сферу и&nbsp;бизнес вместе с&nbsp;нами!</h3>
+            <a class="btn btn-accent btn-lg mt-4 mb-5 px-5 text-nowrap" href="{% url 'region' %}"><svg fill="#FFFFFF" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
+          </div>
+        </div>
+      </div>
+      {% include 'include/footer.html' %}
+    </div>
+  </div>
+{% endblock %}
