@@ -1,0 +1,18 @@
+- model: geo.region
+  pk: '01'
+  fields:
+    created: 2020-12-24 07:47:29.949864+00:00
+    modified: 2023-01-05 09:47:55.571080+00:00
+    _id: 0
+    region: Республика Адыгея
+    title: Республика Адыгея
+    is_pub: true
+- model: geo.region
+  pk: '02'
+  fields:
+    created: 2020-12-24 07:47:29.949864+00:00
+    modified: 2023-01-05 09:51:06.874536+00:00
+    _id: 1
+    region: Республика Башкортостан
+    title: Республика Башкортостан
+    is_pub: true
