@@ -1,0 +1,14 @@
+<script>
+  {% for message in messages %}
+    {% autoescape off %}
+    $.toast({
+      text: '{{ message }}',
+      showHideTransition: 'slide',
+      allowToastClose: false,
+      icon: '{{ message.tags }}',
+      loaderBg: '#FAC969',
+      position: 'top-center',
+    })
+    {% endautoescape %}
+  {% endfor %}
+</script>

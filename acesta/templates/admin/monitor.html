@@ -1,0 +1,138 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}">{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <div class="container-fluid px-0">
+    <h2 class="fs-6 mt-2 text-info" style="transform:translateX(-.3em)">Точки притяжения</h2>
+    <div class="row mt-0">
+      <div class="col-12 col-md-6 overflow-auto ps-0" style="height: 22vh;">
+        <table class="table table-hover table-responsive">
+          <tr style="position:sticky;top:0;z-index:1;">
+            <th width="220"><a href="{% url 'monitor' sort='sights_code' %}">Регион</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='sights_qty' %}">Всего</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='sights_not_checked' %}">Не проверенные</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='sights_empty_kernels' %}">Пустые ядра</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='sights_old_kernels' %}">Старые ядра</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='sights_not_in_region' %}">Вне региона</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='sights_empty_titles' %}">Пустые названия</a></th>
+          </tr>
+          {% for code, data in sights.items %}
+          <tr>
+            <td>{{ code }} {{ data.title }}</td>
+            <td class="text-end">{{ data.qty }}</td>
+            <td class="text-end{% if data.not_checked != 0%} text-white bg-danger fw-bold{% endif %}">{{ data.not_checked }}</td>
+            <td class="text-end{% if data.empty_kernels != 0%} text-white bg-danger fw-bold{% endif %}">{{ data.empty_kernels }}</td>
+            <td class="text-end{% if data.old_kernels != 0%} text-white bg-danger fw-bold{% endif %}">{{ data.old_kernels }}</td>
+            <td class="text-end{% if data.not_in_region != 0%} text-white bg-danger fw-bold{% endif %}">{{ data.not_in_region }}</td>
+            <td class="text-end{% if data.empty_titles != 0%} text-white bg-danger fw-bold{% endif %}">{{ data.empty_titles }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="col-12 col-md-6 overflow-auto pe-0" style="height: 22vh;">
+        <table class="table table-hover table-responsive">
+          <tr style="position:sticky;top:0;z-index:1;">
+            <th width="220"><a href="{% url 'monitor' sort='suspicious_kernels_code' %}">Регион</a> ({{ suspicious_kernels|length }})</th>
+            <th class="text-end"><a href="{% url 'monitor' sort='suspicious_kernels_sight_id' %}">id</a></th>
+            <th><a href="{% url 'monitor' sort='suspicious_kernels_query' %}">Запрос</a></th>
+            <th><a href="{% url 'monitor' sort='suspicious_kernels_kernel' %}">Ядро</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='suspicious_kernels_ratio' %}">Совпадение</a></th>
+          </tr>
+          {% for sight in suspicious_kernels %}
+          <tr>
+            <td>{{ sight.code }} {{ sight.title }}</td>
+            <td class="text-end">{{ sight.sight_id|stringformat:"i" }}</td>
+            <td>{{ sight.query }}</td>
+            <td>{{ sight.kernel.0 }}</td>
+            <td class="text-end text-white bg-danger fw-bold">{{ sight.ratio|floatformat:'3' }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+    <h2 class="fs-6 mt-4 text-info" style="transform:translateX(-.3em)">Популярность</h2>
+    <div class="row mt-0">
+      <div class="col-12 col-md-6 overflow-auto ps-0" style="height: 22vh;">
+        <table class="table table-hover table-responsive">
+          <tr style="position:sticky;top:0;z-index:1;">
+            <th width="220"><a href="{% url 'monitor' sort='ppt_code' %}">Регион</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='ppt_wrong_region' %}">Неправильный регион</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='ppt_no_data' %}">Точек без данных</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='ppt_old_data' %}">Точек со старыми данными</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='ppt_few_queries' %}">Заниженные запросы</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='ppt_many_queries' %}">Завышенные запросы</a></th>
+          </tr>
+          {% for code, data in ppt.items %}
+          <tr>
+            <td>{{ code }} {{ data.title }}</td>
+            <td class="text-end{% if data.wrong_region != 0%} text-white bg-danger fw-bold{% endif %}">{{ data.wrong_region }}</td>
+            <td class="text-end{% if data.no_data != 0%} text-white bg-danger fw-bold{% endif %}">{{ data.no_data }}</td>
+            <td class="text-end{% if data.old_data != 0%} text-white bg-danger fw-bold{% endif %}">{{ data.old_data }}</td>
+            <td class="text-end{% if data.few_queries != 0%} text-white bg-danger fw-bold{% endif %}">
+              {{ data.few_queries }}
+            </td>
+            <td class="text-end{% if data.many_queries != 0%} text-white bg-danger fw-bold{% endif %}">
+              {{ data.many_queries }}
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="col-12 col-md-6 overflow-auto pe-0" style="height: 22vh;">
+        <table class="table table-hover table-responsive">
+          <tr style="position:sticky;top:0;z-index:1;">
+            <th width="220"><a href="{% url 'monitor' sort='suspicious_queries_code' %}">Регион</a> ({{ suspicious_queries|length }})</th>
+            <th class="text-end"><a href="{% url 'monitor' sort='suspicious_queries_sight_id' %}">id</a></th>
+            <th><a href="{% url 'monitor' sort='suspicious_queries_sight_title' %}">Название</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='suspicious_queries_kernel' %}">Ядро</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='suspicious_queries_qty' %}">Запросы</a> </th>
+          </tr>
+          {% for sight in suspicious_queries %}
+          <tr>
+            <td>{{ sight.code }} {{ sight.title }}</td>
+            <td class="text-end">{{ sight.sight_id|stringformat:"i" }}</td>
+            <td class="text-white bg-danger fw-bold">{{ sight.sight_title }}</td>
+            <td class="text-end">{{ sight.kernel }}</td>
+            <td class="text-end">{{ sight.qty }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+    <h2 class="fs-6 mt-4 text-info" style="transform:translateX(-.3em)">Аудитория</h2>
+    <div class="row mt-0 overflow-auto" style="height:22vh;">
+      <div class="col px-0">
+        <table class="table table-hover table-responsive">
+          <tr style="position:sticky;top:0;z-index:1;">
+            <th width="220"><a href="{% url 'monitor' sort='audience_code' %}">Регион</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='audience_old_data_region' %}">Старые данные в регионах</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='audience_old_data_cities' %}">Старые данные в городах</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='audience_no_data_region' %}">Регион без данных</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='audience_no_data_city' %}">Города без данных</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='audience_empty_city' %}">Пустые города</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='audience_coeff' %}">Коэффициент в регионе</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='audience_bad_coeff' %}">Коэффициенты не совпадают в регионе</a></th>
+            <th class="text-end"><a href="{% url 'monitor' sort='audience_bad_coeff_city' %}">Коэффициенты не совпадают в городах</a></th>
+          </tr>
+          {% for code, data in audience.items %}
+          <tr>
+            <td>{{ code }} {{ data.title }}</td>
+            <td class="text-end{% if data.old_data_region != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.old_data_region }}</td>
+            <td class="text-end{% if data.old_data_cities != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.old_data_cities }}</td>
+            <td class="text-end{% if data.no_data_region != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.no_data_region }}</td>
+            <td class="text-end{% if data.no_data_city != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.no_data_city }}</td>
+            <td class="text-end{% if data.empty_city != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.empty_city }}</td>
+            <td class="text-end">{{ data.coeff|floatformat:2 }}</td>
+            <td class="text-end{% if data.bad_coeff != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.bad_coeff }}</td>
+            <td class="text-end{% if data.bad_coeff_city != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.bad_coeff_city }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

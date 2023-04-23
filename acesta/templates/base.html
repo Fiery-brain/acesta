@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}{{ TITLE }}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/toast.css' %}">
+    {% block css_external %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block css %}{% endblock %}
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+  </head>
+  <body>
+    {% block modals %}{% endblock %}
+    {% block body %}{% endblock %}
+    {% block js %}
+      <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+      <script src="{% static 'js/jquery.min.js' %}"></script>
+      <script src="{% static 'js/jquery.cookie.min.js' %}"></script>
+      <script src="{% static 'js/size.to.cookie.js' %}"></script>
+      <script src="{% static 'js/tooltip.js' %}"></script>
+      <script src="{% static 'js/toast.min.js' %}"></script>
+      {% if messages %}
+        {% include "include/messages.html" %}
+      {% endif %}
+      {% include "include/metrika.html" %}
+    {% endblock %}
+  </body>
+</html>

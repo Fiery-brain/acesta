@@ -1,0 +1,28 @@
+{% load static %}
+<div class="place-block {{ border_class_base }}{{ border_class }} d-inline-flex flex-column justify-content-between">
+  <div class="place-container">
+    <div class="d-flex flex-nowrap justify-content-between">
+      <div class="p-1 d-inline-flex flex-nowrap">
+        <div class="d-inline-block {{ text_class_base }}{{ text_class }} place_value me-1">{{ value }}</div>
+        <div class=" d-inline-block">
+          <div class="place_total">
+            {% if total %}
+              из {{ total }}
+            {% endif %}
+          </div>
+          <div>
+            <span class="{{ text_class_base }}{{ text_class }} place_value_name">{{ value_name }}</span>
+          </div>
+        </div>
+      </div>
+      {% if tooltip_text %}
+        <div>
+          <a href="#" data-bs-toggle="tooltip" title="{{ tooltip_text }}"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="place_description">
+    {{ desc }}
+  </div>
+</div>

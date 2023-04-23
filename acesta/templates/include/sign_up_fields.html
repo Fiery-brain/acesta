@@ -1,0 +1,71 @@
+{% load static %}
+{% load i18n %}
+
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <div class="form-floating mb-2">
+        <select class="form-select" required name="region" id="inputRegion" autocomplete="newRegion">
+          {% for id, region in form.region.field.choices %}
+            <option value="{{ id }}"{% if form.region.value == id %} selected{% endif %}>{{ region }}</option>
+          {% endfor %}
+        </select>
+        <label for="inputRegion">Домашний регион</label>
+      </div>
+      <div class="form-floating mb-2">
+        <input type="email" required class="form-control{% if form.errors %} is-invalid{% endif %}" name="email" id="inputEmail" value="{{ form.email.value|default_if_none:'' }}">
+        <label for="inputEmail" class="form-label">Email</label>
+        {% if form.errors %}
+          <div class="invalid-feedback">Email уже используется</div>
+        {% endif %}
+      </div>
+      <div class="form-floating mb-2">
+        <input type="text" required class="form-control" name="last_name" id="inputLastName" pattern="[А-Яа-яЁё ]+" value="{{ form.last_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
+        <label for="inputLastName" class="form-label">Фамилия</label>
+      </div>
+      <div class="form-floating mb-2">
+        <input type="text" required class="form-control" name="first_name" id="inputFirstName" pattern="[А-Яа-яЁё ]+" value="{{ form.first_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
+        <label for="inputFirstName" class="form-label">Имя</label>
+      </div>
+      <div class="form-floating mb-2">
+        <input type="text" required class="form-control" name="middle_name" id="inputMiddleName" pattern="[А-Яа-яЁё ]+" value="{{ form.middle_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
+        <label for="inputMiddleName" class="form-label">Отчество</label>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="form-floating mb-2">
+        <input type="text" class="form-control" name="company" id="inputCompany" value="{{ form.company.value|default_if_none:'' }}">
+        <label for="inputCompany" class="form-label">Компания (не обязательно)</label>
+      </div>
+      <div class="form-floating mb-2">
+        <input type="text" class="form-control" name="position" id="inputPosition" value="{{ form.position.value|default_if_none:'' }}">
+        <label for="inputPosition" class="form-label">Должность (не обязательно)</label>
+      </div>
+      <div class="form-floating mb-2">
+        <input type="tel" pattern="\+[0-9]\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" class="form-control" name="phone" id="inputPhone" title="Телефон" data-mask="+0(000) 000-00-00" value="{{ form.phone.value|default_if_none:'' }}">
+        <label for="inputPhone" class="form-label">Телефон (не обязательно)</label>
+      </div>
+      <div class="form-floating mb-2">
+        <select class="form-select" name="city" id="inputCity">
+          {% for id, city in form.city.field.choices %}
+            <option value="{{ id }}"{% if form.city.value == id %} selected{% endif %}>{{ city }}</option>
+          {% endfor %}
+        </select>
+        <label for="inputCity">Город (не обязательно)</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="password" required class="form-control" name="password1" id="inputEmailPassword">
+        <label for="inputEmailPassword" class="form-label">Пароль</label>
+      </div>
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-md-8">
+      Регистрируясь на&nbsp;сайте вы соглашаетесь с&nbsp;<a href="{% url 'terms' %}">Условиями использования</a> и&nbsp;<a href="{% url 'privacy' %}">Политикой конфиденциальности</a>
+    </div>
+    <div class="col-12 col-md-4 d-lg-flex justify-content-lg-end mt-3 mt-lg-0">
+      <button type="submit" class="btn btn-primary btn-lg px-4"><svg fill="#FFFFFF" width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#sign-up"></use></svg>Зарегистрироваться</button>
+    </div>
+  </div>

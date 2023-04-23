@@ -1,0 +1,15 @@
+{% extends "admin/index.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div id="content-main">
+<div class="app-monitor module">
+      <table width="100%">
+        <caption>
+          <a href="{% url 'monitor' %}" class="section" title="Монитор">Монитор</a>
+        </caption>
+      </table>
+    </div>
+  {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+</div>
+{% endblock %}
