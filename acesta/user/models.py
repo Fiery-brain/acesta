@@ -223,7 +223,7 @@ class Order(TimeStampedModel):
         regions = Region.objects.filter(code__in=regions_list)
         cost = 0
         for region in regions:
-            cost += period * settings.PRICES.get(f"rank_{region.rank}")
+            cost += period * settings.PRICES.get(f"rank_{region.rank}", 0)
         return cost
 
     @staticmethod
@@ -235,9 +235,9 @@ class Order(TimeStampedModel):
         """
         discount = 0
         if 6 <= period < 12:
-            discount = settings.PRICES.get("gt_6_discount")
+            discount = settings.PRICES.get("gt_6_discount", 0)
         elif period >= 12:
-            discount = settings.PRICES.get("gt_12_discount")
+            discount = settings.PRICES.get("gt_12_discount", 0)
         return discount
 
     @staticmethod

@@ -6,6 +6,7 @@
     _id: 0
     region: Республика Адыгея
     title: Республика Адыгея
+    rank: 0
     is_pub: true
 - model: geo.region
   pk: '02'
@@ -15,4 +16,5 @@
     _id: 1
     region: Республика Башкортостан
     title: Республика Башкортостан
+    rank: 0
     is_pub: true
