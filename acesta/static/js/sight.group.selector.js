@@ -6,10 +6,10 @@ $("#groupType").select2({
     },
   },
   templateResult: function (group) {
-    return $("<span class='option " + group.id + "'>" + group.text + "</span>");
+    return $("<span class='option bg-" + group.id + "'>" + group.text + "</span>");
   },
   templateSelection: function (group) {
-    return $("<span class='option " + group.id + "'>" + group.text + "</span>");
+    return $("<span class='option bg-" + group.id + "'>" + group.text + "</span>");
   },
 });
 

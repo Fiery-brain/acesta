@@ -1,0 +1,473 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;1,200;1,300;1,400;1,600;1,700&display=swap');
+:root{
+    --acesta-text-primary:#212529;
+    --acesta-text-secondary:#959090;
+    --acesta-primary:#429388;
+    --acesta-dark-primary:#34766A;
+    --acesta-very-dark-primary:#244F47;
+    --acesta-light-primary:#B2DFDB;
+    --acesta-accent-secondary:#fab222;
+    --acesta-accent-primary:#C44D63;
+    --acesta-accent-primary-dark:#ad223c;
+    --acesta-divider:#DCDCDC;
+    --acesta-bg:#f8f9fc;
+
+    --acesta-rank0:#959090;
+    --acesta-rank1:#7B8986;
+    --acesta-rank2:#66847E;
+    --acesta-rank3:#517E76;
+    --acesta-rank4:#34766A;
+
+    --acesta-recreation:#499587;
+    --acesta-excursion:#B3B476;
+    --acesta-beach:#FFD27A;
+    --acesta-shop:#FFC669;
+    --acesta-pilgrimage:#F6B65F;
+    --acesta-outdoor:#E89E68;
+    --acesta-spa:#DC8566;
+    --acesta-museum:#D57465;
+    --acesta-theatre:#D1615A;
+    --acesta-extreme:#C65264;
+
+    --acesta-manufactures:#479095;
+    --acesta-lakes:#499587;
+    --acesta-mount:#549985;
+    --acesta-nationalparks:#609C83;
+    --acesta-parks:#6DA081;
+    --acesta-reserves:#78A380;
+    --acesta-volcano:#83A67E;
+    --acesta-waterfall:#90AA7C;
+    --acesta-bridges:#9DAE79;
+    --acesta-castles:#A8B177;
+    --acesta-fountains:#B3B476;
+    --acesta-placeofinterest:#BFB874;
+    --acesta-skyscrapers:#CCBC71;
+    --acesta-squares:#D7BF70;
+    --acesta-viewpoints:#E2C26E;
+    --acesta-zoo:#EFC66B;
+    --acesta-beachs:#FFD27A;
+    --acesta-shops:#F6C069;
+    --acesta-temples:#F3B869;
+    --acesta-cinema:#EFB068;
+    --acesta-nightclubs:#EBA768;
+    --acesta-parades:#E89E68;
+    --acesta-parks_ent:#E49667;
+    --acesta-resort:#E08D67;
+    --acesta-artgallery:#D97D66;
+    --acesta-theatres:#D16B65;
+    --acesta-active:#CE6365;
+    --acesta-snow:#CA5A64;
+    --acesta-sport:#C65264;
+    --acesta-industry:#479095;
+
+    --acesta-border-light:#e2e1e1;
+}
+body{background-color:#0C4940}
+h1{font-size:32px; color:var(--acesta-text-primary);font-weight:600}
+h2{font-size:24px; color:var(--acesta-text-primary);font-weight:600}
+h3{font-size:20px; font-weight:600; color:var(--acesta-text-primary)}
+a{color:var(--acesta-dark-primary)}
+a:hover{color:var(--acesta-primary)}
+a:not(.navbar-brand){text-decoration:none; opacity:.85}
+a[type*="button"]:hover{text-decoration:underline; opacity:1}
+
+.nav{
+    --bs-nav-link-color:var(--acesta-dark-primary);
+    --bs-nav-link-hover-color:var(--acesta-primary)
+}
+.nav-pills .nav-link.active{
+    color:var(--acesta-dark-primary);
+    font-weight:700;
+    background-color:inherit!important;
+}
+.nav-pills .nav-link.active:hover{text-decoration:none;color:var(--acesta-dark-primary);cursor:default}
+.tab-content .tab-pane{padding-top:.5em}
+
+.text-rank0{color:var(--acesta-rank0)!important}
+.text-rank1{color:var(--acesta-rank1)!important}
+.text-rank2{color:var(--acesta-rank2)!important}
+.text-rank3{color:var(--acesta-rank3)!important}
+.text-rank4{color:var(--acesta-rank4)!important}
+
+.text-beach{color:var(--acesta-beach)}
+.text-excursion{color:var(--acesta-excursion)}
+.text-extreme{color:var(--acesta-extreme)}
+.text-industry{color:var(--acesta-industry)}
+.text-museum{color:var(--acesta-museum)}
+.text-outdoor{color:var(--acesta-outdoor)}
+.text-pilgrimage{color:var(--acesta-pilgrimage)}
+.text-recreation{color:var(--acesta-recreation)}
+.text-shopping{color:var(--acesta-shops)}
+.text-spa{color:var(--acesta-spa)}
+.text-theatre{color:var(--acesta-theatre)}
+
+.text-accent-primary{color:var( --acesta-accent-primary)!important}
+.text-accent-secondary{color:var( --acesta-accent-secondary)!important}
+
+.text-lakes{color:var(--acesta-lakes)!important}
+.text-mount{color:var(--acesta-mount)!important}
+.text-nationalparks{color:var(--acesta-nationalparks)!important}
+.text-parks{color:var(--acesta-parks)!important}
+.text-reserves{color:var(--acesta-reserves)!important}
+.text-volcano{color:var(--acesta-volcano)!important}
+.text-waterfall{color:var(--acesta-waterfall)!important}
+.text-bridges{color:var(--acesta-bridges)!important}
+.text-castles{color:var(--acesta-castles)!important}
+.text-fountains{color:var(--acesta-fountains)!important}
+.text-placeofinterest{color:var(--acesta-placeofinterest)!important}
+.text-skyscrapers{color:var(--acesta-skyscrapers)!important}
+.text-squares{color:var(--acesta-squares)!important}
+.text-viewpoints{color:var(--acesta-viewpoints)!important}
+.text-zoo{color:var(--acesta-zoo)!important}
+.text-beachs{color:var(--acesta-beachs)!important}
+.text-shops{color:var(--acesta-shops)!important}
+.text-temples{color:var(--acesta-temples)!important}
+.text-cinema{color:var(--acesta-cinema)!important}
+.text-nightclubs{color:var(--acesta-nightclubs)!important}
+.text-parades{color:var(--acesta-parades)!important}
+.text-parks_ent{color:var(--acesta-parks_ent)!important}
+.text-resort{color:var(--acesta-resort)!important}
+.text-spa{color:var(--acesta-spa)!important}
+.text-artgallery{color:var(--acesta-artgallery)!important}
+.text-museum{color:var(--acesta-museum)!important}
+.text-theatres{color:var(--acesta-theatres)!important}
+.text-active{color:var(--acesta-active)!important}
+.text-snow{color:var(--acesta-snow)!important}
+.text-sport{color:var(--acesta-sport)!important}
+.text-manufactures{color:var(--acesta-manufactures)}
+
+.border-rank0{border-color:var(--acesta-rank0)!important}
+.border-rank1{border-color:var(--acesta-rank1)!important}
+.border-rank2{border-color:var(--acesta-rank2)!important}
+.border-rank3{border-color:var(--acesta-rank3)!important}
+.border-rank4{border-color:var(--acesta-rank4)!important}
+
+.border-accent-primary{border-color:var( --acesta-accent-primary)!important}
+.border-accent-secondary{border-color:var( --acesta-accent-secondary)!important}
+
+.border-lakes{border-color:var(--acesta-lakes)!important}
+.border-mount{border-color:var(--acesta-mount)!important}
+.border-nationalparks{border-color:var(--acesta-nationalparks)!important}
+.border-parks{border-color:var(--acesta-parks)!important}
+.border-reserves{border-color:var(--acesta-reserves)!important}
+.border-volcano{border-color:var(--acesta-volcano)!important}
+.border-waterfall{border-color:var(--acesta-waterfall)!important}
+.border-bridges{border-color:var(--acesta-bridges)!important}
+.border-castles{border-color:var(--acesta-castles)!important}
+.border-fountains{border-color:var(--acesta-fountains)!important}
+.border-placeofinterest{border-color:var(--acesta-placeofinterest)!important}
+.border-skyscapers{border-color:var(--acesta-skyscapers)!important}
+.border-squares{border-color:var(--acesta-squares)!important}
+.border-viewpoints{border-color:var(--acesta-viewpoints)!important}
+.border-zoo{border-color:var(--acesta-zoo)!important}
+.border-beachs{border-color:var(--acesta-beachs)!important}
+.border-shops{border-color:var(--acesta-shops)!important}
+.border-temples{border-color:var(--acesta-temples)!important}
+.border-cinema{border-color:var(--acesta-cinema)!important}
+.border-nightclubs{border-color:var(--acesta-nightclubs)!important}
+.border-parades{border-color:var(--acesta-parades)!important}
+.border-parks_ent{border-color:var(--acesta-parks_ent)!important}
+.border-resort{border-color:var(--acesta-resort)!important}
+.border-spa{border-color:var(--acesta-spa)!important}
+.border-artgallery{border-color:var(--acesta-artgallery)!important}
+.border-museum{border-color:var(--acesta-museum)!important}
+.border-theatres{border-color:var(--acesta-theatres)!important}
+.border-active{border-color:var(--acesta-active)!important}
+.border-snow{border-color:var(--acesta-snow)!important}
+.border-sport{border-color:var(--acesta-sport)!important}
+
+.border-beach{border-color:var(--acesta-beach)!important}
+.border-outdoor{border-color:var(--acesta-outdoor)!important}
+.border-pilgrimage{border-color:var(--acesta-pilgrimage)!important}
+.border-extreme{border-color:var(--acesta-extreme)!important}
+.border-theatre{border-color:var(--acesta-theatre)!important}
+.border-shopping{border-color:var(--acesta-shops)!important}
+.border-industry{border-color:var(--acesta-industry)!important}
+.border-recreation{border-color:var(--acesta-recreation)!important}
+.border-excursion{border-color:var(--acesta-excursion)!important}
+
+.rounded-top-left{border-top-left-radius:var(--bs-border-radius)!important}
+.rounded-top-right{border-top-right-radius:var(--bs-border-radius)!important}
+
+.bg-green{background-color:var(--acesta-dark-primary)}
+.bg-yellow{background-color:var(--acesta-accent-secondary)}
+.bg-red{background-color:var(--acesta-accent-primary-dark)}
+
+.bg-museum{background-image:url('../img/sprite.svg#museum')!important}
+.bg-spa{background-image:url('../img/sprite.svg#spa')!important}
+.bg-beach{background-image:url('../img/sprite.svg#beach')!important}
+.bg-outdoor{background-image:url('../img/sprite.svg#outdoor')!important}
+.bg-pilgrimage{background-image:url('../img/sprite.svg#pilgrimage')!important}
+.bg-industry{background-image:url('../img/sprite.svg#industry')!important}
+.bg-extreme{background-image:url('../img/sprite.svg#extreme')!important}
+.bg-theatre{background-image:url('../img/sprite.svg#theatre')!important}
+.bg-shopping{background-image:url('../img/sprite.svg#shopping')!important}
+.bg-recreation{background-image:url('../img/sprite.svg#recreation')!important}
+.bg-excursion{background-image:url('../img/sprite.svg#excursion')!important}
+
+.bg-active{background-image:url('../img/sprite.svg#active')!important}
+.bg-artgallery{background-image:url('../img/sprite.svg#artgallery')!important}
+.bg-beachs{background-image:url('../img/sprite.svg#beachs')!important}
+.bg-bridges{background-image:url('../img/sprite.svg#bridges')!important}
+.bg-castles{background-image:url('../img/sprite.svg#castles')!important}
+.bg-cinema{background-image:url('../img/sprite.svg#cinema')!important}
+.bg-fountains{background-image:url('../img/sprite.svg#fountains')!important}
+.bg-manufactures{background-image:url('../img/sprite.svg#manufactures')!important}
+.bg-lakes{background-image:url('../img/sprite.svg#lakes')!important}
+.bg-mount{background-image:url('../img/sprite.svg#mount')!important}
+.bg-nationalparks{background-image:url('../img/sprite.svg#nationalparks')!important}
+.bg-nightclubs{background-image:url('../img/sprite.svg#nightclubs')!important}
+.bg-parades{background-image:url('../img/sprite.svg#parades')!important}
+.bg-parks{background-image:url('../img/sprite.svg#parks')!important}
+.bg-parks_ent{background-image:url('../img/sprite.svg#parks_ent')!important}
+.bg-placeofinterest{background-image:url('../img/sprite.svg#placeofinterest')!important}
+.bg-reserves{background-image:url('../img/sprite.svg#reserves')!important}
+.bg-resort{background-image:url('../img/sprite.svg#resort')!important}
+.bg-shops{background-image:url('../img/sprite.svg#shops')}
+.bg-skyscrapers{background-image:url('../img/sprite.svg#skyscrapers')!important}
+.bg-snow{background-image:url('../img/sprite.svg#snow')!important}
+.bg-sport{background-image:url('../img/sprite.svg#sport')!important}
+.bg-squares{background-image:url('../img/sprite.svg#squares')!important}
+.bg-temples{background-image:url('../img/sprite.svg#temples')!important}
+.bg-theatres{background-image:url('../img/sprite.svg#theatres')!important}
+.bg-viewpoints{background-image:url('../img/sprite.svg#viewpoints')!important}
+.bg-volcano{background-image:url('../img/sprite.svg#volcano')!important}
+.bg-waterfall{background-image:url('../img/sprite.svg#waterfall')!important}
+.bg-zoo{background-image:url('../img/sprite.svg#zoo')!important}
+
+.bg-man{background-image:url('../img/sprite.svg#man')}
+.bg-woman{background-image:url('../img/sprite.svg#woman')}
+.bg-more{background-image:url('../img/sprite.svg#more')}
+
+.medal{border-radius:50%;font-weight:900;color:#605904}
+.bronze{background:linear-gradient(45deg, rgba(223,182,103,1) 0%,rgba(249,243,232,1) 56%,rgba(231,192,116,1) 96%); box-shadow:0 0 0 2px rgba(223,182,103,1)}
+.silver{background:linear-gradient(45deg, rgba(160,160,160,1) 0%,rgb(235, 235, 235) 56%, rgba(160,160,160,1) 96%);box-shadow:0 0 0 2px rgba(160,160,160,1)}
+.gold{background:linear-gradient(45deg, rgb(242, 185, 12) 0%,rgba(255,255,255,1) 56%,rgb(242, 185, 12) 96%);box-shadow:0 0 0 2px #f6cf5c}
+
+.table{    --bs-table-hover-bg:#fdfdfd}
+@keyframes show{0%{opacity:.5} 100%{opacity:1}}
+div{opacity:.5;transition:opacity 1s;animation:show .75s 1;animation-fill-mode:forwards}
+
+body{min-width:320px;width:auto !important;width:320px; color:var(--acesta-text-primary);font-family:Nunito,sans-serif}
+.wrapper{min-height:100vh;overflow-x:hidden}
+
+::-webkit-scrollbar {background:#f8f8f8;width:8px;height:8px}
+::-webkit-scrollbar-track {box-shadow:inset 0 0 8px #f8f8f8;border-radius:8px}
+::-webkit-scrollbar-thumb {background:#9f9f9f;border-radius:8px}
+::-webkit-scrollbar-thumb:hover {background:#bcbbbb}
+
+.jq-toast-wrap{width:320px}
+.jq-toast-single{font-family:Nunito,sans-serif;font-size:15px;overflow-wrap:break-word}
+.jq-icon-success{ background-color:#71AA46; color:#dff0d8; border-color:#d6e9c6}
+.jq-icon-error{background-color:#DF5346; color:#f2dede; border-color:#ebccd1}
+.jq-icon-warning{background-color:#DA8743; color:#fcf8e3; border-color:#faebcc}
+.jq-has-icon {padding:16px 16px 16px 64px;background-position:24px}
+
+.dropdown-toggle::after{vertical-align:.12em}
+.dropdown-item{padding-right:2em}
+th{background-color:#f7f7f7!important}
+.table-fixed-head thead th{ position:sticky; top:0; z-index:1; }
+
+.modal-header svg,
+.btn svg{transform:translateY(-2px)}
+.logo-muted{filter:grayscale(1);opacity:.8}
+.rounded-50{border-radius:50%}
+tr:last-child
+{border-bottom-style:hidden;
+}
+
+.tooltip-inner{color:var(--acesta-text-primary);background-color:#f8f8f8;-webkit-box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8);
+-moz-box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8);
+box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8);border:1px solid #ececec}
+.tooltip-arrow{color:#ececec}
+
+.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before,
+.bs-tooltip-bottom .tooltip-arrow::before{border-left-color:#ececec}
+
+.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+.bs-tooltip-bottom .tooltip-arrow::before{border-top-color:#ececec}
+
+.bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before,
+.bs-tooltip-bottom .tooltip-arrow::before{border-right-color:#ececec}
+
+.bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before,
+.bs-tooltip-bottom .tooltip-arrow::before{border-bottom-color:#ececec}
+
+.select2-dropdown{z-index:2000!important}
+.form-floating span.select2-selection.select2-selection--single {outline:none}
+.form-floating .select2-container--default.select2-container--focus .select2-selection--multiple{border-color:#ced4da}
+.form-floating .select2-container--default .select2-selection--single{height:58px;border-color:#ced4da}
+.form-floating .select2-container--default .select2-selection--multiple{padding-top:22px;border-color:#ced4da}
+.form-floating .select2-container--default .select2-selection--single .select2-selection__rendered{line-height:72px;padding-left:14px}
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable{background-color:#f4f4f4;color:var(--acesta-text-primary);font-weight:bolder}
+.select2-container{min-width:300px}
+.select2-container--default .select2-results__option--selected{font-weight:bolder;background:none!important}
+.select2-selection svg{position:relative;bottom:1px}
+.select2-container--default .select2-results__option--selected path{fill:var(--bs-white)}
+.select2-container--default .select2-selection--single {border-color:var(--acesta-border-light)}
+
+.btn-primary {
+    --bs-btn-color:#fff;
+    --bs-btn-bg:#429388;
+    --bs-btn-border-color:#429388;
+    --bs-btn-hover-color:#fff;
+    --bs-btn-hover-bg:#52ada1;
+    --bs-btn-hover-border-color:#52ada1;
+    --bs-btn-focus-shadow-rgb:49,132,253;
+    --bs-btn-active-color:#fff;
+    --bs-btn-active-bg:#256960;
+    --bs-btn-active-border-color:#256960;
+    --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color:#fff;
+    --bs-btn-disabled-bg:#6aa8a0;
+    --bs-btn-disabled-border-color:#6aa8a0;
+}
+.btn-outline-primary {
+    --bs-btn-color:#429388;
+    --bs-btn-border-color:#429388;
+    --bs-btn-hover-color:#fff;
+    --bs-btn-hover-bg:#429388;
+    --bs-btn-hover-border-color:#429388;
+    --bs-btn-focus-shadow-rgb:13,110,253;
+    --bs-btn-active-color:#fff;
+    --bs-btn-active-bg:#429388;
+    --bs-btn-active-border-color:#429388;
+    --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color:#9dc3bf;
+    --bs-btn-disabled-bg:transparent;
+    --bs-gradient:none;
+}
+
+.btn-accent {
+    --bs-btn-color:#FFFFFF;
+    --bs-btn-bg:#b7072a;
+    --bs-btn-border-color:#980421;
+    --bs-btn-hover-color:#FFFFFF;
+    --bs-btn-hover-bg:#ce2547;
+    --bs-btn-hover-border-color:#ba1637;
+    --bs-btn-focus-shadow-rgb:217,164,6;
+    --bs-btn-active-color:#FFFFFF;
+    --bs-btn-active-bg:#ce2547;
+    --bs-btn-active-border-color:#ba1637;
+    --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color:#FFFFFF;
+    --bs-btn-disabled-bg:#d57687;
+    --bs-btn-disabled-border-color:#d57687;
+}
+
+.btn-accent-secondary {
+    --bs-btn-color:#000;
+    --bs-btn-bg:#ffb627;
+    --bs-btn-border-color:#ecbd5f;
+    --bs-btn-hover-color:#000;
+    --bs-btn-hover-bg:#f8cc74;
+    --bs-btn-hover-border-color:#edc470;
+    --bs-btn-focus-shadow-rgb:217,164,6;
+    --bs-btn-active-color:#000;
+    --bs-btn-active-bg:#FAC969;
+    --bs-btn-active-border-color:#FAC969;
+    --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color:#000;
+    --bs-btn-disabled-bg:#ebc986;
+    --bs-btn-disabled-border-color:#ebc986;
+}
+
+.btn-outline-accent {
+    --bs-btn-color:#b7072a;
+    --bs-btn-border-color:#b7072a;
+    --bs-btn-hover-color:#fff;
+    --bs-btn-hover-bg:#b7072a;
+    --bs-btn-hover-border-color:#a80828;
+    --bs-btn-focus-shadow-rgb:13,110,253;
+    --bs-btn-active-color:#fff;
+    --bs-btn-active-bg:#b94359;
+    --bs-btn-active-border-color:#b94359;
+    --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color:#d57687;
+    --bs-btn-disabled-bg:transparent;
+    --bs-gradient:none;
+}
+.btn:hover {
+    color:var(--bs-btn-hover-color);
+    background-color:var(--bs-btn-hover-bg);
+    border-color:var(--bs-btn-hover-border-color);
+}
+
+.btn-outline-light{opacity:.9}
+.btn-outline-light:active, .btn-outline-light:hover, .btn-outline-light:focus{opacity:1;color:var(--bs-white);background-color:transparent;border-color:var(--bs-white);}
+
+.bg-basic {--bs-bg-opacity:1;background-color:#979ea5!important}
+.bg-new, .bg-info {--bs-bg-opacity:1;background-color:#4a87a5!important}
+.bg-waiting {--bs-bg-opacity:1;background-color:#ec616f!important}
+.bg-paid {--bs-bg-opacity:1;background-color:#eb9147!important}
+.bg-canceled {--bs-bg-opacity:1;background-color:#b5b6b7!important}
+.bg-done, .bg-success {--bs-bg-opacity:1;background-color:#70ab43!important}
+.bg-accent {--bs-bg-opacity:1; background-color:#FAC969!important}
+
+.btn-outline-primary:hover svg,
+.btn-outline-primary:active svg,
+.btn-outline-primary:focus svg,
+.btn-outline-secondary:hover svg,
+.btn-outline-secondary:active svg,
+.btn-outline-secondary:focus svg,
+.btn-outline-accent:hover svg,
+.btn-outline-accent:active svg,
+.btn-outline-accent:focus svg
+{fill:var(--bs-white)}
+
+.btn:focus,.btn:active:focus,.btn.active:focus,
+.btn.focus,.btn:active.focus,.btn.active.focus {box-shadow:none}
+.modal-footer{justify-content:flex-start}
+
+input[type=radio] {margin-right:.3em;position:relative;top:.2em;appearance:none;border-radius:50%;font:inherit;color:currentColor;width:1em;height:1em;border:0.1em solid #429388}
+input:checked[type=radio] {background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e")}
+input:checked {background-color:#429388;border-color:#429388}
+
+._dash-loading{display:none}
+*[data-dash-is-loading="true"]{filter:blur(2px);-web-kit-filter:blur(2px);-moz-filter:blur(2px);-o-filter:blur(2px);-ms-filter:blur(2px);}
+#loader{background-image:url('../img/loader.svg');display:none;background-color:transparent;position:fixed;z-index:2;width:50px;height:50px;text-align:center;top:35%;left:50%;padding:20px;transform:translate(-50%, 0)}
+.footer .main a{color:#9dfff6;text-decoration:none}
+.footer .main a:hover{color:#d1fffa;text-decoration:none}
+.footer .main a:hover svg{fill:#d1fffa}
+.footer .main{padding-top:64px;color:#fff;padding-bottom:180px; background-color:#0C4940}
+.footer .main .logo_col{height:124px}
+.footer .main .logo_img{height:54px;margin-bottom:4px}
+.footer .main .logo_col h5{font-weight:600;font-size:13px}
+.footer .main .logo_legacy li{line-height:18px;font-size:15px}
+.footer .winner .desc{font-weight:100;display:inline-block;margin-top:6px}
+.footer .winner_img{float:left;transform:translateY(1px);height:120px;margin-right:24px}
+
+@media (max-width:832px){
+    body{font-size:.85rem}
+}
+
+.navbar{box-shadow:4px 4px 8px rgba(141, 141, 141, 0.15)}
+.container-outside{min-height:700px;margin-top:120px}
+h5.logo-tags{font-size:12px;font-weight:700;opacity:.5}
+
+.login-or{ text-align:center;border-bottom:1px solid #efefef}
+.login-or span{display:inline-block;padding:0 1em;transform:translateY(25px);background:#fff;margin-bottom:15px}
+
+textarea:hover,
+input:hover,
+textarea:active,
+input:active,
+textarea:focus,
+input:focus,
+svg:focus,
+button:focus,
+label:focus
+.btn:active,
+.btn.active,
+.btn-close:focus,
+.btn-close:active
+{outline:0px !important;-webkit-appearance:none;box-shadow:none !important}
+
+.form-control:focus {border:1px solid var(--acesta-primary)}
+
+.dot {height:8px;width:8px;background-color:var(--acesta-dark-primary);border-radius:50%;display:inline-block;transform:translateY(-2px)}
+
+.accordion-button{color:var(--acesta-primary)}
+.accordion-button:not(.collapsed) {color:var(--bs-white);background-color:var(--acesta-primary);box-shadow:inset 0 calc(var(--bs-accordion-border-width) * -1) 0 var(--bs-accordion-border-color)}
+.accordion-button:not(.collapsed)::after {background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23FFFFFF'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e")}
+.accordion-body{opacity:.7;color:var(--acesta-text-primary)}

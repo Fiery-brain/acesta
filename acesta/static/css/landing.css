@@ -1,0 +1,140 @@
+.text-green{color:var(--acesta-dark-primary)}
+.text-yellow{color:var(--acesta-accent-secondary)}
+.text-red{color:var(--acesta-accent-primary-dark)}
+
+.btn{box-shadow:4px 4px 8px rgba(141, 141, 141, 0.25)}
+
+.colored{background:linear-gradient(270deg, #C44D63 22.67%, #F8B62E 53.05%, #34766A 79.29%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-weight:600;font-size:28px; transform:translateX(20px)}
+h2:before{content:url('../img/decor.svg'); display:block;margin-bottom:-54px;margin-left:-24px;opacity:.87}
+
+@media (min-width:993px) {
+  .screen-block{height:100vh;max-height:950px;min-height:650px}
+  .logo{height:48px}
+  .screen-block .title{/*height:25vh;*/position:relative}
+  .screen-block .title h2{position:absolute; bottom:0}
+}
+@media (max-width:993px) {
+  .logo{height:36px;margin:12px 0 12px}
+}
+
+/* Hero */
+.hero-outside-container{max-height:950px;background:radial-gradient(72.69% 109.42% at 70.76% 50%, #FFFFFF 0%, #D1EEEA 100%)}
+.hero .content{height:100vh;max-height:950px;background:url('/static/img/hero.svg') no-repeat right center;background-size:auto 90%}
+.hero .hero-text{font-size:1rem}
+@media (min-width:993px) {
+  .hero .content{min-height:650px}
+}
+@media (max-width:992px) {
+  .hero .content{background:none}
+}
+@media (min-width:993px) {
+  .hero .content{background-size:52%}
+}
+@media (min-width:1400px) {
+  .hero .content{background-size:auto 90%}
+}
+.hero .content h1{color:var(--acesta-dark-primary);font-weight:700}
+
+/* Situation */
+.situation{background-color:#439388}
+.situation-data{transition:none; border-radius:24px;box-shadow:0px 0px 16px rgba(8, 88, 77, 0.75);background:radial-gradient(78.09% 78.09% at 50% 50%, #FFFFFF 64.96%, #e6fcf9 100%)}
+.situation h3{font-weight:700;color:#4f4f4f}
+.situation .content{transition:none}
+.situation h4{font-size:13px;font-weight:600}
+.situation h5{font-size:16px;font-weight:600;margin-bottom:0}
+.situation .medal{width:36px;min-width:36px;height:36px;font-size:20px;line-height:38px;text-align:center;transform:translateY(2px)}
+.situation .blazon-icon{width:32px;max-height:32px}
+.situation .more-data{font-size:18px;display:inline-block;height:40px;line-height:40px;color:#C44D63}
+.situation .more-data:hover{color:#da566e}
+.situation .text-muted{line-height:.9;opacity:.8}
+@media (min-width:993px) {
+  .situation{height:100vh;max-height:950px}
+  .situation .content{transition:none;height:100vh ;max-height:950px}
+}
+@media (max-width:1200px) {
+  .situation{max-height:950px}
+}
+
+/* Audience */
+.audience{background:radial-gradient(59.97% 58.23% at 50.03% 59.63%, #fffaf3 30.59%, #FFF2DD 100%)}
+.audience-icon{position:relative; z-index:100}
+.audience-text{background-color:var(--bs-white);padding:100px 24px 24px 24px;box-shadow:0px 0px 4px rgba(224, 212, 166, 0.5);border-radius:16px}
+.audience-text h3{font-weight:700}
+@media (max-width:992px) {
+  .audience-icon{height:120px; margin-top:-120px;transform:translate(22px, 100px)}
+}
+@media (min-width:993px) {
+  .audience{height:100vh;max-height:950px}
+  .audience-text {min-height:340px}
+  .audience-icon{height:150px; margin-top:-150px;transform:translate(22px, 100px)}
+}
+
+/* Cover */
+.cover{background:radial-gradient(54.7% 59.67% at 50% 50%, #FFFFFF 0%, #D1EEEA 100%)}
+.cover-container{height:70%}
+.cover-data{position:relative;transform:translateY(64px);font-weight:bold;margin-bottom:-48px;color:var(--bs-white)}
+@media (max-width:992px) {
+  .cover{background:url('/static/img/cover.svg') no-repeat center,radial-gradient(54.7% 59.67% at 50% 50%,#FFFFFF 0%,#D1EEEA 100%)}
+  .cover-container{background-size:cover}
+}
+@media (min-width:993px) {
+  .cover-container{background:url('/static/img/cover.svg') no-repeat center;background-size:contain}
+}
+@media (max-width:767px) {
+  .bg-cover-data{width:150px}
+  .cover-data{transform:translateY(48px); margin-bottom:-36px;font-size:26px}
+}
+@media (min-width:768px) {
+  .bg-cover-data{width:200px}
+  .cover-data{font-size:32px}
+}
+
+/* Features */
+.features{background:radial-gradient(54.7% 59.67% at 50% 50%, #f795a7 0%, #df687e 100%)}
+.feature-icon{position:relative; z-index:100}
+.feature{background-color:var(--bs-white);padding:100px 24px 24px 24px;box-shadow:0px 0px 4px rgba(188, 188, 188, 0.5);border-radius:16px}
+.feature h3{font-weight:700}
+@media (max-width:992px) {
+  .feature-icon{height:120px; margin-top:-120px;transform:translate(22px, 100px)}
+}
+@media (min-width:993px) {
+  .feature {min-height:340px}
+  .feature-icon{height:150px; margin-top:-150px;transform:translate(22px, 100px)}
+}
+
+/* Reviews */
+.reviews{background:radial-gradient(59.97% 58.23% at 50.03% 59.63%, #fffaf3 30.59%, #FFF2DD 100%)}
+.reviews .review{box-shadow:0px 0px 4px rgba(224, 212, 166, 0.5);border-radius:16px;min-height:478px}
+.review .photo{max-width:172px}
+.reviews .quote-container{max-height:380px;overflow-y:auto}
+.reviews h3{color:#d15068}
+.reviews .title{font-weight:600}
+.reviews small{color:#b0b0b0}
+blockquote {padding:0.5em 10px; quotes:"\201C""\201D""\2018""\2019"}
+blockquote:before {color:#FFC669;content:open-quote;font-size:6em;line-height:0; vertical-align:-0.4em;position:relative;top:6px}
+
+
+/* FAQ */
+.faq{background:radial-gradient(54.7% 59.67% at 50% 50%, #FFFFFF 0%, #D1EEEA 100%)}
+
+.develop-tourism-with-acesta{height:100vh;background-image:url('../img/develop-tourism-with-acesta.svg');background-color:#fbca6c;background-repeat:no-repeat;background-position:center bottom}
+.develop-tourism-with-acesta .content{margin-bottom:40vh}
+@media (min-width:1600px){
+  .develop-tourism-with-acesta{min-height:1700px;height:100vh}
+}
+@media (min-width:1101px) and (max-width:1599px){
+  .develop-tourism-with-acesta{min-height:1000px;height:100vh}
+}
+@media (max-width:1100px){
+  .develop-tourism-with-acesta .content h3{font-size:1.3em}
+  .develop-tourism-with-acesta{min-height:700px}
+}
+@media (max-width:832px){
+  .develop-tourism-with-acesta .content h3{font-size:1.1em}
+  .develop-tourism-with-acesta{background-size:cover}
+}
+@media (min-width:833px){
+  .develop-tourism-with-acesta{background-size:130%}
+}
+.footer{transform:translateY(-1px)}

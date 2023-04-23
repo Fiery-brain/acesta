@@ -7,7 +7,7 @@ $("#inputTourismType").select2({
   },
   templateResult: function (tourism_type) {
     return $(
-      "<span class='option " +
+      "<span class='option bg-" +
         tourism_type.id +
         "'>" +
         tourism_type.text +
@@ -16,7 +16,7 @@ $("#inputTourismType").select2({
   },
   templateSelection: function (tourism_type) {
     return $(
-      "<span class='option " +
+      "<span class='option bg-" +
         tourism_type.id +
         "'>" +
         tourism_type.text +
