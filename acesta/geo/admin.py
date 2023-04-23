@@ -43,8 +43,6 @@ class RegionAdmin(admin.ModelAdmin):
         "region",
         "title",
         "population",
-        "paths",
-        "polygons",
     )
 
     def has_delete_permission(self, request, obj=None):
