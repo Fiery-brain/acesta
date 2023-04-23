@@ -1,11 +1,5 @@
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: "/frontend"
-    schedule:
-      interval: daily
-      time: "18:00"
-    open-pull-requests-limit: 10
   - package-ecosystem: pip
     directory: "/"
     schedule:
