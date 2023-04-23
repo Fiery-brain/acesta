@@ -1,0 +1,16 @@
+{% extends "outside.html" %}
+
+{% load static %}
+
+{% block content %}
+  <div class="row">
+    <div class="d-none d-md-block col-md-7 d-flex align-content-center pb-5">
+      {% block content_image %}
+      <img width="80%" src="{% static 'img/login.svg' %}">
+      {% endblock %}
+    </div>
+    <div class="col-12 col-md-5">
+      {% block content_block %}{% endblock %}
+    </div>
+  </div>
+{% endblock %}

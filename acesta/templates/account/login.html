@@ -1,0 +1,46 @@
+{% extends "account/base_col6.html" %}
+
+{% load static %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block title %}Авторизация. {% endblock %}
+
+{% block content_block %}
+  <h1 class="mb-4">Авторизация</h1>
+  {% get_providers as socialaccount_providers %}
+  {% if socialaccount_providers %}
+    <div class="socialaccount_ballot">
+      <ul class="list-unstyled socialaccount_providers d-flex justify-content-between px-5 mb-0">
+        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+      </ul>
+      <div class="login-or mb-4"><span>{% trans 'or' %}</span></div>
+    </div>
+    {% include "socialaccount/snippets/login_extra.html" %}
+  {% endif %}
+  <form class="login" method="POST" action="{% url 'account_login' %}">
+    {% csrf_token %}
+    <div class="form-floating mb-2">
+      <input type="email" required class="form-control{% if form.errors %} is-invalid{% endif %}" name="login" id="inputEmail">
+      <label for="inputEmail" class="form-label">Email</label>
+      {% if form.errors %}
+        <div class="invalid-feedback">Неправильный логин или&nbsp;пароль</div>
+      {% endif %}
+    </div>
+    <div class="form-floating mb-2">
+      <input type="password" required class="form-control{% if form.errors %} is-invalid{% endif %}" name="password" id="inputEmailPassword">
+      <label for="inputEmailPassword" class="form-label">Пароль</label>
+    </div>
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" name="remember" id="checkboxRemember">
+      <label for="checkboxRemember" class="form-check-label">Запомнить меня</label>
+    </div>
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <div class="d-flex justify-content-between align-items-center">
+      <a type="button" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+      <button class="btn btn-primary btn-lg px-4" type="submit"><svg fill="#FFFFFF" width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#sign-in"></use></svg>{% trans "Sign In" %}</button>
+    </div>
+  </form>
+{% endblock %}

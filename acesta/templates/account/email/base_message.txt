@@ -1,0 +1,6 @@
+Здравствуйте!
+{% block content %}{% endblock %}
+{% with site_name=current_site.name site_domain=current_site.domain %}
+{{ site_name }}
+https://{{ site_domain }}
+{% endwith %}

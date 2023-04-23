@@ -1,0 +1,10 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+
+{% block content %}{% user_display user as user_display %}{% with site_name=current_site.name site_domain=current_site.domain %}
+Вы получили это письмо, потому что пользоватьель {{ user_display }} указал(а) ваш Email при регистрации учетной записи на сайте https://{{ site_domain }}.
+
+Для подтверждения регистрации перейдите по ссылке:
+
+{{ activate_url }}{% endwith %}
+{% endblock %}

@@ -1,0 +1,3 @@
+{% load account %}
+{% user_display user as name %}
+Вы успешно вошли как {{ name }}
