@@ -372,7 +372,6 @@ SEX = (
     ("m", "Мужчины"),
 )
 
-
 TOURISM_TYPES = tuple(
     map(
         lambda x: tuple(x.split("=")),
