@@ -15,32 +15,22 @@ repos:
       - id: check-merge-conflict
 
   - repo: https://github.com/psf/black
-    files: ^backend/
-    rev: 20.8b1
+    rev: 22.3.0
     hooks:
       - id: black
 
   - repo: https://github.com/asottile/reorder_python_imports
-    files: ^backend/
     rev: v2.3.6
     hooks:
       - id: reorder-python-imports
 
   - repo: https://gitlab.com/pycqa/flake8
-    files: ^backend/
     rev: 3.8.4
     hooks:
       - id: flake8
         args: ['--config=setup.cfg']
 
   - repo: https://github.com/pre-commit/mirrors-autopep8
-    files: ^backend/
-    rev: ''
+    rev: v2.0.1  # Use the sha / tag you want to point at
     hooks:
       - id: autopep8
-
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    files: ^frontend/
-    rev: ''
-    hooks:
-      - id: eslint
