@@ -377,7 +377,7 @@ TOURISM_TYPES = tuple(
     map(lambda x: tuple(x.split("=")), env.list("ACESTA_TOURISM_TYPES", default=()))
 )
 
-TOURISM_TYPE_DEFAULT = env("ACESTA_TOURISM_TYPE_DEFAULT")
+TOURISM_TYPE_DEFAULT = env("ACESTA_TOURISM_TYPE_DEFAULT", default="")
 
 PRICES = {k: int(v) for k, v in env.dict("ACESTA_PRICES", default={}).items()}
 
