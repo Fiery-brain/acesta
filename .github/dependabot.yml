@@ -7,7 +7,7 @@ updates:
       time: "18:00"
     open-pull-requests-limit: 10
   - package-ecosystem: pip
-    directory: "/backend"
+    directory: "/"
     schedule:
       interval: daily
       time: "18:00"
