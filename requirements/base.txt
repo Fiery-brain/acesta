@@ -12,7 +12,7 @@ django-model-utils==4.3.1  # https://github.com/jazzband/django-model-utils
 django-allauth==0.54.0  # https://github.com/pennersr/django-allauth
 
 # Application
--e git+https://github.com/satels/django-ipgeobase.git#egg=django-ipgeobase
+-e git+https://github.com/eugena/django-ipgeobase.git#egg=django-ipgeobase
 django-ipware==5.0.0  # https://github.com/un33k/django-ipware
 django-json-widget==1.1.1  # https://github.com/jmrivas86/django-json-widget
 django-plotly-dash==2.1.4  # https://github.com/GibbsConsulting/django-plotly-dash
