@@ -1,4 +1,4 @@
-![acesta Analytics for Experts in Tourirm](frontend/static/og/og_acesta.png)
+<!-- ![acesta Analytics for Experts in Tourirm](frontend/static/og/og_acesta.png) -->
 
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/626c2f88b91f08127430/maintainability)](https://codeclimate.com/github/Fiery-brain/acesta/maintainability)
@@ -7,6 +7,4 @@
 
 # Аналитика в туризме
 
-Принимаем заявки на подключение к сервису:
-
-[https://fiery-brain.github.io/acesta/](https://fiery-brain.github.io/acesta/)
+[https://acesta.ru](https://acesta.ru)
