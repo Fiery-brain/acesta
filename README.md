@@ -7,6 +7,4 @@
 
 # Аналитика в туризме
 
-Принимаем заявки на подключение к сервису:
-
-[https://fiery-brain.github.io/acesta/](https://fiery-brain.github.io/acesta/)
+[https://acesta.ru](https://acesta.ru)
