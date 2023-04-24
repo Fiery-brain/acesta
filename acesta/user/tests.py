@@ -54,6 +54,12 @@ class UrlsTest(CredentialsMixin, test.TestCase):
         self.assertEqual(status_code, 302)
         self.assertEqual(last_url, "/login/?next=/new_order/")
 
+        # price unauthorised
+        response = self.client.get(reverse("price"), follow=True)
+        last_url, status_code = response.redirect_chain[-1]
+        self.assertEqual(status_code, 302)
+        self.assertEqual(last_url, "/login/?next=/price/")
+
         self.client.login(**self.credentials)
         self.assertEqual(get_user(self.client).is_authenticated, True)
 
@@ -143,7 +149,7 @@ class UrlsTest(CredentialsMixin, test.TestCase):
         self.assertEqual(messages[0].tags, "success")
         self.assertEqual(len(Order.objects.filter(user=get_user(self.client))), 1)
 
-        # TODO price
+        # price authorised
         response = self.client.get(reverse("price"))
         self.assertEqual(response.status_code, 200)
 
