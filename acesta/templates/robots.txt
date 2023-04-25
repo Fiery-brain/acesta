@@ -1,0 +1,25 @@
+User-agent: *
+Disallow: /dashboard/
+Disallow: /price/
+Disallow: /interest/
+Disallow: /rating/*
+Disallow: /user/*
+Disallow: /set_region/*
+Disallow: /signup/
+Disallow: /login/*
+Disallow: /logout/
+Disallow: /password-change/
+Disallow: /password/*
+Disallow: /inactive/
+Disallow: /email-change/
+Disallow: /confirm-email/*
+Disallow: /social-signup/
+Disallow: /connections/
+Disallow: /vk/
+Disallow: /yandex/
+Disallow: /google/
+Disallow: /leaderid/
+Disallow: /support/
+Disallow: /new_order/
+Disallow: /get_costs/
+Sitemap: https://{{ request.META.HTTP_HOST }}/sitemap.xml

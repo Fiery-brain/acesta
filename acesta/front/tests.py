@@ -16,6 +16,10 @@ class FrontTest(test.TestCase):
         response = self.client.get(reverse("sitemap"))
         self.assertEqual(response.status_code, 200)
 
+        # robots
+        response = self.client.get(reverse("robots"))
+        self.assertEqual(response.status_code, 200)
+
         # help
         response = self.client.get(reverse("help"))
         self.assertEqual(response.status_code, 200)
