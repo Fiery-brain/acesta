@@ -1,9 +1,12 @@
+import datetime
 from math import ceil
 
 from django.conf import settings
 from django.http import HttpRequest
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils import timezone
+from django.views.generic import TemplateView
 
 from acesta.front.helpers import get_random_sight_group
 from acesta.front.helpers import get_random_tourism_type
@@ -55,3 +58,21 @@ def help(request: HttpRequest) -> HttpResponse:
             "support_form": get_support_form(request.user, settings.SUPPORT_QUESTION),
         },
     )
+
+
+class SitemapView(TemplateView):
+    """
+    Sitemap View
+    """
+
+    template_name = "sitemap.xml"
+    content_type = "text/xml"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["now"] = timezone.now()
+        context["week_ago"] = timezone.now() - datetime.timedelta(days=7)
+        return context
+
+
+sitemap = SitemapView.as_view()
