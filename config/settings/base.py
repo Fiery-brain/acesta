@@ -270,7 +270,7 @@ EMAIL_USE_TLS = env("DJANGO_EMAIL_USE_TLS", default="")
 # Django Admin URL.
 ADMIN_URL = env("DJANGO_ADMIN_URL", default="admin/")
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = getaddresses([env("DJANGO_ADMINS")])
+ADMINS = getaddresses([env("DJANGO_ADMINS", default="")])
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 # Django Admin Title
