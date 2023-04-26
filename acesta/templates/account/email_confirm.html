@@ -11,7 +11,7 @@
 
   {% user_display confirmation.email_address.user as user_display %}
 
-  <p>{% with confirmation.email_address.email as email %}Подтвердите Email <a href="mailto:{{ email }}">{{ email }}</a> для&nbsp;пользователя {{ user_display }}{% endwith %}</p>
+  <p class="my-4">{% with confirmation.email_address.email as email %}Подтвердите Email <a href="mailto:{{ email }}">{{ email }}</a> для&nbsp;пользователя {{ user_display }}{% endwith %}</p>
 
   <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
       {% csrf_token %}
@@ -22,7 +22,7 @@
 
   {% url 'account_email' as email_url %}
 
-  <p>Неправильная ссылка для&nbsp;подтверждения Email. <a href="{{ email_url }}">Повторите запрос</a></p>
+  <p class="my-4">Неправильная ссылка для&nbsp;подтверждения Email. <a href="{{ email_url }}">Повторите запрос</a></p>
 
   {% endif %}
 {% endblock %}
