@@ -15,7 +15,7 @@ django-db-mutex==3.0.0  # https://github.com/ambitioninc/django-db-mutex
 django_redis==5.2.0  # https://github.com/jazzband/django-redis
 
 # Application
--e git+https://github.com/eugena/django-ipgeobase.git#egg=django-ipgeobase
+dadata==21.10.1  # https://github.com/hflabs/dadata-py
 django-ipware==5.0.0  # https://github.com/un33k/django-ipware
 django-json-widget==1.1.1  # https://github.com/jmrivas86/django-json-widget
 django-plotly-dash==2.1.4  # https://github.com/GibbsConsulting/django-plotly-dash

@@ -1,4 +1,6 @@
-from django_ipgeobase.models import IPGeoBase
+from dadata import Dadata
+from django.conf import settings
+from httpx import HTTPStatusError
 from ipware import get_client_ip
 
 from acesta.geo.models import City
@@ -12,15 +14,21 @@ def get_geo_objects_from_geo_base(request):
     """
     region = city = None
     ip, _ = get_client_ip(request)
-    ip_geo_bases = IPGeoBase.objects.by_ip(ip)
-    if ip_geo_bases.exists():
-        ip_geo_base = ip_geo_bases[0]
-        try:
-            region = Region.objects.filter(title=ip_geo_base.region).first()
-        except Region.DoesNotExist:
-            pass
-        try:
-            city = City.objects.filter(title=ip_geo_base.city).first()
-        except City.DoesNotExist:
-            pass
+
+    try:
+        with Dadata(settings.DADATA_TOKEN, settings.DADATA_SECRET) as dadata:
+
+            response = dadata.iplocate(ip).get("data")
+            region = Region.objects.filter(
+                title__icontains=response.get("region").lower()
+            ).first()
+
+            region_filter = dict(code=region) if region else {}
+            city = City.objects.filter(
+                title=response.get("city"), **region_filter
+            ).first()
+
+    except (AttributeError, HTTPStatusError):
+        pass
+
     return region, city

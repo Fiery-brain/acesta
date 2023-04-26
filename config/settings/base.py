@@ -304,6 +304,10 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
+# DADATA
+DADATA_TOKEN = env("API_DADATA_TOKEN")
+DADATA_SECRET = env("API_DADATA_SECRET")
+
 # Application
 TITLE = "Аналитика в туризме — ацеста"
 HASH_TAGS = "#туризм #аналитика"
