@@ -305,8 +305,8 @@ LOGGING = {
 }
 
 # DADATA
-DADATA_TOKEN = env("API_DADATA_TOKEN")
-DADATA_SECRET = env("API_DADATA_SECRET")
+DADATA_TOKEN = env("API_DADATA_TOKEN", default="")
+DADATA_SECRET = env("API_DADATA_SECRET", default="")
 
 # Application
 TITLE = "Аналитика в туризме — ацеста"
