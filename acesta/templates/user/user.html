@@ -203,7 +203,7 @@
         </div>
         <div class="form-floating mb-2">
           <input type="text" class="form-control" name="company" id="inputCompany" value="{{ user_form.company.value|default_if_none:'' }}">
-          <label for="inputCompany" class="form-label">Компания{% if not  user_form.company.value %} (не обязательно){% endif %}</label>
+          <label for="inputCompany" class="form-label">Место работы{% if not  user_form.company.value %} (не обязательно){% endif %}</label>
         </div>
         <div class="form-floating mb-2">
           <input type="text" class="form-control" name="position" id="inputPosition" value="{{ user_form.position.value|default_if_none:'' }}">
