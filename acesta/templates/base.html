@@ -10,8 +10,8 @@
     {% block css_external %}{% endblock %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block css %}{% endblock %}
-    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
-    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% static 'img/favicon.svg' %}" type="image/svg+xml">
+    <link rel="shortcut icon" href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% static 'img/favicon.svg' %}" type="image/svg+xml">
   </head>
   <body>
     {% block modals %}{% endblock %}
