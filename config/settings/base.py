@@ -63,7 +63,6 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "db_mutex",
-    "django_ipgeobase",
     "django_json_widget",
     "django_plotly_dash.apps.DjangoPlotlyDashConfig",
     "channels",
