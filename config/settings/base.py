@@ -1,6 +1,7 @@
 """
 Base settings to build other settings files upon.
 """
+from email.utils import getaddresses
 from pathlib import Path
 
 import environ
@@ -269,7 +270,7 @@ EMAIL_USE_TLS = env("DJANGO_EMAIL_USE_TLS", default="")
 # Django Admin URL.
 ADMIN_URL = env("DJANGO_ADMIN_URL", default="admin/")
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = env.list("DJANGO_ADMINS", default=[])
+ADMINS = getaddresses([env("DJANGO_ADMINS")])
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 # Django Admin Title
