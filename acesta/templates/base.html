@@ -9,6 +9,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ru_RU" />
     <meta property="og:title" content="{% block ogtitle %}{% endblock %}{{ TITLE }}" />
+    <meta property="og:description" content = "Аналитический сервис для оценки туристического потенциала, нахождения точек роста и разработки эффективных стратегий развития на уровне точки притяжения, города, региона" />
     <meta property="og:url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:image" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block ogimage %}{% static 'img/og/acesta.png' %}{% endblock %}" />
     <meta property="og:image:secure_url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block ogimage_secure %}{% static 'img/og/acesta.png' %}{% endblock %}" />
