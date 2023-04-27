@@ -6,6 +6,11 @@
 
 {% block title %}Авторизация. {% endblock %}
 
+{% block ogtitle %}Авторизация. {% endblock %}
+
+{% block ogimage %}{% static 'img/og/login.png' %}{% endblock %}
+{% block ogimage_secure %}{% static 'img/og/login.png' %}{% endblock %}
+
 {% block content_block %}
   <h1 class="mb-4">Авторизация</h1>
   {% get_providers as socialaccount_providers %}

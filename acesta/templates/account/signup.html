@@ -3,7 +3,12 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}{% trans "Signup" %}. {% endblock %}
+{% block title %}Регистрация. {% endblock %}
+
+{% block ogtitle %}Регистрация. {% endblock %}
+
+{% block ogimage %}{% static 'img/og/login.png' %}{% endblock %}
+{% block ogimage_secure %}{% static 'img/og/login.png' %}{% endblock %}
 
 {% block css_external %}
   <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">

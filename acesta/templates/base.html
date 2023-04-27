@@ -4,7 +4,18 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}{{ TITLE }}</title>
+    <title>{% block title %}{% endblock %}{% if TITLE %}{{ TITLE }}{% else %}Аналитика в туризме — ацеста{% endif %}</title>
+    {% block meta %}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:title" content="{% block ogtitle %}{% endblock %}{{ TITLE }}" />
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ request.path }}" />
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block ogimage %}{% static 'img/og/acesta.png' %}{% endblock %}" />
+    <meta property="og:image:secure_url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block ogimage_secure %}{% static 'img/og/acesta.png' %}{% endblock %}" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {% endblock %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/toast.css' %}">
     {% block css_external %}{% endblock %}
