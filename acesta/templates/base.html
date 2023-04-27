@@ -16,6 +16,11 @@
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="vk:image" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block vkimage %}{% static 'img/og/acesta.1200.530.png' %}{% endblock %}" />
+    <meta property="vk:image:secure_url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block vkimage_secure %}{% static 'img/og/acesta.1200.530.png' %}{% endblock %}" />
+    <meta property="vk:image:type" content="image/png" />
+    <meta property="vk:image:width" content="1200" />
+    <meta property="vk:image:height" content="530" />
     {% endblock %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/toast.css' %}">
