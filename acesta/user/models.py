@@ -11,6 +11,7 @@ from model_utils.models import TimeStampedModel
 
 from acesta.geo.models import City
 from acesta.geo.models import Region
+from acesta.user.validators import validate_russian
 
 
 class UserManager(BaseUserManager):
@@ -65,7 +66,13 @@ class User(AbstractUser):
         blank=True,
         null=True,
     )
-    middle_name = models.CharField("Отчество", max_length=50)
+    first_name = models.CharField("Имя", max_length=150, validators=[validate_russian])
+    last_name = models.CharField(
+        "Фамилия", max_length=150, validators=[validate_russian]
+    )
+    middle_name = models.CharField(
+        "Отчество", max_length=50, validators=[validate_russian]
+    )
     phone = models.CharField(
         "Телефон",
         max_length=12,
