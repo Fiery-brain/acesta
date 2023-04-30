@@ -68,7 +68,17 @@ class UserAdmin(auth_admin.UserAdmin):
     form = UserForm
     add_form = UserCreationForm
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (
+            None,
+            {
+                "fields": (
+                    "username",
+                    "password",
+                    "is_active",
+                    "is_superuser",
+                )
+            },
+        ),
         (
             "Персональная информация",
             {
@@ -110,6 +120,7 @@ class UserAdmin(auth_admin.UserAdmin):
         "middle_name",
         "email",
         "city",
+        "is_active",
         "is_superuser",
         "last_login",
     ]
