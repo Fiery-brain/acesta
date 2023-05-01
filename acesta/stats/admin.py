@@ -521,11 +521,11 @@ class MonitorAdmin(TemplateView):
                 Sight.objects.values("code")
                 .annotate(qt=models.Count("id"))
                 .filter(
-                    ~models.Q(sight_region_sights__home_code=models.F("code")),
+                    ~models.Q(sight_all_region_popularity__home_code=models.F("code")),
                     is_checked=True,
                     is_pub=True,
                 )
-                .exclude(sight_region_sights__home_code__isnull=True)
+                .exclude(sight_all_region_popularity__home_code__isnull=True)
                 .values_list("code", "qt")
             ).items()
         }
@@ -542,7 +542,7 @@ class MonitorAdmin(TemplateView):
                 .filter(
                     is_checked=True,
                     is_pub=True,
-                    sight_region_sights__home_code__isnull=True,
+                    sight_all_region_popularity__home_code__isnull=True,
                 )
                 .values_list("code", "qt")
             ).items()
@@ -555,9 +555,7 @@ class MonitorAdmin(TemplateView):
                 Sight.objects.values("code")
                 .annotate(qt=models.Count("id", distinct=True))
                 .filter(
-                    # is_checked=True,
-                    # is_pub=True,
-                    sight_region_sights__modified__lt=timezone.now()
+                    sight_all_region_popularity__modified__lt=timezone.now()
                     - datetime.timedelta(days=env.int("POPULARITY_PERIOD", default=30))
                 )
                 .values_list("code", "qt")
@@ -804,7 +802,9 @@ class MonitorAdmin(TemplateView):
                 else 1,
             )
             for sight in (
-                Sight.objects.annotate(qt=models.Sum("sight_region_sights__qty"))
+                Sight.objects.annotate(
+                    qt=models.Sum("sight_all_region_popularity__qty")
+                )
                 .filter(is_checked=True, is_pub=True)
                 .values(
                     "code",
@@ -819,12 +819,6 @@ class MonitorAdmin(TemplateView):
         ]
 
         context = self.get_context_data(**kwargs)
-        # context['title'] = 'Монитор'
-        # context['sights'] = self.get_sights_monitor()
-        # context['suspicious_kernels'] = self.get_suspicious_kernels()
-        # context['suspicious_queries'] = self.get_suspicious_queries()
-        # context['ppt'] = self.get_ppt_monitor()
-        # context['audience'] = self.get_audience_monitor()
         context.update(
             dict(
                 title="Монитор",

@@ -14,12 +14,12 @@ admin.site.site_title = settings.ADMIN_TITLE
 
 urlpatterns = [
     path(
-        f"{settings.ADMIN_URL}/monitor/",
+        f"{settings.ADMIN_URL}monitor/",
         staff_member_required(MonitorAdmin.as_view(template_name="admin/monitor.html")),
         name="monitor",
     ),
     path(
-        f"{settings.ADMIN_URL}/monitor/<str:sort>/",
+        f"{settings.ADMIN_URL}monitor/<str:sort>/",
         staff_member_required(MonitorAdmin.as_view(template_name="admin/monitor.html")),
         name="monitor",
     ),
