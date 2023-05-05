@@ -49,7 +49,9 @@
       {% if messages %}
         {% include "include/messages.html" %}
       {% endif %}
-      {% include "include/metrika.html" %}
+      {% if not DEBUG %}
+        {% include "include/metrika.html" %}
+      {% endif %}
     {% endblock %}
   </body>
 </html>

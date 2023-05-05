@@ -11,4 +11,5 @@ def settings(request: HttpRequest) -> dict:
     return dict(
         TITLE=django_settings.TITLE,
         HASH_TAGS=django_settings.HASH_TAGS,
+        DEBUG=django_settings.DEBUG,
     )
