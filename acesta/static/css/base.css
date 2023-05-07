@@ -223,7 +223,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .bg-placeofinterest{background-image:url('../img/sprite.svg#placeofinterest')!important}
 .bg-reserves{background-image:url('../img/sprite.svg#reserves')!important}
 .bg-resort{background-image:url('../img/sprite.svg#resort')!important}
-.bg-shops{background-image:url('../img/sprite.svg#shops')}
+.bg-shops{background-image:url('../img/sprite.svg#shops')!important}
 .bg-skyscrapers{background-image:url('../img/sprite.svg#skyscrapers')!important}
 .bg-snow{background-image:url('../img/sprite.svg#snow')!important}
 .bg-sport{background-image:url('../img/sprite.svg#sport')!important}
