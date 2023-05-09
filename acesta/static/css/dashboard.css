@@ -229,3 +229,4 @@ ul.nav.rating-tabs a:hover{text-decoration:none}
 
 /* PRICE */
 .price-container{max-width:100vw}
+.plan-container{min-width:200px}

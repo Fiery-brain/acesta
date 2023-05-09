@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpRequest
@@ -6,13 +8,17 @@ from django.http import JsonResponse
 from django.http import QueryDict
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template.loader import get_template
+from django.utils import timezone
 from sentry_sdk import capture_message
+from xhtml2pdf import pisa
 
 from acesta.geo.models import Region
 from acesta.user.forms import OrderForm
 from acesta.user.forms import SupportForm
 from acesta.user.forms import UserForm
 from acesta.user.models import Order
+from acesta.user.utils import fetch_pdf_resources
 from acesta.user.utils import get_order_form
 from acesta.user.utils import get_support_form
 
@@ -41,6 +47,7 @@ def price(request: HttpRequest) -> HttpResponse:
         request,
         "user/price.html",
         {
+            "price": PRICES.get(f"rank_{request.user.current_region.rank}"),
             "prices": PRICES,
             "discounts": DISCOUNTS,
             "support_form": get_support_form(request.user, settings.SUPPORT_REPORT),
@@ -97,6 +104,66 @@ def new_order(request: HttpRequest) -> HttpResponse:
             )
 
     return redirect("user")
+
+
+def offer(request: HttpRequest) -> HttpResponse:
+    template = get_template("user/offer.html")
+
+    region = request.user.current_region
+    regions = [region.code]
+    html = template.render(
+        {
+            "TITLE": settings.TITLE,
+            "region": region,
+            "discounts": DISCOUNTS,
+            "cost_1m": Order.get_cost(1, regions),
+            "cost_6m": int(
+                Order.get_cost(6, regions) - Order.get_discount_sum(6, regions)
+            ),
+            "cost_12m": int(
+                Order.get_cost(12, regions) - Order.get_discount_sum(12, regions)
+            ),
+        }
+    )
+
+    pdf = BytesIO()
+    pisa.pisaDocument(
+        BytesIO(html.encode("UTF-8")),
+        pdf,
+        encoding="utf-8",
+        link_callback=fetch_pdf_resources,
+    )
+
+    response = HttpResponse(pdf.getvalue(), content_type="application/pdf")
+    response["Content-Disposition"] = (
+        f"attachment; filename=acesta-offer-{request.user.current_region.code}"
+        f"-{timezone.now().strftime('%d.%m.%Y')}.pdf"
+    )
+
+    return response
+
+
+def offer_report(request: HttpRequest) -> HttpResponse:
+    template = get_template("user/offer_report.html")
+
+    region = request.user.current_region
+    html = template.render({"TITLE": settings.TITLE, "region": region})
+
+    pdf = BytesIO()
+    pisa.pisaDocument(
+        BytesIO(html.encode("UTF-8")),
+        pdf,
+        encoding="utf-8",
+        link_callback=fetch_pdf_resources,
+    )
+
+    response = HttpResponse(pdf.getvalue(), content_type="application/pdf")
+    response["Content-Disposition"] = (
+        f"attachment; filename=acesta-offer-report-{request.user.current_region.code}"
+        f"-{timezone.now().strftime('%d.%m.%Y')}.pdf"
+    )
+
+    return response
 
 
 def support(request: HttpRequest) -> HttpResponse:
