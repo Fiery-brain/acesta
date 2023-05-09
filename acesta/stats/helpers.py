@@ -3,7 +3,6 @@ import math
 import geopandas as gpd
 import pandas as pd
 from django.conf import settings
-from django.core.cache import caches
 from django.db import models
 
 from acesta.geo.models import City
@@ -81,12 +80,8 @@ def get_geojson() -> gpd.GeoDataFrame:
     Returns Russia regions geodata
     :return: gpd.GeoDataFrame
     """
-    cache = caches["db"]
-    geojson = cache.get("geojson")
-    if geojson is None:
-        geojson = gpd.read_file(settings.GEOJSON)
-        geojson = geojson.set_index("code")
-        cache.set("geojson", geojson)
+    geojson = gpd.read_file(settings.GEOJSON)
+    geojson = geojson.set_index("code")
     return geojson
 
 
