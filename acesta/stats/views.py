@@ -146,9 +146,7 @@ def region_view(request) -> HttpResponse:
                 "sight_groups": SightGroup.pub.filter(
                     name__in=[
                         group.get("group")
-                        for group in Sight.objects.filter(
-                            code=request.user.current_region
-                        )
+                        for group in Sight.pub.filter(code=request.user.current_region)
                         .values("group")
                         .distinct()
                     ]
@@ -181,9 +179,7 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
                 "sight_groups": SightGroup.pub.filter(
                     name__in=[
                         group.get("group")
-                        for group in Sight.objects.filter(
-                            code=request.user.current_region
-                        )
+                        for group in Sight.pub.filter(code=request.user.current_region)
                         .values("group")
                         .distinct()
                     ]
