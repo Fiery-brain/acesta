@@ -92,7 +92,10 @@
                   <h1>Раскрываем<br><span class="text-nowrap colored">туристический</span> <span class="text-accent-primary">потенциал</span></h1>
                   <p>Наш аналитический сервис помогает бизнесу и&nbsp;органам власти оценить потенциальную аудиторию объектов туристического интереса и&nbsp;разработать стратегии развития на&nbsp;уровне точки притяжения, города, региона
                   </p>
-                  <a class="btn btn-accent btn-lg px-4 px-md-5 text-nowrap" href="{% url 'region' %}"><svg fill="#FFFFFF" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать бесплатно</a>
+                  <a class="btn btn-accent btn-lg{% if request.user.is_authenticated %} px-5{% else %} px-4 px-md-5{% endif %} text-nowrap" href="{% url 'region' %}"><svg fill="#FFFFFF" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать{% if not request.user.is_authenticated %} бесплатно{% endif %}</a>
+                  {% if not request.user.is_authenticated %}
+                    <p class="mt-1 ms-1"><small class="opacity-25">Получить доступ к&nbsp;бесплатной базовой версии</small></p>
+                  {% endif %}
                 </div>
               </div>
               <div class="col-12 col-md-7 d-none d-lg-block">
