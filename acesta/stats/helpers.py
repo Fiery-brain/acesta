@@ -159,9 +159,9 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
     )
     df = pd.DataFrame(list(ppt_data.values(*columns)))
     if not len(df):
-        df = pd.DataFrame([], columns=columns)
-
-    df["ppt"] = df["ppt"] / 100
+        df = pd.DataFrame([["Запрашивают редко", "", "", ""]], columns=columns)
+    else:
+        df["ppt"] = df["ppt"] / 100
 
     if len(sort_by):
         df = df.sort_values(
