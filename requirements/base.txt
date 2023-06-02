@@ -24,5 +24,5 @@ pandas==2.0.1  # https://github.com/pandas-dev/pandas
 pyogrio==0.6.0  # https://github.com/geopandas/pyogrio
 geopandas==0.13.0  # https://github.com/geopandas/geopandas
 matplotlib==3.7.1  # https://github.com/matplotlib/matplotlib
-sentry-sdk==1.23.1  # https://github.com/getsentry/sentry-python
+sentry-sdk==1.25.0  # https://github.com/getsentry/sentry-python
 xhtml2pdf==0.2.11  #https://github.com/xhtml2pdf/xhtml2pdf
