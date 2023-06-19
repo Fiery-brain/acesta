@@ -119,9 +119,10 @@ class UserAdmin(auth_admin.UserAdmin):
         "first_name",
         "middle_name",
         "email",
+        "region",
         "city",
-        "is_active",
-        "is_superuser",
+        # "is_active",
+        # "is_superuser",
         "last_login",
     ]
     search_fields = [
