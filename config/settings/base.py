@@ -169,7 +169,6 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django_plotly_dash.middleware.BaseMiddleware",
     "django_plotly_dash.middleware.ExternalRedirectionMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
