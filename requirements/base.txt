@@ -1,9 +1,9 @@
 pytz==2023.3  # https://github.com/stub42/pytz
 argon2-cffi==21.3.0  # https://github.com/hynek/argon2_cffi
-whitenoise==6.4.0  # https://github.com/evansd/whitenoise
+whitenoise==6.5.0  # https://github.com/evansd/whitenoise
 psycopg2-binary==2.9.5 # https://github.com/psycopg/psycopg2-wheels
 psycopg2==2.9.5  #https://github.com/psycopg/psycopg2
-Levenshtein==0.21.0 # https://github.com/maxbachmann/Levenshtein
+Levenshtein==0.21.1 # https://github.com/maxbachmann/Levenshtein
 
 # Django
 # ------------------------------------------------------------------------------
@@ -12,17 +12,17 @@ django-environ==0.10.0  # https://github.com/joke2k/django-environ
 django-model-utils==4.3.1  # https://github.com/jazzband/django-model-utils
 django-allauth==0.54.0  # https://github.com/pennersr/django-allauth
 django-db-mutex==3.0.0  # https://github.com/ambitioninc/django-db-mutex
-django_redis==5.2.0  # https://github.com/jazzband/django-redis
+django_redis==5.3.0  # https://github.com/jazzband/django-redis
 
 # Application
 dadata==21.10.1  # https://github.com/hflabs/dadata-py
 django-ipware==5.0.0  # https://github.com/un33k/django-ipware
 django-json-widget==1.1.1  # https://github.com/jmrivas86/django-json-widget
-django-plotly-dash==2.2.0  # https://github.com/GibbsConsulting/django-plotly-dash
+django-plotly-dash==2.2.1  # https://github.com/GibbsConsulting/django-plotly-dash
 channels==4.0.0  # https://github.com/django/channels
-pandas==2.0.1  # https://github.com/pandas-dev/pandas
+pandas==2.0.2  # https://github.com/pandas-dev/pandas
 pyogrio==0.6.0  # https://github.com/geopandas/pyogrio
-geopandas==0.13.0  # https://github.com/geopandas/geopandas
+geopandas==0.13.2  # https://github.com/geopandas/geopandas
 matplotlib==3.7.1  # https://github.com/matplotlib/matplotlib
-sentry-sdk==1.23.1  # https://github.com/getsentry/sentry-python
+sentry-sdk==1.25.1  # https://github.com/getsentry/sentry-python
 xhtml2pdf==0.2.11  #https://github.com/xhtml2pdf/xhtml2pdf
