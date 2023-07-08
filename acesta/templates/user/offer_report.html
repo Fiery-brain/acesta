@@ -1,5 +1,3 @@
-{% load static %}
-
 <html lang="ru">
 <head>
   <title>Tourism analytics acesta. Commercial Offer for Region {{ region.code }}</title>
@@ -11,7 +9,7 @@
       @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700&display=swap');
       body{font-family:Nunito,sans-serif;font-size:14px;font-weight:400; line-height:1}
       a{color:#34766A}
-      h1{padding: 64px 0 14px;font-weight:700}
+      h1{padding: 48px 0 14px;font-weight:700}
       strong{font-weight:700}
       .table-border,.table-border th,.table-border td{border:1px solid #ccc;border-collapse:collapse;}
       p.b0{margin-bottom:2px;padding-bottom:0}
@@ -24,29 +22,16 @@
   </head>
   <body>
     <table width="100%">
-      <tr>
-        <td>
-          <img width="130" src="{% static 'img/acesta-ru-full.png' %}">
-        </td>
-        <td>
-          <p class="t0 b0"><strong>{{ TITLE }}</strong></p>
-          <p class="t0 b0">Веб-сайт: <a href="https://acesta.ru">https://acesta.ru</a></p>
-          <p class="t0 b0">Email: <a href="mailto:info@acesta.ru">info@acesta.ru</a></p>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2" align="center">
-          <h1>Коммерческое предложение</h1>
-        </td>
-      </tr>
+      {% include "include/offer_head.html" %}
       <tr>
         <td colspan="2" class="b2">
           <p class="b0">Аналитический сервис ацеста предлагает рассмотреть возможность использования услуги «Аналитический отчет».</p>
           <p class="t0 b0">Преимущества использования сервиса:</p>
             <ul>
+              <li>методика построения отчетов доказала свою эффективность в&nbsp;регионах</li>
+              <li>аналитика строится на&nbsp;актуальных данных Яндекс.Подбор слов, ВКонтакте и&nbsp;Росстат</li>
               <li>сервис охватывает все регионы Российской Федерации</li>
-              <li>методика построения отчетов доказала свою эффективность</li>
-              <li>аналитика строится на&nbsp;актуальных данных</li>
+              <li>срок выполнения до 2-х недель</li>
             </ul>
           <p class="t0">Создание аналитического отчета по&nbsp;техническому заданию дает возможность создания отчетов, которые не&nbsp;вошли в&nbsp;базовый набор.</p>
           <p class="b1">Характеристики и стоимость услуги «Аналитический отчет»:</p>
@@ -56,13 +41,13 @@
         <td colspan="2">
           <table class="table-border" cellpadding="5">
             <tr>
-              <td>Регион</td>
+              <td width="40%">Регион</td>
               <td><strong>{{ region.title }}</strong> (ранг&nbsp;{{ region.rank }})</td>
             </tr>
             <tr>
               <td>Описание</td>
               <td>
-                Создание произвольного аналитического отчета о&nbsp;туристическом потенциале региона в&nbsp;формате Jupyter-ноутбук.
+                Создание произвольного аналитического отчета о&nbsp;туристическом потенциале региона в&nbsp;табличном виде или в&nbsp;формате презентации
               </td>
             </tr>
             <tr>
