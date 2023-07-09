@@ -7,16 +7,16 @@ register = template.Library()
 
 
 @register.inclusion_tag("include/request_modal.html", takes_context=True)
-def request_modal(context, *args, **kwargs):
+def request_modal(context, subject):
     return dict(
         REQUEST_CONSULTATION=settings.REQUEST_CONSULTATION,
         REQUEST_CHANNELS=dict(settings.REQUEST_CHANNELS_OUTSIDE),
         consultation_form=get_request_form(
-            getattr(context["request"], "user"), settings.REQUEST_CONSULTATION
+            getattr(context.get("request"), "user"), settings.REQUEST_CONSULTATION
         ),
         presentation_form=get_request_form(
-            getattr(context["request"], "user"), settings.REQUEST_PRESENTATION
+            getattr(context.get("request"), "user"), settings.REQUEST_PRESENTATION
         ),
         request=context["request"],
-        subject=kwargs.get("subject"),
+        subject=subject,
     )
