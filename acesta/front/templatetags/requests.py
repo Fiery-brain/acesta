@@ -1,6 +1,8 @@
 from django import template
 from django.conf import settings
 
+from acesta.user.utils import get_request_form
+
 register = template.Library()
 
 
@@ -8,9 +10,13 @@ register = template.Library()
 def request_modal(context, *args, **kwargs):
     return dict(
         REQUEST_CONSULTATION=settings.REQUEST_CONSULTATION,
-        REQUEST_CHANNELS=context["REQUEST_CHANNELS"],
-        consultation_form=context["consultation_form"],
-        presentation_form=context["presentation_form"],
+        REQUEST_CHANNELS=dict(settings.REQUEST_CHANNELS_OUTSIDE),
+        consultation_form=get_request_form(
+            getattr(context["request"], "user"), settings.REQUEST_CONSULTATION
+        ),
+        presentation_form=get_request_form(
+            getattr(context["request"], "user"), settings.REQUEST_PRESENTATION
+        ),
         request=context["request"],
         subject=kwargs.get("subject"),
     )

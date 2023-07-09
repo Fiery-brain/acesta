@@ -223,7 +223,6 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "acesta.front.context_processors.settings",
-                "acesta.front.context_processors.request_forms",
                 "acesta.geo.context_processors.settings",
                 "acesta.geo.context_processors.regions",
                 "acesta.geo.context_processors.user_region_codes",
