@@ -2,7 +2,7 @@
 .text-yellow{color:var(--acesta-accent-secondary)}
 .text-red{color:var(--acesta-accent-primary-dark)}
 
-.btn{box-shadow:4px 4px 8px rgba(141, 141, 141, 0.25)}
+.btn :not(.modal-footer, svg){box-shadow:4px 4px 8px rgba(141, 141, 141, 0.25)}
 
 .colored{background:linear-gradient(270deg, #C44D63 22.67%, #F8B62E 53.05%, #34766A 79.29%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 h2{font-weight:600;font-size:28px; transform:translateX(20px)}
@@ -11,12 +11,14 @@ h2:before{content:url('../img/decor.svg'); display:block;margin-bottom:-54px;mar
 @media (min-width:993px) {
   .screen-block{height:100vh;max-height:950px;min-height:650px}
   .logo{height:48px}
-  .screen-block .title{/*height:25vh;*/position:relative}
+  .screen-block .title{position:relative}
   .screen-block .title h2{position:absolute; bottom:0}
 }
 @media (max-width:993px) {
   .logo{height:36px;margin:12px 0 12px}
 }
+.contact-block svg{width:42px;height:42px;}
+.contact-block li:not(:first-child){margin-left:1em!important;}
 
 /* Hero */
 .hero-outside-container{max-height:950px;background:radial-gradient(72.69% 109.42% at 70.76% 50%, #FFFFFF 0%, #D1EEEA 100%)}

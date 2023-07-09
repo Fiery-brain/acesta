@@ -1,0 +1,43 @@
+ {% load static %}
+
+  <div class="modal fade" id="{{ subject }}" tabindex="-1" role="dialog" aria-labelledby="requestLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form action="{% url 'request' %}" method="post" class="has-masked">
+          <div class="modal-header bg-accent">
+            <h5 class="modal-title" id="{{ subject }}Label"><svg fill="#464646" class="me-2" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>Запрос {% if subject == REQUEST_CONSULTATION %}консультации{% else %}презентации{% endif %}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% csrf_token %}
+            <div>
+              <input maxlength="35" class="form-control" required name="name" type="text" id="{{ subject }}InputName" placeholder="Имя"{% if request.user.is_authenticated %} value="{{ request.user.first_name }} {{ request.user.middle_name }}"{% endif %}>
+              <div id="{{ subject }}MessageName" class="form-text text-muted ms-2">Как к вам обращаться</div>
+            </div>
+            <div class="input-group mt-3">
+              <select class="form-select" id="{{ subject }}InputGroupChannel" name="channel">
+                {% for channel, title in REQUEST_CHANNELS.items %}
+                  <option value="{{ channel }}" class="bg-{{ channel }}">{{ title }}</option>
+                {% endfor %}
+              </select>
+              <input type="tel" required maxlength="32" pattern="\+[0-9]\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" class="form-control" name="_id" id="{{ subject }}InputChannel" placeholder="+7(333) 222-11-00" data-mask="+0(000) 000-00-00" {% if request.user.is_authenticated %} value="{{ request.user.phone }}"{% endif %}>
+            </div>
+            <div id="{{ subject }}ChannelHelp" class="form-text text-muted ms-2">Канал связи</div>
+            <div class="mt-3">
+              <textarea required class="form-control" name="comment" id="{{ subject }}TextMessage" rows="3" autocomplete="off" placeholder="{% if subject == REQUEST_CONSULTATION %}Комментарий{% else %}Цель{% endif %}"></textarea>
+              <div id="{{ subject }}MessageHelp" class="form-text text-muted ms-2">{% if subject == REQUEST_CONSULTATION %}В какое время и&nbsp;каким способом удобно получить консультацию{% else %}Расскажите нам, какие задачи собираетесь решать при&nbsp;помощи сервиса{% endif %}</div>
+            </div>
+            {% if subject == REQUEST_CONSULTATION %}
+              {{ consultation_form.user }}
+              {{ consultation_form.subject }}
+            {% else %}
+              {{ presentation_form.subject }}
+            {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Запросить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

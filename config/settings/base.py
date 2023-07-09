@@ -223,6 +223,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "acesta.front.context_processors.settings",
+                "acesta.front.context_processors.request_forms",
                 "acesta.geo.context_processors.settings",
                 "acesta.geo.context_processors.regions",
                 "acesta.geo.context_processors.user_region_codes",
@@ -347,6 +348,39 @@ SUPPORT_SUBJECTS = (
     (SUPPORT_QUESTION, "Обращение в техподдержку"),
     (SUPPORT_REPORT, "Заказ отчета"),
     (SUPPORT_SIGHTS, "Новые достопримечательности"),
+)
+
+REQUEST_CONSULTATION = "consultation"
+REQUEST_PRESENTATION = "presentation"
+
+REQUEST_SUBJECTS = (
+    (REQUEST_CONSULTATION, "Консультация"),
+    (REQUEST_PRESENTATION, "Презентация"),
+)
+
+CHANNEL_PHONE = "phone"
+CHANNEL_TELEGRAM = "telegram"
+CHANNEL_WHATSAPP = "whatsapp"
+CHANNEL_VIBER = "viber"
+CHANNEL_VK = "vk"
+CHANNEL_FB = "facebook"
+CHANNEL_EMAIL = "email"
+
+REQUEST_CHANNELS = (
+    (CHANNEL_PHONE, "Телефон"),
+    (CHANNEL_TELEGRAM, "Telegram"),
+    (CHANNEL_WHATSAPP, "WhatsApp"),
+    (CHANNEL_VIBER, "Viber"),
+    (CHANNEL_VK, "VK"),
+    (CHANNEL_FB, "Facebook"),
+    (CHANNEL_EMAIL, "Email"),
+)
+
+REQUEST_CHANNELS_OUTSIDE = (
+    (CHANNEL_PHONE, "Телефон"),
+    (CHANNEL_TELEGRAM, "Telegram"),
+    (CHANNEL_WHATSAPP, "WhatsApp"),
+    (CHANNEL_VIBER, "Viber"),
 )
 
 REGION_TYPE_FEDERAL_CITY = "federal_city"

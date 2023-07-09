@@ -26,8 +26,7 @@ a svg{transform:translateY(-1px)}
 }
 
 /* TOURISM TYPE AND SIGHT GROUPS OPTIONS */
-span.option{display:inline-block; background-repeat:no-repeat;padding-left:32px;background-position:0 1px;background-image:url('../img/sprite.svg#tourism')}
-
+span.option{display:inline-block;background-repeat:no-repeat;padding-left:32px;background-position:0 1px;background-image:url('../img/sprite.svg#tourism')}
 
 /* NAVBAR */
 .logo-gs{height:26px}
@@ -44,6 +43,11 @@ ul.dropdown-menu li > a:active{color:#fff;background-color:#327a71;border-color:
 ul.dropdown-menu li > a:active svg{fill:var(--bs-white)}
 ul.dropdown-menu li > a:hover{text-decoration:none}
 a.nav-link.dropdown-toggle:hover{text-decoration:none}
+.contact-block{margin-right: 1rem}
+.contact-block svg{width:24px;height:24px;}
+.contact-block span{display:none!important;}
+.contact-block a{padding:.5rem}
+
 
 /* REGIONS SELECTOR */
 #selectRegion {font-size:96%}

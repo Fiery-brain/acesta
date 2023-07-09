@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from acesta.user.models import Order
 from acesta.user.models import Region
+from acesta.user.models import Request
 from acesta.user.models import Support
 
 User = get_user_model()
@@ -70,6 +71,24 @@ class SupportForm(forms.ModelForm):
             "message",
             "subject",
             "user",
+        ]
+
+
+class RequestForm(forms.ModelForm):
+    """
+    Request Form
+    """
+
+    class Meta:
+        model = Request
+        fields = [
+            "name",
+            "user",
+            "subject",
+            "channel",
+            "time",
+            "_id",
+            "comment",
         ]
 
 

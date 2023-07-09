@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load requests %}
 {% load stats %}
 
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+{% endblock %}
+
+{% block modals %}
+  {{ block.super }}
+  {% request_modal subject="presentation" %}
 {% endblock %}
 
 {% block body %}
@@ -50,7 +56,7 @@
   </svg>
   <div class="wrapper d-flex flex-column justify-content-between">
     <div class="container-fluid px-0">
-      <nav class="navbar fixed-top navbar-expand-lg bg-white navbar-light">
+      <nav class="navbar fixed-top navbar-expand-lg bg-white navbar-light navbar-landing">
         <div class="container">
           <svg class="logo" viewBox="0 0 686 270" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="acesta">
@@ -72,13 +78,14 @@
               <rect id="bg" width="686" height="270" fill="white" opacity="0"/>
             </g>
           </svg>
-          <div class="justify-content-end">
+          <div class="d-flex justify-content-end">
+            {% include "include/contact_block.html" %}
             <div class="d-none d-md-block">
               <a class="btn btn-accent btn-lg px-5 ms-5 my-3 text-nowrap" href="{% url 'region' %}"><svg fill="#ffffff" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
             </div>
-            <div class="d-block d-md-none">
+            <!-- <div class="d-block d-md-none">
               <a class="btn btn-accent px-4 my-3 text-nowrap" href="{% url 'region' %}"><svg fill="#ffffff" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
-            </div>
+            </div> -->
           </div>
         </div>
       </nav>
@@ -501,4 +508,11 @@
       {% include 'include/footer.html' %}
     </div>
   </div>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+  <script src="{% static 'js/user.clear.phone.mask.js' %}"></script>
 {% endblock %}

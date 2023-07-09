@@ -3,6 +3,7 @@ import os
 from django.conf import settings
 
 from acesta.user.forms import OrderForm
+from acesta.user.forms import RequestForm
 from acesta.user.forms import SupportForm
 from acesta.user.models import User
 
@@ -22,6 +23,24 @@ def get_support_form(user: User, subject: str) -> SupportForm:
     user_field = support_form.fields["user"]
     user_field.widget = user_field.hidden_widget()
     return support_form
+
+
+def get_request_form(user: User, subject: str) -> RequestForm:
+    """
+    Returns Request Form
+    :param user: User
+    :param subject: str
+    :return: RequestForm
+    """
+    request_form = RequestForm()
+    request_form.initial["subject"] = subject
+    if user.is_authenticated:
+        request_form.initial["user"] = user
+    subject_field = request_form.fields["subject"]
+    subject_field.widget = subject_field.hidden_widget()
+    user_field = request_form.fields["user"]
+    user_field.widget = user_field.hidden_widget()
+    return request_form
 
 
 def get_order_form(user: User) -> OrderForm:

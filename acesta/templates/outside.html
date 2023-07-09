@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load requests %}
 
 {% block modals %}
+  {{ block.super }}
+  {% request_modal subject="presentation" %}
 {% endblock %}
 
 {% block body %}

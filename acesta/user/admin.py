@@ -10,6 +10,7 @@ from django_json_widget.widgets import JSONEditorWidget
 
 from acesta.user.forms import UserCreationForm
 from acesta.user.models import Order
+from acesta.user.models import Request
 from acesta.user.models import Support
 from acesta.user.models import User
 
@@ -118,16 +119,21 @@ class UserAdmin(auth_admin.UserAdmin):
         "last_name",
         "first_name",
         "middle_name",
-        "email",
+        "points",
         "region",
         "city",
-        # "is_active",
-        # "is_superuser",
         "last_login",
     ]
     search_fields = [
         "username",
+        "last_name",
+        "region__title",
     ]
+    list_filter = (
+        "points",
+        "region",
+        "last_login",
+    )
 
 
 @admin.register(Order)
@@ -182,6 +188,68 @@ class OrderAdmin(admin.ModelAdmin):
         form.save_m2m()
         for formset in formsets:
             self.save_formset(request, form, formset, change=change)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class RequestForm(ModelForm):
+    """
+    Request form
+    """
+
+    class Meta(admin_forms.UserChangeForm.Meta):
+        model = Request
+        widgets = {
+            "comment": forms.Textarea(
+                attrs={
+                    "style": "width:95%",
+                    "rows": 5,
+                }
+            ),
+            "note": forms.Textarea(
+                attrs={
+                    "style": "width:95%",
+                    "rows": 5,
+                }
+            ),
+        }
+        fields = "__all__"
+
+
+@admin.register(Request)
+class RequestAdmin(admin.ModelAdmin):
+    """
+    Request Management
+    """
+
+    form = RequestForm
+    list_display = [
+        "name",
+        "request_user",
+        "subject",
+        "channel",
+        "_id",
+        "time",
+        "comment",
+        "note",
+        "state",
+        "modified",
+    ]
+
+    list_filter = (
+        "subject",
+        "state",
+        "created",
+        "modified",
+    )
+
+    def request_user(self, obj):
+        return (
+            f"{obj.user.last_name} {obj.user.first_name} ({obj.user.region})"
+            if obj.user
+            else ""
+        )
 
     def has_delete_permission(self, request, obj=None):
         return False

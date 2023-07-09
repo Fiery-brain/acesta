@@ -1,4 +1,5 @@
 {% load static %}
+{% load requests %}
 <!DOCTYPE html>
 <html lang="ru">
   <head>
@@ -30,6 +31,7 @@
     {% endblock %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/toast.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
     {% block css_external %}{% endblock %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block css %}{% endblock %}
@@ -37,7 +39,10 @@
     <link rel="shortcut icon" href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% static 'img/favicon.svg' %}" type="image/svg+xml">
   </head>
   <body>
-    {% block modals %}{% endblock %}
+    {% block modals %}
+      {% request_modal subject=REQUEST_CONSULTATION %}
+    {% endblock %}
+
     {% block body %}{% endblock %}
     {% block js %}
       <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
@@ -46,6 +51,11 @@
       <script src="{% static 'js/size.to.cookie.js' %}"></script>
       <script src="{% static 'js/tooltip.js' %}"></script>
       <script src="{% static 'js/toast.min.js' %}"></script>
+
+      <script src="{% static 'js/select2.min.js' %}"></script>
+      <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+      <script src="{% static 'js/user.clear.phone.mask.js' %}"></script>
+      <script src="{% static 'js/channel.selector.js' %}"></script>
       {% if messages %}
         {% include "include/messages.html" %}
       {% endif %}

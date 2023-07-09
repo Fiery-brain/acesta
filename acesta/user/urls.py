@@ -31,6 +31,7 @@ from acesta.user.views import offer_report
 from acesta.user.views import price
 from acesta.user.views import support
 from acesta.user.views import user_profile
+from acesta.user.views import visitor_request
 
 urlpatterns = [
     path("signup/", signup, name="account_signup"),
@@ -102,6 +103,7 @@ urlpatterns += [
     path("user/<str:code>/", login_required(user_profile), name="user"),
     path("user/", login_required(user_profile), name="user"),
     path("price/", login_required(price), name="price"),
+    path("request/", visitor_request, name="request"),
     path("support/", login_required(support), name="support"),
     path("offer/", login_required(offer), name="offer"),
     path("offer_report/", login_required(offer_report), name="offer_report"),

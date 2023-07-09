@@ -1,7 +1,10 @@
 from io import BytesIO
 
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.http import FileResponse
 from django.http import HttpRequest
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -15,6 +18,7 @@ from xhtml2pdf import pisa
 
 from acesta.geo.models import Region
 from acesta.user.forms import OrderForm
+from acesta.user.forms import RequestForm
 from acesta.user.forms import SupportForm
 from acesta.user.forms import UserForm
 from acesta.user.models import Order
@@ -166,6 +170,66 @@ def offer_report(request: HttpRequest) -> HttpResponse:
     return response
 
 
+def visitor_request(request: HttpRequest) -> HttpResponse or FileResponse:
+    """
+    Saves request
+    :param request: django.http.HttpRequest
+    :return: django.http.HttpResponse
+    """
+    if request.method == "POST":
+        is_consultation = request.POST["subject"] == settings.REQUEST_CONSULTATION
+
+        data = request.POST.copy()
+
+        if is_consultation:
+            data["time"] = timezone.now() + relativedelta(minutes=60)
+        request_form = RequestForm(data=data)
+
+        if request.POST:
+            if request_form.is_valid():
+                request_form.save()
+                if is_consultation:
+                    messages.add_message(
+                        request,
+                        messages.SUCCESS,
+                        "Спасибо! Мы получили запрос и&nbsp;свяжемся с вами в ближайшее время",
+                    )
+                try:
+                    send_mail(
+                        f"Новый запрос {'консультации' if is_consultation else 'презентации'}",
+                        f"""Новый запрос {'консультации' if is_consultation else 'презентации'}
+                            {request.POST['name']}
+                            {request.POST['channel']} {request.POST['_id']} {request.POST['comment']}""",
+                        settings.DEFAULT_FROM_EMAIL,
+                        settings.ADMINS,
+                        fail_silently=False,
+                    )
+                except RuntimeError:
+                    capture_message("Новый запрос посетителя")
+
+            else:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    "Не удалось отправить запрос, попробуйте позже или&nbsp;обратитесь в&nbsp;техподдержку",
+                )
+                capture_message(
+                    f"Ошибка при добавлении сообщения {request_form.errors}"
+                )
+        if request.POST["subject"] == settings.REQUEST_CONSULTATION:
+            return redirect(request.META["HTTP_REFERER"])
+        else:
+            return FileResponse(
+                open(
+                    f'{str(settings.APPS_DIR / "templates")}/Tourism-analytics-acesta-presentation.pdf',
+                    "rb",
+                ),
+                content_type="application/pdf",
+            )
+    else:
+        return redirect("index")
+
+
 def support(request: HttpRequest) -> HttpResponse:
     """
     Saves support message
@@ -180,7 +244,7 @@ def support(request: HttpRequest) -> HttpResponse:
             messages.add_message(
                 request,
                 messages.SUCCESS,
-                "Спасибо! Мы получили ваше сообщение и&nbsp;обработаем его в&nbsp;ближайшее время",
+                "Спасибо! Мы получили сообщение и&nbsp;обработаем его в&nbsp;ближайшее время",
             )
             capture_message("Новое сообщение в техподдержку")
 
