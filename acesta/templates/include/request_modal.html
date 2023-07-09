@@ -35,6 +35,7 @@
             {% endif %}
           </div>
           <div class="modal-footer">
+            <small class="text-muted">Отправляя форму, соглашаюсь с&nbsp;<a href="{% url 'terms' %}">Условиями&nbsp;использования</a> и&nbsp;<a href="{% url 'privacy' %}">Политикой&nbsp;конфиденциальности</a></small>
             <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Запросить</button>
           </div>
         </form>
