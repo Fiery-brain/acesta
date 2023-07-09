@@ -40,7 +40,7 @@
   </head>
   <body>
     {% block modals %}
-      {% request_modal request=request subject=REQUEST_CONSULTATION %}
+      {% request_modal request=request user=request.user subject=REQUEST_CONSULTATION %}
     {% endblock %}
 
     {% block body %}{% endblock %}

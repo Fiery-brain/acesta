@@ -3,7 +3,7 @@
   <div class="modal fade" id="{{ subject }}" tabindex="-1" role="dialog" aria-labelledby="requestLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        <form action="{% url 'request' %}" method="post" class="has-masked">
+        <form action="{% url 'visitor_request' %}" method="post" class="has-masked">
           <div class="modal-header bg-accent">
             <h5 class="modal-title" id="{{ subject }}Label"><svg fill="#464646" class="me-2" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>Запрос {% if subject == REQUEST_CONSULTATION %}консультации{% else %}презентации{% endif %}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

@@ -7,12 +7,12 @@ register = template.Library()
 
 
 @register.inclusion_tag("include/request_modal.html")
-def request_modal(request, subject):
+def request_modal(request, user, subject):
     return dict(
         REQUEST_CONSULTATION=settings.REQUEST_CONSULTATION,
         REQUEST_CHANNELS=dict(settings.REQUEST_CHANNELS_OUTSIDE),
-        consultation_form=get_request_form(request.user, settings.REQUEST_CONSULTATION),
-        presentation_form=get_request_form(request.user, settings.REQUEST_PRESENTATION),
+        consultation_form=get_request_form(user, settings.REQUEST_CONSULTATION),
+        presentation_form=get_request_form(user, settings.REQUEST_PRESENTATION),
         request=request,
         subject=subject,
     )
