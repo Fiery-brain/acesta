@@ -4,7 +4,7 @@
 
 {% block modals %}
   {{ block.super }}
-  {% request_modal subject="presentation" %}
+  {% request_modal request=request subject="presentation" %}
 {% endblock %}
 
 {% block body %}
