@@ -279,8 +279,8 @@ class SupportAdmin(admin.ModelAdmin):
     def support_user(self, obj):
         return f"{obj.user.last_name} {obj.user.first_name} ({obj.user.region})"
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
     formfield_overrides = {
         models.TextField: {

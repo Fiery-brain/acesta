@@ -307,7 +307,7 @@ class Request(TimeStampedModel):
     Request Model
     """
 
-    name = models.CharField("Имя", max_length=35)
+    name = models.CharField("Имя", max_length=35, validators=[validate_russian])
     user = models.ForeignKey(
         User,
         verbose_name="Пользователь",
