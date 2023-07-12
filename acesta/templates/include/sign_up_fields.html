@@ -62,8 +62,11 @@
         <label for="inputCity">Город (не обязательно)</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" required class="form-control" name="password1" id="inputEmailPassword">
-        <label for="inputEmailPassword" class="form-label">Пароль</label>
+        <input type="password" required class="form-control{% if form.password1.errors %} is-invalid{% endif %}" name="password1" id="inputPassword" minlength="8">
+        <label for="inputPassword" class="form-label">Пароль (не менее 8 символов, должен содержать буквы и цифры)</label>
+        {% if form.password1.errors %}
+          <div class="invalid-feedback">Слишком простой пароль</div>
+        {% endif %}
       </div>
       {% if redirect_field_value %}
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
