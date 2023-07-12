@@ -106,6 +106,7 @@ class UserAdmin(auth_admin.UserAdmin):
                     "city",
                     "email",
                     "phone",
+                    "points",
                 )
             },
         ),
@@ -134,6 +135,9 @@ class UserAdmin(auth_admin.UserAdmin):
         "region",
         "last_login",
     )
+
+    def get_ordering(self, request):
+        return ["-last_login"]
 
 
 @admin.register(Order)
