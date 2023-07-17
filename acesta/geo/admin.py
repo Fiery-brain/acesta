@@ -20,14 +20,14 @@ class RegionAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "region_type",
+        "rank",
         "is_pub",
     )
 
     list_display = (
         "code",
         "title",
-        "territory",
-        "synonyms",
+        "rank",
         "is_pub",
         "created",
         "modified",
