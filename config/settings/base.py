@@ -262,7 +262,8 @@ EMAIL_PORT = env("DJANGO_EMAIL_PORT", default="")
 # Optional SMTP authentication information for EMAIL_HOST.
 EMAIL_HOST_USER = env("DJANGO_EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = env("DJANGO_EMAIL_HOST_PASSWORD", default="")
-EMAIL_USE_TLS = env("DJANGO_EMAIL_USE_TLS", default="")
+EMAIL_USE_TLS = env("DJANGO_EMAIL_USE_TLS", default=False)
+EMAIL_USE_SSL = env("DJANGO_EMAIL_USE_SSL", default=False)
 EMAIL_SUBJECT_PREFIX = "ацеста. "
 
 # ADMIN
