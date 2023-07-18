@@ -230,23 +230,20 @@ class RequestAdmin(admin.ModelAdmin):
     form = RequestForm
     list_display = [
         "name",
+        "region",
         "request_user",
         "subject",
         "channel",
         "_id",
         "time",
+        "interest",
         "comment",
         "note",
         "state",
         "modified",
     ]
 
-    list_filter = (
-        "subject",
-        "state",
-        "created",
-        "modified",
-    )
+    list_filter = ("subject", "state", "created", "modified", "region", "interest")
 
     def request_user(self, obj):
         return (

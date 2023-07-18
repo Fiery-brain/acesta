@@ -329,6 +329,15 @@ class Request(TimeStampedModel):
     time = models.DateTimeField("Срок", blank=True, null=True)
     comment = models.CharField("Комментарий", max_length=255, blank=True, null=True)
     note = models.CharField("Заметки", max_length=255, blank=True, null=True)
+    region = models.ForeignKey(
+        Region,
+        verbose_name="Регион",
+        on_delete=models.DO_NOTHING,
+        related_name="region_requests",
+        blank=True,
+        null=True,
+    )
+    interest = models.BooleanField("Интерес", default=True)
     state = models.CharField(
         "Статус",
         max_length=10,
