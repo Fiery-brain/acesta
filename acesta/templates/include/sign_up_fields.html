@@ -19,22 +19,22 @@
         {% endif %}
       </div>
       <div class="form-floating mb-2">
-        <input type="text" required class="form-control{% if form.last_name.errors %} is-invalid{% endif %}" name="last_name" id="inputLastName" value="{{ form.last_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
-        <label for="inputLastName" class="form-label">Фамилия</label>
+        <input type="text" required class="form-control{% if form.last_name.errors %} is-invalid{% endif %}" name="last_name" id="inputLastName" maxlength="150" value="{{ form.last_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
+        <label for="inputLastName" class="form-label">Фамилия (на русском языке)</label>
        {% if form.last_name.errors %}
           <div class="invalid-feedback">Фамилия должна быть на русском языке</div>
         {% endif %}
       </div>
       <div class="form-floating mb-2">
-        <input type="text" required class="form-control{% if form.first_name.errors %} is-invalid{% endif %}" name="first_name" id="inputFirstName"  value="{{ form.first_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
-        <label for="inputFirstName" class="form-label">Имя</label>
+        <input type="text" required class="form-control{% if form.first_name.errors %} is-invalid{% endif %}" name="first_name" id="inputFirstName" maxlength="150" value="{{ form.first_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
+        <label for="inputFirstName" class="form-label">Имя (на русском языке)</label>
         {% if form.first_name.errors %}
           <div class="invalid-feedback">Имя должно быть на русском языке</div>
         {% endif %}
       </div>
       <div class="form-floating mb-2">
-        <input type="text" required class="form-control{% if form.middle_name.errors %} is-invalid{% endif %}" name="middle_name" id="inputMiddleName"  value="{{ form.middle_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
-        <label for="inputMiddleName" class="form-label">Отчество</label>
+        <input type="text" required class="form-control{% if form.middle_name.errors %} is-invalid{% endif %}" name="middle_name" id="inputMiddleName" maxlength="50"  value="{{ form.middle_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
+        <label for="inputMiddleName" class="form-label">Отчество (на русском языке)</label>
         {% if form.middle_name.errors %}
           <div class="invalid-feedback">Отчество должно быть на русском языке</div>
         {% endif %}
@@ -42,11 +42,11 @@
     </div>
     <div class="col-12 col-md-6">
       <div class="form-floating mb-2">
-        <input type="text" class="form-control" name="company" id="inputCompany" value="{{ form.company.value|default_if_none:'' }}">
+        <input type="text" class="form-control" name="company" id="inputCompany" maxlength="130" value="{{ form.company.value|default_if_none:'' }}">
         <label for="inputCompany" class="form-label">Место работы (не обязательно)</label>
       </div>
       <div class="form-floating mb-2">
-        <input type="text" class="form-control" name="position" id="inputPosition" value="{{ form.position.value|default_if_none:'' }}">
+        <input type="text" class="form-control" name="position" id="inputPosition" maxlength="130" value="{{ form.position.value|default_if_none:'' }}">
         <label for="inputPosition" class="form-label">Должность (не обязательно)</label>
       </div>
       <div class="form-floating mb-2">

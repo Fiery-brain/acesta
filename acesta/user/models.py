@@ -81,13 +81,13 @@ class User(AbstractUser):
     )
     company = models.CharField(
         "Компания",
-        max_length=100,
+        max_length=130,
         blank=True,
         null=True,
     )
     position = models.CharField(
         "Должность",
-        max_length=80,
+        max_length=130,
         blank=True,
         null=True,
     )

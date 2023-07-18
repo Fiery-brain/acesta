@@ -32,6 +32,10 @@ class SignupView(BaseSignupView):
         capture_message("Новая регистрация через форму")
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        capture_message(f"Ошибка при регистрации через форму {form.errors}")
+        return super().form_invalid(form)
+
 
 signup = SignupView.as_view()
 
