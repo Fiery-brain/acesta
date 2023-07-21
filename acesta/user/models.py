@@ -76,8 +76,6 @@ class User(AbstractUser):
     phone = models.CharField(
         "Телефон",
         max_length=12,
-        blank=True,
-        null=True,
     )
     company = models.CharField(
         "Компания",

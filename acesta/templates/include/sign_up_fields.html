@@ -42,16 +42,16 @@
     </div>
     <div class="col-12 col-md-6">
       <div class="form-floating mb-2">
+        <input type="tel" required pattern="\+[0-9]\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" class="form-control" name="phone" id="inputPhone" title="Телефон" data-mask="+0(000) 000-00-00" value="{{ form.phone.value|default_if_none:'' }}">
+        <label for="inputPhone" class="form-label">Телефон</label>
+      </div>
+      <div class="form-floating mb-2">
         <input type="text" class="form-control" name="company" id="inputCompany" maxlength="130" value="{{ form.company.value|default_if_none:'' }}">
         <label for="inputCompany" class="form-label">Место работы (не обязательно)</label>
       </div>
       <div class="form-floating mb-2">
         <input type="text" class="form-control" name="position" id="inputPosition" maxlength="130" value="{{ form.position.value|default_if_none:'' }}">
         <label for="inputPosition" class="form-label">Должность (не обязательно)</label>
-      </div>
-      <div class="form-floating mb-2">
-        <input type="tel" pattern="\+[0-9]\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" class="form-control" name="phone" id="inputPhone" title="Телефон" data-mask="+0(000) 000-00-00" value="{{ form.phone.value|default_if_none:'' }}">
-        <label for="inputPhone" class="form-label">Телефон (не обязательно)</label>
       </div>
       <div class="form-floating mb-2">
         <select class="form-select" name="city" id="inputCity">
