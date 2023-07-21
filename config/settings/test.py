@@ -4,6 +4,8 @@ With these settings, tests run faster.
 from .base import *  # noqa
 from .base import env
 
+if DEBUG:  # noqa
+    from .local import *  # noqa
 TESTING = True
 
 # GENERAL
@@ -31,3 +33,5 @@ CACHES = {
         "TIMEOUT": None,
     },
 }
+
+HOME_CODE_BLOCKS = (("01", "02"),)
