@@ -56,7 +56,15 @@ class UserForm(ModelForm):
 
     class Meta(admin_forms.UserChangeForm.Meta):
         model = User
-        widgets = {"period_info": JSONEditorWidget}
+        widgets = {
+            "period_info": JSONEditorWidget,
+            "note": forms.Textarea(
+                attrs={
+                    "style": "width:95%",
+                    "rows": 5,
+                }
+            ),
+        }
         fields = "__all__"
 
 
@@ -107,6 +115,7 @@ class UserAdmin(auth_admin.UserAdmin):
                     "email",
                     "phone",
                     "points",
+                    "note",
                 )
             },
         ),
@@ -120,7 +129,9 @@ class UserAdmin(auth_admin.UserAdmin):
         "last_name",
         "first_name",
         "middle_name",
+        "phone",
         "points",
+        "note",
         "region",
         "city",
         "last_login",

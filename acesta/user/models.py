@@ -90,6 +90,7 @@ class User(AbstractUser):
         null=True,
     )
     points = models.SmallIntegerField("Контакты", default=0)
+    note = models.CharField("Заметки", max_length=255, blank=True, null=True)
 
     objects = UserManager()
 
