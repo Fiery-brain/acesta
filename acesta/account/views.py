@@ -9,10 +9,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
-from sentry_sdk import capture_message
 
 from acesta.account.forms import ChangeEmailForm
 from acesta.geo.utils import get_geo_objects_from_geo_base
+from acesta.user.utils import send_message
 
 User = get_user_model()
 
@@ -29,11 +29,11 @@ class SignupView(BaseSignupView):
         return initial
 
     def form_valid(self, form):
-        capture_message("Новая регистрация через форму")
+        send_message("Новая регистрация через форму")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        capture_message(f"Ошибка при регистрации через форму {form.errors}")
+        send_message(f"Ошибка при регистрации через форму {form.errors}")
         return super().form_invalid(form)
 
 

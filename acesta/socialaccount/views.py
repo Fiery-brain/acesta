@@ -2,9 +2,9 @@ from allauth.socialaccount.views import ConnectionsView as BaseConnectionsView
 from allauth.socialaccount.views import SignupView as BaseSignupView
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from sentry_sdk import capture_message
 
 from acesta.geo.utils import get_geo_objects_from_geo_base
+from acesta.user.utils import send_message
 
 
 class SignupView(BaseSignupView):
@@ -19,11 +19,11 @@ class SignupView(BaseSignupView):
         return form
 
     def form_valid(self, form):
-        capture_message("Новая регистрация через соцсеть")
+        send_message("Новая регистрация через соцсеть")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        capture_message(f"Ошибка при регистрации через соцсеть {form.errors}")
+        send_message(f"Ошибка при регистрации через соцсеть {form.errors}")
         return super().form_invalid(form)
 
 

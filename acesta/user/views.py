@@ -13,7 +13,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.template.loader import get_template
 from django.utils import timezone
-from sentry_sdk import capture_message
 from xhtml2pdf import pisa
 
 from acesta.geo.models import Region
@@ -25,6 +24,7 @@ from acesta.user.models import Order
 from acesta.user.utils import fetch_pdf_resources
 from acesta.user.utils import get_order_form
 from acesta.user.utils import get_support_form
+from acesta.user.utils import send_message
 
 
 PRICES = {
@@ -95,7 +95,7 @@ def new_order(request: HttpRequest) -> HttpResponse:
                 messages.SUCCESS,
                 "Спасибо! Мы получили вашу заявку и&nbsp;обработаем ее в&nbsp;ближайшее время",
             )
-            capture_message("Новая заявка на расширенный доступ")
+            send_message("Новая заявка на расширенный доступ")
 
         else:
             messages.add_message(
@@ -103,7 +103,7 @@ def new_order(request: HttpRequest) -> HttpResponse:
                 messages.ERROR,
                 "Не удалось сохранить заявку, попробуйте позже или&nbsp;обратитесь в&nbsp;техподдержку",
             )
-            capture_message(
+            send_message(
                 f"Ошибка при добавлении заявки на расширенный доступ {order_form.errors}"
             )
 
@@ -144,6 +144,11 @@ def offer(request: HttpRequest) -> HttpResponse:
         f"-{timezone.now().strftime('%d.%m.%Y')}.pdf"
     )
 
+    send_message(
+        f"""Загрузка коммерческого предложения на полный доступ
+    {request.user.current_region} {request.user}"""
+    )
+
     return response
 
 
@@ -165,6 +170,11 @@ def offer_report(request: HttpRequest) -> HttpResponse:
     response["Content-Disposition"] = (
         f"attachment; filename=acesta-offer-report-{request.user.current_region.code}"
         f"-{timezone.now().strftime('%d.%m.%Y')}.pdf"
+    )
+
+    send_message(
+        f"""Загрузка коммерческого предложения на отчет
+    {request.user.current_region} {request.user}"""
     )
 
     return response
@@ -205,7 +215,7 @@ def visitor_request(request: HttpRequest) -> HttpResponse or FileResponse:
                         fail_silently=False,
                     )
                 except RuntimeError:
-                    capture_message("Новый запрос посетителя")
+                    send_message("Новый запрос посетителя")
 
             else:
                 messages.add_message(
@@ -213,9 +223,7 @@ def visitor_request(request: HttpRequest) -> HttpResponse or FileResponse:
                     messages.ERROR,
                     "Не удалось отправить запрос, попробуйте позже или&nbsp;обратитесь в&nbsp;техподдержку",
                 )
-                capture_message(
-                    f"Ошибка при добавлении сообщения {request_form.errors}"
-                )
+                send_message(f"Ошибка при добавлении сообщения {request_form.errors}")
         if request.POST["subject"] == settings.REQUEST_CONSULTATION:
             return redirect(request.META["HTTP_REFERER"])
         else:
@@ -246,7 +254,7 @@ def support(request: HttpRequest) -> HttpResponse:
                 messages.SUCCESS,
                 "Спасибо! Мы получили сообщение и&nbsp;обработаем его в&nbsp;ближайшее время",
             )
-            capture_message("Новое сообщение в техподдержку")
+            send_message("Новое сообщение в техподдержку")
 
         else:
             messages.add_message(
@@ -254,7 +262,7 @@ def support(request: HttpRequest) -> HttpResponse:
                 messages.ERROR,
                 "Не удалось отправить сообщение, попробуйте позже или&nbsp;обратитесь в&nbsp;техподдержку",
             )
-            capture_message(f"Ошибка при добавлении сообщения {support_form.errors}")
+            send_message(f"Ошибка при добавлении сообщения {support_form.errors}")
 
     return redirect(request.META["HTTP_REFERER"])
 
@@ -280,7 +288,7 @@ def user_profile(request: HttpRequest, code: str = None) -> HttpResponse:
                 messages.ERROR,
                 "Не удалось сохранить данные, попробуйте позже или&nbsp;обратитесь в&nbsp;техподдержку",
             )
-            capture_message(f"Ошибка при сохранении данных {user_form.errors}")
+            send_message(f"Ошибка при сохранении данных {user_form.errors}")
 
     return render(
         request,
