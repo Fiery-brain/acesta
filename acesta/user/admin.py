@@ -254,7 +254,7 @@ class RequestAdmin(admin.ModelAdmin):
         "modified",
     ]
 
-    list_filter = ("subject", "state", "created", "modified", "region", "interest")
+    list_filter = ("subject", "interest", "state", "created", "modified", "region")
 
     def request_user(self, obj):
         return (
