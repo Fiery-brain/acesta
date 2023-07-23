@@ -67,6 +67,8 @@
     --acesta-snow:#CA5A64;
     --acesta-sport:#C65264;
     --acesta-industry:#479095;
+    --acesta-gastro:#C54B77;
+    --acesta-kitchen:#C54B68;
 
     --acesta-border-light:#e2e1e1;
 }
@@ -98,6 +100,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .text-rank4{color:var(--acesta-rank4)!important}
 
 .text-beach{color:var(--acesta-beach)}
+.text-gastro{color:var(--acesta-gastro)}
 .text-excursion{color:var(--acesta-excursion)}
 .text-extreme{color:var(--acesta-extreme)}
 .text-industry{color:var(--acesta-industry)}
@@ -143,6 +146,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .text-snow{color:var(--acesta-snow)!important}
 .text-sport{color:var(--acesta-sport)!important}
 .text-manufactures{color:var(--acesta-manufactures)}
+.text-kitchen{color:var(--acesta-kitchen)}
 
 .border-rank0{border-color:var(--acesta-rank0)!important}
 .border-rank1{border-color:var(--acesta-rank1)!important}
@@ -185,6 +189,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .border-sport{border-color:var(--acesta-sport)!important}
 
 .border-beach{border-color:var(--acesta-beach)!important}
+.border-gastro{border-color:var(--acesta-gastro)!important}
 .border-outdoor{border-color:var(--acesta-outdoor)!important}
 .border-pilgrimage{border-color:var(--acesta-pilgrimage)!important}
 .border-extreme{border-color:var(--acesta-extreme)!important}
@@ -212,6 +217,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .bg-shopping{background-image:url('../img/sprite.svg#shopping')!important}
 .bg-recreation{background-image:url('../img/sprite.svg#recreation')!important}
 .bg-excursion{background-image:url('../img/sprite.svg#excursion')!important}
+.bg-gastro{background-image:url('../img/sprite.svg#gastro')!important}
 
 .bg-active{background-image:url('../img/sprite.svg#active')!important}
 .bg-artgallery{background-image:url('../img/sprite.svg#artgallery')!important}
@@ -221,6 +227,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .bg-cinema{background-image:url('../img/sprite.svg#cinema')!important}
 .bg-fountains{background-image:url('../img/sprite.svg#fountains')!important}
 .bg-manufactures{background-image:url('../img/sprite.svg#manufactures')!important}
+.bg-kitchen{background-image:url('../img/sprite.svg#kitchen')!important}
 .bg-lakes{background-image:url('../img/sprite.svg#lakes')!important}
 .bg-mount{background-image:url('../img/sprite.svg#mount')!important}
 .bg-nationalparks{background-image:url('../img/sprite.svg#nationalparks')!important}
