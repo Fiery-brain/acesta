@@ -6,7 +6,8 @@
   <meta name="subject" content="Tourism analytics service - acesta. Commercial Offer for Region {{ region.code }}">
   <style>
       @page {margin:0;padding:72px}
-      @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700&display=swap');
+      @font-face {font-family:'Nunito';font-weight:400;src:url('/static/font/Nunito-Regular.ttf')}
+      @font-face {font-family:'Nunito';font-weight:700;src:url('/static/font/Nunito-Bold.ttf')}
       body{font-family:Nunito,sans-serif;font-size:14px;font-weight:400; line-height:1}
       a{color:#34766A}
       h1{padding: 48px 0 14px;font-weight:700}
@@ -60,7 +61,7 @@
             </tr>
           </table>
           <p>НДС не облагается.</p>
-          <p>Услуги оказываются на&nbsp;основании Договора. Оплата услуг осуществляется на&nbsp;основании счета. По&nbsp;факту оказания услуг предоставляется акт выполненных работ.</p>
+          <p>Услуги оказываются на&nbsp;основании Оферты. Оплата услуг осуществляется на&nbsp;основании счета. По&nbsp;факту оказания услуг предоставляется акт выполненных работ.</p>
           <p>Срок указанной стоимости по&nbsp;данному предложению: {% now 'd.m.Y' %}.</p>
         </td>
       </tr>

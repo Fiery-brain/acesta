@@ -1,6 +1,3 @@
-"""
-With these settings, tests run faster.
-"""
 from .base import *  # noqa
 from .base import env
 

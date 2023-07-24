@@ -26,6 +26,7 @@ from acesta.socialaccount.views import connections
 from acesta.socialaccount.views import social_signup
 from acesta.user.views import get_costs
 from acesta.user.views import new_order
+from acesta.user.views import oferta
 from acesta.user.views import offer
 from acesta.user.views import offer_report
 from acesta.user.views import price
@@ -105,6 +106,7 @@ urlpatterns += [
     path("price/", login_required(price), name="price"),
     path("request/", visitor_request, name="visitor_request"),
     path("support/", login_required(support), name="support"),
+    path("oferta/", oferta, name="oferta"),
     path("offer/", login_required(offer), name="offer"),
     path("offer_report/", login_required(offer_report), name="offer_report"),
     path("new_order/", login_required(new_order), name="order"),

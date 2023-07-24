@@ -3,7 +3,19 @@
 
 {% block title %}Услуги и&nbsp;цены. {% endblock %}
 
-{% block part_title %}<h1 class="pt-5 fs-4 text-muted">Услуги и&nbsp;цены</h1>{% endblock %}
+{% block part_title %}
+  <div class="container pt-5 mb-3">
+    <div class="row">
+      <div class="col-12 col-md-3">
+        <h1 class="fs-4 mb-2 text-muted text-nowrap">Услуги и&nbsp;цены</h1>
+      </div>
+      <div class="col-12 col-md-9 pt-3 pt-md-0 d-flex align-items-center justify-content-md-end text-nowrap">
+        <a href="{% url 'oferta' %}" class="ms-md-3 text-secondary py-2" title="Скачать оферту"><svg fill="#34766a" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Оферта</a>
+        <a href="{% url 'offer' %}" class="ms-2 ms-md-3 text-secondary py-2 text-nowrap" title="Скачать коммерческое предложение"><svg fill="#fab222" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Коммерческое предложение<</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
 
 {% block modals %}
   {{ block.super }}
@@ -39,12 +51,12 @@
       <table class="w-100">
         <tr>
           <td></td>
-          <td class="text-center plan-container bg-green text-white px-3 pt-3 pb-0 rounded-top-left">
+          <td class="text-center plan-container bg-green text-white px-3 pt-3 pb-3 rounded-top-left">
             <h2 class="text-white fs-6">Базовый<span class="d-none d-lg-inline"> доступ</span></h2>
             <p class="fw-bold fs-5 mb-2">бесплатно</p>
             <a href="{% url 'region' %}" class="btn btn-outline-light px-4">Начать</a>
           </td>
-          <td class="text-center plan-container bg-yellow text-white px-3 pt-3 pb-0">
+          <td class="text-center plan-container bg-yellow text-white px-3 pt-3 pb-3">
             <h2 class="text-white fs-6">Полный<span class="d-none d-lg-inline"> доступ</span></h2>
             <p class="fw-bold fs-5 mb-2 text-nowrap">{{ price }} ₽/мес
               <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
@@ -62,7 +74,7 @@
             </p>
             <a href="{% url 'user' code=request.user.current_region.code %}" class="btn btn-outline-light px-4{% if not request.user.current_region.rank %} disabled{% endif %}"><div class="d-block d-lg-none">Заказать</div><div class="d-none d-lg-block text-nowrap">Отправить заявку</div></a>
           </td>
-          <td class="text-center plan-container bg-red text-white px-3 pt-3 pb-0 rounded-top-right">
+          <td class="text-center plan-container bg-red text-white px-3 pt-3 pb-3 rounded-top-right">
             <h2 class="text-white fs-6"><span class="d-inline d-lg-none">Отчет</span><span class="d-none d-lg-inline">Аналитический отчет</span></h2>
             <p class="fw-bold text-nowrap fs-5 mb-2">от 100 000 ₽</p>
             <a href="#" data-bs-toggle="modal" data-bs-target="#orderReport" class="btn btn-outline-light px-4`"><div class="d-block d-lg-none">Заказать</div><div class="d-none d-lg-block text-nowrap">Отправить заявку</div></a>
@@ -72,16 +84,16 @@
            <td></td>
            <td class="bg-green"></td>
            <td class="text-center bg-yellow">
-             {% if request.user.current_region.rank %}
-              <p class="mt-0 mb-2">
-                <a href="{% url 'offer' %}" class="text-white" title="Скачать коммерческое предложение"><small class="small text-nowrap">Коммерческое предложение</small></a>
-              </p>
-             {% endif %}
+<!--             {% if request.user.current_region.rank %}-->
+<!--              <p class="mt-0 mb-2">-->
+<!--                <a href="{% url 'offer' %}" class="text-white" title="Скачать коммерческое предложение"><small class="small text-nowrap">Коммерческое предложение</small></a>-->
+<!--              </p>-->
+<!--             {% endif %}-->
            </td>
            <td class="text-center bg-red">
-            <p class="mt-0 mb-2">
-              <a href="{% url 'offer_report' %}" class="text-white" title="Скачать коммерческое предложение"><small class="small text-nowrap">Коммерческое предложение</small></a>
-            </p>
+<!--            <p class="mt-0 mb-2">-->
+<!--              <a href="{% url 'offer_report' %}" class="text-white" title="Скачать коммерческое предложение"><small class="small text-nowrap">Коммерческое предложение</small></a>-->
+<!--            </p>-->
            </td>
         </tr>
         <tr>

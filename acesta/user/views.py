@@ -110,6 +110,34 @@ def new_order(request: HttpRequest) -> HttpResponse:
     return redirect("user")
 
 
+def oferta(request: HttpRequest) -> HttpResponse:
+    """
+    Public offer
+    :param request: HttpRequest
+    :return: django.http.HttpResponse
+    """
+    template = get_template("user/oferta.html")
+
+    html = template.render({})
+
+    pdf = BytesIO()
+    pisa.pisaDocument(
+        BytesIO(html.encode("UTF-8")),
+        pdf,
+        encoding="utf-8",
+        link_callback=fetch_pdf_resources,
+    )
+
+    response = HttpResponse(pdf.getvalue(), content_type="application/pdf")
+    response[
+        "Content-Disposition"
+    ] = f"attachment; filename=acesta-offer-{timezone.now().strftime('%d.%m.%Y')}.pdf"
+
+    send_message(f"""Загрузка оферты {request.user.current_region} {request.user}""")
+
+    return response
+
+
 def offer(request: HttpRequest) -> HttpResponse:
     template = get_template("user/offer.html")
 

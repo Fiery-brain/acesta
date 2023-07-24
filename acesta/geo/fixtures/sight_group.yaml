@@ -7,3 +7,12 @@
     title: музеи
     title_gen: музеев
     is_pub: true
+- model: geo.sightgroup
+  pk: snow
+  fields:
+    created: 2021-06-20 16:47:07.164000+00:00
+    modified: 2021-06-20 16:47:07.164000+00:00
+    tourism_type: active
+    title: горнолыжные курорты
+    title_gen: горнолыжных курортов
+    is_pub: true
