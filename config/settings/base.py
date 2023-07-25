@@ -174,6 +174,7 @@ MIDDLEWARE = [
     "django_plotly_dash.middleware.ExternalRedirectionMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "acesta.user.middleware.clean_up_old_periods",
+    "acesta.user.middleware.set_last_hit",
 ]
 
 # STATIC

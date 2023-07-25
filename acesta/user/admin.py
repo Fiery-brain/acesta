@@ -123,7 +123,7 @@ class UserAdmin(auth_admin.UserAdmin):
             "Регионы",
             {"fields": ("regions", "region", "current_region", "period_info")},
         ),
-        ("Даты", {"fields": ("last_login", "date_joined")}),
+        ("Даты", {"fields": ("last_hit", "last_login", "date_joined")}),
     )
     list_display = [
         "last_name",
@@ -134,7 +134,7 @@ class UserAdmin(auth_admin.UserAdmin):
         "note",
         "region",
         "city",
-        "last_login",
+        "last_hit",
     ]
     search_fields = [
         "username",

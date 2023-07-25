@@ -94,6 +94,11 @@ class User(AbstractUser):
     )
     points = models.SmallIntegerField("Контакты", default=0)
     note = models.CharField("Заметки", max_length=255, blank=True, null=True)
+    last_hit = models.DateTimeField(
+        "Последний хит",
+        blank=True,
+        null=True,
+    )
 
     objects = UserManager()
 
@@ -168,6 +173,10 @@ class User(AbstractUser):
         if len(old_periods):
             self.save()
 
+    def set_last_hit(self):
+        self.last_hit = now()
+        self.save()
+
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
@@ -192,6 +201,12 @@ class Order(TimeStampedModel):
     discount = models.DecimalField(
         "Скидка", decimal_places=2, max_digits=10, default=0.0
     )
+    # promo = models.CharField(
+    #     "Промокод",
+    #     max_length=10,
+    #     blank=True,
+    #     null=True,
+    # )
     total = models.DecimalField("Итого", decimal_places=2, max_digits=10, default=0.0)
     regions = models.ManyToManyField(
         Region,
@@ -261,6 +276,7 @@ class Order(TimeStampedModel):
         return Order.get_discount(period) / 100 * Order.get_cost(period, regions_list)
 
     def save(self, *args, **kwargs):
+        # TODO if new or status -> DONE
         if self.pk is not None:
             order = Order.objects.get(pk=self.pk)
             if self.state == settings.STATE_DONE and order.state != settings.STATE_DONE:
