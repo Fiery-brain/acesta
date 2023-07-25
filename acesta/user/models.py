@@ -292,8 +292,8 @@ class Order(TimeStampedModel):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = "Заявка"
-        verbose_name_plural = "Заявки"
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
         ordering = ["-modified"]
 
 

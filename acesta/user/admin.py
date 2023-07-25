@@ -204,8 +204,8 @@ class OrderAdmin(admin.ModelAdmin):
         for formset in formsets:
             self.save_formset(request, form, formset, change=change)
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
 
 class RequestForm(ModelForm):
