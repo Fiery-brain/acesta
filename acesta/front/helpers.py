@@ -14,7 +14,7 @@ def get_random_tourism_type():
     Returns a random tourism type
     :return: tuple
     """
-    return settings.TOURISM_TYPES[randint(len(settings.TOURISM_TYPES))]
+    return settings.TOURISM_TYPES_OUTSIDE[randint(len(settings.TOURISM_TYPES_OUTSIDE))]
 
 
 def get_random_sight_group():

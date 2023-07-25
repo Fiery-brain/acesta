@@ -66,7 +66,9 @@ def get_sight_stats(request) -> list:
     sight_stats = [
         {
             "name": stat["group__tourism_type"],
-            "title": dict(settings.TOURISM_TYPES).get(stat["group__tourism_type"]),
+            "title": dict(settings.TOURISM_TYPES_OUTSIDE).get(
+                stat["group__tourism_type"]
+            ),
             "groups": "<br>".join(sorted(list(set(stat["groups"].split("|"))))),
             "cnt": stat["cnt"],
         }
@@ -277,7 +279,9 @@ def get_audience(area: str, tourism_type: str, code: str) -> models.QuerySet:
         (AudienceCities if area == settings.AREA_CITIES else AudienceRegions)
         .objects.filter(
             code_id=int(code) if area == settings.AREA_CITIES else code,
-            **dict(tourism_type=tourism_type) if tourism_type else {}
+            **dict(tourism_type=tourism_type)
+            if tourism_type
+            else dict(tourism_type__in=dict(settings.TOURISM_TYPES_OUTSIDE).keys())
         )
         .order_by("-v_type_sex_age")
     )

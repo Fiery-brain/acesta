@@ -205,7 +205,7 @@ interest_app.layout = html.Div(
                                             children=[title],
                                         ),
                                     }
-                                    for name, title in settings.TOURISM_TYPES
+                                    for name, title in settings.TOURISM_TYPES_OUTSIDE
                                 ],
                             ],
                             clearable=False,
@@ -832,7 +832,7 @@ def update_audience(key, *args, **kwargs):
                                 className="audience-qty",
                             ),
                             html.Div(
-                                title=f"{dict(settings.TOURISM_TYPES).get(rec.tourism_type)}",
+                                title=f"{dict(settings.TOURISM_TYPES_OUTSIDE).get(rec.tourism_type)}",
                                 className=f"audience-tourism-type bg-{rec.tourism_type}",
                                 **{"data-bs-toggle": "tooltip"},
                             ),

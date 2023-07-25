@@ -419,6 +419,8 @@ TOURISM_TYPES = tuple(
     )
 ) or (("museum", "музейный туризм"),)
 
+TOURISM_TYPES_OUTSIDE = tuple((k, v) for k, v in TOURISM_TYPES if k not in ("gastro"))
+
 TOURISM_TYPE_DEFAULT = env("ACESTA_TOURISM_TYPE_DEFAULT", default="museum")
 
 PRICES = {k: int(v) for k, v in env.dict("ACESTA_PRICES", default={}).items()}

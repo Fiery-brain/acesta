@@ -42,12 +42,12 @@ def region_view(request) -> HttpResponse:
         :param stats: list
         :return: list
         """
-        weak_names = set(list(dict(settings.TOURISM_TYPES).keys())) - set(
+        weak_names = set(list(dict(settings.TOURISM_TYPES_OUTSIDE).keys())) - set(
             [stat["name"] for stat in stats]
         )
         return [
             title.replace("туризм", "").lower().strip("- ")
-            for name, title in settings.TOURISM_TYPES
+            for name, title in settings.TOURISM_TYPES_OUTSIDE
             if name in weak_names
         ]
 
@@ -204,7 +204,7 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
             ):
                 return redirect("rating")
             data = {
-                "tourism_types": settings.TOURISM_TYPES,
+                "tourism_types": settings.TOURISM_TYPES_OUTSIDE,
                 "interest_city_places": CityRating.objects.filter(
                     home_region=request.user.current_region,
                     **(
@@ -230,7 +230,7 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
             }
         else:
             data = {
-                "tourism_types": settings.TOURISM_TYPES,
+                "tourism_types": settings.TOURISM_TYPES_OUTSIDE,
                 "interest_region_places": RegionRating.objects.filter(
                     region_code__isnull=True,
                     **(

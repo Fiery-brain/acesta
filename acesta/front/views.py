@@ -30,8 +30,8 @@ def index(request: HttpRequest) -> HttpResponse:
         request,
         "index.html",
         {
-            "tourism_types": settings.TOURISM_TYPES,
-            "tourism_types_col_qty": str(ceil(len(settings.TOURISM_TYPES) / 2)),
+            "tourism_types": settings.TOURISM_TYPES_OUTSIDE,
+            "tourism_types_col_qty": str(ceil(len(settings.TOURISM_TYPES_OUTSIDE) / 2)),
             "tourism_type_name": tourism_type_name,
             "tourism_type": tourism_type,
             "sight_group_name": sight_group_name,
@@ -40,7 +40,7 @@ def index(request: HttpRequest) -> HttpResponse:
             "top_sights": get_top_sights(sight_group_name),
             "regions_cnt": get_regions_cnt(),
             "sights_cnt": get_sights_cnt(),
-            "tourism_types_cnt": len(settings.TOURISM_TYPES),
+            "tourism_types_cnt": len(settings.TOURISM_TYPES_OUTSIDE),
         },
     )
 
