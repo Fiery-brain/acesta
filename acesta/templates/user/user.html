@@ -35,6 +35,14 @@
                 <input type="number" required class="form-control" min="1" name="period" id="inputPeriod" value="{{ order_form.period.value }}" placeholder="Период *" title="Период">
                 <label for="inputPeriod" class="form-label">Период (мес)</label>
               </div>
+               <div class="form-floating mb-2">
+                <input type="text" pattern="\d{10,12}" class="form-control" minlength="10" maxlength="12" name="inn" id="inputInn" placeholder="ИНН для выставления счета" title="ИНН организации (10 или 12 цифр)">
+                <label for="inputInn" class="form-label">ИНН организации (необязательно)</label>
+              </div>
+              <div class="form-floating mb-2">
+                <input type="text" class="form-control" minlength="10" maxlength="10" name="promo" id="inputPromo" placeholder="Промокод" title="Промокод (код из 10 символов, который вы получили в ходе проведения акции)">
+                <label for="inputPromo" class="form-label">Промокод (необязательно)</label>
+              </div>
               {{ order_form.user }}
               <div class="sums">
                 <div class="text-nowrap text-end text-muted mt-3 fs-6">

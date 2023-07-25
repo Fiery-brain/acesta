@@ -201,12 +201,18 @@ class Order(TimeStampedModel):
     discount = models.DecimalField(
         "Скидка", decimal_places=2, max_digits=10, default=0.0
     )
-    # promo = models.CharField(
-    #     "Промокод",
-    #     max_length=10,
-    #     blank=True,
-    #     null=True,
-    # )
+    inn = models.CharField(
+        "ИНН",
+        max_length=12,
+        blank=True,
+        null=True,
+    )
+    promo = models.CharField(
+        "Промокод",
+        max_length=10,
+        blank=True,
+        null=True,
+    )
     total = models.DecimalField("Итого", decimal_places=2, max_digits=10, default=0.0)
     regions = models.ManyToManyField(
         Region,
@@ -281,6 +287,8 @@ class Order(TimeStampedModel):
             order = Order.objects.get(pk=self.pk)
             if self.state == settings.STATE_DONE and order.state != settings.STATE_DONE:
                 self.user.update_period_info(self.period, self.regions)
+        elif self.state == settings.STATE_DONE:
+            self.user.update_period_info(self.period, self.regions)
         super().save(*args, **kwargs)
 
     class Meta:
