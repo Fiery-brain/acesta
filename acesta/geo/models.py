@@ -203,7 +203,7 @@ class Sight(TimeStampedModel):
         on_delete=models.CASCADE,
         related_name="region_sights",
     )
-    query = models.CharField("Строка поиска", max_length=150)
+    query = models.CharField("Строка поиска", max_length=150, blank=True)
     query_additional = models.CharField(
         "Дополнительные строки поиска",
         max_length=255,
@@ -212,9 +212,7 @@ class Sight(TimeStampedModel):
         null=True,
     )
     kernel = models.JSONField(
-        "Семантическое ядро",
-        max_length=500,
-        default=list,
+        "Семантическое ядро", max_length=500, default=list, blank=True
     )
     rate = models.FloatField(
         verbose_name="Рейтинг",
@@ -279,7 +277,7 @@ class Sight(TimeStampedModel):
         db_index=True,
     )
     is_in_geo_region = models.BooleanField(default=True)
-    geo_data = models.JSONField(default=dict)
+    geo_data = models.JSONField(default=dict, blank=True)
     objects = models.Manager()
     pub = PubManager()
 
@@ -303,9 +301,53 @@ def update_modified_kernel(sender, instance, *args, **kwargs) -> None:
     :return: None
     """
     if instance.pk:
-        old = Sight.objects.get(pk=instance.pk)
-        if old.kernel != instance.kernel:
-            instance.modified_kernel = timezone.now()
+        try:
+            old = Sight.objects.get(pk=instance.pk)
+            if old.kernel != instance.kernel:
+                instance.modified_kernel = timezone.now()
+        except Sight.DoesNotExist:
+            pass
+
+
+def fill_geo_data(sender, instance, *args, **kwargs) -> None:
+    try:
+        from acesta_updater.management.commands.helpers.sight_helper import (
+            get_geo_data,
+            get_address,
+            check_region,
+            get_city,
+            get_query,
+        )
+
+        if instance.pk:
+            try:
+                old = Sight.objects.get(pk=instance.pk)
+                if old.lat != instance.lat or old.lon != instance.lon:
+                    instance.geo_data = get_geo_data(instance.lon, instance.lat)
+                    instance.address = get_address(instance.geo_data)
+                    instance.city = get_city(instance.geo_data)
+            except Sight.DoesNotExist:
+                pass
+
+            if not instance.geo_data:
+                instance.geo_data = get_geo_data(instance.lon, instance.lat)
+            instance.is_in_geo_region = check_region(instance.code, instance.geo_data)
+
+            if len(instance.query) < 2:
+                instance.query = get_query(instance.title or instance.name)
+
+        else:
+
+            instance.geo_data = get_geo_data(instance.lon, instance.lat)
+            instance.address = get_address(instance.geo_data)
+            instance.city = get_city(instance.geo_data)
+
+            if not check_region(instance.code, instance.geo_data):
+                instance.geo_data = False
+
+    except ImportError:
+        pass
 
 
 models.signals.pre_save.connect(update_modified_kernel, sender=Sight)
+models.signals.pre_save.connect(fill_geo_data, sender=Sight)
