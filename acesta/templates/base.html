@@ -41,6 +41,39 @@
   <body>
     {% block modals %}
       {% request_modal subject=REQUEST_CONSULTATION %}
+
+      {% with url=request.resolver_match.url_name %}
+        {% if url != 'terms' %}
+          <div class="modal fade legacy" id="terms" tabindex="-1" role="dialog" aria-labelledby="termsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-80" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title text-nowrap fw-bolder" id="termsLabel">Условия использования</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0 pb-4">
+                  {% include 'include/terms_content.html' %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        {% if url != 'privacy' %}
+          <div class="modal fade legacy" id="privacy" tabindex="-1" role="dialog" aria-labelledby="privacyLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-80" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title text-nowrap fw-bolder" id="privacyLabel">Политика конфиденциальности</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0 pb-4">
+                  {% include 'include/privacy_content.html' %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endwith %}
     {% endblock %}
 
     {% block body %}{% endblock %}

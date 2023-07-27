@@ -21,7 +21,7 @@
       <div class="form-floating mb-2">
         <input type="text" required class="form-control{% if form.last_name.errors %} is-invalid{% endif %}" name="last_name" id="inputLastName" maxlength="150" value="{{ form.last_name.value|default_if_none:'' }}" pattern="[А-Яа-яЁё ]+">
         <label for="inputLastName" class="form-label">Фамилия (на русском языке)</label>
-       {% if form.last_name.errors %}
+        {% if form.last_name.errors %}
           <div class="invalid-feedback">Фамилия должна быть на русском языке</div>
         {% endif %}
       </div>
@@ -75,7 +75,7 @@
   </div>
   <div class="row">
     <div class="col-12 col-md-8">
-      Регистрируясь на&nbsp;сайте вы соглашаетесь с&nbsp;<a href="{% url 'terms' %}">Условиями использования</a> и&nbsp;<a href="{% url 'privacy' %}">Политикой конфиденциальности</a>
+      Регистрируясь на&nbsp;сайте вы соглашаетесь с&nbsp;<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#terms">Условиями использования</a> и&nbsp;<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#privacy">Политикой конфиденциальности</a>
     </div>
     <div class="col-12 col-md-4 d-lg-flex justify-content-lg-end mt-3 mt-lg-0">
       <button type="submit" class="btn btn-primary btn-lg px-4"><svg fill="#FFFFFF" width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#sign-up"></use></svg>Зарегистрироваться</button>
