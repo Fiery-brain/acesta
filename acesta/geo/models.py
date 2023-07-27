@@ -68,7 +68,7 @@ class Region(TimeStampedModel):
     class Meta:
         verbose_name = "Регион"
         verbose_name_plural = "Регионы"
-        ordering = ("code",)
+        ordering = ("title",)
 
 
 class City(TimeStampedModel):
