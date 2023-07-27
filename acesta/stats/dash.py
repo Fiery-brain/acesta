@@ -237,6 +237,10 @@ interest_app.layout = html.Div(
                             className="pt-3 pt-lg-0",
                         ),
                         html.Div(
+                            id="tabs-interesants-dummy",
+                            children=[],
+                        ),
+                        html.Div(
                             children=[
                                 dash_table.DataTable(
                                     get_ppt_df(
@@ -306,6 +310,10 @@ interest_app.layout = html.Div(
                                 html.Div(id="home-area-help"),
                             ],
                             className="d-flex justify-content-between",
+                        ),
+                        html.Div(
+                            id="home-area-dummy",
+                            children=[],
                         ),
                         html.Div(
                             children=[
@@ -395,6 +403,38 @@ def update_tabs(*args, **kwargs):
 
 
 @interest_app.callback(
+    dependencies.Output("tabs-interesants-dummy", "children"),
+    dependencies.Input("helper-interesant", "interval"),
+)
+def update_interesants_dummy(*args, **kwargs):
+    """
+    Returns interesants area tabs
+    :param kwargs:
+    :return:
+    """
+    if kwargs.get("user").is_extended:
+        return []
+    else:
+        return [
+            html.Div(
+                className="border-bottom mb-3",
+                children=[
+                    html.A(
+                        href="/price/",
+                        children=[
+                            html.Img(
+                                src="/static/img/dummy-tabs-interesants.svg",
+                                width=200,
+                            )
+                        ],
+                        title="Показать цены",
+                    )
+                ],
+            )
+        ]
+
+
+@interest_app.callback(
     dependencies.Output("home-area", "options"),
     dependencies.Input("helper-interesant", "interval"),
 )
@@ -436,6 +476,38 @@ def update_options(*args, **kwargs):
         return options
     else:
         return []
+
+
+@interest_app.callback(
+    dependencies.Output("home-area-dummy", "children"),
+    dependencies.Input("helper-interesant", "interval"),
+)
+def update_home_area_dummy(*args, **kwargs):
+    """
+    Returns interesants area tabs
+    :param kwargs:
+    :return:
+    """
+    if kwargs.get("user").is_extended:
+        return []
+    else:
+        return [
+            # html.Div(
+            #    className="border-bottom mb-3",
+            # children=[
+            html.A(
+                href="/price/",
+                children=[
+                    html.Img(
+                        src="/static/img/dummy-home-area.svg",
+                        height=36,
+                    )
+                ],
+                title="Показать цены",
+            )
+            # ]
+            # )
+        ]
 
 
 @interest_app.callback(

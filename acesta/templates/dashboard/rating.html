@@ -12,25 +12,27 @@
 {% block content %}
   <div class="row pt-3 mx-0 rating">
     <div class="col-12 col-lg-8 ps-0">
+      <ul class="nav flex-nowrap w-100 rating-tabs">
       {% if request.user.is_extended %}
-        <ul class="nav flex-nowrap w-100 rating-tabs">
-          {% with url=request.resolver_match.url_name %}
-            <li class="nav-item {% if url != 'rating' %}d-none d-lg-inline-block{% endif %}">
-              <a class="nav-link {% if url == 'rating' %} active{% endif %}" aria-current="page" href="{% url 'rating' %}{% if request.GET and request.GET.tourism_type %}?tourism_type={{ request.GET.tourism_type }}{% endif %}"><span>Рейтинг регионов</span></a>
+        {% with url=request.resolver_match.url_name %}
+          <li class="nav-item {% if url != 'rating' %}d-none d-lg-inline-block{% endif %}">
+            <a class="nav-link {% if url == 'rating' %} active{% endif %} text-nowrap" href="{% url 'rating' %}{% if request.GET and request.GET.tourism_type %}?tourism_type={{ request.GET.tourism_type }}{% endif %}">Рейтинг регионов</a>
+          </li>
+          {% if request.user.current_region.region_type != REGION_TYPE_FEDERAL_CITY %}
+            <li class="nav-item {% if url != 'rating-cities' %}d-none d-lg-inline-block{% endif %}">
+              <a class="nav-link{% if url == 'rating-cities' %} active{% endif %}  text-nowrap" href="{% url 'rating-cities' area=AREA_CITIES %}{% if request.GET and request.GET.tourism_type %}?tourism_type={{ request.GET.tourism_type }}{% endif %}">Рейтинг городов</a>
             </li>
-            {% if request.user.current_region.region_type != REGION_TYPE_FEDERAL_CITY %}
-              <li class="nav-item {% if url != 'rating-cities' %}d-none d-lg-inline-block{% endif %}">
-                <a class="nav-link{% if url == 'rating-cities' %} active{% endif %}" href="{% url 'rating-cities' area=AREA_CITIES %}{% if request.GET and request.GET.tourism_type %}?tourism_type={{ request.GET.tourism_type }}{% endif %}"><span>Рейтинг городов</span></a>
-              </li>
-            {% endif %}
-            <li class="nav-item {% if url != 'rating-sights' %}d-none d-lg-inline-block{% endif %}">
-              <a class="nav-link{% if url == 'rating-sights' %} active{% endif %}" href="{% url 'rating-sights' area=AREA_SIGHTS %}"><span>Рейтинг точек притяжения</span></a>
-            </li>
-          {% endwith %}
-        </ul>
+          {% endif %}
+          <li class="nav-item {% if url != 'rating-sights' %}d-none d-lg-inline-block{% endif %}">
+            <a class="nav-link{% if url == 'rating-sights' %} active{% endif %}  text-nowrap" href="{% url 'rating-sights' area=AREA_SIGHTS %}">Рейтинг точек притяжения</a>
+          </li>
+        {% endwith %}
       {% else %}
-        <h1 class="fs-6 mt-2 fw-bolder">Рейтинг регионов</h1>
+        <li class="nav-item"><span class="nav-link active text-nowrap">Рейтинг регионов</span></li>
+        <li class="nav-item d-none d-lg-inline-block"><a href="{% url 'price' %}" class="nav-link text-nowrap text-muted" title="Показать цены"><svg width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>Рейтинг городов</a></li>
+        <li class="nav-item d-none d-lg-inline-block"><a href="{% url 'price' %}" class="nav-link text-nowrap text-muted" title="Показать цены"><svg width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>Рейтинг точек притяжения</a></li>
       {% endif %}
+      </ul>
     </div>
     <div class="col-12 col-lg-4 d-lg-flex flex-wrap justify-content-end align-content-center px-0 mt-3 mt-lg-0 rating-part-selector">
     {% if area == AREA_SIGHTS %}

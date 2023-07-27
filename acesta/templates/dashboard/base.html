@@ -24,7 +24,7 @@
         <div class="modal-body">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-12 col-lg-3">
+              <div class="col-12 col-xl-3">
                 <h5>Республики</h5>
                 <ul>
                   {% with regions=grouped_regions.republic %}
@@ -32,7 +32,7 @@
                   {% endwith %}
                 </ul>
               </div>
-              <div class="col-12 col-lg-3">
+              <div class="col-12 col-xl-3">
                 <h5>Города федерального подчинения</h5>
                 <ul>
                   {% with regions=grouped_regions.federal_city %}
@@ -56,7 +56,7 @@
                   {% endwith %}
                 </ul>
               </div>
-              <div class="col-12 col-lg-3">
+              <div class="col-12 col-xl-3">
               <h5>Области</h5>
                 <ul class="mb-0">
                   {% with regions=grouped_regions.region|slice:":24" %}
@@ -64,7 +64,7 @@
                   {% endwith %}
                 </ul>
               </div>
-              <div class="col-12 col-lg-3">
+              <div class="col-12 col-xl-3">
                 <ul>
                   {% with regions=grouped_regions.region|slice:"24:" %}
                     {% include 'include/regions_by_type.html' %}
@@ -119,13 +119,11 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'region' %}">Регион<svg fill="#fab222" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#region"></use></svg></a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'interest' %}">Интерес<svg fill="#fab222" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#interest"></use></svg></a></li>
           <li class="nav-item"><a class="nav-link pb-1" href="{% url 'rating' %}">Рейтинг<svg fill="#fab222" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#rating"></use></svg></a></li>
-          {% if request.user.is_extended %}
-            <li class="nav-item"><a class="nav-link py-1" href="{% url 'rating' %}"><small>регионов</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
-            {% if request.user.current_region.region_type != REGION_TYPE_FEDERAL_CITY %}
-              <li class="nav-item"><a class="nav-link py-1" href="{% url 'rating-cities' area='cities' %}"><small>городов</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
-            {% endif %}
-            <li class="nav-item"><a class="nav-link pt-1 pb-3" href="{% url 'rating-sights' area='sights' %}"><small>точек притяжения</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
+          <li class="nav-item"><a class="nav-link py-1" href="{% url 'rating' %}"><small>регионов</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
+          {% if request.user.current_region.region_type != REGION_TYPE_FEDERAL_CITY %}
+            <li class="nav-item"><a class="nav-link py-1" href="{% if request.user.is_extended %}{% url 'rating-cities' area='cities' %}{% else %}{% url 'price' %}{% endif %}">{% if not request.user.is_extended %}<svg width="14" height="14" class="me-1 mt-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>{% endif %}<small>городов</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
           {% endif %}
+          <li class="nav-item"><a class="nav-link pt-1 pb-3" href="{% if request.user.is_extended %}{% url 'rating-sights' area='sights' %}{% else %}{% url 'price' %}{% endif %}">{% if not request.user.is_extended %}<svg width="14" height="14" class="me-1 mt-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>{% endif %}<small>точек притяжения</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
           <li class="nav-item border-top"><a class="nav-link" href="{% url 'user' %}">Моя страница<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#user"></use></svg></a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'price' %}">Услуги<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#price"></use></svg></a></li>
           <li class="nav-item border-bottom"><a class="nav-link" href="{% url 'help' %}">О сервисе<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></li>
@@ -151,7 +149,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12 col-lg-5 d-flex align-items-end">
-          <h2><img height="32" class="me-2 mb-1" src="{% static 'img/blazon/'|add:request.user.current_region.code|add:'.svg'%}"><a class="region-selector" title="Выбрать регион" href="#" type="button" data-bs-toggle="modal" data-bs-target="#selectRegion"> {{ request.user.current_region }}</a></h2>
+          <h2><img height="32" class="me-2 mb-1" src="{% static 'img/blazon/'|add:request.user.current_region.code|add:'.svg'%}"><a class="region-selector" title="Выбрать регион" href="#" type="button" data-bs-toggle="modal" data-bs-target="#selectRegion"> {{ request.user.current_region.region_short }}</a></h2>
         </div>
         <div class="col-12 col-lg-7 d-none d-lg-flex align-items-end justify-content-end">
           <ul class="nav justify-content-end flex-nowrap">

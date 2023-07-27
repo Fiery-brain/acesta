@@ -58,6 +58,10 @@ class Region(TimeStampedModel):
     objects = models.Manager()
     pub = PubManager()
 
+    @property
+    def region_short(self):
+        return self.title.split(" - ")[0]
+
     def __str__(self):
         return self.title
 
