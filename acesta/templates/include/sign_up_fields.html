@@ -47,11 +47,11 @@
       </div>
       <div class="form-floating mb-2">
         <input type="text" class="form-control" name="company" id="inputCompany" maxlength="130" value="{{ form.company.value|default_if_none:'' }}">
-        <label for="inputCompany" class="form-label">Место работы (не обязательно)</label>
+        <label for="inputCompany" class="form-label">Место работы (необязательно)</label>
       </div>
       <div class="form-floating mb-2">
         <input type="text" class="form-control" name="position" id="inputPosition" maxlength="130" value="{{ form.position.value|default_if_none:'' }}">
-        <label for="inputPosition" class="form-label">Должность (не обязательно)</label>
+        <label for="inputPosition" class="form-label">Должность (необязательно)</label>
       </div>
       <div class="form-floating mb-2">
         <select class="form-select" name="city" id="inputCity">
@@ -59,7 +59,7 @@
             <option value="{{ id }}"{% if form.city.value == id %} selected{% endif %}>{{ city }}</option>
           {% endfor %}
         </select>
-        <label for="inputCity">Город (не обязательно)</label>
+        <label for="inputCity">Город (необязательно)</label>
       </div>
       <div class="form-floating mb-3">
         <input type="password" required class="form-control{% if form.password1.errors %} is-invalid{% endif %}" name="password1" id="inputPassword" minlength="8">
