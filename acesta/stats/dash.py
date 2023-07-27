@@ -492,9 +492,6 @@ def update_home_area_dummy(*args, **kwargs):
         return []
     else:
         return [
-            # html.Div(
-            #    className="border-bottom mb-3",
-            # children=[
             html.A(
                 href="/price/",
                 children=[
@@ -505,8 +502,6 @@ def update_home_area_dummy(*args, **kwargs):
                 ],
                 title="Показать цены",
             )
-            # ]
-            # )
         ]
 
 
