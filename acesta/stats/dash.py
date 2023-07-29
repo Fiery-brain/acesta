@@ -188,28 +188,8 @@ interest_app.layout = html.Div(
                     children=[
                         dcc.Dropdown(
                             id="tourism-type",
-                            options=[
-                                {
-                                    "value": "",
-                                    "label": html.Span(
-                                        className="option",
-                                        children=["все виды туризма"],
-                                    ),
-                                },
-                                *[
-                                    {
-                                        "value": name,
-                                        "search": title,
-                                        "label": html.Span(
-                                            className=f"option bg-{name}",
-                                            children=[title],
-                                        ),
-                                    }
-                                    for name, title in settings.TOURISM_TYPES_OUTSIDE
-                                ],
-                            ],
+                            options=[],
                             clearable=False,
-                            value="",
                             className="w-100",
                         )
                     ],
@@ -431,6 +411,69 @@ def update_interesants_dummy(*args, **kwargs):
                     )
                 ],
             )
+        ]
+
+
+@interest_app.callback(
+    dependencies.Output("tourism-type", "value"),
+    dependencies.Input("home-area", "value"),
+)
+def update_tourism_type(home_area: str, **kwargs):
+    if (
+        kwargs.get("request").user.is_extended
+        and home_area != settings.AREA_REGIONS
+        and kwargs.get("request").user.tourism_types is not None
+    ):
+        return kwargs.get("request").user.get_current_tourism_type()
+    else:
+        return ""
+
+
+@interest_app.callback(
+    dependencies.Output("tourism-type", "options"),
+    dependencies.Input("home-area", "value"),
+)
+def update_tourism_types(home_area: str, **kwargs):
+    if (
+        kwargs.get("request").user.is_extended
+        and home_area != settings.AREA_REGIONS
+        and kwargs.get("request").user.tourism_types is not None
+    ):
+        return [
+            {
+                "value": name,
+                "search": title,
+                "label": html.Span(
+                    className=f"option bg-{name}"
+                    f"{' disabled' if name not in kwargs.get('request').user.tourism_types else ''}",
+                    children=[title],
+                ),
+                "disabled": True
+                if name not in kwargs.get("request").user.tourism_types
+                else False,
+            }
+            for name, title in settings.TOURISM_TYPES_OUTSIDE
+        ]
+    else:
+        return [
+            {
+                "value": "",
+                "label": html.Span(
+                    className="option",
+                    children=["все виды туризма"],
+                ),
+            },
+            *[
+                {
+                    "value": name,
+                    "search": title,
+                    "label": html.Span(
+                        className=f"option bg-{name}",
+                        children=[title],
+                    ),
+                }
+                for name, title in settings.TOURISM_TYPES_OUTSIDE
+            ],
         ]
 
 

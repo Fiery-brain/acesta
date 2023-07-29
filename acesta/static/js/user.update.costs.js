@@ -5,6 +5,7 @@ $(function () {
       method: "POST",
       data: {
         period: $("#inputPeriod").val(),
+        tourism_types: $("#inputTourismTypes").val(),
         regions: $("#inputRegions").val(),
         csrfmiddlewaretoken: csrfToken
       },
@@ -15,5 +16,5 @@ $(function () {
     });
   }
   update_costs();
-  $("#inputRegions, #inputPeriod").on("input change", update_costs)
+  $("#inputRegions, #inputPeriod, #inputTourismTypes").on("input change", update_costs)
 })

@@ -56,6 +56,7 @@ class OrderForm(forms.ModelForm):
         fields = [
             "regions",
             "period",
+            "tourism_types",
             "inn",
             "promo",
             "user",

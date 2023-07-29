@@ -42,7 +42,7 @@
       <td colspan="2">
         <table class="table-border" cellpadding="5">
           <tr>
-            <td width="40%">Регион</td>
+            <td width="25%">Регион</td>
             <td><strong>{{ region.title }}</strong> (ранг&nbsp;{{ region.rank }})</td>
           </tr>
           <tr>
@@ -58,16 +58,32 @@
               </ul>
             </td>
           </tr>
+        </table>
+        <br>
+        <table class="table-border" cellpadding="5">
           <tr>
-            <td>Стоимость за месяц</td>
+            <td>Стоимость</td>
+            <td align="center">1 вид туризма</td>
+            <td align="center">все виды туризма</td>
+          </tr>
+          <tr>
+            <td>за неделю</td>
+            <td align="right"><strong>{{ cost_1w_1t }} ₽</strong></td>
+            <td align="right"><strong>{{ cost_1w }} ₽</strong></td>
+          </tr>
+          <tr>
+            <td>за месяц</td>
+            <td align="right"><strong>{{ cost_1m_1t }} ₽</strong></td>
             <td align="right"><strong>{{ cost_1m }} ₽</strong></td>
           </tr>
           <tr>
-            <td>Стоимость за полгода (со скидкой {{ discounts.gt_6_discount }}%)</td>
+            <td>за полгода (со скидкой {{ discounts.gt_6_discount }}%)</td>
+            <td align="right"><strong>{{ cost_6m_1t }} ₽</strong></td>
             <td align="right"><strong>{{ cost_6m }} ₽</strong></td>
           </tr>
           <tr>
-            <td>Стоимость за год (со скидкой {{ discounts.gt_12_discount }}%)</td>
+            <td>за год (со скидкой {{ discounts.gt_12_discount }}%)</td>
+            <td align="right"><strong>{{ cost_12m_1t }} ₽</strong></td>
             <td align="right"><strong>{{ cost_12m }} ₽</strong></td>
           </tr>
         </table>

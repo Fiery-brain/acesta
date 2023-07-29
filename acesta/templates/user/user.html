@@ -32,10 +32,22 @@
                 <label for="inputRegions" class="form-label">Регионы</label>
               </div>
               <div class="form-floating mb-2">
-                <input type="number" required class="form-control" min="1" name="period" id="inputPeriod" value="{{ order_form.period.value }}" placeholder="Период *" title="Период">
-                <label for="inputPeriod" class="form-label">Период (мес)</label>
+                <select class="form-select" required name="period" id="inputPeriod">
+                  {% for period, title in order_form.period.field.choices %}
+                    <option value="{{ period }}"{% if order_form.period.value == period %} selected{% endif %}>{{ title }}</option>
+                  {% endfor %}
+                </select>
+                <label for="inputPeriod" class="form-label">Период</label>
               </div>
-               <div class="form-floating mb-2">
+              <div class="form-floating mb-2">
+                <select class="form-select" name="tourism_types" id="inputTourismTypes" multiple>
+                  {% for name, title in tourism_types %}
+                    <option value="{{ name }}">{{ title }}</option>
+                  {% endfor %}
+                </select>
+                <label for="inputTourismTypes" class="form-label">Виды туризма (все или до 3 конкретных)</label>
+              </div>
+              <div class="form-floating mb-2">
                 <input type="text" pattern="\d{10,12}" class="form-control" minlength="10" maxlength="12" name="inn" id="inputInn" placeholder="ИНН для выставления счета" title="ИНН организации (10 или 12 цифр)">
                 <label for="inputInn" class="form-label">ИНН организации (обязательно для организаций)</label>
               </div>
@@ -298,7 +310,7 @@
               <tr>
                 <th class="d-none d-xl-table-cell" scope="col">Дата</th>
                 <th scope="col">Регионы</th>
-                <th class="text-center text-nowrap" scope="col">Период, мес</th>
+                <th scope="col">Период</th>
                 <th class="text-end d-none d-xl-table-cell" scope="col">Сумма, ₽</th>
                 <th class="text-center" scope="col">Статус</th>
               </tr>
@@ -312,7 +324,7 @@
                       {{ region.title }}{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                   </td>
-                  <td class="text-center">{{ order.period }}</td>
+                  <td class="text-nowrap">{{ order.get_period_display }}</td>
                   <td class="text-end d-none d-xl-table-cell">{{ order.total }}</td>
                   <td class="text-center text-nowrap"><span class="badge bg-{{ order.state }}">{{ order.get_state_display }}</span></td>
                 </tr>
@@ -333,6 +345,7 @@
   <script src="{% static 'js/jquery.mask.min.js' %}"></script>
   <script src="{% static 'js/jquery.number.min.js' %}"></script>
   <script src="{% static 'js/regions.selector.js' %}"></script>
+  <script src="{% static 'js/tourism.types.selector.js' %}"></script>
   <script src="{% static 'js/city.selector.js' %}"></script>
   <script>
     const costUrl = "{% url 'costs' %}";

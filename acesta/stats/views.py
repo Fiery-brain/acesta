@@ -163,19 +163,21 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
     :param area: str
     :return: django.http.HttpResponse
     """
-    context = {
-        "area": area,
-    }
+    context = {"area": area}
     if area != settings.AREA_REGIONS and not request.user.is_extended:
         return redirect("rating")
     else:
         if area == settings.AREA_SIGHTS:
+            sight_group = request.user.get_current_sight_group(
+                request.GET.get("group", None) or None
+            )
             group_filter = (
-                dict(sight_group=request.GET.get("group"))
-                if request.GET.get("group")
+                dict(sight_group=sight_group)
+                if sight_group is not None
                 else dict(sight_group__isnull=True)
             )
             data = {
+                "sight_group": sight_group,
                 "sight_groups": SightGroup.pub.filter(
                     name__in=[
                         group.get("group")
@@ -203,25 +205,25 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
                 == settings.REGION_TYPE_FEDERAL_CITY
             ):
                 return redirect("rating")
+            tourism_type = request.user.get_current_tourism_type(
+                request.GET.get("tourism_type", None) or None
+            )
             data = {
+                "tourism_type": tourism_type,
                 "tourism_types": settings.TOURISM_TYPES_OUTSIDE,
                 "interest_city_places": CityRating.objects.filter(
                     home_region=request.user.current_region,
-                    **(
-                        dict(tourism_type=request.GET.get("tourism_type"))
-                        if request.GET.get("tourism_type")
-                        else dict(tourism_type__isnull=True)
-                    )
+                    **dict(tourism_type=tourism_type)
+                    if tourism_type is not None
+                    else dict(tourism_type__isnull=True)
                 ).select_related(),
                 "amount_city_places": (
                     Sight.pub.filter(
                         city__isnull=False,
                         code=request.user.current_region,
-                        **(
-                            dict(group__tourism_type=request.GET.get("tourism_type"))
-                            if request.GET.get("tourism_type")
-                            else {}
-                        )
+                        **dict(group__tourism_type=tourism_type)
+                        if tourism_type is not None
+                        else {}
                     )
                     .values("city", "city__title")
                     .annotate(qty=models.Count("id"))

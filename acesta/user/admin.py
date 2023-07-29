@@ -114,14 +114,23 @@ class UserAdmin(auth_admin.UserAdmin):
                     "city",
                     "email",
                     "phone",
+                    "subscription",
                     "points",
                     "note",
                 )
             },
         ),
         (
-            "Регионы",
-            {"fields": ("regions", "region", "current_region", "period_info")},
+            "Регионы и виды туризма",
+            {
+                "fields": (
+                    "regions",
+                    "region",
+                    "current_region",
+                    "period_info",
+                    "tourism_types",
+                )
+            },
         ),
         ("Даты", {"fields": ("last_hit", "last_login", "date_joined")}),
     )
@@ -148,7 +157,7 @@ class UserAdmin(auth_admin.UserAdmin):
     )
 
     def get_ordering(self, request):
-        return ["-last_login"]
+        return ["-last_hit"]
 
 
 @admin.register(Order)

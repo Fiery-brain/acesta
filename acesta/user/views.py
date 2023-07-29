@@ -51,7 +51,11 @@ def price(request: HttpRequest) -> HttpResponse:
         request,
         "user/price.html",
         {
-            "price": PRICES.get(f"rank_{request.user.current_region.rank}"),
+            "price": Order.get_cost(
+                0.25,
+                [request.user.current_region.code],
+                [settings.TOURISM_TYPE_DEFAULT],
+            ),
             "prices": PRICES,
             "discounts": DISCOUNTS,
             "support_form": get_support_form(request.user, settings.SUPPORT_REPORT),
@@ -66,11 +70,12 @@ def get_order_data(post: QueryDict) -> tuple:
     :return: tuple
     """
     try:
-        period = int(post.get("period"))
+        period = float(post.get("period").replace(",", "."))
     except ValueError:
         period = 0
+    tourism_types = post.getlist("tourism_types") or post.getlist("tourism_types[]")
     regions = post.getlist("regions") or post.getlist("regions[]")
-    return period, regions
+    return period, tourism_types, regions
 
 
 def new_order(request: HttpRequest) -> HttpResponse:
@@ -79,14 +84,18 @@ def new_order(request: HttpRequest) -> HttpResponse:
     :param request: django.http.HttpRequest
     :return: django.http.HttpResponse
     """
-    order_form = OrderForm(data=request.POST)
-
     if request.POST:
+        data = request.POST.copy()
+
+        period, tourism_types, regions = get_order_data(request.POST)
+        data["period"] = period
+
+        order_form = OrderForm(data=data)
+
         if order_form.is_valid():
             order = order_form.save(commit=False)
-            period, regions = get_order_data(request.POST)
-            order.cost = Order.get_cost(period, regions)
-            order.discount = Order.get_discount_sum(period, regions)
+            order.cost = Order.get_cost(period, regions, tourism_types)
+            order.discount = Order.get_discount_sum(period, regions, tourism_types)
             order.total = order.cost - order.discount
             order.save()
             order_form.save_m2m()
@@ -148,9 +157,22 @@ def offer(request: HttpRequest) -> HttpResponse:
             "TITLE": settings.TITLE,
             "region": region,
             "discounts": DISCOUNTS,
+            "cost_1w_1t": Order.get_cost(
+                0.25, regions, [settings.TOURISM_TYPE_DEFAULT]
+            ),
+            "cost_1w": Order.get_cost(0.25, regions),
+            "cost_1m_1t": Order.get_cost(1, regions, [settings.TOURISM_TYPE_DEFAULT]),
             "cost_1m": Order.get_cost(1, regions),
+            "cost_6m_1t": int(
+                Order.get_cost(6, regions, [settings.TOURISM_TYPE_DEFAULT])
+                - Order.get_discount_sum(6, regions, [settings.TOURISM_TYPE_DEFAULT])
+            ),
             "cost_6m": int(
                 Order.get_cost(6, regions) - Order.get_discount_sum(6, regions)
+            ),
+            "cost_12m_1t": int(
+                Order.get_cost(12, regions, [settings.TOURISM_TYPE_DEFAULT])
+                - Order.get_discount_sum(12, regions, [settings.TOURISM_TYPE_DEFAULT])
             ),
             "cost_12m": int(
                 Order.get_cost(12, regions) - Order.get_discount_sum(12, regions)
@@ -223,35 +245,35 @@ def visitor_request(request: HttpRequest) -> HttpResponse or FileResponse:
             data["time"] = timezone.now() + relativedelta(minutes=60)
         request_form = RequestForm(data=data)
 
-        if request.POST:
-            if request_form.is_valid():
-                request_form.save()
-                if is_consultation:
-                    messages.add_message(
-                        request,
-                        messages.SUCCESS,
-                        "Спасибо! Мы получили запрос и&nbsp;свяжемся с вами в ближайшее время",
-                    )
-                try:
-                    send_mail(
-                        f"Новый запрос {'консультации' if is_consultation else 'презентации'}",
-                        f"""Новый запрос {'консультации' if is_consultation else 'презентации'}
-                            {request.POST['name']}
-                            {request.POST['channel']} {request.POST['_id']} {request.POST['comment']}""",
-                        settings.DEFAULT_FROM_EMAIL,
-                        settings.ADMINS,
-                        fail_silently=False,
-                    )
-                except RuntimeError:
-                    send_message("Новый запрос посетителя")
-
-            else:
+        if request_form.is_valid():
+            request_form.save()
+            if is_consultation:
                 messages.add_message(
                     request,
-                    messages.ERROR,
-                    "Не удалось отправить запрос, попробуйте позже или&nbsp;обратитесь в&nbsp;техподдержку",
+                    messages.SUCCESS,
+                    "Спасибо! Мы получили запрос и&nbsp;свяжемся с вами в ближайшее время",
                 )
-                send_message(f"Ошибка при добавлении сообщения {request_form.errors}")
+            try:
+                send_mail(
+                    f"Новый запрос {'консультации' if is_consultation else 'презентации'}",
+                    f"""Новый запрос {'консультации' if is_consultation else 'презентации'}
+                        {request.POST['name']}
+                        {request.POST['channel']} {request.POST['_id']} {request.POST['comment']}""",
+                    settings.DEFAULT_FROM_EMAIL,
+                    settings.ADMINS,
+                    fail_silently=False,
+                )
+            except RuntimeError:
+                send_message("Новый запрос посетителя")
+
+        else:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                "Не удалось отправить запрос, попробуйте позже или&nbsp;обратитесь в&nbsp;техподдержку",
+            )
+            send_message(f"Ошибка при добавлении сообщения {request_form.errors}")
+
         if request.POST["subject"] == settings.REQUEST_CONSULTATION:
             return redirect(request.META["HTTP_REFERER"])
         else:
@@ -324,6 +346,7 @@ def user_profile(request: HttpRequest, code: str = None) -> HttpResponse:
         {
             "prices": PRICES,
             "discounts": DISCOUNTS,
+            "tourism_types": settings.TOURISM_TYPES,
             "order_form": get_order_form(request.user),
             "user_form": UserForm(instance=request.user),
             "open_order": True if code else False,
@@ -340,11 +363,11 @@ def get_costs(request: HttpRequest) -> JsonResponse:
     :param request: django.http.HttpRequest
     :return: int
     """
-    period, regions = get_order_data(request.POST)
+    period, tourism_types, regions = get_order_data(request.POST)
     return JsonResponse(
         {
-            "cost": Order.get_cost(period, regions),
+            "cost": Order.get_cost(period, regions, tourism_types),
             "discount": Order.get_discount(period),
-            "discount_sum": Order.get_discount_sum(period, regions),
+            "discount_sum": Order.get_discount_sum(period, regions, tourism_types),
         }
     )

@@ -10,8 +10,10 @@
         <h1 class="fs-4 mb-2 text-muted text-nowrap">Услуги и&nbsp;цены</h1>
       </div>
       <div class="col-12 col-md-9 pt-3 pt-md-0 d-flex align-items-center justify-content-md-end text-nowrap">
-        <a href="{% url 'oferta' %}" class="ms-md-3 text-secondary py-2" title="Скачать оферту"><svg fill="#34766a" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Оферта</a>
-        <a href="{% url 'offer' %}" class="ms-2 ms-md-3 text-secondary py-2 text-nowrap" title="Скачать коммерческое предложение"><svg fill="#fab222" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Коммерческое предложение</a>
+        {% if request.user.current_region.rank > 0%}
+          <a href="{% url 'oferta' %}" class="ms-md-3 text-secondary py-2" title="Скачать оферту"><svg fill="#34766a" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Оферта</a>
+          <a href="{% url 'offer' %}" class="ms-2 ms-md-3 text-secondary py-2 text-nowrap" title="Скачать коммерческое предложение"><svg fill="#fab222" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Коммерческое предложение</a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -58,7 +60,7 @@
           </td>
           <td class="text-center plan-container bg-yellow text-white px-3 pt-3 pb-3">
             <h2 class="text-white fs-6">Полный<span class="d-none d-lg-inline"> доступ</span></h2>
-            <p class="fw-bold fs-5 mb-2 text-nowrap">{{ price }} ₽/мес
+            <p class="fw-bold fs-5 mb-2 text-nowrap">{% if price %}от {{ price }} ₽/нед{% else %}0 ₽/мес{% endif %}
               <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
                 <p class='mt-1 mb-1 text-nowrap'><small>Регион 0 ранга: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ prices.rank_0 }} ₽</b>/мес</small></p>
                 <p class='mb-1 text-nowrap'><small>Регион 1 ранга: <b>{{ prices.rank_1 }} ₽</b>/мес</small></p>

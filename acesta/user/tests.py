@@ -1,9 +1,15 @@
+from dateutil.relativedelta import relativedelta
 from django import test
+from django.conf import settings
 from django.contrib.auth import get_user
 from django.urls import reverse
+from django.utils.timezone import now
 
+from acesta.user import format_date
+from acesta.user import get_date
 from acesta.user.helpers import CredentialsMixin
 from acesta.user.models import Order
+from acesta.user.models import Region
 
 
 class UrlsTest(CredentialsMixin, test.TestCase):
@@ -100,7 +106,7 @@ class UrlsTest(CredentialsMixin, test.TestCase):
         response = self.client.post(
             reverse("order"),
             data={
-                "period": 6,
+                "period": 0.12,
                 "regions": [
                     "101",
                 ],
@@ -138,7 +144,7 @@ class UrlsTest(CredentialsMixin, test.TestCase):
         response = self.client.post(
             reverse("order"),
             data={
-                "period": 6,
+                "period": 6.0,
                 "regions": ["01", "02"],
                 "user": get_user(self.client).id,
             },
@@ -157,3 +163,88 @@ class UrlsTest(CredentialsMixin, test.TestCase):
         response = self.client.post(reverse("account_logout"))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(get_user(self.client).is_authenticated, False)
+
+    def test_orders(self):
+
+        self.assertGreater(len(settings.TOURISM_TYPES), 0)
+
+        self.client.login(**self.credentials)
+        self.assertEqual(get_user(self.client).is_authenticated, True)
+
+        user = get_user(self.client)
+
+        # simple order
+        o = Order.objects.create(period=0.25, user=user)
+        o.regions.add(Region.objects.get(code="01"))
+
+        self.assertEqual(len(user.regions.all()), 0)
+        self.assertEqual(user.period_info, {})
+        self.assertIsNone(user.tourism_types)
+
+        o.state = settings.STATE_DONE
+        o.save()
+
+        period_info = user.period_info
+
+        self.assertEqual(len(user.regions.all()), 1)
+        self.assertIn("01", period_info.keys())
+        self.assertIsNone(user.tourism_types)
+
+        self.assertEqual(
+            get_date(period_info.get("01").get("start")), get_date(format_date(now()))
+        )
+
+        self.assertEqual(
+            get_date(period_info.get("01").get("end")),
+            get_date(format_date(now() + relativedelta(days=7))),
+        )
+
+        # done order
+        o = Order.objects.create(
+            period=0.5,
+            user=user,
+            state=settings.STATE_DONE,
+            tourism_types=["spa", "museum"],
+        )
+        o.regions.add(Region.objects.get(code="02"))
+
+        period_info = user.period_info
+
+        self.assertEqual(len(user.regions.all()), 2)
+        self.assertIn("02", period_info.keys())
+        self.assertSetEqual(set(user.tourism_types), {"spa", "museum"})
+
+        self.assertEqual(
+            get_date(period_info.get("02").get("start")), get_date(format_date(now()))
+        )
+
+        self.assertEqual(
+            get_date(period_info.get("02").get("end")),
+            get_date(format_date(now() + relativedelta(days=14))),
+        )
+
+        # clearing subscription
+        period_info["01"]["end"] = format_date(now() - relativedelta(days=1))
+
+        user.period_info = period_info
+        user.save()
+
+        self.assertEqual(user.period_info["01"]["end"], period_info["01"]["end"])
+
+        user.clean_up_old_periods()
+
+        self.assertEqual(len(user.regions.all()), 1)
+        self.assertEqual(len(user.period_info), 1)
+        self.assertIn("02", period_info.keys())
+        self.assertSetEqual(set(user.tourism_types), {"spa", "museum"})
+
+        period_info["02"]["end"] = format_date(now() - relativedelta(days=1))
+
+        user.period_info = period_info
+        user.save()
+
+        user.clean_up_old_periods()
+
+        self.assertEqual(len(user.regions.all()), 0)
+        self.assertEqual(user.period_info, {})
+        self.assertIsNone(user.tourism_types)

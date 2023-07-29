@@ -3,6 +3,8 @@ from .base import env
 
 if DEBUG:  # noqa
     from .local import *  # noqa
+
+SITE_ID = 1
 TESTING = True
 
 # GENERAL

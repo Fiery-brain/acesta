@@ -314,6 +314,7 @@ box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8);border:1px solid #ececec}
 .select2-selection svg{position:relative;bottom:1px}
 .select2-container--default .select2-results__option--selected path{fill:var(--bs-white)}
 .select2-container--default .select2-selection--single {border-color:var(--acesta-border-light)}
+.select2-container .select2-search--inline .select2-search__field{font-family: Nunito;position:relative;bottom:6px;}
 
 .btn-primary {
     --bs-btn-color:#fff;

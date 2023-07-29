@@ -419,6 +419,22 @@ TOURISM_TYPES = tuple(
     )
 ) or (("museum", "музейный туризм"),)
 
+PERIOD_DATE_FORMAT = "%d.%m.%Y %H:%M:%S %z"
+TOURISM_TYPE_COEF = env("ACESTA_TOURISM_TYPE_COEF", default=0.27)
+PERIOD_1_WEEK_COEF = env("ACESTA_PERIOD_1_WEEK_COEF", default=0.35)
+PERIOD_2_WEEKS_COEF = env("ACESTA_PERIOD_2_WEEKS_COEF", default=0.6)
+ORDER_PERIODS = (
+    (0.25, "1 неделя"),
+    (0.5, "2 недели"),
+    (1.0, "1 месяц"),
+    (2.0, "2 месяца"),
+    (3.0, "3 месяца"),
+    (4.0, "4 месяца"),
+    (5.0, "5 месяцев"),
+    (6.0, "6 месяцев"),
+    (12.0, "12 месяцев"),
+)
+
 TOURISM_TYPES_OUTSIDE = tuple((k, v) for k, v in TOURISM_TYPES if k not in ("gastro"))
 
 TOURISM_TYPE_DEFAULT = env("ACESTA_TOURISM_TYPE_DEFAULT", default="museum")

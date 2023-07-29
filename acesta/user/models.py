@@ -1,16 +1,17 @@
-from datetime import datetime
-
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager as BaseUserManager
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.utils import timezone
 from django.utils.timezone import now
 from model_utils.models import TimeStampedModel
 
 from acesta.geo.models import City
 from acesta.geo.models import Region
+from acesta.geo.models import SightGroup
+from acesta.user import format_date
+from acesta.user import get_date
 from acesta.user.validators import validate_russian
 
 
@@ -32,8 +33,6 @@ class User(AbstractUser):
     User Model
     """
 
-    period_dateformat = "%d.%m.%Y %H:%M:%S %z"
-
     email = models.EmailField("Email", unique=True)
     regions = models.ManyToManyField(
         Region,
@@ -44,6 +43,15 @@ class User(AbstractUser):
     period_info = models.JSONField(
         "Периоды полного доступа",
         default=dict,
+        blank=True,
+        null=True,
+    )
+    tourism_types = ArrayField(
+        models.CharField(
+            "Оплаченные виды туризма",
+            max_length=10,
+            choices=settings.TOURISM_TYPES,
+        ),
         blank=True,
         null=True,
     )
@@ -58,6 +66,7 @@ class User(AbstractUser):
         verbose_name="Домашний регион",
         on_delete=models.DO_NOTHING,
         related_name="home_region_users",
+        default="01",
     )
     city = models.ForeignKey(
         City,
@@ -68,15 +77,22 @@ class User(AbstractUser):
     )
     first_name = models.CharField("Имя", max_length=150, validators=[validate_russian])
     last_name = models.CharField(
-        "Фамилия", max_length=150, validators=[validate_russian]
+        "Фамилия",
+        max_length=150,
+        validators=[validate_russian],
+        blank=True,
+        null=True,
     )
     middle_name = models.CharField(
-        "Отчество", max_length=50, validators=[validate_russian]
+        "Отчество",
+        max_length=50,
+        validators=[validate_russian],
+        blank=True,
+        null=True,
     )
     phone = models.CharField(
         "Телефон",
         max_length=12,
-        # TODO
         blank=True,
         null=True,
     )
@@ -94,6 +110,7 @@ class User(AbstractUser):
     )
     points = models.SmallIntegerField("Контакты", default=0)
     note = models.CharField("Заметки", max_length=255, blank=True, null=True)
+    subscription = models.BooleanField("Подписка на новости", default=1)
     last_hit = models.DateTimeField(
         "Последний хит",
         blank=True,
@@ -105,8 +122,6 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [
         "first_name",
-        "last_name",
-        "middle_name",
         "region",
     ]
 
@@ -132,38 +147,48 @@ class User(AbstractUser):
             self.current_region.rank == 0 or self.current_region in self.regions.all()
         )
 
-    def update_period_info(self, period, order_regions):
+    def update_period_info(self, period, order_regions, tourism_types):
+
         period_info = self.period_info
+
         for region in order_regions.all():
             region_period_data = {region.code: {}}
-            if region.code in period_info.keys():
-                end = datetime.strptime(
-                    period_info.get(region.code).get("end"), self.period_dateformat
-                )
-                end += relativedelta(months=period)
-                region_period_data[region.code]["start"] = period_info.get(
-                    region.code
-                ).get("start")
-                region_period_data[region.code]["end"] = datetime.strftime(
-                    end, self.period_dateformat
-                )
+
+            if period == 0.25:
+                delta_args = dict(days=7)
+            elif period == 0.5:
+                delta_args = dict(days=14)
             else:
-                start = timezone.now()
-                end = start + relativedelta(months=period)
-                region_period_data[region.code]["start"] = datetime.strftime(
-                    start, self.period_dateformat
-                )
-                region_period_data[region.code]["end"] = datetime.strftime(
-                    end, self.period_dateformat
-                )
+                delta_args = dict(months=period)
+            if region.code in period_info.keys():
+                region_period_data[region.code] = period_info.get(region.code)
+                if (
+                    get_date(format_date(now()))
+                    - get_date(period_info.get(region.code).get("start"))
+                ).seconds // 60:
+                    end = get_date(period_info.get(region.code).get("end"))
+                    end += relativedelta(**delta_args)
+                    region_period_data[region.code]["start"] = period_info.get(
+                        region.code
+                    ).get("start")
+                    region_period_data[region.code]["end"] = format_date(end)
+            else:
+                start = now()
+                end = start + relativedelta(**delta_args)
+                region_period_data[region.code]["start"] = format_date(start)
+                region_period_data[region.code]["end"] = format_date(end)
             self.regions.add(region)
             self.period_info.update(region_period_data)
-            self.save()
+        if self.tourism_types is None:
+            self.tourism_types = tourism_types
+        else:
+            self.tourism_types = list(set(self.tourism_types + tourism_types))
+        self.save()
 
     def clean_up_old_periods(self):
         old_periods = []
         for region, period in self.period_info.items():
-            end_date = datetime.strptime(period.get("end"), self.period_dateformat)
+            end_date = get_date(period.get("end"))
             if end_date < now():
                 old_region = Region.objects.get(code=region)
                 self.regions.remove(old_region)
@@ -171,11 +196,40 @@ class User(AbstractUser):
         for region in old_periods:
             del self.period_info[region]
         if len(old_periods):
-            self.save()
+            if not len(self.period_info):
+                self.tourism_types = None
+            self.save(update_fields=["period_info", "tourism_types"])
+
+    def get_current_tourism_type(self, tourism_type=None) -> str or None:
+        """
+        Checks if tourism type is open for user
+        and return the first permitted
+        :param tourism_type: str
+        :return: str
+        """
+        if self.tourism_types is not None:
+            if tourism_type is None or tourism_type not in self.tourism_types:
+                tourism_type = sorted(self.tourism_types)[0]
+        return tourism_type
+
+    def get_current_sight_group(self, sight_group) -> str or None:
+        """
+        Checks if sight group is open for user
+        and return the first permitted
+        :param sight_group: str
+        :return: str
+        """
+        if self.tourism_types is not None:
+            sight_groups = SightGroup.objects.filter(
+                tourism_type__in=self.tourism_types
+            )
+            if sight_group is None or not len(sight_groups.filter(name=sight_group)):
+                sight_group = sight_groups.first().name
+        return sight_group
 
     def set_last_hit(self):
         self.last_hit = now()
-        self.save()
+        self.save(update_fields=["last_hit"])
 
     class Meta:
         verbose_name = "Пользователь"
@@ -194,7 +248,16 @@ class Order(TimeStampedModel):
         on_delete=models.DO_NOTHING,
         related_name="user_orders",
     )
-    period = models.IntegerField("Период (месяцев)")
+    period = models.FloatField("Период", choices=settings.ORDER_PERIODS)
+    tourism_types = ArrayField(
+        models.CharField(
+            "Виды туризма",
+            max_length=10,
+            choices=settings.TOURISM_TYPES,
+        ),
+        blank=True,
+        null=True,
+    )
     cost = models.DecimalField(
         "Стоимость", decimal_places=2, max_digits=10, default=0.0
     )
@@ -244,24 +307,40 @@ class Order(TimeStampedModel):
     )
 
     @staticmethod
-    def get_cost(period: int, regions_list: list):
+    def get_cost(period: float, regions_list: list, tourism_types: list = None):
         """
         Returns access cost by period and regions list
-        :param period: int
+        :param period: float
         :param regions_list: list
+        :param tourism_types: list
         :return: int
         """
+
+        def get_period_coef(period):
+            coef = period
+            if 0 < period <= 0.25:
+                coef = settings.PERIOD_1_WEEK_COEF
+            elif 0.25 < period <= 0.5:
+                coef = settings.PERIOD_2_WEEKS_COEF
+            return coef
+
         regions = Region.objects.filter(code__in=regions_list)
         cost = 0
+
         for region in regions:
-            cost += period * settings.PRICES.get(f"rank_{region.rank}", 0)
-        return cost
+            cost += get_period_coef(period) * settings.PRICES.get(
+                f"rank_{region.rank}", 0
+            )
+
+        if tourism_types is not None and len(tourism_types):
+            cost *= settings.TOURISM_TYPE_COEF * len(tourism_types)
+        return int(cost)
 
     @staticmethod
-    def get_discount(period: int):
+    def get_discount(period: float):
         """
         Returns discount by period
-        :param period: int
+        :param period: float
         :return: float
         """
         discount = 0
@@ -272,24 +351,19 @@ class Order(TimeStampedModel):
         return discount
 
     @staticmethod
-    def get_discount_sum(period: int, regions_list: list):
+    def get_discount_sum(period: float, regions_list: list, tourism_types: list = None):
         """
         Returns discount sum by period
         :param period: int
         :param regions_list: list
+        :param tourism_types: list
         :return: float
         """
-        return Order.get_discount(period) / 100 * Order.get_cost(period, regions_list)
-
-    def save(self, *args, **kwargs):
-        # TODO if new or status -> DONE
-        if self.pk is not None:
-            order = Order.objects.get(pk=self.pk)
-            if self.state == settings.STATE_DONE and order.state != settings.STATE_DONE:
-                self.user.update_period_info(self.period, self.regions)
-        elif self.state == settings.STATE_DONE:
-            self.user.update_period_info(self.period, self.regions)
-        super().save(*args, **kwargs)
+        return (
+            Order.get_discount(period)
+            / 100
+            * Order.get_cost(period, regions_list, tourism_types)
+        )
 
     class Meta:
         verbose_name = "Заказ"
@@ -381,7 +455,7 @@ class Request(TimeStampedModel):
         ordering = ["-modified"]
 
 
-def recalc_sums_after_change_period(sender, instance, *args, **kwargs) -> None:
+def recalc_sums_after_changes(sender, instance, *args, **kwargs) -> None:
     """
     Recalculates Order sums
     :param sender: Order
@@ -390,9 +464,19 @@ def recalc_sums_after_change_period(sender, instance, *args, **kwargs) -> None:
     """
     if instance.pk:
         regions_list = [region.code for region in instance.regions.all()]
-        instance.cost = Order.get_cost(instance.period, regions_list)
-        instance.discount = Order.get_discount_sum(instance.period, regions_list)
+        instance.cost = Order.get_cost(
+            instance.period, regions_list, instance.tourism_types
+        )
+        instance.discount = Order.get_discount_sum(
+            instance.period, regions_list, instance.tourism_types
+        )
         instance.total = instance.cost - instance.discount
+
+        order = Order.objects.get(pk=instance.pk)
+        if instance.state == settings.STATE_DONE and order.state != settings.STATE_DONE:
+            instance.user.update_period_info(
+                instance.period, instance.regions, instance.tourism_types
+            )
 
 
 def recalc_sums_after_change_regions(sender, **kwargs) -> None:
@@ -404,13 +488,23 @@ def recalc_sums_after_change_regions(sender, **kwargs) -> None:
     """
     instance = kwargs.pop("instance")
     pk_set = kwargs.pop("pk_set")
-    instance.cost = Order.get_cost(instance.period, pk_set)
-    instance.discount = Order.get_discount_sum(instance.period, pk_set)
+    instance.cost = Order.get_cost(instance.period, pk_set, instance.tourism_types)
+    instance.discount = Order.get_discount_sum(
+        instance.period, pk_set, instance.tourism_types
+    )
     instance.total = instance.cost - instance.discount
-    instance.save(update_fields=["cost", "discount", "total"])
+    if (
+        instance.state == settings.STATE_DONE
+        and not (instance.modified - instance.created).microseconds
+    ):
+        instance.user.update_period_info(
+            instance.period,
+            Region.objects.filter(pk__in=pk_set),
+            instance.tourism_types,
+        )
 
 
-models.signals.pre_save.connect(recalc_sums_after_change_period, sender=Order)
+models.signals.pre_save.connect(recalc_sums_after_changes, sender=Order)
 models.signals.m2m_changed.connect(
     recalc_sums_after_change_regions, sender=Order.regions.through
 )
