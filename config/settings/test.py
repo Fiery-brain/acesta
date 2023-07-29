@@ -15,6 +15,20 @@ SECRET_KEY = env(
     default="tn5CoM0Zdl0qOqGP0iAhUOUIWYHFVkKitkLvEFi1Hr9JBZ1n4e8cuvb2GuGuekO8",
 )
 
+# DATABASES
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "github_actions",
+        "USER": "radorado",
+        "PASSWORD": "radorado",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+    }
+}
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#test-runner
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
 
