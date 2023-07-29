@@ -25,6 +25,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements/test.txt
+    - uses: harmon758/postgresql-action@v1
+      with:
+        postgresql version: '14'
     - name: Run Tests
       run: |
         pytest
