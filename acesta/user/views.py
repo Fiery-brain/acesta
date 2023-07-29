@@ -346,7 +346,7 @@ def user_profile(request: HttpRequest, code: str = None) -> HttpResponse:
         {
             "prices": PRICES,
             "discounts": DISCOUNTS,
-            "tourism_types": settings.TOURISM_TYPES,
+            "tourism_types": settings.TOURISM_TYPES_OUTSIDE,
             "order_form": get_order_form(request.user),
             "user_form": UserForm(instance=request.user),
             "open_order": True if code else False,
