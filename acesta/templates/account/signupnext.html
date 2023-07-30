@@ -1,0 +1,33 @@
+{% extends "account/base_col6.html" %}
+
+{% load static %}
+
+{% block title %}Завершение регистрации. {% endblock %}
+
+{% block description %}Завершение регистрации на аналитическом сервисе для развития туризма ацеста{% endblock %}
+
+{% block ogtitle %}Завершение регистрации. {% endblock %}
+
+{% block ogimage %}{% static 'img/og/login.png' %}{% endblock %}
+{% block ogimage_secure %}{% static 'img/og/login.png' %}{% endblock %}
+
+{% block vkimage %}{% static 'img/og/login.vk.png' %}{% endblock %}
+{% block vkimage_secure %}{% static 'img/og/login.vk.png' %}{% endblock %}
+
+{% block css_external %}
+  <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block content_block %}
+  <h1>Завершение регистрации</h1>
+  <form class="signup" id="signup_form" method="post" action="{% url 'account_signupnext' %}">
+    {% csrf_token %}
+    {% include "include/sign_up_fields_2.html" %}
+  </form>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/region.selector.js' %}"></script>
+{% endblock %}

@@ -7,4 +7,4 @@ def user_display(user: User):
     :param user: User
     :return: str
     """
-    return f"{ user.first_name } { user.middle_name }".strip()
+    return f"{ user.first_name } { user.middle_name if user.middle_name is not None else '' }".strip()

@@ -430,8 +430,10 @@ box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8);border:1px solid #ececec}
 .modal-footer{justify-content:flex-start}
 
 input[type=radio] {margin-right:.3em;position:relative;top:.2em;appearance:none;border-radius:50%;font:inherit;color:currentColor;width:1em;height:1em;border:0.1em solid #429388}
+.form-check-input:checked{background-color: var(--acesta-primary);border-color: var(--acesta-primary);}
+.form-check-input:focus{border-color: var(--acesta-dark-primary);}
 input:checked[type=radio] {background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e")}
-input:checked {background-color:#429388;border-color:#429388}
+input:checked {background-color:var(--acesta-light-primary);border-color:var(--acesta-dark-primary)}
 
 ._dash-loading{display:none}
 *[data-dash-is-loading="true"]{filter:blur(2px);-web-kit-filter:blur(2px);-moz-filter:blur(2px);-o-filter:blur(2px);-ms-filter:blur(2px);}
@@ -479,6 +481,7 @@ label:focus
 .btn-close:focus,
 .btn-close:active
 {outline:0px !important;-webkit-appearance:none;box-shadow:none !important}
+textarea.form-control{min-height: 100px;}
 
 .form-control:focus,.form-select:focus{border:1px solid var(--acesta-primary)}
 

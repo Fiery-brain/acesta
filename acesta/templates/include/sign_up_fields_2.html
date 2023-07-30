@@ -1,0 +1,34 @@
+{% load static %}
+<div class="form-floating mt-3 mb-2">
+  <select class="form-select" required name="region" id="inputRegion" autocomplete="newRegion">
+    <option value="">-----</option>
+    {% for id, region in form.region.field.choices %}
+      <option value="{{ id }}"{% if request.POST and form.region.value == id %} selected{% endif %}>{{ region }}</option>
+    {% endfor %}
+  </select>
+  <label for="inputRegion">Домашний регион</label>
+</div>
+<div class="form-floating mb-2">
+  <textarea class="form-control" required minlength="5" placeholder="Задачи, которые собираетесь решать" name="purpose" id="txtPurpose">{{ form.purpose.value|default:"" }}</textarea>
+  <label for="txtPurpose">Цель (задачи, которые собираетесь решать)</label>
+</div>
+<div class="form-floating mb-2">
+  <input type="password" required class="form-control{% if form.password1.errors %} is-invalid{% endif %}" name="password1" id="inputPassword" minlength="8">
+  <label for="inputPassword" class="form-label">Пароль (не менее 8 букв и цифр)</label>
+  {% if form.password1.errors %}
+    <div class="invalid-feedback">Слишком простой пароль</div>
+  {% endif %}
+</div>
+<div class="form-check mb-2">
+  <input class="form-check-input" type="checkbox" value="1" name="subscription" id="checkSubscription" checked>
+  <label class="form-check-label" for="checkSubscription">
+    Хочу получать новости сервиса
+  </label>
+</div>
+{% if redirect_field_value %}
+<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+{% endif %}
+
+<div class="mt-4">
+  <button type="submit" class="btn btn-primary btn-lg px-4"><svg fill="#FFFFFF" width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#sign-in"></use></svg>Начать работу</button>
+</div>

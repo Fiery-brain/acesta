@@ -21,6 +21,7 @@ from acesta.account.views import email_change
 from acesta.account.views import password_change
 from acesta.account.views import password_set
 from acesta.account.views import signup
+from acesta.account.views import signupnext
 from acesta.socialaccount.providers.leaderid.provider import LeaderIDProvider
 from acesta.socialaccount.views import connections
 from acesta.socialaccount.views import social_signup
@@ -36,6 +37,7 @@ from acesta.user.views import visitor_request
 
 urlpatterns = [
     path("signup/", signup, name="account_signup"),
+    path("signupnext/", signupnext, name="account_signupnext"),
     path("login/", login, name="account_login"),
     path("logout/", logout, name="account_logout"),
     path(

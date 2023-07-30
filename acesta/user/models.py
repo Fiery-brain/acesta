@@ -109,8 +109,10 @@ class User(AbstractUser):
         null=True,
     )
     points = models.SmallIntegerField("Контакты", default=0)
+    purpose = models.CharField("Цель", max_length=1200, blank=True, null=True)
     note = models.CharField("Заметки", max_length=255, blank=True, null=True)
-    subscription = models.BooleanField("Подписка на новости", default=1)
+    subscription = models.BooleanField("Подписка на новости", default=True)
+    registered = models.BooleanField("Регистрация завершена", default=False)
     last_hit = models.DateTimeField(
         "Последний хит",
         blank=True,
@@ -127,6 +129,10 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         if self.pk is None:
+            if not hasattr(self, "region"):
+                self.region = Region.objects.get(
+                    pk=User._meta.get_field("region").get_default()
+                )
             self.current_region = self.region
         self.username = self.email
         super().save(*args, **kwargs)

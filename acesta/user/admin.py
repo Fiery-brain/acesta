@@ -58,6 +58,12 @@ class UserForm(ModelForm):
         model = User
         widgets = {
             "period_info": JSONEditorWidget,
+            "purpose": forms.Textarea(
+                attrs={
+                    "style": "width:95%",
+                    "rows": 5,
+                }
+            ),
             "note": forms.Textarea(
                 attrs={
                     "style": "width:95%",
@@ -114,6 +120,7 @@ class UserAdmin(auth_admin.UserAdmin):
                     "city",
                     "email",
                     "phone",
+                    "purpose",
                     "subscription",
                     "points",
                     "note",
@@ -135,11 +142,12 @@ class UserAdmin(auth_admin.UserAdmin):
         ("Даты", {"fields": ("last_hit", "last_login", "date_joined")}),
     )
     list_display = [
-        "last_name",
         "first_name",
         "middle_name",
+        "last_name",
         "phone",
         "points",
+        "purpose",
         "note",
         "region",
         "city",

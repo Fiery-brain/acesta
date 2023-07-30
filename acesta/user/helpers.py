@@ -18,5 +18,6 @@ class CredentialsMixin:
             email=self.credentials["email"],
             username=self.credentials["email"],
             password=self.credentials["password"],
+            registered=True,
             region_id="01",
         )

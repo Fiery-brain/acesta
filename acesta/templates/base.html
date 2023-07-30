@@ -89,9 +89,11 @@
       <script src="{% static 'js/jquery.mask.min.js' %}"></script>
       <script src="{% static 'js/user.clear.phone.mask.js' %}"></script>
       <script src="{% static 'js/channel.selector.js' %}"></script>
-      {% if messages %}
-        {% include "include/messages.html" %}
-      {% endif %}
+      {% block messages %}
+        {% if messages %}
+          {% include "include/messages.html" %}
+        {% endif %}
+      {% endblock messages %}
       {% if not DEBUG %}
         {% include "include/metrika.html" %}
       {% endif %}

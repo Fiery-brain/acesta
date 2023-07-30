@@ -49,7 +49,10 @@ def formatted_percentage(x: int, y: int) -> str:
     Returns formatted result
     :return: str
     """
-    return str(int(round(x / y, 2) * 100)).rjust(2)
+    try:
+        return str(int(round(x / y, 2) * 100)).rjust(2)
+    except ZeroDivisionError:
+        return "0"
 
 
 # Sights Statistics Application

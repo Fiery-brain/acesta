@@ -1,7 +1,6 @@
-{% extends "outside.html" %}
+{% extends "account/base_col6.html" %}
 
 {% load static %}
-{% load i18n %}
 
 {% block title %}Регистрация. {% endblock %}
 
@@ -15,23 +14,10 @@
 {% block vkimage %}{% static 'img/og/login.vk.png' %}{% endblock %}
 {% block vkimage_secure %}{% static 'img/og/login.vk.png' %}{% endblock %}
 
-{% block css_external %}
-  <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
-    {{ block.super }}
-{% endblock %}
-
-{% block content %}
-  <div class="row">
-    <h1>{% trans "Sign Up" %}</h1>
-  </div>
+{% block content_block %}
+  <h1>Регистрация</h1>
   <form class="signup has-masked" id="signup_form" method="post" action="{% url 'account_signup' %}">
     {% csrf_token %}
-    {% include "include/sign_up_fields.html" %}
+    {% include "include/sign_up_fields_1.html" %}
   </form>
-{% endblock %}
-
-{% block js %}
-  {{ block.super }}
-  <script src="{% static 'js/region.selector.js' %}"></script>
-  <script src="{% static 'js/city.selector.js' %}"></script>
 {% endblock %}

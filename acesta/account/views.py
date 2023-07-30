@@ -1,3 +1,4 @@
+from allauth.account import app_settings
 from allauth.account.adapter import get_adapter
 from allauth.account.views import PasswordChangeView as BasePasswordChangeView
 from allauth.account.views import PasswordSetView as BasePasswordSetView
@@ -11,6 +12,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 
 from acesta.account.forms import ChangeEmailForm
+from acesta.account.forms import SignupNextForm
 from acesta.geo.utils import get_geo_objects_from_geo_base
 from acesta.user.utils import send_message
 
@@ -18,15 +20,10 @@ User = get_user_model()
 
 
 class SignupView(BaseSignupView):
-    def get_initial(self):
-        initial = super().get_initial()
-        if not initial.get("region") or not initial.get("city"):
-            region, city = get_geo_objects_from_geo_base(self.request)
-            if not initial.get("region") and region:
-                initial["region"] = region.code
-            if not initial.get("city") and city:
-                initial["city"] = city.id
-        return initial
+    success_url = reverse_lazy("account_signupnext")
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(FormView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         send_message("Новая регистрация через форму")
@@ -38,6 +35,61 @@ class SignupView(BaseSignupView):
 
 
 signup = SignupView.as_view()
+
+
+class SignupnextView(FormView):
+    template_name = "account/signupnext." + app_settings.TEMPLATE_EXTENSION
+    success_url = reverse_lazy("region")
+    form_class = SignupNextForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        if not initial.get("region"):
+            region, _ = get_geo_objects_from_geo_base(self.request)
+            if not initial.get("region") and region:
+                initial["region"] = region.code
+        return initial
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.registered:
+            response = HttpResponseRedirect(self.success_url)
+        else:
+            response = super(FormView, self).dispatch(request, *args, **kwargs)
+        return response
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        self.request.user.region = data.get("region")
+        self.request.user.current_region = data.get("region")
+        self.request.user.purpose = data.get("purpose")
+        self.request.user.subscription = data.get("subscription", True)
+        self.request.user.registered = True
+        self.request.user.set_password(data.get("password1"))
+        self.request.user.save(
+            update_fields=[
+                "region",
+                "current_region",
+                "registered",
+                "purpose",
+                "subscription",
+                "password",
+            ]
+        )
+        get_adapter().login(self.request, self.request.user)
+        send_message("Новый вход после регистрации")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        send_message(f"Ошибка входа после регистрации {form.errors}")
+        return super().form_invalid(form)
+
+
+signupnext = SignupnextView.as_view()
 
 
 class PasswordChangeView(BasePasswordChangeView):

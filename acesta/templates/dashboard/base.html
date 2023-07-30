@@ -133,7 +133,7 @@
       <ul class="navbar-nav d-none d-lg-flex">
         <li>{% include "include/contact_block.html" %}</li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ request.user.first_name }} {{ request.user.middle_name }}</a>
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ request.user.first_name }} {{ request.user.middle_name|default:"" }}</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="{% url 'user' %}"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#user"></use></svg>Моя страница</a></li>
             <li><a class="dropdown-item" href="{% url 'price' %}"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#price"></use></svg>Услуги</a></li>

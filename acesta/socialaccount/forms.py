@@ -9,12 +9,6 @@ class SocialSignupForm(BaseSocialSignupForm, ModelForm):
     class Meta:
         model = User
         fields = (
-            "last_name",
             "first_name",
-            "middle_name",
-            "region",
-            "city",
-            "position",
-            "company",
             "phone",
         )

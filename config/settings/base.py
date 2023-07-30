@@ -175,6 +175,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "acesta.user.middleware.clean_up_old_periods",
     "acesta.user.middleware.set_last_hit",
+    "acesta.user.middleware.check_registered",
 ]
 
 # STATIC
