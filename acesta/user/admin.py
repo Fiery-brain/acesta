@@ -89,6 +89,7 @@ class UserAdmin(auth_admin.UserAdmin):
                 "fields": (
                     "username",
                     "password",
+                    "registered",
                     "is_active",
                     "is_superuser",
                 )
@@ -147,6 +148,7 @@ class UserAdmin(auth_admin.UserAdmin):
         "last_name",
         "phone",
         "points",
+        "registered",
         "purpose",
         "note",
         "region",
