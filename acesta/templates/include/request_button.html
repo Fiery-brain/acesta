@@ -1,3 +1,4 @@
+{% if not request.user.is_authenticated or not request.user.is_accustomed %}
   <div class="request-button">
     <a href="#" data-bs-toggle="modal" data-bs-target="#{{ REQUEST_CONSULTATION }}">
       <svg width="124" height="124" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,3 +20,4 @@
       </svg>
     </a>
   </div>
+{% endif %}

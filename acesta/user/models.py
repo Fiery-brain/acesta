@@ -153,6 +153,14 @@ class User(AbstractUser):
             self.current_region.rank == 0 or self.current_region in self.regions.all()
         )
 
+    @property
+    def is_accustomed(self) -> bool:
+        """
+        Returns True if user is already experienced
+        :return: bool
+        """
+        return self.date_joined + relativedelta(days=7) < now()
+
     def update_period_info(self, period, order_regions, tourism_types):
 
         period_info = self.period_info
