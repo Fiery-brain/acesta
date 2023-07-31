@@ -124,14 +124,21 @@
             <li class="nav-item"><a class="nav-link py-1" href="{% if request.user.is_extended %}{% url 'rating-cities' area='cities' %}{% else %}{% url 'price' %}{% endif %}">{% if not request.user.is_extended %}<svg width="14" height="14" class="me-1 mt-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>{% endif %}<small>городов</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
           {% endif %}
           <li class="nav-item"><a class="nav-link pt-1 pb-3" href="{% if request.user.is_extended %}{% url 'rating-sights' area='sights' %}{% else %}{% url 'price' %}{% endif %}">{% if not request.user.is_extended %}<svg width="14" height="14" class="me-1 mt-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>{% endif %}<small>точек притяжения</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
-          <li class="nav-item border-top"><a class="nav-link" href="{% url 'user' %}">Моя страница<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#user"></use></svg></a></li>
+          <li class="nav-item border-top"><a class="nav-link" href="{% url 'user' %}">Моя страница<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#{% if request.user.is_extended %}crown{% else %}restricted{% endif %}"></use></svg></a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'price' %}">Услуги<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#price"></use></svg></a></li>
           <li class="nav-item border-bottom"><a class="nav-link" href="{% url 'help' %}">О сервисе<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></li>
           <li class="nav-item pb-2"><a class="nav-link logout-link" href="#"> Выход<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#sign-out"></use></svg></a></li>
         </ul>
       </div>
-      <ul class="navbar-nav d-none d-lg-flex">
+      <ul class="navbar-nav d-none d-lg-flex align-items-center">
         <li>{% include "include/contact_block.html" %}</li>
+        <li>
+          {% if request.user.is_extended %}
+            <a href="{% url 'user' %}" title="Расширенный доступ. Посмотреть подробности"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#crown"></use></svg></a>
+          {% else %}
+            <a href="{% url 'user' code=request.user.current_region.code %}" title="Ограниченный доступ. Расширить"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#restricted"></use></svg></a>
+          {% endif %}
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ request.user.first_name }} {{ request.user.middle_name|default:"" }}</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
