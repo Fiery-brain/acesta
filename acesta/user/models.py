@@ -221,7 +221,7 @@ class User(AbstractUser):
         :param tourism_type: str
         :return: str
         """
-        if self.tourism_types is not None:
+        if self.tourism_types is not None and len(self.tourism_types):
             if tourism_type is None or tourism_type not in self.tourism_types:
                 tourism_type = sorted(self.tourism_types)[0]
         return tourism_type
@@ -233,7 +233,7 @@ class User(AbstractUser):
         :param sight_group: str
         :return: str
         """
-        if self.tourism_types is not None:
+        if self.tourism_types is not None and len(self.tourism_types):
             sight_groups = SightGroup.objects.filter(
                 tourism_type__in=self.tourism_types
             )
