@@ -30,4 +30,20 @@
 {% block js %}
   {{ block.super }}
   <script src="{% static 'js/region.selector.js' %}"></script>
+  <script src="{% static 'js/password-score.js' %}"></script>
+  <script src="{% static 'js/password-score-options.js' %}"></script>
+  <script src="{% static 'js/bootstrap-strength-meter.js' %}"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('#inputPassword').strengthMeter('progressBar', {
+            container: $('#password-checker-progress'),
+            hierarchy: {
+                '0': 'progress-bar-danger',
+                '50': 'progress-bar-warning',
+                '90': 'progress-bar-success'
+            }
+        });
+    });
+</script>
 {% endblock %}

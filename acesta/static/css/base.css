@@ -490,6 +490,10 @@ textarea.form-control{min-height: 100px;}
 .input-group .select2-container .select2-selection--single{height:38px}
 .input-group .select2-container--default .select2-selection--single .select2-selection__rendered{line-height:36px}
 .input-group .select2-container--default .select2-selection--single .select2-selection__arrow{height:36px}
+.progress{height: 5px;}
+.progress-bar-danger{background-color: #ec616f;}
+.progress-bar-warning{background-color: #eb9147;}
+.progress-bar-success{background-color: #70ab43;}
 
 #select2-consultationInputGroupChannel-container span.option,#select2-presentationInputGroupChannel-container span.option{display:inline;background-repeat:no-repeat;padding-left:30px; background-position: 0;font-size:1rem}
 #select2-consultationInputGroupChannel-results span.option,#select2-presentationInputGroupChannel-results span.option{display:inline-block;background-repeat:no-repeat;padding-left:30px;font-size:1rem}
