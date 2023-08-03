@@ -95,16 +95,16 @@
               {% csrf_token %}
               {% if request.user.has_usable_password %}
               <div class="form-floating mb-2">
-                <input type="password" required minlength="8" class="form-control" name="oldpassword" id="inputOldPassword" value="" autocomplete="off">
+                <input type="password" required minlength="6" class="form-control" name="oldpassword" id="inputOldPassword" value="" autocomplete="off">
                 <label for="inputOldPassword" class="form-label">Текущий пароль</label>
               </div>
               {% endif %}
               <div class="form-floating mb-2">
-                <input type="password" required minlength="8" class="form-control" name="password1" id="inputPassword1" value="" autocomplete="off">
+                <input type="password" required minlength="6" class="form-control" name="password1" id="inputPassword1" value="" autocomplete="off">
                 <label for="inputPassword1" class="form-label">Новый пароль</label>
               </div>
               <div class="form-floating">
-                <input type="password" required minlength="8" class="form-control" name="password2" id="inputPassword2" value="" autocomplete="off">
+                <input type="password" required minlength="6" class="form-control" name="password2" id="inputPassword2" value="" autocomplete="off">
                 <label for="inputPassword2" class="form-label">Подтверждение пароля</label>
               </div>
           </div>
