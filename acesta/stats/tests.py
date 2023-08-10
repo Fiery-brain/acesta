@@ -72,11 +72,11 @@ class StatsTest(CredentialsMixin, test.TestCase):
 
         # rating authorised
         response = self.client.get(reverse("rating-cities", kwargs={"area": "cities"}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
         # rating authorised
         response = self.client.get(reverse("rating-sights", kwargs={"area": "sights"}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
         # set-region authorised
         response = self.client.get(

@@ -214,6 +214,14 @@ class User(AbstractUser):
                 self.tourism_types = None
             self.save(update_fields=["period_info", "tourism_types"])
 
+    @property
+    def is_set_tourism_types(self) -> bool:
+        """
+        Returns True if user has filtered tourism types
+        :return: bool
+        """
+        return self.tourism_types is not None and len(self.tourism_types)
+
     def get_current_tourism_type(self, tourism_type=None) -> str or None:
         """
         Checks if tourism type is open for user
@@ -221,7 +229,7 @@ class User(AbstractUser):
         :param tourism_type: str
         :return: str
         """
-        if self.tourism_types is not None and len(self.tourism_types):
+        if self.is_set_tourism_types:
             if tourism_type is None or tourism_type not in self.tourism_types:
                 tourism_type = sorted(self.tourism_types)[0]
         return tourism_type

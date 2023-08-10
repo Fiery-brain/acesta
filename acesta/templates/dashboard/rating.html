@@ -38,9 +38,9 @@
     {% if area == AREA_SIGHTS %}
       <form action="" id="groupSelector">
         <select id="groupType" name="group">
-          <option value="" {% if request.user.tourism_types is not None and request.user.tourism_types|length %} disabled="disabled"{% endif %}>все разделы</option>
+          <option value="" {% if request.user.is_set_tourism_types %} disabled="disabled"{% endif %}>все разделы</option>
           {% for group in sight_groups %}
-            <option value="{{ group.name }}"{% if group.name == sight_group %} selected{% endif %}{% if request.user.tourism_types is not None and request.user.tourism_types|length and group.tourism_type not in request.user.tourism_types %} disabled{% endif%}>{{ group.title }}</option>
+            <option value="{{ group.name }}"{% if group.name == sight_group %} selected{% endif %}{% if request.user.is_set_tourism_types and group.tourism_type not in request.user.tourism_types %} disabled{% endif%}>{{ group.title }}</option>
           {% endfor %}
         </select>
       </form>
@@ -50,7 +50,7 @@
           {% if area == AREA_CITIES %}
             <option value="" {% if request.user.tourism_types is not None and request.user.tourism_types|length %} disabled="disabled"{% endif %}>все виды туризма</option>
             {% for name, title in tourism_types %}
-              <option value="{{ name }}"{% if name == tourism_type %} selected{% endif %}{% if request.user.tourism_types is not None and request.user.tourism_types|length and name not in request.user.tourism_types %} disabled{% endif%}>{{ title }}</option>
+              <option value="{{ name }}"{% if name == tourism_type %} selected{% endif %}{% if request.user.is_set_tourism_types and name not in request.user.tourism_types %} disabled{% endif%}>{{ title }}</option>
             {% endfor %}
           {% else %}
             <option value="">все виды туризма</option>

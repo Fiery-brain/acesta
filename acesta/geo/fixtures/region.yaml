@@ -6,8 +6,9 @@
     _id: 0
     region: Республика Адыгея
     title: Республика Адыгея
-    rank: 0
+    rank: 1
     is_pub: true
+    synonyms: адыгея
 - model: geo.region
   pk: '02'
   fields:
@@ -16,5 +17,6 @@
     _id: 1
     region: Республика Башкортостан
     title: Республика Башкортостан
-    rank: 0
+    rank: 2
     is_pub: true
+    synonyms: башкирия

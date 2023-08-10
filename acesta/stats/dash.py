@@ -425,7 +425,7 @@ def update_tourism_type(home_area: str, **kwargs):
     if (
         kwargs.get("request").user.is_extended
         and home_area != settings.AREA_REGIONS
-        and kwargs.get("request").user.tourism_types is not None
+        and kwargs.get("request").user.is_set_tourism_types
     ):
         return kwargs.get("request").user.get_current_tourism_type()
     else:
@@ -440,7 +440,7 @@ def update_tourism_types(home_area: str, **kwargs):
     if (
         kwargs.get("request").user.is_extended
         and home_area != settings.AREA_REGIONS
-        and kwargs.get("request").user.tourism_types is not None
+        and kwargs.get("request").user.is_set_tourism_types
     ):
         return [
             {
