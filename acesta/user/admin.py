@@ -149,6 +149,7 @@ class UserAdmin(auth_admin.UserAdmin):
         "phone",
         "points",
         "registered",
+        "subscription",
         "purpose",
         "note",
         "region",
