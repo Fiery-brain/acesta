@@ -5,8 +5,7 @@ Disallow: /interest/
 Disallow: /rating/*
 Disallow: /user/*
 Disallow: /set_region/*
-Disallow: /signup/
-Disallow: /login/*
+Disallow: /signupnext/
 Disallow: /logout/
 Disallow: /password-change/
 Disallow: /password/*

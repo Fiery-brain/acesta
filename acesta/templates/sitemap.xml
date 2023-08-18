@@ -5,6 +5,16 @@
 <priority>1.00</priority>
 </url>
 <url>
+<loc>https://{{ request.META.HTTP_HOST }}/signup/</loc>
+<lastmod>{{ week_ago|date:"c" }}</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://{{ request.META.HTTP_HOST }}/login/</loc>
+<lastmod>{{ week_ago|date:"c" }}</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
 <loc>https://{{ request.META.HTTP_HOST }}/terms/</loc>
 <lastmod>{{ week_ago|date:"c" }}</lastmod>
 <priority>0.80</priority>
