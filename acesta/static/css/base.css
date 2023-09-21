@@ -69,6 +69,7 @@
     --acesta-industry:#479095;
     --acesta-gastro:#C54B77;
     --acesta-kitchen:#C54B68;
+    --acesta-gastroenterprise:#C84B7F;
 
     --acesta-border-light:#e2e1e1;
 }
@@ -141,6 +142,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .text-sport{color:var(--acesta-sport)!important}
 .text-manufactures{color:var(--acesta-manufactures)}
 .text-kitchen{color:var(--acesta-kitchen)}
+.text-gastroenterprise{color:var(--acesta-gastroenterprise)}
 
 .border-rank0{border-color:var(--acesta-rank0)!important}
 .border-rank1{border-color:var(--acesta-rank1)!important}
@@ -222,6 +224,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .bg-fountains{background-image:url('../img/sprite.svg#fountains')!important}
 .bg-manufactures{background-image:url('../img/sprite.svg#manufactures')!important}
 .bg-kitchen{background-image:url('../img/sprite.svg#kitchen')!important}
+.bg-gastroenterprise{background-image:url('../img/sprite.svg#gastroenterprise')!important}
 .bg-lakes{background-image:url('../img/sprite.svg#lakes')!important}
 .bg-mount{background-image:url('../img/sprite.svg#mount')!important}
 .bg-nationalparks{background-image:url('../img/sprite.svg#nationalparks')!important}
