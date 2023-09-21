@@ -80,7 +80,7 @@
               {% for place in interest_sight_places %}
               <tr>
                 <td class="text-center rating-place"><div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div></td>
-                <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.title }}"><svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ place.sight.group.name }}"></use></svg></a></td>
+                <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.all.0.title }}"><svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ place.sight.group.all.0.name }}"></use></svg></a></td>
                 <td class="ps-1">
                   <p class="mb-0 sight-title">{{ place.sight }}</p>
                   <div class="text-muted sight-description">
@@ -119,7 +119,7 @@
               {% for place in top_sights %}
               <tr>
                 <td class="text-center rating-place"><div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div></td>
-                <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.title }}"><svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ place.sight.group.name }}"></use></svg></a></td>
+                <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.all.0.title }}"><svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ place.sight.group.all.0.name }}"></use></svg></a></td>
                 <td class="ps-1">
                   <p class="mb-0  sight-title">{{ place.sight }}</p>
                   <div class="text-muted sight-description">

@@ -100,7 +100,7 @@
               <table class="table table-responsive">
                 {% for sight in region_sights %}
                 <tr>
-                  <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ sight.group.title }}"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ sight.group.name }}"></use></svg></a></td>
+                  <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ sight.group.all.0.title }}"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ sight.group.all.0.name }}"></use></svg></a></td>
                   <td class="ps-1">
                     <small class="sight-title">{{ sight }}</small>
                   </td>

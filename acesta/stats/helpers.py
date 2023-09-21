@@ -191,7 +191,11 @@ def get_map_df(tourism_type: str, home_code: str) -> pd.DataFrame:
         .values("code")
         .annotate(qty=models.Sum("qty"), ppt=models.Avg("popularity_mean"))
     )
-    df_map = df_map.join(pd.DataFrame(list(ppt_data)).set_index("code")).fillna(0)
+    try:
+        df_map = df_map.join(pd.DataFrame(list(ppt_data)).set_index("code")).fillna(0)
+    except KeyError:
+        df_map["qty"] = 0
+        df_map["ppt"] = 0
     return df_map
 
 
@@ -203,13 +207,12 @@ def get_sights(region: str, tourism_type: str) -> models.QuerySet:
     :return: models.QuerySet
     """
     return (
-        Sight.objects.only("id", "address", "group__title", "title", "lon", "lat")
+        Sight.objects.only("id", "address", "group", "title", "lon", "lat")
         .filter(
             code=region,
             is_pub=True,
             **dict() if not tourism_type else dict(group__tourism_type=tourism_type)
         )
-        .select_related("group")
         .annotate(qty=models.Sum("sight_all_region_popularity__qty"))
     )
 

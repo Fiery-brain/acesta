@@ -748,12 +748,14 @@ def update_map(tourism_type: str, home_area: str, *args, **kwargs) -> go.Figure:
                     lat.append(sight.lat),
                     lon.append(sight.lon),
                     qty.append(sight.qty or 0),
-                    color.append(settings.SIGHT_GROUPS_PALETTE.get(sight.group_id)),
+                    color.append(
+                        settings.SIGHT_GROUPS_PALETTE.get(sight.group.all()[0].pk)
+                    ),
                     ids.append(f"sights_{sight.id}"),
                     title.append(sight.title),
                     extra.append(
                         [
-                            sight.group.title,
+                            ",".join([group.title for group in sight.group.all()]),
                             "<br>".join(
                                 wrap(
                                     sight.address.replace("Россия, ", "").replace(

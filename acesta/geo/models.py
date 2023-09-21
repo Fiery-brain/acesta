@@ -145,7 +145,7 @@ class SightGroup(TimeStampedModel):
     )
     name = models.CharField(
         "Имя",
-        max_length=15,
+        max_length=25,
         primary_key=True,
     )
     title = models.CharField(
@@ -238,13 +238,10 @@ class Sight(TimeStampedModel):
         verbose_name="Долгота",
         default=0.0,
     )
-    group = models.ForeignKey(
+    group = models.ManyToManyField(
         SightGroup,
         verbose_name="Группы",
         related_name="group_sights",
-        on_delete=models.DO_NOTHING,
-        blank=True,
-        null=True,
     )
     city = models.ForeignKey(
         City,
