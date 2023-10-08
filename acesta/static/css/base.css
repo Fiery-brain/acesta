@@ -142,6 +142,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .text-sport{color:var(--acesta-sport)!important}
 .text-manufactures{color:var(--acesta-manufactures)}
 .text-kitchen{color:var(--acesta-kitchen)}
+.text-gastromeetings{color:var(--acesta-gastro)}
 .text-gastroenterprise{color:var(--acesta-gastroenterprise)}
 
 .border-rank0{border-color:var(--acesta-rank0)!important}
@@ -183,6 +184,9 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .border-active{border-color:var(--acesta-active)!important}
 .border-snow{border-color:var(--acesta-snow)!important}
 .border-sport{border-color:var(--acesta-sport)!important}
+.border-kitchen{border-color:var(--acesta-kitchen)!important}
+.border-gastromeetings{border-color:var(--acesta-gastro)!important}
+.border-gastroenterprise{border-color:var(--acesta-gastroenterprise)!important}
 
 .border-beach{border-color:var(--acesta-beach)!important}
 .border-gastro{border-color:var(--acesta-gastro)!important}
