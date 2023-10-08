@@ -115,6 +115,7 @@ class SightAdmin(admin.ModelAdmin):
         "name",
         "query",
         "sight_kernel",
+        "sight_groups",
         "city",
         "is_pub",
         "is_checked",
@@ -130,6 +131,9 @@ class SightAdmin(admin.ModelAdmin):
         "group__tourism_type",
         "code",
     )
+
+    def sight_groups(self, obj):
+        return [group.title for group in obj.group.all()]
 
     def sight_kernel(self, obj):
         """
