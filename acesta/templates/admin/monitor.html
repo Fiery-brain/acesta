@@ -38,6 +38,7 @@
             <th width="220"><a href="{% url 'monitor' sort='suspicious_kernels_code' %}">Регион</a> ({{ suspicious_kernels|length }})</th>
             <th class="text-end"><a href="{% url 'monitor' sort='suspicious_kernels_sight_id' %}">id</a></th>
             <th><a href="{% url 'monitor' sort='suspicious_kernels_query' %}">Запрос</a></th>
+            <th><a href="{% url 'monitor' sort='suspicious_kernels_query_additional' %}">Дополнительные запросы</a></th>
             <th><a href="{% url 'monitor' sort='suspicious_kernels_kernel' %}">Ядро</a></th>
             <th class="text-end"><a href="{% url 'monitor' sort='suspicious_kernels_ratio' %}">Совпадение</a></th>
           </tr>
@@ -46,6 +47,7 @@
             <td>{{ sight.code }} {{ sight.title }}</td>
             <td class="text-end">{{ sight.sight_id|stringformat:"i" }}</td>
             <td>{{ sight.query }}</td>
+            <td>{{ sight.query_additional|default:"" }}</td>
             <td>{{ sight.kernel.0 }}</td>
             <td class="text-end text-white bg-danger fw-bold">{{ sight.ratio|floatformat:'3' }}</td>
           </tr>
