@@ -767,11 +767,12 @@ class MonitorAdmin(TemplateView):
                 "title": sight[3],
                 "sight_id": sight[4],
                 "query": sight[6],
-                "kernel": sight[7][0],
-                "ratio": sight[8],
+                "query_additional": sight[7],
+                "kernel": sight[8][0],
+                "ratio": sight[9],
             }
             for sight in self.queries_data
-            if sight[8] < threshold
+            if sight[9] < threshold and sight[10] < threshold
         ]
 
         if self.kwargs.get("sort") and self.kwargs.get("sort").startswith(
@@ -796,8 +797,12 @@ class MonitorAdmin(TemplateView):
                 sight.get("id"),
                 sight.get("title"),
                 sight.get("query"),
+                sight.get("query_additional"),
                 sight.get("kernel"),
                 ratio(sight.get("query"), sight.get("kernel")[0][0])
+                if len(sight.get("kernel"))
+                else 1,
+                ratio(sight.get("query_additional"), sight.get("kernel")[0][0])
                 if len(sight.get("kernel"))
                 else 1,
             )
@@ -814,6 +819,7 @@ class MonitorAdmin(TemplateView):
                     "id",
                     "title",
                     "query",
+                    "query_additional",
                 )
             ).order_by("code")
         ]
