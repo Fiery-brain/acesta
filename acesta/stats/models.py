@@ -168,7 +168,7 @@ class AllCityPopularity(CityPopularity, StorageMixin, SightGroupMixin):
         ordering = ("-qty",)
         verbose_name = "Вся популярность в городах"
         verbose_name_plural = "Вся популярность в городах"
-        unique_together = ("sight", "home_code", "code", "source_code")
+        unique_together = ("sight", "home_code", "code", "source_code", "sight_group")
 
 
 class AllRegionPopularity(RegionPopularity, StorageMixin, SightGroupMixin):
@@ -203,7 +203,7 @@ class AllRegionPopularity(RegionPopularity, StorageMixin, SightGroupMixin):
         ordering = ("-qty",)
         verbose_name = "Вся популярность в регионах"
         verbose_name_plural = "Вся популярность в регионах"
-        unique_together = ("sight", "home_code", "code", "source_city")
+        unique_together = ("sight", "home_code", "code", "source_city", "sight_group")
 
 
 class RegionRegionPopularity(RegionPopularity, TourismTypeMixin):
