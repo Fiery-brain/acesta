@@ -108,7 +108,7 @@ class SightAdmin(admin.ModelAdmin):
 
     search_fields = ("title",)
 
-    readonly_fields = ["name", "full_name", "_id", "city"]
+    readonly_fields = ["name", "full_name", "_id"]
 
     list_display = (
         "title",
