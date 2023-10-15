@@ -105,16 +105,20 @@ def get_interest(
             if interesant_area == settings.AREA_REGIONS
             else RegionCityPopularity
         )
-        return ppt_model.objects.filter(
-            home_code=region,
-            qty__gt=0,
-            **dict(tourism_type=tourism_type)
-            if tourism_type
-            else dict(tourism_type__isnull=True)
-        ).annotate(
-            ppt=models.functions.Round(
-                "popularity_mean", output_field=models.IntegerField()
+        return (
+            ppt_model.objects.filter(
+                home_code=region,
+                qty__gt=0,
+                **dict(tourism_type=tourism_type)
+                if tourism_type
+                else dict(tourism_type__isnull=True)
             )
+            .annotate(
+                ppt=models.functions.Round(
+                    "popularity_mean", output_field=models.IntegerField()
+                )
+            )
+            .distinct()
         )
     else:
         if home_area == settings.AREA_CITIES:
@@ -123,16 +127,20 @@ def get_interest(
                 if interesant_area == settings.AREA_REGIONS
                 else CityCityPopularity
             )
-            return ppt_model.objects.filter(
-                home_code=id,
-                qty__gt=0,
-                **dict(tourism_type=tourism_type)
-                if tourism_type
-                else dict(tourism_type__isnull=True)
-            ).annotate(
-                ppt=models.functions.Round(
-                    "popularity_mean", output_field=models.IntegerField()
+            return (
+                ppt_model.objects.filter(
+                    home_code=id,
+                    qty__gt=0,
+                    **dict(tourism_type=tourism_type)
+                    if tourism_type
+                    else dict(tourism_type__isnull=True)
                 )
+                .annotate(
+                    ppt=models.functions.Round(
+                        "popularity_mean", output_field=models.IntegerField()
+                    )
+                )
+                .distinct()
             )
         elif home_area == settings.AREA_SIGHTS:
             ppt_model = (
@@ -140,10 +148,17 @@ def get_interest(
                 if interesant_area == settings.AREA_REGIONS
                 else AllCityPopularity
             )
-            return ppt_model.objects.filter(sight__id=id, qty__gt=0,).annotate(
-                ppt=models.functions.Round(
-                    "popularity_mean", output_field=models.IntegerField()
+            return (
+                ppt_model.objects.filter(
+                    sight__id=id,
+                    qty__gt=0,
                 )
+                .annotate(
+                    ppt=models.functions.Round(
+                        "popularity_mean", output_field=models.IntegerField()
+                    )
+                )
+                .distinct()
             )
 
 
