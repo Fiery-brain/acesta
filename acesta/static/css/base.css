@@ -228,6 +228,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .bg-fountains{background-image:url('../img/sprite.svg#fountains')!important}
 .bg-manufactures{background-image:url('../img/sprite.svg#manufactures')!important}
 .bg-kitchen{background-image:url('../img/sprite.svg#kitchen')!important}
+.bg-gastromeetings{background-image:url('../img/sprite.svg#gastromeetings')!important}
 .bg-gastroenterprise{background-image:url('../img/sprite.svg#gastroenterprise')!important}
 .bg-lakes{background-image:url('../img/sprite.svg#lakes')!important}
 .bg-mount{background-image:url('../img/sprite.svg#mount')!important}
