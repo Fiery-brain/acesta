@@ -6,7 +6,7 @@
       <option value="{{ id }}"{% if request.POST and form.region.value == id %} selected{% endif %}>{{ region }}</option>
     {% endfor %}
   </select>
-  <label for="inputRegion">Домашний регион</label>
+  <label for="inputRegion">Домашний регион (регион, в который поедут туристы)</label>
 </div>
 <div class="form-floating mb-2">
   <textarea class="form-control" required minlength="5" placeholder="Задачи, которые собираетесь решать" name="purpose" id="txtPurpose">{{ form.purpose.value|default:"" }}</textarea>
