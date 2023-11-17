@@ -108,6 +108,7 @@ class SightGroupMixin(models.Model):
         SightGroup,
         verbose_name="Вид достопримечательности",
         on_delete=models.DO_NOTHING,
+        related_name="group_%(class)s",
         max_length=15,
         blank=True,
         null=True,
