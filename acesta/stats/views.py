@@ -176,6 +176,9 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
                 if sight_group is not None
                 else dict(sight_group__isnull=True)
             )
+            sight_group_filter = (
+                dict(group=sight_group) if sight_group is not None else {}
+            )
             data = {
                 "sight_group": sight_group,
                 "sight_groups": SightGroup.pub.filter(
@@ -190,6 +193,11 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
                     region_code=request.user.current_region, **group_filter
                 ).prefetch_related(
                     "sight", "sight__group", "sight__code", "sight__city"
+                ),
+                "outside_rating_sight": Sight.objects.filter(
+                    code=request.user.current_region,
+                    sight_ratings__isnull=True,
+                    **sight_group_filter
                 ),
                 "top_sights": SightRating.objects.filter(
                     region_code__isnull=True, **group_filter

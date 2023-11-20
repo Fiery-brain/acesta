@@ -95,11 +95,31 @@
                 </td>
                 <td class="text-end pe-4">{{ place.value }}</td>
               </tr>
-              {% empty %}
+              {% endfor %}
+              {% for sight in outside_rating_sight %}
+              <tr>
+                <td class="text-center rating-place"><div>-</div></td>
+                <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ sight.group.all.0.title }}"><svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ sight.group.all.0.name }}"></use></svg></a></td>
+                <td class="ps-1">
+                  <p class="mb-0 sight-title">{{ sight }}</p>
+                  <div class="text-muted sight-description">
+                    <small class="d-inline-flex sight-location">
+                      {% if sight.city and sight.code.region_type != REGION_TYPE_FEDERAL_CITY %}
+                        {{ sight.city }}
+                      {% else %}
+                        {{ sight.code }}
+                      {% endif %}
+                    </small>
+                  </div>
+                </td>
+                <td class="text-end pe-4">0</td>
+              </tr>
+              {% endfor %}
+              {% if not interest_sight_places|length and not outside_rating_sight|length %}
                 <tr>
                   <td colspan="3" class="ps-5">Пока нет значимых точек притяжения</td>
                 </tr>
-              {% endfor %}
+              {% endif %}
             </tbody>
           </table>
         </div>
