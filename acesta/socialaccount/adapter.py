@@ -32,6 +32,11 @@ def user_region(user, *args):
     """
     try:
         region = Region.objects.get(title__startswith=args[0].split(" ")[0])
+    except Region.MultipleObjectsReturned:
+        try:
+            region = Region.objects.get(title=args[0])
+        except Region.DoesNotExist:
+            return
     except Region.DoesNotExist:
         return
     setattr(user, "region", region)
