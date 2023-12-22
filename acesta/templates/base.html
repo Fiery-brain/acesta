@@ -40,7 +40,7 @@
   </head>
   <body>
     {% block modals %}
-      {% if not request.user.is_authenticated or not request.user.is_accustomed %}
+      {% if request.user.is_authenticated and not request.user.is_accustomed %}
         {% request_modal subject=REQUEST_CONSULTATION %}
       {% endif %}
 
