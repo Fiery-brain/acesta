@@ -194,7 +194,7 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
                 ).prefetch_related(
                     "sight", "sight__group", "sight__code", "sight__city"
                 ),
-                "outside_rating_sight": Sight.objects.filter(
+                "outside_rating_sight": Sight.pub.filter(
                     code=request.user.current_region,
                     sight_ratings__isnull=True,
                     **sight_group_filter
