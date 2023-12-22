@@ -159,7 +159,7 @@ class User(AbstractUser):
         Returns True if user is already experienced
         :return: bool
         """
-        return self.date_joined + relativedelta(days=7) < now()
+        return self.date_joined + relativedelta(days=14) < now()
 
     def update_period_info(self, period, order_regions, tourism_types):
 
