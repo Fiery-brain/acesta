@@ -8,6 +8,7 @@ from django.db import models
 from django.forms import ModelForm
 from django_json_widget.widgets import JSONEditorWidget
 
+from acesta.user.fieldsets import user_form_fieldset
 from acesta.user.forms import UserCreationForm
 from acesta.user.models import Order
 from acesta.user.models import Request
@@ -58,18 +59,8 @@ class UserForm(ModelForm):
         model = User
         widgets = {
             "period_info": JSONEditorWidget,
-            "purpose": forms.Textarea(
-                attrs={
-                    "style": "width:95%",
-                    "rows": 5,
-                }
-            ),
-            "note": forms.Textarea(
-                attrs={
-                    "style": "width:95%",
-                    "rows": 5,
-                }
-            ),
+            "purpose": forms.Textarea(attrs={"style": "width:95%", "rows": 5}),
+            "note": forms.Textarea(attrs={"style": "width:95%", "rows": 5}),
         }
         fields = "__all__"
 
@@ -82,66 +73,7 @@ class UserAdmin(auth_admin.UserAdmin):
 
     form = UserForm
     add_form = UserCreationForm
-    fieldsets = (
-        (
-            None,
-            {
-                "fields": (
-                    "username",
-                    "password",
-                    "registered",
-                    "is_active",
-                    "is_superuser",
-                )
-            },
-        ),
-        (
-            "Персональная информация",
-            {
-                "fields": (
-                    "last_name",
-                    "first_name",
-                    "middle_name",
-                )
-            },
-        ),
-        (
-            "Работа",
-            {
-                "fields": (
-                    "company",
-                    "position",
-                )
-            },
-        ),
-        (
-            "Контакты",
-            {
-                "fields": (
-                    "city",
-                    "email",
-                    "phone",
-                    "purpose",
-                    "subscription",
-                    "points",
-                    "note",
-                )
-            },
-        ),
-        (
-            "Регионы и виды туризма",
-            {
-                "fields": (
-                    "regions",
-                    "region",
-                    "current_region",
-                    "period_info",
-                    "tourism_types",
-                )
-            },
-        ),
-        ("Даты", {"fields": ("last_hit", "last_login", "date_joined")}),
-    )
+    fieldsets = user_form_fieldset
     list_display = [
         "first_name",
         "middle_name",
@@ -224,9 +156,6 @@ class OrderAdmin(admin.ModelAdmin):
         for formset in formsets:
             self.save_formset(request, form, formset, change=change)
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
-
 
 class RequestForm(ModelForm):
     """
@@ -236,18 +165,8 @@ class RequestForm(ModelForm):
     class Meta(admin_forms.UserChangeForm.Meta):
         model = Request
         widgets = {
-            "comment": forms.Textarea(
-                attrs={
-                    "style": "width:95%",
-                    "rows": 5,
-                }
-            ),
-            "note": forms.Textarea(
-                attrs={
-                    "style": "width:95%",
-                    "rows": 5,
-                }
-            ),
+            "comment": forms.Textarea(attrs={"style": "width:95%", "rows": 5}),
+            "note": forms.Textarea(attrs={"style": "width:95%", "rows": 5}),
         }
         fields = "__all__"
 
@@ -283,9 +202,6 @@ class RequestAdmin(admin.ModelAdmin):
             else ""
         )
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
-
 
 @admin.register(Support)
 class SupportAdmin(admin.ModelAdmin):
@@ -311,16 +227,8 @@ class SupportAdmin(admin.ModelAdmin):
     def support_user(self, obj):
         return f"{obj.user.last_name} {obj.user.first_name} ({obj.user.region})"
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
-
     formfield_overrides = {
         models.TextField: {
-            "widget": forms.Textarea(
-                attrs={
-                    "style": "width:80%",
-                    "rows": 10,
-                }
-            )
+            "widget": forms.Textarea(attrs={"style": "width:80%", "rows": 10})
         },
     }
