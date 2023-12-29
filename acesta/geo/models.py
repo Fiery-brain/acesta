@@ -1,21 +1,15 @@
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
-
-class PubManager(models.Manager):
-    """
-    Менеджер для выбора только опубликованных записей
-    """
-
-    def get_queryset(self):
-        return super().get_queryset().filter(is_pub=True)
+from acesta.geo.managers import PubManager
+from acesta.geo.utils import fill_geo_data
+from acesta.geo.utils import update_modified_kernel
 
 
 class Region(TimeStampedModel):
     """
-    Регионы
+    Region model
     """
 
     code = models.CharField(
@@ -50,11 +44,7 @@ class Region(TimeStampedModel):
         blank=True,
         null=True,
     )
-    is_pub = models.BooleanField(
-        "Публиковать",
-        default=False,
-        db_index=True,
-    )
+    is_pub = models.BooleanField("Публиковать", default=False, db_index=True)
     objects = models.Manager()
     pub = PubManager()
 
@@ -73,7 +63,7 @@ class Region(TimeStampedModel):
 
 class City(TimeStampedModel):
     """
-    Город
+    City model
     """
 
     code = models.ForeignKey(
@@ -82,10 +72,7 @@ class City(TimeStampedModel):
         on_delete=models.CASCADE,
         related_name="region_cities",
     )
-    _id = models.IntegerField(
-        "Внешний ID",
-        unique=True,
-    )
+    _id = models.IntegerField("Внешний ID", unique=True)
     title = models.CharField("Название", max_length=150, db_index=True)
     area = models.CharField(
         "Район",
@@ -93,28 +80,15 @@ class City(TimeStampedModel):
         blank=True,
         null=True,
     )
-    lat = models.FloatField(
-        verbose_name="Широта",
-        default=0.0,
-    )
-    lon = models.FloatField(
-        verbose_name="Долгота",
-        default=0.0,
-    )
+    lat = models.FloatField(verbose_name="Широта", default=0.0)
+    lon = models.FloatField(verbose_name="Долгота", default=0.0)
     population = models.IntegerField("Численность", default=0)
     foundation = models.CharField(
         "Год основания",
         max_length=60,
     )
-    is_capital = models.BooleanField(
-        "Столица",
-        default=False,
-    )
-    is_pub = models.BooleanField(
-        "Публиковать",
-        default=False,
-        db_index=True,
-    )
+    is_capital = models.BooleanField("Столица", default=False)
+    is_pub = models.BooleanField("Публиковать", default=False, db_index=True)
     synonyms = models.TextField(
         verbose_name="Синонимы",
         help_text="Введите фразы отделив их переводом строки",
@@ -134,7 +108,7 @@ class City(TimeStampedModel):
 
 class SightGroup(TimeStampedModel):
     """
-    Группа точки притяжения
+    Sight group model
     """
 
     tourism_type = models.CharField(
@@ -143,24 +117,13 @@ class SightGroup(TimeStampedModel):
         choices=settings.TOURISM_TYPES,
         default=settings.TOURISM_TYPE_DEFAULT,
     )
-    name = models.CharField(
-        "Имя",
-        max_length=25,
-        primary_key=True,
-    )
-    title = models.CharField(
-        "Название",
-        max_length=150,
-    )
+    name = models.CharField("Имя", max_length=25, primary_key=True)
+    title = models.CharField("Название", max_length=150)
     title_gen = models.CharField(
         "Название в родительном падеже",
         max_length=150,
     )
-    is_pub = models.BooleanField(
-        "Публиковать",
-        default=False,
-        db_index=True,
-    )
+    is_pub = models.BooleanField("Публиковать", default=False, db_index=True)
     objects = models.Manager()
     pub = PubManager()
 
@@ -175,7 +138,7 @@ class SightGroup(TimeStampedModel):
 
 class Sight(TimeStampedModel):
     """
-    Точка притяжения
+    Sight model
     """
 
     title = models.CharField(
@@ -230,14 +193,8 @@ class Sight(TimeStampedModel):
         verbose_name="Количество просмотров",
         default=0,
     )
-    lat = models.FloatField(
-        verbose_name="Широта",
-        default=0.0,
-    )
-    lon = models.FloatField(
-        verbose_name="Долгота",
-        default=0.0,
-    )
+    lat = models.FloatField(verbose_name="Широта", default=0.0)
+    lon = models.FloatField(verbose_name="Долгота", default=0.0)
     group = models.ManyToManyField(
         SightGroup,
         verbose_name="Группы",
@@ -264,19 +221,11 @@ class Sight(TimeStampedModel):
         blank=True,
         null=True,
     )
-    is_checked = models.BooleanField(
-        "Запрос проверен",
-        default=False,
-        db_index=True,
-    )
+    is_checked = models.BooleanField("Запрос проверен", default=False, db_index=True)
     modified_kernel = models.DateTimeField(
         "Последнее обновление ядра", blank=True, null=True
     )
-    is_pub = models.BooleanField(
-        "Публиковать",
-        default=False,
-        db_index=True,
-    )
+    is_pub = models.BooleanField("Публиковать", default=False, db_index=True)
     is_in_geo_region = models.BooleanField(default=True)
     geo_data = models.JSONField(default=dict, blank=True)
     objects = models.Manager()
@@ -292,76 +241,6 @@ class Sight(TimeStampedModel):
             ["name", "full_name", "city", "is_pub", "code", "lat", "lon"],
         )
         ordering = ("title",)
-
-
-def update_modified_kernel(sender, instance, *args, **kwargs) -> None:
-    """
-    Updates modified kernel if required
-    :param sender: Sight
-    :param instance: Sight
-    :return: None
-    """
-    if instance.pk:
-        try:
-            old = Sight.objects.get(pk=instance.pk)
-            if old.kernel != instance.kernel:
-                instance.modified_kernel = timezone.now()
-        except Sight.DoesNotExist:
-            pass
-
-
-def fill_geo_data(sender, instance, *args, **kwargs) -> None:
-    try:
-        from acesta_updater.management.commands.helpers.sight_helper import (
-            get_geo_data,
-            get_lon_lat,
-            get_address,
-            check_region,
-            get_city,
-            get_query,
-        )
-
-        def set_instance_geo_data(sight):
-            """
-            Defines sight geo data by filled data
-            :param sight: Sight
-            :return: Sight
-            """
-            if sight.lon and sight.lat:
-                sight.geo_data = get_geo_data(sight.lon, sight.lat)
-                sight.address = get_address(sight.geo_data)
-            elif instance.address:
-                sight.geo_data = get_geo_data(sight.lon, sight.lat, sight.address)
-                sight.lon, sight.lat = get_lon_lat(sight.geo_data)
-                sight.address = get_address(sight.geo_data)
-
-            if sight.geo_data:
-                sight.city = get_city(sight.geo_data)
-                sight.is_in_geo_region = check_region(sight.code, sight.geo_data)
-
-            return sight
-
-        if instance.pk:
-            try:
-                old = Sight.objects.get(pk=instance.pk)
-                if (
-                    old.lat != instance.lat
-                    or old.lon != instance.lon
-                    or not instance.geo_data
-                    or old.address != instance.address
-                ):
-                    instance = set_instance_geo_data(instance)
-            except Sight.DoesNotExist:
-                pass
-
-            if len(instance.query) < 2:
-                instance.query = get_query(instance.title or instance.name)
-
-        else:
-            instance = set_instance_geo_data(instance)
-
-    except ImportError:
-        pass
 
 
 models.signals.pre_save.connect(update_modified_kernel, sender=Sight)
