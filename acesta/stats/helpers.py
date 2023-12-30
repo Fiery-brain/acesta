@@ -166,6 +166,7 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
     """
     Returns popularity as a DataFrame
     :param ppt_data
+    :param sort_by
     :return: pd.DataFrame
     """
     columns = (
