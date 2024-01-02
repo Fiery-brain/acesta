@@ -5,11 +5,11 @@ from django.contrib.auth import get_user
 from django.urls import reverse
 from django.utils.timezone import now
 
+from acesta.geo.models import Region
 from acesta.user import format_date
 from acesta.user import get_date
 from acesta.user.helpers import CredentialsMixin
 from acesta.user.models import Order
-from acesta.user.models import Region
 
 
 class UrlsTest(CredentialsMixin, test.TestCase):
@@ -165,7 +165,6 @@ class UrlsTest(CredentialsMixin, test.TestCase):
         self.assertEqual(get_user(self.client).is_authenticated, False)
 
     def test_orders(self):
-
         self.assertGreater(len(settings.TOURISM_TYPES), 0)
 
         self.client.login(**self.credentials)

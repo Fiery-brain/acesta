@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+from acesta.geo.models import Region
 from acesta.user.models import Order
-from acesta.user.models import Region
 from acesta.user.models import Request
 from acesta.user.models import Support
 
@@ -96,7 +96,6 @@ class RequestForm(forms.ModelForm):
 
 
 class UserCreationForm(admin_forms.UserCreationForm):
-
     error_message = admin_forms.UserCreationForm.error_messages.update(
         {"duplicate_username": _("This username has already been taken.")}
     )
