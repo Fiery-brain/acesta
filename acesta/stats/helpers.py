@@ -109,9 +109,11 @@ def get_interest(
             ppt_model.objects.filter(
                 home_code=region,
                 qty__gt=0,
-                **dict(tourism_type=tourism_type)
-                if tourism_type
-                else dict(tourism_type__isnull=True)
+                **(
+                    dict(tourism_type=tourism_type)
+                    if tourism_type
+                    else dict(tourism_type__isnull=True)
+                )
             )
             .annotate(
                 ppt=models.functions.Round(
@@ -131,9 +133,11 @@ def get_interest(
                 ppt_model.objects.filter(
                     home_code=id,
                     qty__gt=0,
-                    **dict(tourism_type=tourism_type)
-                    if tourism_type
-                    else dict(tourism_type__isnull=True)
+                    **(
+                        dict(tourism_type=tourism_type)
+                        if tourism_type
+                        else dict(tourism_type__isnull=True)
+                    )
                 )
                 .annotate(
                     ppt=models.functions.Round(
@@ -200,9 +204,11 @@ def get_map_df(tourism_type: str, home_code: str) -> pd.DataFrame:
     ppt_data = (
         RegionRegionPopularity.objects.filter(
             home_code_id=home_code,
-            **dict(tourism_type=tourism_type)
-            if tourism_type
-            else dict(tourism_type__isnull=True)
+            **(
+                dict(tourism_type=tourism_type)
+                if tourism_type
+                else dict(tourism_type__isnull=True)
+            )
         )
         .values("code")
         .annotate(qty=models.Sum("qty"), ppt=models.Avg("popularity_mean"))
@@ -298,9 +304,11 @@ def get_audience(area: str, tourism_type: str, code: str) -> models.QuerySet:
         (AudienceCities if area == settings.AREA_CITIES else AudienceRegions)
         .objects.filter(
             code_id=int(code) if area == settings.AREA_CITIES else code,
-            **dict(tourism_type=tourism_type)
-            if tourism_type
-            else dict(tourism_type__in=dict(settings.TOURISM_TYPES_OUTSIDE).keys())
+            **(
+                dict(tourism_type=tourism_type)
+                if tourism_type
+                else dict(tourism_type__in=dict(settings.TOURISM_TYPES_OUTSIDE).keys())
+            )
         )
         .order_by("-v_type_sex_age")
     )
