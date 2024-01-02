@@ -83,8 +83,7 @@ def update_interesants_dummy(*args, **kwargs):
                         href="/price/",
                         children=[
                             html.Img(
-                                src="/static/img/dummy-tabs-interesants.svg",
-                                width=200,
+                                src="/static/img/dummy-tabs-interesants.svg", width=200
                             )
                         ],
                         title="Показать цены",
@@ -218,12 +217,7 @@ def update_home_area_dummy(*args, **kwargs):
         return [
             html.A(
                 href="/price/",
-                children=[
-                    html.Img(
-                        src="/static/img/dummy-home-area.svg",
-                        height=36,
-                    )
-                ],
+                children=[html.Img(src="/static/img/dummy-home-area.svg", height=36)],
                 title="Показать цены",
             )
         ]
@@ -238,3 +232,20 @@ def update_table_style(*args, **kwargs):
     return {
         "maxHeight": f"{get_height_base(kwargs.get('request').COOKIES.get('innerHeight')) - tabsHeight - 8 - 66}px"
     }
+
+
+@interest_app.callback(
+    dependencies.Output("table-interesants", "selected_cells"),
+    dependencies.Output("table-interesants", "active_cell"),
+    dependencies.Input("tabs-interesants", "value"),
+    dependencies.Input("tourism-type", "value"),
+    dependencies.Input("map", "clickData"),
+)
+def clear(*args, **kwargs) -> tuple:
+    """
+    Resets selected data in interesants table
+    :param args: list
+    :param kwargs: dict
+    :return: tuple
+    """
+    return [], None
