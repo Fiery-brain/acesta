@@ -9,7 +9,7 @@ from django.shortcuts import render
 from acesta.geo.models import Region
 from acesta.geo.models import Sight
 from acesta.geo.models import SightGroup
-from acesta.stats.helpers import get_sight_stats
+from acesta.stats.dash.helpers.sights_stats import get_sight_stats
 from acesta.stats.models import CityRating
 from acesta.stats.models import RegionRating
 from acesta.stats.models import SightRating
