@@ -1,80 +1,16 @@
-import math
-
 import geopandas as gpd
 import pandas as pd
 from django.conf import settings
 from django.db import models
 
 from acesta.geo.models import City
-from acesta.geo.models import Region
 from acesta.geo.models import Sight
 from acesta.stats.models import AllCityPopularity
 from acesta.stats.models import AllRegionPopularity
-from acesta.stats.models import AudienceCities
-from acesta.stats.models import AudienceRegions
 from acesta.stats.models import CityCityPopularity
 from acesta.stats.models import CityRegionPopularity
 from acesta.stats.models import RegionCityPopularity
 from acesta.stats.models import RegionRegionPopularity
-
-
-class GroupConcat(models.Aggregate):
-    """
-    Aggregate function for JOIN related records
-    """
-
-    function = "GROUP_CONCAT"
-    template = "%(function)s(%(expressions)s)"
-
-    def __init__(self, expression, delimiter, **extra):
-        output_field = extra.pop("output_field", models.CharField())
-        delimiter = models.Value(delimiter)
-        super(GroupConcat, self).__init__(
-            expression, delimiter, output_field=output_field, **extra
-        )
-
-    def as_postgresql(self, compiler, connection):
-        self.function = "STRING_AGG"
-        return super(GroupConcat, self).as_sql(compiler, connection)
-
-
-def round_up(n, decimals=0) -> int:
-    """
-    Rounds number up to thousands
-    :param n: int
-    :param decimals: int
-    :return: int
-    """
-    multiplier = 10**decimals
-    return math.ceil(n * multiplier) / multiplier
-
-
-def get_sight_stats(request) -> list:
-    """
-    Returns region sight statistics as a list
-    :param request: django.http.HttpRequest
-    :return: list
-    """
-    sight_stats = (
-        Sight.pub.filter(
-            code=request.user.current_region,
-        )
-        .values("group__tourism_type")
-        .annotate(cnt=models.Count("id"), groups=GroupConcat("group__title", "|"))
-        .order_by("-cnt")
-    )
-    sight_stats = [
-        {
-            "name": stat["group__tourism_type"],
-            "title": dict(settings.TOURISM_TYPES_OUTSIDE).get(
-                stat["group__tourism_type"]
-            ),
-            "groups": "<br>".join(sorted(list(set(stat["groups"].split("|"))))),
-            "cnt": stat["cnt"],
-        }
-        for stat in sight_stats
-    ]
-    return list(sight_stats)
 
 
 def get_geojson() -> gpd.GeoDataFrame:
@@ -270,45 +206,3 @@ def get_sizes(values: list, min_size: int = 10, max_size: int = 30) -> list:
             step = (max(values) - min(values)) / (max_size - min_size)
             sizes = [min_size + int((v or 0) / step) for v in values]
     return sizes
-
-
-def get_audience_key_data(key) -> tuple:
-    """
-    Parses audience key
-    :param key: str
-    :return: tuple
-    """
-    return key.split("_") if key else ("01", "", "regions")
-
-
-def get_object_title(pk: str, area: str) -> models.Model:
-    """
-    Returns object title by primary key and area
-    :param pk: str
-    :param area: str
-    :return:
-    """
-    object_model = Region if area == settings.AREA_REGIONS else City
-    return getattr(object_model.objects.get(pk=pk), "title")
-
-
-def get_audience(area: str, tourism_type: str, code: str) -> models.QuerySet:
-    """
-    Returns audience according to area and tourism type
-    :param area: str
-    :param tourism_type: str
-    :param code: str
-    :return: django.db.models.QuerySet
-    """
-    return (
-        (AudienceCities if area == settings.AREA_CITIES else AudienceRegions)
-        .objects.filter(
-            code_id=int(code) if area == settings.AREA_CITIES else code,
-            **(
-                dict(tourism_type=tourism_type)
-                if tourism_type
-                else dict(tourism_type__in=dict(settings.TOURISM_TYPES_OUTSIDE).keys())
-            )
-        )
-        .order_by("-v_type_sex_age")
-    )
