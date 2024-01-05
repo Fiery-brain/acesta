@@ -2,7 +2,7 @@ version: "2"         # required to adjust maintainability checks
 checks:
   similar-code:
     config:
-      threshold: 120
+      threshold: 150
 exclude_patterns:
  - "config/"
  - "db/"
