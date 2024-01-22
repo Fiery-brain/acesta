@@ -20,7 +20,7 @@ django-ipware==6.0.3  # https://github.com/un33k/django-ipware
 django-json-widget==1.1.1  # https://github.com/jmrivas86/django-json-widget
 django-plotly-dash==2.2.2  # https://github.com/GibbsConsulting/django-plotly-dash
 channels==4.0.0  # https://github.com/django/channels
-pandas==2.1.4  # https://github.com/pandas-dev/pandas
+pandas==2.2.0  # https://github.com/pandas-dev/pandas
 pyogrio==0.7.2  # https://github.com/geopandas/pyogrio
 geopandas==0.14.2  # https://github.com/geopandas/geopandas
 matplotlib==3.8.2  # https://github.com/matplotlib/matplotlib
