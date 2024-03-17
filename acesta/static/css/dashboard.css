@@ -123,7 +123,7 @@ box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8)}
 #content h4{font-size:15px;font-weight:600;color:var(--acesta-text-primary)}
 /* cursor:default; */
 #title-container:hover{text-decoration:none}
-#tourism-type{display:flex; justify-content:flex-end;position:relative;z-index:100;min-width:300px}
+#tourism-type{display:flex; justify-content:flex-end;min-width:300px}
 #tourism-type .Select-control, #tourism-type .Select-multi-value-wrapper,#tourism-type .Select-value{height:28px;line-height:28px;top:1px; border-color:var(--acesta-border-light)}
 .VirtualizedSelectFocusedOption{background-color:#eeeeee;font-weight:bolder}
 .Select.is-focused:not(.is-open) > .Select-control {

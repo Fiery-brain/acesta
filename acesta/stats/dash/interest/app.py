@@ -18,7 +18,7 @@ interest_app.layout = html.Div(
     className="container",
     children=[
         html.Div(
-            className="row mt-4",
+            className="row mt-4 position-relative",
             children=[
                 html.Div(
                     children=[
@@ -52,6 +52,7 @@ interest_app.layout = html.Div(
                     ),
                 ),
             ],
+            style={"zIndex": "1"},
         ),
         html.Div(
             children=[
@@ -176,7 +177,6 @@ interest_app.layout = html.Div(
                 ),
             ],
             className="row d-flex flex-column-reverse flex-lg-row position-relative",
-            style={"zIndex": "-1"},
         ),
     ],
 )
