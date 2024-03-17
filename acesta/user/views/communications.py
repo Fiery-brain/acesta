@@ -28,7 +28,7 @@ def visitor_request(request: HttpRequest) -> HttpResponse or FileResponse:
             data["time"] = timezone.now() + relativedelta(minutes=60)
         request_form = RequestForm(data=data)
 
-        if request_form.is_valid():
+        if request_form.is_valid() and request.user.is_authenticated:
             request_form.save()
             if is_consultation:
                 messages.add_message(

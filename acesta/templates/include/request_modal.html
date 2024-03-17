@@ -11,7 +11,7 @@
           <div class="modal-body">
             {% csrf_token %}
             <div>
-              <input maxlength="35" class="form-control" required name="name" type="text" id="{{ subject }}InputName" pattern="[А-Яа-яЁё\s\-]+" placeholder="Имя (на русском языке)"{% if request.user.is_authenticated %} value="{{ request.user.first_name }} {{ request.user.middle_name }}"{% endif %}>
+              <input maxlength="35" class="form-control" required name="name" type="text" id="{{ subject }}InputName" pattern="[А-Яа-яЁё\s\-]+" placeholder="Имя (на русском языке)"{% if request.user.is_authenticated %} value="{{ request.user.first_name }}{% if request.user.middle_name %} {{ request.user.middle_name }}{% endif %}"{% endif %}>
               <div id="{{ subject }}MessageName" class="form-text text-muted ms-2">Как к вам обращаться</div>
             </div>
             <div class="input-group mt-3">
