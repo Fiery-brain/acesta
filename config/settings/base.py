@@ -74,7 +74,6 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.vk",
     "allauth.socialaccount.providers.yandex",
     "acesta.socialaccount.providers.leaderid",
-    "allauth.socialaccount.providers.google",
 ]
 
 LOCAL_APPS = [
@@ -292,8 +291,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
+            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
