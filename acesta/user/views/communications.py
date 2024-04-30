@@ -63,9 +63,7 @@ def visitor_request(request: HttpRequest) -> HttpResponse or FileResponse:
             if is_time_check:
                 send_message(f"Ошибка при добавлении сообщения {request_form.errors}")
 
-        if request.POST["subject"] == settings.REQUEST_CONSULTATION:
-            return redirect(request.META["HTTP_REFERER"])
-        else:
+        if request.POST["subject"] == settings.REQUEST_PRESENTATION and is_time_check:
             return FileResponse(
                 open(
                     f'{str(settings.APPS_DIR / "templates")}/Tourism-analytics-acesta-presentation.pdf',
@@ -73,6 +71,9 @@ def visitor_request(request: HttpRequest) -> HttpResponse or FileResponse:
                 ),
                 content_type="application/pdf",
             )
+        else:
+            return redirect(request.META["HTTP_REFERER"])
+
     else:
         return redirect("index")
 
