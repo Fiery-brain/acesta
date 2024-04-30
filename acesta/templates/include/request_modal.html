@@ -26,6 +26,7 @@
             <div class="mt-3">
               <textarea required class="form-control" name="comment" id="{{ subject }}TextMessage" rows="3" autocomplete="off" placeholder="{% if subject == REQUEST_CONSULTATION %}Комментарий{% else %}Цель{% endif %}"></textarea>
               <div id="{{ subject }}MessageHelp" class="form-text text-muted ms-2">{% if subject == REQUEST_CONSULTATION %}В какое время и&nbsp;каким способом удобно получить консультацию{% else %}Расскажите нам, какие задачи собираетесь решать при&nbsp;помощи сервиса{% endif %}</div>
+              <input required hidden class="form-control time_checker" name="time_checker" id="{{ subject }}TimeChecker" value="0">
             </div>
             {% if subject == REQUEST_CONSULTATION %}
               {{ consultation_form.user }}

@@ -28,7 +28,12 @@ def visitor_request(request: HttpRequest) -> HttpResponse or FileResponse:
             data["time"] = timezone.now() + relativedelta(minutes=60)
         request_form = RequestForm(data=data)
 
-        if request_form.is_valid() and request.user.is_authenticated:
+        try:
+            is_time_check = bool(int(request.POST.get("time_checker", default=False)))
+        except ValueError:
+            is_time_check = False
+
+        if is_time_check and request_form.is_valid() and request.user.is_authenticated:
             request_form.save()
             if is_consultation:
                 messages.add_message(
@@ -55,7 +60,8 @@ def visitor_request(request: HttpRequest) -> HttpResponse or FileResponse:
                 messages.ERROR,
                 "Не удалось отправить запрос, попробуйте позже или&nbsp;обратитесь в&nbsp;техподдержку",
             )
-            send_message(f"Ошибка при добавлении сообщения {request_form.errors}")
+            if is_time_check:
+                send_message(f"Ошибка при добавлении сообщения {request_form.errors}")
 
         if request.POST["subject"] == settings.REQUEST_CONSULTATION:
             return redirect(request.META["HTTP_REFERER"])
