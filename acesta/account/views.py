@@ -20,17 +20,42 @@ User = get_user_model()
 
 
 class SignupView(BaseSignupView):
+    is_time_check = None
     success_url = reverse_lazy("account_signupnext")
+
+    def get_is_time_check(self):
+        if self.is_time_check is None:
+            try:
+                self.is_time_check = bool(
+                    int(self.request.POST.get("time_checker", default=False))
+                )
+            except ValueError:
+                self.is_time_check = False
+        return self.is_time_check
 
     def dispatch(self, request, *args, **kwargs):
         return super(FormView, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if self.get_is_time_check() and form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def form_valid(self, form):
         send_message("Новая регистрация через форму")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        send_message(f"Ошибка при регистрации через форму {form.errors}")
+        if self.get_is_time_check():
+            send_message(f"Ошибка при регистрации через форму {form.errors}")
+        elif form.is_valid():
+            get_adapter(self.request).add_message(
+                self.request,
+                messages.ERROR,
+                "account/messages/too_many_registration_requests.txt",
+            )
         return super().form_invalid(form)
 
 

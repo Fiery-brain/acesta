@@ -20,6 +20,7 @@
 {% if redirect_field_value %}
 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
 {% endif %}
+<input type="hidden" class="form-control time_checker" name="time_checker" id="{{ subject }}TimeChecker" value="0">
 
 <div>
   <small>Регистрируясь на&nbsp;сайте соглашаюсь с&nbsp;<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#terms">Условиями использования</a><br>и&nbsp;<a href="#" type="button" data-bs-toggle="modal" data-bs-target="#privacy">Политикой конфиденциальности</a></small>
