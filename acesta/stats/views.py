@@ -31,9 +31,9 @@ def region_view(request) -> HttpResponse:
         """
         q75 = np.quantile([s["cnt"] for s in stats], 0.75) if len(stats) else 0
         return [
-            stat["title"].replace("туризм", "").lower().strip("- ")
+            stat.get("title").replace("туризм", "").lower().strip("- ")
             for stat in stats
-            if stat["cnt"] >= q75
+            if stat.get("cnt") >= q75 and stat.get("title") is not None
         ]
 
     def get_weak_types(stats: list) -> list:
