@@ -22,7 +22,7 @@ django-plotly-dash==2.2.2  # https://github.com/GibbsConsulting/django-plotly-da
 channels==4.0.0  # https://github.com/django/channels
 pandas==2.2.2  # https://github.com/pandas-dev/pandas
 pyogrio==0.8.0  # https://github.com/geopandas/pyogrio
-geopandas==0.14.4  # https://github.com/geopandas/geopandas
+geopandas==1.0.1  # https://github.com/geopandas/geopandas
 matplotlib==3.9.0  # https://github.com/matplotlib/matplotlib
 sentry-sdk==2.5.1  # https://github.com/getsentry/sentry-python
 reportlab==4.0.9  # https://github.com/Distrotech/reportlab
