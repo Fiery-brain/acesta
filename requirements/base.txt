@@ -25,5 +25,5 @@ pyogrio==0.8.0  # https://github.com/geopandas/pyogrio
 geopandas==1.0.1  # https://github.com/geopandas/geopandas
 matplotlib==3.9.0  # https://github.com/matplotlib/matplotlib
 sentry-sdk==2.10.0  # https://github.com/getsentry/sentry-python
-reportlab==4.0.9  # https://github.com/Distrotech/reportlab
+reportlab==4.2.2  # https://github.com/Distrotech/reportlab
 xhtml2pdf==0.2.16  #https://github.com/xhtml2pdf/xhtml2pdf
