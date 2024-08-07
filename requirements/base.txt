@@ -23,7 +23,7 @@ channels==4.0.0  # https://github.com/django/channels
 pandas==2.2.2  # https://github.com/pandas-dev/pandas
 pyogrio==0.8.0  # https://github.com/geopandas/pyogrio
 geopandas==1.0.1  # https://github.com/geopandas/geopandas
-matplotlib==3.9.1  # https://github.com/matplotlib/matplotlib
+matplotlib==3.9.1.post1  # https://github.com/matplotlib/matplotlib
 sentry-sdk==2.12.0  # https://github.com/getsentry/sentry-python
 reportlab==4.2.2  # https://github.com/Distrotech/reportlab
 xhtml2pdf==0.2.16  #https://github.com/xhtml2pdf/xhtml2pdf
