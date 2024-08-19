@@ -8,5 +8,5 @@ pytest==8.3.2  # https://github.com/pytest-dev/pytest
 pytest-sugar==1.0.0  # https://github.com/Frozenball/pytest-sugar
 pytest-django==4.8.0  # https://github.com/pytest-dev/pytest-django
 django-coverage-plugin==3.1.0  # https://github.com/nedbat/django_coverage_plugin
-factory-boy==3.3.0  # https://github.com/FactoryBoy/factory_boy
+factory-boy==3.3.1  # https://github.com/FactoryBoy/factory_boy
 PyYAML==6.0.1  # https://github.com/yaml/pyyaml
