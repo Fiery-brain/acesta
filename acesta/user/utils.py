@@ -80,4 +80,4 @@ def send_message(message) -> None:
     :return: None
     """
     if not settings.TESTING:
-        return mail_admins(message, message)
+        return mail_admins(message.replace("\n", " "), message)
