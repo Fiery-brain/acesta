@@ -77,7 +77,7 @@ def fetch_pdf_resources(uri: str, rel: str) -> str:
 def send_message(message) -> None:
     """
     Captures a message
-    :return: str An `event_id` if the SDK decided to send the event
+    :return: None
     """
     if not settings.TESTING:
         return mail_admins(message.replace("\n", " "), message)
