@@ -320,7 +320,25 @@ DADATA_SECRET = env("API_DADATA_SECRET", default="")
 
 # Application
 TITLE = "Аналитика в туризме — ацеста"
-HASH_TAGS = "#туризм #аналитика"
+HASH_TAGS = "#туризм #маркетинг #данные #аналитика"
+
+DEFAULT_SEGMENT = "undefined"
+SEGMENT_GOVERNMENT = "government"
+SEGMENT_TIC = "tic"
+SEGMENT_TOUR_OPERATOR = "tour-operator"
+SEGMENT_TOUR_AGENT = "tour-agent"
+SEGMENT_TOURISM_PRODUCT_OWNER = "tourism-product-owner"
+SEGMENT_MARKETING_AGENCY = "marketing-agency"
+
+SEGMENTS = (
+    (DEFAULT_SEGMENT, "Не определен"),
+    (SEGMENT_GOVERNMENT, "Орган власти (комитет по развитию туризма, ...)"),
+    (SEGMENT_TIC, "Туристско-информационный центр (ТИЦ)"),
+    (SEGMENT_TOUR_OPERATOR, "Туроператор"),
+    (SEGMENT_TOUR_AGENT, "Турагент"),
+    (SEGMENT_TOURISM_PRODUCT_OWNER, "Владелец бизнеса в туризме"),
+    (SEGMENT_MARKETING_AGENCY, "Маркетинговое агентство"),
+)
 
 GEOJSON = ROOT_DIR / "geojson" / "Russia.geojson"
 

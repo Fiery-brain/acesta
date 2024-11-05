@@ -54,6 +54,11 @@ class User(AbstractUser):
         blank=True,
         null=True,
     )
+    segment = models.CharField(
+        max_length=25,
+        choices=settings.SEGMENTS,
+        default=settings.DEFAULT_SEGMENT,
+    )
     current_region = models.ForeignKey(
         Region,
         verbose_name="Последний регион",

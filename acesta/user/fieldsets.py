@@ -25,6 +25,7 @@ user_form_fieldset = (
         "Работа",
         {
             "fields": (
+                "segment",
                 "company",
                 "position",
             )
