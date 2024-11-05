@@ -1,7 +1,7 @@
 import os
 
 from django.conf import settings
-from sentry_sdk import capture_message
+from django.core.mail import mail_admins
 
 from acesta.user.forms import OrderForm
 from acesta.user.forms import RequestForm
@@ -74,12 +74,10 @@ def fetch_pdf_resources(uri: str, rel: str) -> str:
     return path
 
 
-def send_message(message) -> str:
+def send_message(message) -> None:
     """
     Captures a message
     :return: str An `event_id` if the SDK decided to send the event
     """
     if not settings.TESTING:
-        return capture_message(message)
-    else:
-        return ""
+        return mail_admins(message, message)
