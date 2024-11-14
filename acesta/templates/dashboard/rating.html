@@ -80,9 +80,24 @@
               {% for place in interest_sight_places %}
               <tr>
                 <td class="text-center rating-place"><div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div></td>
-                <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.all.0.title }}"><svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ place.sight.group.all.0.name }}"></use></svg></a></td>
+                <td width="22" class="pe-1">
+                    <div class="d-flex">
+                      <a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.all.0.title }}">
+                        <svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ place.sight.group.all.0.name }}"></use></svg>
+                      </a>
+                      {% if place.sight.rate > 4.5 %}
+                        <a href="#" data-bs-toggle="tooltip" title="Нравится туристам, оценка: {{ place.sight.rate }}">
+                          <svg viewBox="0 0 32 32" class="rating-heart" fill="#e9336d" width="15" height="15"><use href="{% static 'img/sprite.svg' %}#heart"></use></svg>
+                        </a>
+                      {% endif %}
+                    </div>
+
+                </td>
                 <td class="ps-1">
-                  <p class="mb-0 sight-title">{{ place.sight }}</p>
+                  <p class="mb-0 sight-title">
+                    {{ place.sight }}
+
+                  </p>
                   <div class="text-muted sight-description">
                     <small class="d-inline-flex sight-location">
                       {% if place.sight.city and place.sight.code.region_type != REGION_TYPE_FEDERAL_CITY %}
@@ -139,7 +154,18 @@
               {% for place in top_sights %}
               <tr>
                 <td class="text-center rating-place"><div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div></td>
-                <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.all.0.title }}"><svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ place.sight.group.all.0.name }}"></use></svg></a></td>
+                <td width="22" class="pe-1">
+                    <div class="d-flex">
+                      <a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.all.0.title }}">
+                        <svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ place.sight.group.all.0.name }}"></use></svg>
+                      </a>
+                      {% if place.sight.rate > 4.5 %}
+                        <a href="#" data-bs-toggle="tooltip" title="Нравится туристам, оценка: {{ place.sight.rate }}">
+                          <svg viewBox="0 0 32 32" class="rating-heart" fill="#e9336d" width="15" height="15"><use href="{% static 'img/sprite.svg' %}#heart"></use></svg>
+                        </a>
+                      {% endif %}
+                    </div>
+                </td>
                 <td class="ps-1">
                   <p class="mb-0  sight-title">{{ place.sight }}</p>
                   <div class="text-muted sight-description">

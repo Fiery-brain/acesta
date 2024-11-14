@@ -209,6 +209,7 @@ ul.nav.rating-tabs a:hover{text-decoration:none}
 .rating-title{font-weight:600}
 .rating-part-selector{position:relative;bottom:3px}
 .rating-place{font-size:.8em;line-height:2.1em}
+.rating-heart{position:relative;right:6px; bottom:3px}
 .medal{margin:auto;width:2em;height:2em}
 
 .sight-title{line-height:1.25em}
