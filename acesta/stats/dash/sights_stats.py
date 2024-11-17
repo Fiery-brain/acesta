@@ -73,7 +73,7 @@ def update_stats_graph(*args, **kwargs) -> dcc.Graph:
         fig.update_layout(
             paper_bgcolor="white",
             plot_bgcolor="white",
-            font_family="Nunito",
+            font_family="Golos",
             font_color="#727070",
             showlegend=False,
             hoverlabel={"bordercolor": "#FFF"},

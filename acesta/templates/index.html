@@ -92,10 +92,9 @@
             <div class="row content">
               <div class="col-12 col-lg-5 d-flex align-items-center">
                 <div class="hero-text">
-                  <div><h1 class="hashtags text-green mb-2">{{ HASH_TAGS }}</h1></div>
-                  <div class="utp mb-1">Раскрываем<br><span class="text-nowrap colored">туристический</span> <span class="text-accent-primary">потенциал</span></div>
-                  <p>Наш аналитический сервис помогает бизнесу и&nbsp;органам власти оценить потенциальную аудиторию объектов туристического интереса и&nbsp;разработать стратегии развития на&nbsp;уровне точки притяжения, города, региона
-                  </p>
+                  <div><h1 class="hashtags text-green mb-3">{{ HASH_TAGS }}</h1></div>
+                  <div class="utp mb-3">Инструменты<br><span class="text-nowrap colored">анализа потенциальной аудитории</span> <span class="text-accent-primary text-nowrap">в туризме</span></div>
+                  <p>Используя наши инструменты, вы можете разработать стратегии развития на&nbsp;уровне точки притяжения, города или&nbsp;региона, что делает ваши туристические предложения более привлекательными и&nbsp;приводит к&nbsp;росту числа гостей. В&nbsp;результате вы не только улучшаете качество обслуживания туристов, но и&nbsp;способствуете развитию вашего региона, делая его более конкурентоспособным на туристическом рынке.</p>
                   <a class="btn btn-accent btn-lg{% if request.user.is_authenticated %} px-5{% else %} px-4 px-md-5{% endif %} text-nowrap" href="{% url 'region' %}"><svg fill="#FFFFFF" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать{% if not request.user.is_authenticated %} бесплатно{% endif %}</a>
                   {% if not request.user.is_authenticated %}
                     <p class="mt-2 ms-1 lh-1 d-block w-75"><small class="opacity-25">Получить доступ к&nbsp;бесплатной базовой версии сразу после авторизации</small></p>

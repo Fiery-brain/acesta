@@ -22,10 +22,10 @@ h2:before{content:url('../img/decor.svg'); display:block;margin-bottom:-54px;mar
 
 /* Hero */
 .hero h1.hashtags{font-size:13px;font-weight:lighter}
-.hero .utp{font-size:32px;font-weight:600;color:var(--acesta-dark-primary);line-height:40px}
+.hero .utp{font-size:22px;font-weight:600;color:var(--acesta-dark-primary);line-height:25px}
 .hero-outside-container{max-height:950px;background:radial-gradient(72.69% 109.42% at 70.76% 50%, #FFFFFF 0%, #D1EEEA 100%)}
 .hero .content{height:100vh;max-height:950px;background:url('/static/img/hero.svg') no-repeat right center;background-size:auto 90%}
-.hero .hero-text{font-size:1rem}
+.hero .hero-text{font-size:.9rem}
 @media (min-width:993px) {
   .hero .content{min-height:650px}
 }
