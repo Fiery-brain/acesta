@@ -132,7 +132,7 @@ box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8)}
   background:#fff;
 }
 .Select .disabled{color:#999}
-#interest table{font-family:Nunito,sans-serif!important;font-size:14px!important}
+#interest table{font-family:Golos,sans-serif!important;font-size:14px!important}
 #interest .cell-table th[data-dash-column='code__title']{width:50%;padding-left:.1em!important}
 #interest .cell-table th[data-dash-column='code__title'] .svg-inline--fa{display:none}
 #interest .cell-table .svg-inline--fa{font-size:1.4em}
@@ -160,7 +160,7 @@ box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8)}
 #home-area:has(input){/*background-color:#ffffff69;border-top-left-radius:6px;border-bottom-right-radius:12px;margin-bottom:-32px;*/padding:5px;margin-bottom:2px;max-width:376px}
 #map-container{border:1px solid var(--acesta-border-light)}
 #map .hoverlayer:has(text[data-unformatted*="Региональная"]) path{fill:var(--acesta-primary)!important}
-#map .hovertext text{font-family:Nunito!important}
+#map .hovertext text{font-family:Golos!important}
 .mapboxgl-control-container{display:none}
 
 #title-container{cursor:default}

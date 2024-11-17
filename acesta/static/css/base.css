@@ -1,14 +1,12 @@
-@font-face {font-family:'Nunito';font-style:normal;font-weight:200;src:url('../font/Nunito-ExtraLight.ttf');format('truetype')}
-@font-face {font-family:'Nunito';font-style:normal;font-weight:300;src:url('../font/Nunito-Light.ttf');format('truetype')}
-@font-face {font-family:'Nunito';font-style:normal;font-weight:400;src:url('../font/Nunito-Regular.ttf');format('truetype')}
-@font-face {font-family:'Nunito';font-style:normal;font-weight:500;src:url('../font/Nunito-Medium.ttf');format('truetype')}
-@font-face {font-family:'Nunito';font-style:normal;font-weight:600;src:url('../font/Nunito-SemiBold.ttf');format('truetype')}
-@font-face {font-family:'Nunito';font-style:normal;font-weight:700;src:url('../font/Nunito-Bold.ttf');format('truetype')}
-@font-face {font-family:'Nunito';font-style:normal;font-weight:800;src:url('../font/Nunito-ExtraBold.ttf');format('truetype')}
-@font-face {font-family:'Nunito';font-style:normal;font-weight:900;src:url('../font/Nunito-Black.ttf');format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:400;src:url('../font/GolosText-Regular.ttf');format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:500;src:url('../font/GolosText-Medium.ttf');format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:600;src:url('../font/GolosText-SemiBold.ttf');format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:700;src:url('../font/GolosText-Bold.ttf');format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:800;src:url('../font/GolosText-ExtraBold.ttf');format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:900;src:url('../font/GolosText-Black.ttf');format('truetype')}
 
 :root{
-    --acesta-text-primary:#212529;
+    --acesta-text-primary:#4b4a4a;
     --acesta-text-secondary:#959090;
     --acesta-primary:#429388;
     --acesta-dark-primary:#34766A;
@@ -265,7 +263,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 @keyframes show{0%{opacity:.5} 100%{opacity:1}}
 div{opacity:.5;transition:opacity 1s;animation:show .75s 1;animation-fill-mode:forwards}
 
-body{min-width:320px;width:auto !important;width:320px; color:var(--acesta-text-primary);font-family:Nunito,sans-serif}
+body{min-width:320px;width:auto !important;width:320px; color:var(--acesta-text-primary);font-family:Golos,sans-serif}
 .wrapper{min-height:100vh;overflow-x:hidden}
 
 ::-webkit-scrollbar {background:#f8f8f8;width:8px;height:8px}
@@ -274,7 +272,7 @@ body{min-width:320px;width:auto !important;width:320px; color:var(--acesta-text-
 ::-webkit-scrollbar-thumb:hover {background:#bcbbbb}
 
 .jq-toast-wrap{width:320px}
-.jq-toast-single{font-family:Nunito,sans-serif;font-size:15px;overflow-wrap:break-word}
+.jq-toast-single{font-family:Golos,sans-serif;font-size:15px;overflow-wrap:break-word}
 .jq-icon-success{ background-color:#71AA46; color:#dff0d8; border-color:#d6e9c6}
 .jq-icon-error{background-color:#DF5346; color:#f2dede; border-color:#ebccd1}
 .jq-icon-warning{background-color:#DA8743; color:#fcf8e3; border-color:#faebcc}
@@ -322,7 +320,7 @@ box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8);border:1px solid #ececec}
 .select2-selection svg{position:relative;bottom:1px}
 .select2-container--default .select2-results__option--selected path{fill:var(--bs-white)}
 .select2-container--default .select2-selection--single {border-color:var(--acesta-border-light)}
-.select2-container .select2-search--inline .select2-search__field{font-family: Nunito;position:relative;bottom:6px;}
+.select2-container .select2-search--inline .select2-search__field{font-family:Golos;position:relative;bottom:6px;}
 
 .btn-primary {
     --bs-btn-color:#fff;
@@ -454,7 +452,7 @@ input:checked {background-color:var(--acesta-light-primary);border-color:var(--a
 .footer .main .logo_img{height:54px;margin-bottom:4px}
 .footer .main .logo_col h5{font-weight:600;font-size:13px}
 .footer .main .logo_legacy li{line-height:18px;font-size:15px}
-.footer .winner .desc{font-weight:100;display:inline-block;margin-top:6px}
+.footer .winner .desc{font-weight:400;display:inline-block;margin-top:6px}
 .footer .winner_img{float:left;transform:translateY(1px);height:120px;margin-right:24px}
 .we-are-in-network svg{fill:#95f0e8;width:42px;height:42px;}
 
@@ -465,7 +463,7 @@ input:checked {background-color:var(--acesta-light-primary);border-color:var(--a
 .navbar{box-shadow:4px 4px 8px rgba(141, 141, 141, 0.15)}
 .contact-block a svg:hover{opacity: .85;}
 .container-outside{min-height:700px;margin-top:120px}
-h5.logo-tags{font-size:12px;font-weight:700;opacity:.5}
+h2.logo-tags{font-size:12px;font-weight:600;opacity:.5}
 
 .login-or{ text-align:center;border-bottom:1px solid #efefef}
 .login-or span{display:inline-block;padding:0 1em;transform:translateY(25px);background:#fff;margin-bottom:15px}

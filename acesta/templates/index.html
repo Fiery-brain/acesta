@@ -83,9 +83,6 @@
             <div class="d-none d-md-block">
               <a class="btn btn-accent btn-lg px-5 ms-5 my-3 text-nowrap" href="{% url 'region' %}"><svg fill="#ffffff" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
             </div>
-            <!-- <div class="d-block d-md-none">
-              <a class="btn btn-accent px-4 my-3 text-nowrap" href="{% url 'region' %}"><svg fill="#ffffff" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
-            </div> -->
           </div>
         </div>
       </nav>
@@ -95,8 +92,8 @@
             <div class="row content">
               <div class="col-12 col-lg-5 d-flex align-items-center">
                 <div class="hero-text">
-                  <div><small class="text-green">{{ HASH_TAGS }}</small></div>
-                  <h1>Раскрываем<br><span class="text-nowrap colored">туристический</span> <span class="text-accent-primary">потенциал</span></h1>
+                  <div><h1 class="hashtags text-green mb-2">{{ HASH_TAGS }}</h1></div>
+                  <div class="utp mb-1">Раскрываем<br><span class="text-nowrap colored">туристический</span> <span class="text-accent-primary">потенциал</span></div>
                   <p>Наш аналитический сервис помогает бизнесу и&nbsp;органам власти оценить потенциальную аудиторию объектов туристического интереса и&nbsp;разработать стратегии развития на&nbsp;уровне точки притяжения, города, региона
                   </p>
                   <a class="btn btn-accent btn-lg{% if request.user.is_authenticated %} px-5{% else %} px-4 px-md-5{% endif %} text-nowrap" href="{% url 'region' %}"><svg fill="#FFFFFF" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать{% if not request.user.is_authenticated %} бесплатно{% endif %}</a>
