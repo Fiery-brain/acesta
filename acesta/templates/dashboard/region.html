@@ -6,7 +6,7 @@
 {% block title %}Регион {{ request.user.current_region }}. {% endblock %}
 
 {% block css_external %}
-  <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/select2.min.css' %}" xmlns="http://www.w3.org/1999/html">
   {% plotly_header %}
   {{ block.super }}
 {% endblock %}
@@ -85,14 +85,18 @@
               <a href="#" data-bs-toggle="modal" data-bs-target="#addSight" class="btn btn-outline-primary fw-bold mb-2 text-nowrap" ><svg fill="#34766A" width="18" height="18" class="me-lg-1"><use href="{% static 'img/sprite.svg' %}#add"></use></svg><span class="d-none d-md-inline">Добавить</span></a>
             </div>
             <div class="col-10 col-lg-9 px-0 d-flex flex-wrap justify-content-end align-content-center mb-2">
-              <form action="" id="groupSelector">
-                <select id="groupType" name="group">
-                  <option value="">все разделы</option>
-                  {% for group in sight_groups %}
-                    <option value="{{ group.name }}"{% if group.name == request.GET.group %} selected{% endif %}>{{ group.title }}</option>
-                  {% endfor %}
-                </select>
-              </form>
+               <div class="d-flex justify-content-end align-items-center">
+                <a href="#" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="Точки притяжения региона обновлены <span class='text-nowrap'>{{ sights_update_date|date:'d.m.Y' }}</span>" class="me-3" ><svg viewBox="0 0 24 24"  width="22" height="22"><use href="{% static 'img/sprite.svg' %}#updated"></use></svg></a>
+                  <form action="" id="groupSelector">
+                    <select id="groupType" name="group">
+                      <option value="">все разделы</option>
+                      {% for group in sight_groups %}
+                        <option value="{{ group.name }}"{% if group.name == request.GET.group %} selected{% endif %}>{{ group.title }}</option>
+                      {% endfor %}
+                    </select>
+                  </form>
+                </a>
+               </div>
             </div>
           </div>
           <div class="row">

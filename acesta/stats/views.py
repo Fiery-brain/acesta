@@ -10,6 +10,8 @@ from acesta.geo.models import Region
 from acesta.geo.models import Sight
 from acesta.geo.models import SightGroup
 from acesta.stats.dash.helpers.sights_stats import get_sight_stats
+from acesta.stats.helpers import get_rating_update_date
+from acesta.stats.helpers import get_sights_update_date
 from acesta.stats.models import CityRating
 from acesta.stats.models import RegionRating
 from acesta.stats.models import SightRating
@@ -131,6 +133,7 @@ def region_view(request) -> HttpResponse:
         "amount_rating_place": get_amount_rating_place(),
         "interest_rating_place": get_interest_rating_place(),
         "outstanding_places": get_amount_rating_by_group_outstanding_places(),
+        "sights_update_date": get_sights_update_date(),
     }
 
     if request.GET.get("group", None) is not None:
@@ -163,7 +166,7 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
     :param area: str
     :return: django.http.HttpResponse
     """
-    context = {"area": area}
+    context = {"area": area, "rating_update_date": get_rating_update_date()}
     if area != settings.AREA_REGIONS and not request.user.is_extended:
         return redirect("rating")
     else:

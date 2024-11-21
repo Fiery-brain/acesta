@@ -59,12 +59,10 @@ $(function () {
   });
   $("#interest-container").bind("DOMSubtreeModified", function (e) {
     if (e.target.id == "react-select-2--list") {
-      //e.target.tagName.toLowerCase() == 'div' &&
       $(".Select-noresults").text("Вид не найден");
     }
     if (e.target.tagName.toLowerCase() == "h3") {
       $("#title-container").attr("type", "button");
-      $("#title-container").attr("data-bs-toggle", "tooltip");
       $("#title-container").attr("title", $("#title").text());
     }
     if (
@@ -86,13 +84,22 @@ $(function () {
           );
         }
       });
-      var tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-      );
-      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-      });
       $("#map-container").css("minHeight", containerHeight - 242 + "px");
     }
+  });
+
+  $(window).on("load", function() {
+
+    $("#updated-link").attr("title", $("#updated-link").attr("data-title"))
+    $("#updated-link").html(
+      '<svg width="22" height="22"><use href="/static/img/sprite.svg#updated"></use></svg>'
+    )
+
+    var tooltipTriggerList = [].slice.call(
+      document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
   });
 });

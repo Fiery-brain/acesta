@@ -5,11 +5,14 @@ from dash import html
 from dash.dash_table.Format import Format
 from dash.dash_table.Format import Scheme
 from django.conf import settings
+from django.utils.dateformat import format as dateformat
 from django_plotly_dash import DjangoDash
 
 from acesta.stats.apps import dash_args
 from acesta.stats.dash.helpers.interest import get_interest
 from acesta.stats.dash.helpers.interest import get_ppt_df
+from acesta.stats.helpers import get_auditory_update_date
+from acesta.stats.helpers import get_rating_update_date
 
 
 # Interest Application
@@ -33,18 +36,39 @@ interest_app.layout = html.Div(
                                 )
                             ],
                             className="text-nowrap text-truncate",
+                            **{"data-bs-toggle": "tooltip"},
                         )
                     ],
                     className="col-12 col-lg-6 col-xl-5 ps-0",
                 ),
                 html.Div(
                     children=[
-                        dcc.Dropdown(
-                            id="tourism-type",
-                            options=[],
-                            clearable=False,
-                            className="w-100",
-                        )
+                        html.Div(
+                            children=[
+                                html.A(
+                                    id="updated-link",
+                                    href="#",
+                                    **{
+                                        "data-bs-toggle": "tooltip",
+                                        "data-bs-html": "true",
+                                        "data-title": f"""
+                                            Данные об интересе обновлены <span class='text-nowrap'>
+                                            { dateformat(get_rating_update_date(),'d.m.Y') }</span><br><br>
+                                            Данные о целевых группах обновлены <span class='text-nowrap'>
+                                            { dateformat(get_auditory_update_date(),'d.m.Y') }</span>
+                                        """,
+                                    },
+                                    className="ms-3 ms-leg-0 me-0 me-lg-3",
+                                ),
+                                dcc.Dropdown(
+                                    id="tourism-type",
+                                    options=[],
+                                    clearable=False,
+                                    className="w-100",
+                                ),
+                            ],
+                            className="d-flex justify-content-end align-items-center flex-row-reverse flex-lg-row",
+                        ),
                     ],
                     className=(
                         "col-12 col-lg-6 col-xl-7 py-3 py-lg-0 px-0 "
