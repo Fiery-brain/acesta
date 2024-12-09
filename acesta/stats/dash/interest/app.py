@@ -5,9 +5,11 @@ from dash import html
 from dash.dash_table.Format import Format
 from dash.dash_table.Format import Scheme
 from django.conf import settings
-from django.utils.dateformat import format as dateformat
+from django.utils.timesince import timesince
 from django_plotly_dash import DjangoDash
 
+from acesta.base.utils import timesince_accusatifier as accusatifier
+from acesta.base.utils import timesince_cutter as cutter
 from acesta.stats.apps import dash_args
 from acesta.stats.dash.helpers.interest import get_interest
 from acesta.stats.dash.helpers.interest import get_ppt_df
@@ -53,9 +55,10 @@ interest_app.layout = html.Div(
                                         "data-bs-html": "true",
                                         "data-title": f"""
                                             Данные об интересе обновлены <span class='text-nowrap'>
-                                            { dateformat(get_rating_update_date(),'d.m.Y') }</span><br><br>
+                                            { cutter(accusatifier(timesince(get_rating_update_date()))) } назад
+                                            </span><br><br>
                                             Данные о целевых группах обновлены <span class='text-nowrap'>
-                                            { dateformat(get_auditory_update_date(),'d.m.Y') }</span>
+                                            { cutter(accusatifier(timesince(get_auditory_update_date()))) } назад</span>
                                         """,
                                     },
                                     className="ms-3 ms-leg-0 me-0 me-lg-3",

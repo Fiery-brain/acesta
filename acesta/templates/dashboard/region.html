@@ -2,6 +2,7 @@
 {% load static %}
 {% load plotly_dash %}
 {% load stats %}
+{% load timesince %}
 
 {% block title %}Регион {{ request.user.current_region }}. {% endblock %}
 
@@ -85,8 +86,8 @@
               <a href="#" data-bs-toggle="modal" data-bs-target="#addSight" class="btn btn-outline-primary fw-bold mb-2 text-nowrap" ><svg fill="#34766A" width="18" height="18" class="me-lg-1"><use href="{% static 'img/sprite.svg' %}#add"></use></svg><span class="d-none d-md-inline">Добавить</span></a>
             </div>
             <div class="col-10 col-lg-9 px-0 d-flex flex-wrap justify-content-end align-content-center mb-2">
-               <div class="d-flex justify-content-end align-items-center">
-                <a href="#" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="Точки притяжения региона обновлены <span class='text-nowrap'>{{ sights_update_date|date:'d.m.Y' }}</span>" class="me-3" ><svg viewBox="0 0 24 24"  width="22" height="22"><use href="{% static 'img/sprite.svg' %}#updated"></use></svg></a>
+              <div class="d-flex justify-content-end align-items-center">
+                <a href="#" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="Точки притяжения региона обновлены <span class='text-nowrap'>{{ sights_update_date|timesince|accusatifier|cutter }} назад</span>" class="me-3" ><svg viewBox="0 0 24 24"  width="22" height="22"><use href="{% static 'img/sprite.svg' %}#updated"></use></svg></a>
                   <form action="" id="groupSelector">
                     <select id="groupType" name="group">
                       <option value="">все разделы</option>
@@ -96,7 +97,7 @@
                     </select>
                   </form>
                 </a>
-               </div>
+              </div>
             </div>
           </div>
           <div class="row">

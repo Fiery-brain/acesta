@@ -1,6 +1,7 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
 {% load stats %}
+{% load timesince %}
 
 {% block title %}Рейтинги. {% endblock %}
 
@@ -36,7 +37,7 @@
     </div>
     <div class="col-12 col-lg-5 d-lg-flex flex-wrap justify-content-end align-items-center px-0 mt-3 mt-lg-0 rating-part-selector">
       <div class="d-flex justify-content-end align-items-center flex-row-reverse flex-lg-row">
-        <a href="#" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="Рейтинги обновлены <span class='text-nowrap'>{{ rating_update_date|date:'d.m.Y' }}</span>" class="ms-3 ms-leg-0 me-0 me-lg-3" ><svg viewBox="0 0 24 24"  width="22" height="22"><use href="{% static 'img/sprite.svg' %}#updated"></use></svg></a>
+        <a href="#" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="Рейтинги обновлены <span class='text-nowrap'>{{ rating_update_date|timesince|accusatifier|cutter }} назад</span>" class="ms-3 ms-leg-0 me-0 me-lg-3" ><svg viewBox="0 0 24 24"  width="22" height="22"><use href="{% static 'img/sprite.svg' %}#updated"></use></svg></a>
         {% if area == AREA_SIGHTS %}
           <form action="" id="groupSelector">
             <select id="groupType" name="group">
