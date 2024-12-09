@@ -77,6 +77,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "acesta.base",
     "acesta.front",
     "acesta.geo",
     "acesta.stats",
