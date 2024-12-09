@@ -147,7 +147,7 @@ def update_audience(key, *args, **kwargs):
                             ),
                             html.P(
                                 children=[
-                                    "дети от 6 лет ",
+                                    "дети до 6 лет ",
                                     html.B(
                                         f"{formatted_percentage(rec.v_sex_age_child_6, rec.v_sex_age)}%"
                                     ),
