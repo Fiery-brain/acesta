@@ -50,13 +50,6 @@ $(function () {
     updateSplitter();
   });
 
-  $("title").bind("DOMSubtreeModified", function (e) {
-    if ($(this).text().includes("...")) {
-      $("#loader").css("display", "block");
-    } else {
-      $("#loader").css("display", "none");
-    }
-  });
   $("#interest-container").bind("DOMSubtreeModified", function (e) {
     if (e.target.id == "react-select-2--list") {
       $(".Select-noresults").text("Вид не найден");
