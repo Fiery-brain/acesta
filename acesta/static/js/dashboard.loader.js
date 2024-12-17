@@ -1,14 +1,14 @@
-var target = document.querySelector("title");
+var title = document.querySelector("title");
 
-var observer = new MutationObserver(function (mutations) {
-  if ($(target).text().includes("...")) {
+var titleObserver = new MutationObserver(function () {
+  if ($(title).text().includes("...")) {
     $("#loader").css("display", "block");
   } else {
     $("#loader").css("display", "none");
   }
 });
 
-observer.observe(target, {
+titleObserver.observe(title, {
   attributes: true,
   childList: true,
   characterData: true,

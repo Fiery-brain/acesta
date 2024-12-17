@@ -50,7 +50,9 @@ $(function () {
     updateSplitter();
   });
 
-  $("#interest-container").bind("DOMSubtreeModified", function (e) {
+  var interest = document.querySelector("#interest-container");
+
+  var interestObserver = new MutationObserver(function () {
     if (e.target.id == "react-select-2--list") {
       $(".Select-noresults").text("Вид не найден");
     }
@@ -79,6 +81,12 @@ $(function () {
       });
       $("#map-container").css("minHeight", containerHeight - 242 + "px");
     }
+  });
+
+  interestObserver.observe(interest, {
+    attributes: true,
+    childList: true,
+    characterData: true,
   });
 
   $(window).on("load", function() {
