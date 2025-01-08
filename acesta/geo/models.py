@@ -228,6 +228,7 @@ class Sight(TimeStampedModel):
     is_pub = models.BooleanField("Публиковать", default=False, db_index=True)
     is_in_geo_region = models.BooleanField(default=True)
     geo_data = models.JSONField(default=dict, blank=True)
+    additional_data = models.JSONField(default=dict, blank=True)
     objects = models.Manager()
     pub = PubManager()
 
