@@ -18,7 +18,7 @@ django_redis==5.4.0  # https://github.com/jazzband/django-redis
 dadata==24.10.0  # https://github.com/hflabs/dadata-py
 django-ipware==7.0.1  # https://github.com/un33k/django-ipware
 django-json-widget==2.0.1  # https://github.com/jmrivas86/django-json-widget
-django-plotly-dash==2.4.3  # https://github.com/GibbsConsulting/django-plotly-dash
+django-plotly-dash==2.4.4  # https://github.com/GibbsConsulting/django-plotly-dash
 channels==4.2.0  # https://github.com/django/channels
 pandas==2.2.3  # https://github.com/pandas-dev/pandas
 pyogrio==0.10.0  # https://github.com/geopandas/pyogrio
