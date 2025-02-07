@@ -3,7 +3,7 @@
 # Testing
 # ------------------------------------------------------------------------------
 mypy==1.13.0  # https://github.com/python/mypy
-django-stubs==5.1.1  # https://github.com/typeddjango/django-stubs
+django-stubs==5.1.3  # https://github.com/typeddjango/django-stubs
 pytest==8.3.4  # https://github.com/pytest-dev/pytest
 pytest-sugar==1.0.0  # https://github.com/Frozenball/pytest-sugar
 pytest-django==4.9.0  # https://github.com/pytest-dev/pytest-django
