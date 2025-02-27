@@ -52,38 +52,44 @@ $(function () {
 
   var interest = document.querySelector("#interest-container");
 
-  var interestObserver = new MutationObserver(function () {
-    if (e.target.id == "react-select-2--list") {
-      $(".Select-noresults").text("Вид не найден");
-    }
-    if (e.target.tagName.toLowerCase() == "h3") {
-      $("#title-container").attr("type", "button");
-      $("#title-container").attr("title", $("#title").text());
-    }
-    if (
-      e.target.tagName.toLowerCase() == "div" &&
-      e.target.className == "dt-table-container__row dt-table-container__row-1"
-    ) {
-      $(".column-header-name").each(function () {
-        if ($(this).parent().parent().attr("class").includes("column-1")) {
-          $(this).html(
-            $(this).text() +
-              '<a href="#" class="ms-1" data-bs-toggle="tooltip" title="Количество запросов туристических объектов за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg></a>'
-          );
-        } else if (
-          $(this).parent().parent().attr("class").includes("column-2")
-        ) {
-          $(this).html(
-            $(this).text() +
-              '<a href="#" class="ms-1" data-bs-toggle="tooltip" title="Региональная популярность или&nbsp;доля, которую занимает регион в&nbsp;показах запросу туристических объектов, деленная на&nbsp;долю всех показов результатов в&nbsp;регионе. Если популярность более 100%, это означает, что в&nbsp;данном регионе существует повышенный интерес к&nbsp;этому запросу, если меньше 100% - пониженный."><svg fill="#939699" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg></a>'
-          );
+  var interestObserver = new MutationObserver(function (mutations) {
+
+    mutations.forEach(function(e) {
+      if (e.target.id == "react-select-2--list") {
+        $(".Select-noresults").text("Вид не найден");
+      }
+      if (typeof e.target.tagName !== "undefined") {
+        if (e.target.tagName.toLowerCase() == "h3") {
+          $("#title-container").attr("type", "button");
+          $("#title-container").attr("title", $("#title").text());
         }
-      });
-      $("#map-container").css("minHeight", containerHeight - 242 + "px");
-    }
+        if (
+          e.target.tagName.toLowerCase() == "div" &&
+          e.target.className == "dt-table-container__row dt-table-container__row-1"
+        ) {
+          $(".column-header-name").each(function () {
+            if ($(this).parent().parent().attr("class").includes("column-1")) {
+              $(this).html(
+                $(this).text() +
+                  '<a href="#" class="ms-1" data-bs-toggle="tooltip" title="Количество запросов туристических объектов за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg></a>'
+              );
+            } else if (
+              $(this).parent().parent().attr("class").includes("column-2")
+            ) {
+              $(this).html(
+                $(this).text() +
+                  '<a href="#" class="ms-1" data-bs-toggle="tooltip" title="Региональная популярность или&nbsp;доля, которую занимает регион в&nbsp;показах запросу туристических объектов, деленная на&nbsp;долю всех показов результатов в&nbsp;регионе. Если популярность более 100%, это означает, что в&nbsp;данном регионе существует повышенный интерес к&nbsp;этому запросу, если меньше 100% - пониженный."><svg fill="#939699" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg></a>'
+              );
+            }
+          });
+        }
+        $("#map-container").css("minHeight", containerHeight - 242 + "px");
+      }
+    });
   });
 
   interestObserver.observe(interest, {
+    subtree: true,
     attributes: true,
     childList: true,
     characterData: true,
