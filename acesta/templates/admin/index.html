@@ -3,13 +3,15 @@
 
 {% block content %}
 <div id="content-main">
-<div class="app-monitor module">
-      <table width="100%">
-        <caption>
-          <a href="{% url 'monitor' %}" class="section" title="Монитор">Монитор</a>
-        </caption>
-      </table>
-    </div>
+  {% with url=request.resolver_match.url_name %}
+    {% if url == 'monitor' or url == 'index' %}
+      <div class="app-monitor module">
+        <table width="100%">
+          {% include 'admin/monitor_menu.html' %}
+        </table>
+      </div>
+    {% endif %}
+  {% endwith %}
   {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
 </div>
 {% endblock %}

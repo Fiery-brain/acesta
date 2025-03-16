@@ -3,11 +3,49 @@ import datetime
 import environ
 from django.db import models
 from django.utils import timezone
+from Levenshtein import ratio
 
 from acesta.geo.models import Region
+from acesta.geo.models import Sight
 from acesta.stats.admin.monitor.common import sort_monitor
 
 env = environ.Env()
+
+
+def get_sights():
+    return [
+        (
+            sight.get("code"),
+            sight.get("qt"),
+            sum([v for k, v in sight.get("kernel")[:3]]),
+            sight.get("code__title"),
+            sight.get("id"),
+            sight.get("title"),
+            sight.get("query"),
+            sight.get("query_additional"),
+            sight.get("kernel"),
+            ratio(sight.get("query"), sight.get("kernel")[0][0])
+            if len(sight.get("kernel"))
+            else 1,
+            ratio(sight.get("query_additional"), sight.get("kernel")[0][0])
+            if len(sight.get("kernel"))
+            else 1,
+        )
+        for sight in (
+            Sight.objects.annotate(qt=models.Sum("sight_all_region_popularity__qty"))
+            .filter(is_checked=True, is_pub=True)
+            .values(
+                "code",
+                "qt",
+                "kernel",
+                "code__title",
+                "id",
+                "title",
+                "query",
+                "query_additional",
+            )
+        ).order_by("code")
+    ]
 
 
 def get_sights_monitor(kwargs) -> dict:
