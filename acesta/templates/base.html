@@ -3,47 +3,49 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}{% if TITLE %}{{ TITLE }}{% else %}Аналитика в туризме — ацеста{% endif %}</title>
-    <meta name="description" content="{% block description %}Аналитический сервис для оценки туристического потенциала, нахождения точек роста и разработки эффективных стратегий развития туризма{% endblock %}"/>
-    {% block meta %}
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ru_RU" />
-    <meta property="og:title" content="{% block ogtitle %}{% endblock %}{{ TITLE }}" />
-    <meta property="og:description" content = "Аналитический сервис для оценки туристического потенциала, нахождения точек роста и разработки эффективных стратегий развития на уровне точки притяжения, города, региона" />
-    <meta property="og:url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ request.path }}" />
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block ogimage %}{% static 'img/og/acesta.cover.png' %}{% endblock %}" />
-    <meta property="og:image:secure_url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block ogimage_secure %}{% static 'img/og/acesta.cover.png' %}{% endblock %}" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% static 'img/og/acesta.logo.600.600.png' %}" />
-    <meta property="og:image:secure_url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% static 'img/og/acesta.logo.600.600.png' %}" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="600" />
-    <meta property="og:image:height" content="600" />
-    <meta property="vk:image" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block vkimage %}{% static 'img/og/acesta.cover.vk.png' %}{% endblock %}" />
-    <meta property="vk:image:secure_url" content="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% block vkimage_secure %}{% static 'img/og/acesta.cover.vk.png' %}{% endblock %}" />
-    <meta property="vk:image:type" content="image/png" />
-    <meta property="vk:image:width" content="537" />
-    <meta property="vk:image:height" content="240" />
-    {% endblock %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/toast.css' %}">
-    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
-    {% block css_external %}{% endblock %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    {% block css %}{% endblock %}
-    <link rel="icon" href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% static 'img/favicon.svg' %}" type="image/svg+xml">
-    <link rel="shortcut icon" href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% static 'img/favicon.svg' %}" type="image/svg+xml">
+    {% with HOST=request.scheme|add:"://"|add:request.META.HTTP_HOST %}
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>{% block title %}{% endblock %}{% if TITLE %}{{ TITLE }}{% else %}Аналитика в туризме — ацеста{% endif %}</title>
+      <meta name="description" content="{% block description %}Аналитический сервис для оценки туристического потенциала, нахождения точек роста и разработки эффективных стратегий развития туризма{% endblock %}"/>
+      {% block meta %}
+      <meta property="og:type" content="website" />
+      <meta property="og:locale" content="ru_RU" />
+      <meta property="og:title" content="{% block ogtitle %}{% endblock %}{{ TITLE }}" />
+      <meta property="og:description" content = "{% block ogdescription %}Аналитический сервис для оценки туристического потенциала, нахождения точек роста и разработки эффективных стратегий развития на уровне точки притяжения, города, региона{% endblock %}" />
+      <meta property="og:url" content="{{ HOST }}{{ request.path }}" />
+      <meta property="og:image" content="{{ HOST }}{% block ogimage %}{% static 'img/og/acesta.cover.png' %}{% endblock %}" />
+      <meta property="og:image:secure_url" content="{{ HOST }}{% block ogimage_secure %}{% static 'img/og/acesta.cover.png' %}{% endblock %}" />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image" content="{{ HOST }}{% static 'img/og/acesta.logo.600.600.png' %}" />
+      <meta property="og:image:secure_url" content="{{ HOST }}{% static 'img/og/acesta.logo.600.600.png' %}" />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:width" content="600" />
+      <meta property="og:image:height" content="600" />
+      <meta property="vk:image" content="{{ HOST }}{% block vkimage %}{% static 'img/og/acesta.cover.vk.png' %}{% endblock %}" />
+      <meta property="vk:image:secure_url" content="{{ HOST }}{% block vkimage_secure %}{% static 'img/og/acesta.cover.vk.png' %}{% endblock %}" />
+      <meta property="vk:image:type" content="image/png" />
+      <meta property="vk:image:width" content="537" />
+      <meta property="vk:image:height" content="240" />
+      {% endblock %}
+      <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+      <link rel="stylesheet" href="{% static 'css/toast.css' %}">
+      <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+      {% block css_external %}{% endblock %}
+      <link rel="stylesheet" href="{% static 'css/base.css' %}">
+      {% block css %}{% endblock %}
+      <link rel="icon" href="{{ HOST }}{% static 'img/favicon.svg' %}" type="image/svg+xml">
+      <link rel="shortcut icon" href="{{ HOST }}{% static 'img/favicon.svg' %}" type="image/svg+xml">
+    {% endwith %}
   </head>
   <body>
     {% block modals %}
       {% request_modal subject=REQUEST_CONSULTATION %}
 
       {% with url=request.resolver_match.url_name %}
-        {% if url != 'terms' %}
+        {% if url == 'account_signup' %}
           <div class="modal fade legacy" id="terms" tabindex="-1" role="dialog" aria-labelledby="termsLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-80" role="document">
               <div class="modal-content">
@@ -57,8 +59,6 @@
               </div>
             </div>
           </div>
-        {% endif %}
-        {% if url != 'privacy' %}
           <div class="modal fade legacy" id="privacy" tabindex="-1" role="dialog" aria-labelledby="privacyLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-80" role="document">
               <div class="modal-content">

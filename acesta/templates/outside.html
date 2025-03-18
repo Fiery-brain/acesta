@@ -11,25 +11,8 @@
   <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white navbar-outside">
     <div class="container">
       <a class="navbar-brand mt-3" href="{% url 'index' %}" title="{{ TITLE }}">
-        <svg height="52" viewBox="0 0 686 270" fill="none">
-          <g id="acesta">
-            <use fill="#4B4A4A" href="{% static 'img/sprite.svg' %}#logo-text"></use>
-            <g id="flower">
-              <use href="{% static 'img/sprite.svg' %}#logo-flower"></use>
-              <animateTransform
-                attributeName="transform"
-                attributeType="XML"
-                type="rotate"
-                from="0 601 84"
-                to="360 601 84"
-                begin="bg.mouseover"
-                end="bg.mouseout"
-                dur="5s"
-                repeatCount="indefinite" />
-            </g>
-            <use href="{% static 'img/sprite.svg' %}#logo-base"></use>
-            <rect id="bg" width="686" height="270" fill="white" opacity="0"/>
-          </g>
+        <svg width="200" class="logo" viewBox="0 0 281 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <use href="{% static 'img/sprite.svg' %}#logo-2"></use>
         </svg>
         <h2 class="logo-tags mt-1">{{ HASH_TAGS }}</h2>
       </a>
