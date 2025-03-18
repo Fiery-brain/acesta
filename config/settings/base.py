@@ -228,6 +228,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
+                "acesta.base.context_processors.host",
                 "acesta.front.context_processors.settings",
                 "acesta.geo.context_processors.settings",
                 "acesta.geo.context_processors.regions",
