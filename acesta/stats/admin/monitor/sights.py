@@ -30,6 +30,8 @@ def get_sights():
             ratio(sight.get("query_additional"), sight.get("kernel")[0][0])
             if len(sight.get("kernel"))
             else 1,
+            sight.get("similarity_rate"),
+            sight.get("is_kernel_checked"),
         )
         for sight in (
             Sight.objects.annotate(qt=models.Sum("sight_all_region_popularity__qty"))
@@ -43,8 +45,10 @@ def get_sights():
                 "title",
                 "query",
                 "query_additional",
+                "similarity_rate",
+                "is_kernel_checked",
             )
-        ).order_by("code")
+        ).order_by("similarity_rate", "code")
     ]
 
 
@@ -159,9 +163,10 @@ def get_suspicious_kernels(queries_data, kwargs, threshold=0.5) -> list:
             "query_additional": sight[7],
             "kernel": sight[8][0],
             "ratio": sight[9],
+            "similarity_rate": sight[11],
         }
         for sight in queries_data
-        if sight[9] < threshold and sight[10] < threshold
+        if len(sight[8]) and not sight[12]
     ]
 
     if kwargs.get("sort") and kwargs.get("sort").startswith("suspicious_kernels"):
