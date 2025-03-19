@@ -40,6 +40,7 @@
             <th><a href="{% url 'monitor_sights' sort='suspicious_kernels_query_additional' %}">Дополнительные запросы</a></th>
             <th><a href="{% url 'monitor_sights' sort='suspicious_kernels_kernel' %}">Ядро</a></th>
             <th class="text-end"><a href="{% url 'monitor_sights' sort='suspicious_kernels_ratio' %}">Совпадение</a></th>
+            <th class="text-end"><a href="{% url 'monitor_sights' sort='suspicious_similarity' %}">Смысловое совпадение</a></th>
           </tr>
           {% for sight in suspicious_kernels %}
           <tr>
@@ -48,7 +49,8 @@
             <td>{{ sight.query }}</td>
             <td>{{ sight.query_additional|default:"" }}</td>
             <td>{{ sight.kernel.0 }}</td>
-            <td class="text-end text-white bg-danger fw-bold">{{ sight.ratio|floatformat:'3' }}</td>
+            <td class="text-end fw-bold">{{ sight.ratio|floatformat:'3' }}</td>
+            <td class="text-end fw-bold">{{ sight.similarity_rate|floatformat:'1' }}</td>
           </tr>
           {% endfor %}
         </table>
