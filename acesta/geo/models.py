@@ -222,6 +222,7 @@ class Sight(TimeStampedModel):
         null=True,
     )
     is_checked = models.BooleanField("Запрос проверен", default=False, db_index=True)
+    is_network = models.BooleanField("Сеть", default=False, db_index=True)
     similarity_rate = models.FloatField(
         verbose_name="Схожесть запроса и ядра", default=0.0
     )
