@@ -1,7 +1,7 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
 {% load socialaccount %}
-{% load user %}
+{% load prop %}
 
 
 {% block title %}Моя страница. {% endblock %}
@@ -52,7 +52,7 @@
                 <label for="inputInn" class="form-label">ИНН организации (обязательно для организаций)</label>
               </div>
               <div class="form-floating mb-2">
-                <input type="text" class="form-control" minlength="10" maxlength="10" name="promo" id="inputPromo" placeholder="Промокод" title="Промокод (код из 10 символов, который вы получили в ходе проведения акции)">
+                <input type="text" class="form-control" minlength="5" maxlength="10" name="promo" id="inputPromo" placeholder="Промокод" title="Промокод (код из 10 символов, который вы получили в ходе проведения акции)">
                 <label for="inputPromo" class="form-label">Промокод (необязательно)</label>
               </div>
               {{ order_form.user }}
