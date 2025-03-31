@@ -1,0 +1,41 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}">{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <div class="container-fluid px-0">
+    <div class="row mt-0 overflow-auto" style="height: 78vh;">
+      <div class="col px-0">
+        <table class="table table-hover table-responsive">
+          <tr style="position:sticky;top:0;z-index:1;">
+            <th width="220"><a href="{% url 'monitor_audience' sort='audience_code' %}">Регион</a></th>
+            <th class="text-end"><a href="{% url 'monitor_audience' sort='audience_old_data_region' %}">Старые данные в регионах</a></th>
+            <th class="text-end"><a href="{% url 'monitor_audience' sort='audience_old_data_cities' %}">Старые данные в городах</a></th>
+            <th class="text-end"><a href="{% url 'monitor_audience' sort='audience_no_data_region' %}">Регион без данных</a></th>
+            <th class="text-end"><a href="{% url 'monitor_audience' sort='audience_no_data_city' %}">Города без данных</a></th>
+            <th class="text-end"><a href="{% url 'monitor_audience' sort='audience_empty_city' %}">Пустые города</a></th>
+            <th class="text-end"><a href="{% url 'monitor_audience' sort='audience_coeff' %}">Коэффициент в регионе</a></th>
+            <th class="text-end"><a href="{% url 'monitor_audience' sort='audience_bad_coeff' %}">Коэффициенты не совпадают в регионе</a></th>
+            <th class="text-end"><a href="{% url 'monitor_audience' sort='audience_bad_coeff_city' %}">Коэффициенты не совпадают в городах</a></th>
+          </tr>
+          {% for code, data in audience.items %}
+          <tr>
+            <td>{{ code }} {{ data.title }}</td>
+            <td class="text-end{% if data.old_data_region != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.old_data_region }}</td>
+            <td class="text-end{% if data.old_data_cities != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.old_data_cities }}</td>
+            <td class="text-end{% if data.no_data_region != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.no_data_region }}</td>
+            <td class="text-end{% if data.no_data_city != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.no_data_city }}</td>
+            <td class="text-end{% if data.empty_city != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.empty_city }}</td>
+            <td class="text-end">{{ data.coeff|floatformat:2 }}</td>
+            <td class="text-end{% if data.bad_coeff != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.bad_coeff }}</td>
+            <td class="text-end{% if data.bad_coeff_city != 0 %} text-white bg-danger fw-bold{% endif %}">{{ data.bad_coeff_city }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

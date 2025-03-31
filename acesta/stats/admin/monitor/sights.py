@@ -3,11 +3,53 @@ import datetime
 import environ
 from django.db import models
 from django.utils import timezone
+from Levenshtein import ratio
 
 from acesta.geo.models import Region
+from acesta.geo.models import Sight
 from acesta.stats.admin.monitor.common import sort_monitor
 
 env = environ.Env()
+
+
+def get_sights():
+    return [
+        (
+            sight.get("code"),
+            sight.get("qt"),
+            sum([v for k, v in sight.get("kernel")[:3]]),
+            sight.get("code__title"),
+            sight.get("id"),
+            sight.get("title"),
+            sight.get("query"),
+            sight.get("query_additional"),
+            sight.get("kernel"),
+            ratio(sight.get("query"), sight.get("kernel")[0][0])
+            if len(sight.get("kernel"))
+            else 1,
+            ratio(sight.get("query_additional"), sight.get("kernel")[0][0])
+            if len(sight.get("kernel"))
+            else 1,
+            sight.get("similarity_rate"),
+            sight.get("is_kernel_checked"),
+        )
+        for sight in (
+            Sight.objects.annotate(qt=models.Sum("sight_all_region_popularity__qty"))
+            .filter(is_checked=True, is_pub=True)
+            .values(
+                "code",
+                "qt",
+                "kernel",
+                "code__title",
+                "id",
+                "title",
+                "query",
+                "query_additional",
+                "similarity_rate",
+                "is_kernel_checked",
+            )
+        ).order_by("similarity_rate", "code")
+    ]
 
 
 def get_sights_monitor(kwargs) -> dict:
@@ -121,9 +163,10 @@ def get_suspicious_kernels(queries_data, kwargs, threshold=0.5) -> list:
             "query_additional": sight[7],
             "kernel": sight[8][0],
             "ratio": sight[9],
+            "similarity_rate": sight[11],
         }
         for sight in queries_data
-        if sight[9] < threshold and sight[10] < threshold
+        if len(sight[8]) and not sight[12]
     ]
 
     if kwargs.get("sort") and kwargs.get("sort").startswith("suspicious_kernels"):

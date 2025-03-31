@@ -58,25 +58,8 @@
     <div class="container-fluid px-0">
       <nav class="navbar fixed-top navbar-expand-lg bg-white navbar-light navbar-landing">
         <div class="container">
-          <svg class="logo" viewBox="0 0 686 270" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="acesta">
-              <use fill="#4B4A4A" href="{% static 'img/sprite.svg' %}#logo-text"></use>
-              <g id="flower">
-                <use href="{% static 'img/sprite.svg' %}#logo-flower"></use>
-                <animateTransform
-                  attributeName="transform"
-                  attributeType="XML"
-                  type="rotate"
-                  from="0 601 84"
-                  to="360 601 84"
-                  begin="bg.mouseover"
-                  end="bg.mouseout"
-                  dur="5s"
-                  repeatCount="indefinite" />
-              </g>
-              <use href="{% static 'img/sprite.svg' %}#logo-base"></use>
-              <rect id="bg" width="686" height="270" fill="white" opacity="0"/>
-            </g>
+          <svg class="logo" viewBox="0 0 281 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <use href="{% static 'img/sprite.svg' %}#logo-2"></use>
           </svg>
           <div class="d-flex justify-content-end">
             {% include "include/contact_block.html" %}
@@ -397,12 +380,24 @@
           <div class="row content d-flex justify-content-center align-items-center h-75">
             <div class="accordion w-75 mt-4 mb-5" id="FAQ">
               <div class="accordion-item">
+                <h3 class="accordion-header" id="headingMinusOne">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMinusOne" aria-expanded="true" aria-controls="collapseMinusOne">
+                    Есть ли бесплатная версия?
+                  </button>
+                </h3>
+                <div id="collapseMinusOne" class="accordion-collapse collapse" aria-labelledby="headingMinusOne" data-bs-parent="#FAQ">
+                  <div class="accordion-body">
+                    Да, есть неограниченная по времени бесплатная версия
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
                 <h3 class="accordion-header" id="headingZero">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
                     Какие регионы охватывает сервис?
                   </button>
                 </h3>
-                <div id="collapseZero" class="accordion-collapse collapse show" aria-labelledby="headingZero" data-bs-parent="#FAQ">
+                <div id="collapseZero" class="accordion-collapse collapse" aria-labelledby="headingZero" data-bs-parent="#FAQ">
                   <div class="accordion-body">
                     Сервис охватывает регионы Российской Федерации
                   </div>
@@ -471,7 +466,7 @@
                 </h3>
                 <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#FAQ">
                   <div class="accordion-body">
-                    В&nbsp;бесплатной версии те&nbsp;же&nbsp;отчеты, что и&nbsp;в&nbsp;платной, но отсутствует разбивка по&nbsp;городам и&nbsp;точкам притяжения
+                    В&nbsp;бесплатной версии те&nbsp;же&nbsp;отчеты, что и&nbsp;в&nbsp;платной, но отсутствует информация по&nbsp;городам и&nbsp;точкам притяжения
                   </div>
                 </div>
               </div>
