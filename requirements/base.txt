@@ -25,4 +25,4 @@ pyogrio==0.10.0  # https://github.com/geopandas/pyogrio
 geopandas==1.0.1  # https://github.com/geopandas/geopandas
 matplotlib==3.9.2  # https://github.com/matplotlib/matplotlib
 reportlab==4.3.1  # https://github.com/Distrotech/reportlab
-xhtml2pdf==0.2.16  #https://github.com/xhtml2pdf/xhtml2pdf
+xhtml2pdf==0.2.17  #https://github.com/xhtml2pdf/xhtml2pdf
