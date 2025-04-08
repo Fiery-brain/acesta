@@ -31,7 +31,7 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
         "qty",
         "ppt",
     )
-    df = pd.DataFrame(list(ppt_data.values(*columns)))
+    df = pd.DataFrame.from_records(ppt_data.values(*columns))
     if not len(df):
         df = pd.DataFrame([["Запрашивают редко", "", "", ""]], columns=columns)
     else:
