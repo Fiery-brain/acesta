@@ -96,6 +96,9 @@
       {% if not DEBUG %}
         {% include "include/metrika.html" %}
       {% endif %}
+      <script>
+        const csrfToken = "{{ csrf_token }}";
+      </script>
     {% endblock %}
   </body>
 </html>
