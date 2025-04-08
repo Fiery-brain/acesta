@@ -325,7 +325,7 @@ def get_recommendations(part, region: Region, segment: str, data: dict):
         return get_region_recommendations(region, segment, data)
     elif part == settings.PART_INTEREST:
         return get_interest_recommendations(region, segment, data)
-    elif part == settings.RATING_INTEREST:
+    elif part == settings.PART_RATING:
         return get_rating_recommendations(region, segment, data)
     else:
         raise RuntimeError(f"Unknown part {part}")
