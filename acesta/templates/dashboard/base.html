@@ -42,6 +42,7 @@
         </div>
       </div>
     {% endif %}
+    {% block recommendation_modal %}{% endblock %}
   {% endwith %}
 
   <div class="modal fade" id="selectRegion" tabindex="-1" role="dialog" aria-labelledby="selectRegionLabel" aria-hidden="true">
@@ -205,7 +206,7 @@
       </div>
     </div>
   </footer>
-  {% include "include/request_button.html" %}
+  {% block recommendation_button %}{% endblock %}
 {% endblock %}
 
 {% block js %}
