@@ -10,10 +10,10 @@ from django.views.generic import TemplateView
 
 from acesta.front.helpers import get_random_sight_group
 from acesta.front.helpers import get_random_tourism_type
-from acesta.front.helpers import get_regions_cnt
 from acesta.front.helpers import get_sights_cnt
 from acesta.front.helpers import get_top_regions
 from acesta.front.helpers import get_top_sights
+from acesta.stats.helpers.base import get_regions_cnt
 from acesta.user.utils import get_support_form
 
 
