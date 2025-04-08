@@ -10,6 +10,14 @@
     {{ block.super }}
 {% endblock %}
 
+{% block recommendation_button %}
+  {% include "include/recommendation_button.html" %}
+{% endblock %}
+
+{% block recommendation_modal %}
+  {% include "include/recommendation_modal.html" %}
+{% endblock %}
+
 {% block content %}
   <div class="row pt-3 mx-0 rating">
     <div class="col-12 col-lg-7 ps-0">
@@ -303,4 +311,6 @@
   <script src="{% static 'js/select2.min.js' %}"></script>
   <script src="{% static 'js/sight.group.selector.js' %}"></script>
   <script src="{% static 'js/tourism.type.selector.js' %}"></script>
+  {% include "include/recommendation_data_rating.html" %}
+  <script src="{% static 'js/get.recommendations.js' %}"></script>
 {% endblock %}

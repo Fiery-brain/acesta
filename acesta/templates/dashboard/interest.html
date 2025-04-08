@@ -10,7 +10,16 @@
   {{ block.super }}
 {% endblock %}
 
+{% block recommendation_button %}
+  {% include "include/recommendation_button.html" %}
+{% endblock %}
+
+{% block recommendation_modal %}
+  {% include "include/recommendation_modal.html" %}
+{% endblock %}
+
 {% block content %}
+  <div id="output"></div>
 
   <div id="content">
     <div id="interest-container" class="overflow-hidden">
@@ -29,4 +38,6 @@
   {% plotly_footer %}
   <script src="{% static 'js/dashboard.loader.js' %}"></script>
   <script src="{% static 'js/dashboard.interest.js' %}"></script>
+  {% include "include/recommendation_data_interest.html" %}
+  <script src="{% static 'js/get.recommendations.js' %}"></script>
 {% endblock %}

@@ -1,0 +1,12 @@
+<script>
+  let recommendationsUrl = "{% url "get_recommendations" "interest" %}";
+  let data = {};
+  let storage = window.sessionStorage;
+  $(function () {
+    let recommendationsModal = document.getElementById("recommendations");
+    recommendationsModal.addEventListener("show.bs.modal", function (event) {
+      data['home_area_key'] = storage.getItem("home-area-key").replace(/"/g, '')
+      data['audience_key'] = storage.getItem("audience-key").replace(/"/g, '')
+    })
+  })
+</script>

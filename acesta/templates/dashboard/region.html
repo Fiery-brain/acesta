@@ -12,6 +12,14 @@
   {{ block.super }}
 {% endblock %}
 
+{% block recommendation_button %}
+  {% include "include/recommendation_button.html" %}
+{% endblock %}
+
+{% block recommendation_modal %}
+  {% include "include/recommendation_modal.html" %}
+{% endblock %}
+
 {% block modals %}
   {{ block.super }}
   {% if request.GET.group == '' or request.GET.group %}
@@ -143,4 +151,6 @@
   <script src="{% static 'js/plotly-locale-ru-latest.js' %}"></script>
   {% plotly_footer %}
   <script src="{% static 'js/dashboard.loader.js' %}"></script>
+  {% include "include/recommendation_data_region.html" %}
+  <script src="{% static 'js/get.recommendations.js' %}"></script>
 {% endblock %}

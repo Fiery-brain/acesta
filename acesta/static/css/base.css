@@ -104,16 +104,16 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 
 .text-beach{color:var(--acesta-beach)}
 .text-gastro{color:var(--acesta-gastro)}
-.text-excursion{color:var(--acesta-excursion)}
+.text-excursion, .text-flex{color:var(--acesta-excursion)}
 .text-extreme{color:var(--acesta-extreme)}
-.text-industry{color:var(--acesta-industry)}
+.text-industry, .text-available{color:var(--acesta-industry)}
 .text-museum{color:var(--acesta-museum)}
-.text-outdoor{color:var(--acesta-outdoor)}
+.text-outdoor, .text-effect{color:var(--acesta-outdoor)}
 .text-pilgrimage{color:var(--acesta-pilgrimage)}
-.text-recreation{color:var(--acesta-recreation)}
-.text-shopping{color:var(--acesta-shops)}
+.text-recreation, .text-reliably{color:var(--acesta-recreation)}
+.text-shopping, .text-wow{color:var(--acesta-shops)}
 .text-spa{color:var(--acesta-spa)}
-.text-theatre{color:var(--acesta-theatre)}
+.text-theatre, .text-modern{color:var(--acesta-theatre)}
 
 .text-secondary{color:#282727!important}
 .text-accent-primary{color:var( --acesta-accent-primary)!important}
@@ -455,11 +455,12 @@ input:checked {background-color:var(--acesta-light-primary);border-color:var(--a
 ._dash-loading{display:none}
 *[data-dash-is-loading="true"]{filter:blur(2px);-web-kit-filter:blur(2px);-moz-filter:blur(2px);-o-filter:blur(2px);-ms-filter:blur(2px);}
 #loader{background-image:url('../img/loader.svg');display:none;background-color:transparent;position:fixed;z-index:2;width:50px;height:50px;text-align:center;top:35%;left:50%;padding:20px;transform:translate(-50%, 0)}
+#ai-loader{background-image:url('../img/loader.svg');display:none;background-color:transparent;position:fixed;z-index:2;width:50px;height:50px;text-align:center;top:45%;left:50%;padding:20px;transform:translate(-50%, 0)}
 .footer .main a{color:#9dfff6;text-decoration:none}
 .footer .main a:hover{color:#d1fffa;text-decoration:none}
 .footer .main a:hover svg{fill:#d1fffa}
-.footer .main{padding-top:64px;color:#fff;padding-bottom:180px; background-color:#0C4940}
-.footer .main .logo_col{height:124px}
+.footer .main{padding-top:64px;color:#fff;padding-bottom:68px; background-color:#0C4940}
+/* .footer .main .logo_col{height:124px} */
 .footer .main .logo_img{height:54px;margin-bottom:4px}
 .footer .main .logo_col h5{font-weight:600;font-size:13px}
 .footer .main .logo_legacy li{line-height:18px;font-size:15px}
@@ -535,3 +536,4 @@ textarea.form-control{min-height: 100px;}
     .modal-body .tab-pane {min-height: 80vh; max-height: 80vh; overflow: auto;}
 }
 .modal-body .tab-pane h2{font-size: 20px}
+.modal-backdrop{opacity:0.5 !important;}

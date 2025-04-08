@@ -11,10 +11,10 @@ from django_plotly_dash import DjangoDash
 from acesta.base.utils import timesince_accusatifier as accusatifier
 from acesta.base.utils import timesince_cutter as cutter
 from acesta.stats.apps import dash_args
-from acesta.stats.dash.helpers.interest import get_interest
 from acesta.stats.dash.helpers.interest import get_ppt_df
-from acesta.stats.helpers import get_auditory_update_date
-from acesta.stats.helpers import get_rating_update_date
+from acesta.stats.helpers.interest import get_interest
+from acesta.stats.helpers.update_dates import get_auditory_update_date
+from acesta.stats.helpers.update_dates import get_rating_update_date
 
 
 # Interest Application
@@ -81,15 +81,20 @@ interest_app.layout = html.Div(
             ],
             style={"zIndex": "1"},
         ),
+        # html.Script(
+        #     children="""
+        #     let dataAI = {"d": "123"}
+        #     """
+        # ),
         html.Div(
             children=[
-                dcc.Interval(
-                    id="helper-map", n_intervals=0, max_intervals=0, interval=1
-                ),
+                # dcc.Interval(id="helper-map", n_intervals=0, max_intervals=0, interval=1),
                 dcc.Interval(
                     id="helper-interesant", n_intervals=0, max_intervals=0, interval=1
                 ),
                 dcc.Store(id="audience-key", storage_type="session"),
+                dcc.Store(data=False, id="context-changed", storage_type="session"),
+                dcc.Store(data="", id="home-area-key", storage_type="session"),
                 html.Div(
                     id="interest",
                     children=[

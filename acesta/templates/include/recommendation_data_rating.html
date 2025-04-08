@@ -1,0 +1,10 @@
+{% load prop %}
+<script>
+  let recommendationsUrl="{% url "get_recommendations" "rating" %}";
+  let data = {};
+{% if area == AREA_SIGHTS %}
+  data['rating_key'] = "{{ area }}_{{ sight_group|default:"" }}";
+{% else %}
+  data['rating_key'] = "{{ area }}_{{ request.GET|get_prop:"tourism_type"|default:"" }}";
+{% endif %}
+</script>

@@ -1,8 +1,7 @@
 from django.conf import settings
-from django.core.cache import caches
 from numpy.random import randint
 
-from acesta.geo.models import Region
+from acesta.base.decorators import to_cache
 from acesta.geo.models import Sight
 from acesta.geo.models import SightGroup
 from acesta.stats.models import RegionRating
@@ -38,14 +37,14 @@ def get_top_regions(tourism_type: str, limit: int = 3):
     :param limit: int
     :return: django.db.models.QuerySet
     """
-    cache = caches["db"]
-    regions_rating = cache.get(f"regions_rating_{tourism_type}")
-    if regions_rating is None:
-        regions_rating = RegionRating.objects.filter(
-            tourism_type=tourism_type
-        ).prefetch_related("home_code")[:limit]
-        cache.set(f"regions_rating_{tourism_type}", regions_rating, 60 * 60 * 24 * 7)
-    return regions_rating
+
+    @to_cache("regions_rating_{tourism_type}", 60 * 60 * 24 * 7)
+    def get_regions_rating(**kwargs):
+        return RegionRating.objects.filter(tourism_type=tourism_type).prefetch_related(
+            "home_code"
+        )[:limit]
+
+    return get_regions_rating(tourism_type=tourism_type)
 
 
 def get_top_sights(sight_group: str, limit: int = 3):
@@ -55,37 +54,20 @@ def get_top_sights(sight_group: str, limit: int = 3):
     :param limit: int
     :return: django.db.models.QuerySet
     """
-    cache = caches["db"]
-    sights_rating = cache.get(f"sights_cnt_{sight_group}")
-    if sights_rating is None:
-        sights_rating = SightRating.objects.filter(
+
+    @to_cache("sights_cnt_{sight_group}", 60 * 60 * 24 * 7)
+    def get_sights_rating(**kwargs):
+        return SightRating.objects.filter(
             sight_group=sight_group, region_code__isnull=True
         ).prefetch_related("sight", "sight__code", "sight__city")[:limit]
-        cache.set(f"sights_cnt_{sight_group}", sights_rating, 60 * 60 * 24 * 7)
-    return sights_rating
+
+    return get_sights_rating(sight_group=sight_group)
 
 
-def get_regions_cnt():
-    """
-    Returns quantity of regions
-    :return: int
-    """
-    cache = caches["db"]
-    regions_cnt = cache.get("regions_cnt")
-    if regions_cnt is None:
-        regions_cnt = Region.pub.all().count()
-        cache.set("regions_cnt", regions_cnt, 60 * 60 * 24 * 7)
-    return regions_cnt
-
-
+@to_cache("sights_cnt", 60 * 60 * 24 * 7)
 def get_sights_cnt():
     """
     Returns quantity of sights
     :return: int
     """
-    cache = caches["db"]
-    sights_cnt = cache.get("sights_cnt")
-    if sights_cnt is None:
-        sights_cnt = Sight.pub.all().count()
-        cache.set("sights_cnt", sights_cnt, 60 * 60 * 24 * 7)
-    return sights_cnt
+    return Sight.pub.all().count()

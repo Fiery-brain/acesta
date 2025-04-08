@@ -333,17 +333,14 @@ SEGMENT_TIC = "tic"
 SEGMENT_TOUR_OPERATOR = "tour-operator"
 SEGMENT_TOUR_AGENT = "tour-agent"
 SEGMENT_TOURISM_PRODUCT_OWNER = "tourism-product-owner"
+SEGMENT_INVESTORS = "tourist-investor"
+SEGMENT_GUIDE = "tourist-guide"
 SEGMENT_MARKETING_AGENCY = "marketing-agency"
+SEGMENT_HOSPITALITY = "hospitality"
+SEGMENT_TOURISM_EVENT = "tourism-event"
+SEGMENT_TRANSPORTATION = "transport"
 
-SEGMENTS = (
-    (DEFAULT_SEGMENT, "Не определен"),
-    (SEGMENT_GOVERNMENT, "Орган власти (комитет по развитию туризма, ...)"),
-    (SEGMENT_TIC, "Туристско-информационный центр (ТИЦ)"),
-    (SEGMENT_TOUR_OPERATOR, "Туроператор"),
-    (SEGMENT_TOUR_AGENT, "Турагент"),
-    (SEGMENT_TOURISM_PRODUCT_OWNER, "Владелец бизнеса в туризме"),
-    (SEGMENT_MARKETING_AGENCY, "Маркетинговое агентство"),
-)
+SEGMENTS = env.dict("ACESTA_SEGMENTS", default={})
 
 GEOJSON = ROOT_DIR / "geojson" / "Russia.geojson"
 
@@ -430,6 +427,10 @@ AREA_REGIONS = "regions"
 AREA_CITIES = "cities"
 AREA_SIGHTS = "sights"
 
+PART_REGION = "region"
+PART_INTEREST = "interest"
+PART_RATING = "rating"
+
 AGE = (
     ("18-24", "от 18 до 24 лет"),
     ("25-29", "от 25 до 29 лет"),
@@ -474,3 +475,31 @@ PRICES = {k: int(v) for k, v in env.dict("ACESTA_PRICES", default={}).items()}
 TOURISM_TYPE_PALETTE = env.dict("ACESTA_TOURISM_TYPE_PALETTE", default={})
 
 SIGHT_GROUPS_PALETTE = env.dict("ACESTA_SIGHT_GROUPS_PALETTE", default={})
+
+SEGMENTS_GENITIVE = env.dict("ACESTA_SEGMENTS_GENITIVE", default={})
+
+RECOMMENDATION_TOV = env.dict("ACESTA_RECOMMENDATION_TOV", default={})
+
+RECOMMENDATION_NOTE = env.dict("ACESTA_RECOMMENDATION_NOTE", default={})
+
+RECOMMENDATION_RULES = env("ACESTA_RECOMMENDATION_RULES", default="")
+
+REGION_RECOMMENDATION_TEMPLATE = env(
+    "ACESTA_REGION_RECOMMENDATION_TEMPLATE", default=""
+)
+
+INTEREST_RECOMMENDATION_TEMPLATE = env(
+    "ACESTA_INTEREST_RECOMMENDATION_TEMPLATE", default=""
+)
+
+AUDIENCE_RECOMMENDATION_TEMPLATE = env(
+    "ACESTA_AUDIENCE_RECOMMENDATION_TEMPLATE", default=""
+)
+
+AUDIENCE_SEGMENT_RECOMMENDATION_TEMPLATE = env(
+    "ACESTA_AUDIENCE_SEGMENT_RECOMMENDATION_TEMPLATE", default=""
+)
+
+RATING_RECOMMENDATION_TEMPLATE = env(
+    "ACESTA_RATING_RECOMMENDATION_TEMPLATE", default=""
+)

@@ -1,20 +1,31 @@
 import numpy as np
 from django.conf import settings
-from django.db import models
 from django.http import HttpRequest
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 
 from acesta.geo.models import Region
-from acesta.geo.models import Sight
-from acesta.geo.models import SightGroup
-from acesta.stats.dash.helpers.sights_stats import get_sight_stats
-from acesta.stats.helpers import get_rating_update_date
-from acesta.stats.helpers import get_sights_update_date
-from acesta.stats.models import CityRating
-from acesta.stats.models import RegionRating
-from acesta.stats.models import SightRating
+from acesta.stats.helpers.audience import get_audience_key_data
+from acesta.stats.helpers.rating import get_amount_cities_rating
+from acesta.stats.helpers.rating import get_amount_rating_by_group_outstanding_places
+from acesta.stats.helpers.rating import get_amount_rating_place
+from acesta.stats.helpers.rating import get_amount_region_rating
+from acesta.stats.helpers.rating import get_interest_cities_rating
+from acesta.stats.helpers.rating import get_interest_rating_place
+from acesta.stats.helpers.rating import get_interest_region_rating
+from acesta.stats.helpers.rating import get_interest_sight_rating
+from acesta.stats.helpers.rating import get_outside_rating_sight
+from acesta.stats.helpers.rating import get_sight_group_filter
+from acesta.stats.helpers.rating import get_top_sights
+from acesta.stats.helpers.rating import get_tourism_type_filter
+from acesta.stats.helpers.recommendations import get_recommendations
+from acesta.stats.helpers.sights import get_sight_groups
+from acesta.stats.helpers.sights import get_sight_stats
+from acesta.stats.helpers.sights import get_sights_by_group
+from acesta.stats.helpers.update_dates import get_rating_update_date
+from acesta.stats.helpers.update_dates import get_sights_update_date
 from acesta.user.utils import get_support_form
 
 
@@ -53,107 +64,35 @@ def region_view(request) -> HttpResponse:
             if name in weak_names
         ]
 
-    def get_amount_rating_place() -> int:
-        """
-        Returns rating place
-        :return: int
-        """
-        sight_rating = (
-            Sight.pub.all()
-            .values("code")
-            .annotate(qty=models.Count("id"))
-            .order_by("-qty")
-        )
-        for place, region in enumerate(sight_rating):
-            if region["code"] == request.user.current_region.code:
-                return place + 1
-
-    def get_interest_rating_place() -> int:
-        """
-        Returns rating place
-        :return: int
-        """
-        place = None
-        try:
-            place = RegionRating.objects.get(
-                home_code=request.user.current_region,
-                tourism_type__isnull=True,
-                region_code__isnull=True,
-            ).place
-        except RegionRating.DoesNotExist:
-            pass
-        return place
-
-    def get_amount_rating_by_group_outstanding_places() -> list:
-        """
-        Returns outstanding place
-        :return: list
-        """
-        sight_groups = dict(SightGroup.pub.all().values_list("name", "title_gen"))
-        sight_rating = (
-            Sight.pub.all()
-            .values("code", "group__name")
-            .annotate(qty=models.Count("id"))
-            .order_by("-qty")
-        )
-        sight_rating_by_group = {}
-        for region in sight_rating:
-            sight_rating_by_group.setdefault(region["group__name"], []).append(
-                {
-                    "code": region["code"],
-                    "qty": region["qty"],
-                }
-            )
-
-        outstanding_places = []
-        for group, regions in sight_rating_by_group.items():
-            for place, region in enumerate(regions[:3]):
-                if (
-                    region["code"] == request.user.current_region.code
-                    and region["qty"] > 1
-                ):
-                    outstanding_places.append(
-                        {
-                            "group": group,
-                            "group_title_gen": sight_groups.get(group),
-                            "place": place + 1,
-                        }
-                    )
-                    break
-        return sorted(
-            outstanding_places, key=lambda x: (x["place"], x["group_title_gen"])
-        )
-
-    sight_stats = get_sight_stats(request)
+    sight_stats = get_sight_stats(code=request.user.current_region.code)
 
     context = {
         "strong_types": get_strong_types(sight_stats),
         "weak_types": get_weak_types(sight_stats),
         "places_amount": len(Region.pub.all()),
-        "amount_rating_place": get_amount_rating_place(),
-        "interest_rating_place": get_interest_rating_place(),
-        "outstanding_places": get_amount_rating_by_group_outstanding_places(),
+        "amount_rating_place": get_amount_rating_place(
+            code=request.user.current_region.code
+        ),
+        "interest_rating_place": get_interest_rating_place(
+            code=request.user.current_region.code
+        ),
+        "outstanding_places": get_amount_rating_by_group_outstanding_places(
+            code=request.user.current_region.code
+        ),
         "sights_update_date": get_sights_update_date(),
     }
 
     if request.GET.get("group", None) is not None:
+        group_filter = (
+            dict(group=request.GET.get("group")) if request.GET.get("group") else {}
+        )
         context.update(
             {
                 "support_form": get_support_form(request.user, settings.SUPPORT_SIGHTS),
-                "region_sights": Sight.pub.filter(
-                    code=request.user.current_region,
-                    **dict(group=request.GET.get("group"))
-                    if request.GET.get("group")
-                    else {}
-                ).prefetch_related("group", "code", "city"),
-                "sight_groups": SightGroup.pub.filter(
-                    name__in=[
-                        group.get("group")
-                        for group in Sight.pub.filter(code=request.user.current_region)
-                        .values("group")
-                        .distinct()
-                    ]
+                "region_sights": get_sights_by_group(
+                    request.user.current_region, group_filter
                 ),
+                "sight_groups": get_sight_groups(request.user.current_region),
             }
         )
     return render(request, "dashboard/region.html", context)
@@ -174,95 +113,56 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
             sight_group = request.user.get_current_sight_group(
                 request.GET.get("group", None) or None
             )
-            group_filter = (
-                dict(sight_group=sight_group)
-                if sight_group is not None
-                else dict(sight_group__isnull=True)
-            )
-            sight_group_filter = (
-                dict(group=sight_group) if sight_group is not None else {}
-            )
+
             data = {
                 "sight_group": sight_group,
-                "sight_groups": SightGroup.pub.filter(
-                    name__in=[
-                        group.get("group")
-                        for group in Sight.pub.filter(code=request.user.current_region)
-                        .values("group")
-                        .distinct()
-                    ]
+                "sight_groups": get_sight_groups(request.user.current_region),
+                "interest_sight_places": get_interest_sight_rating(
+                    get_sight_group_filter(sight_group),
+                    code=request.user.current_region.code,
+                    sight_group=sight_group or "",
                 ),
-                "interest_sight_places": SightRating.objects.filter(
-                    region_code=request.user.current_region, **group_filter
-                ).prefetch_related(
-                    "sight", "sight__group", "sight__code", "sight__city"
+                "outside_rating_sight": get_outside_rating_sight(
+                    request.user.current_region,
+                    get_sight_group_filter(sight_group, False),
                 ),
-                "outside_rating_sight": Sight.pub.filter(
-                    code=request.user.current_region,
-                    sight_ratings__isnull=True,
-                    **sight_group_filter
-                ),
-                "top_sights": SightRating.objects.filter(
-                    region_code__isnull=True, **group_filter
-                ).prefetch_related(
-                    "sight", "sight__group", "sight__code", "sight__city"
-                )[
-                    :10
-                ],
+                "top_sights": get_top_sights(get_sight_group_filter(sight_group)),
             }
         elif area == settings.AREA_CITIES:
+
             if (
                 request.user.current_region.region_type
                 == settings.REGION_TYPE_FEDERAL_CITY
             ):
                 return redirect("rating")
+
             tourism_type = request.user.get_current_tourism_type(
                 request.GET.get("tourism_type", None) or None
             )
+
             data = {
                 "tourism_type": tourism_type,
                 "tourism_types": settings.TOURISM_TYPES_OUTSIDE,
-                "interest_city_places": CityRating.objects.filter(
-                    home_region=request.user.current_region,
-                    **dict(tourism_type=tourism_type)
-                    if tourism_type is not None
-                    else dict(tourism_type__isnull=True)
-                ).select_related(),
-                "amount_city_places": (
-                    Sight.pub.filter(
-                        city__isnull=False,
-                        code=request.user.current_region,
-                        **dict(group__tourism_type=tourism_type)
-                        if tourism_type is not None
-                        else {}
-                    )
-                    .values("city", "city__title")
-                    .annotate(qty=models.Count("id"))
-                    .order_by("-qty")
+                "interest_city_places": get_interest_cities_rating(
+                    get_tourism_type_filter(tourism_type),
+                    code=request.user.current_region.code,
+                    tourism_type=tourism_type or "",
+                ),
+                "amount_city_places": get_amount_cities_rating(
+                    request.user.current_region,
+                    get_tourism_type_filter(tourism_type, True),
                 ),
             }
         else:
+            tourism_type = request.GET.get("tourism_type", "")
             data = {
                 "tourism_types": settings.TOURISM_TYPES_OUTSIDE,
-                "interest_region_places": RegionRating.objects.filter(
-                    region_code__isnull=True,
-                    **(
-                        dict(tourism_type=request.GET.get("tourism_type"))
-                        if request.GET.get("tourism_type")
-                        else dict(tourism_type__isnull=True)
-                    )
-                ).select_related(),
-                "amount_region_places": (
-                    Sight.pub.filter(
-                        **(
-                            dict(group__tourism_type=request.GET.get("tourism_type"))
-                            if request.GET.get("tourism_type")
-                            else {}
-                        )
-                    )
-                    .values("code", "code__title")
-                    .annotate(qty=models.Count("id"))
-                    .order_by("-qty")
+                "interest_region_places": get_interest_region_rating(
+                    get_tourism_type_filter(tourism_type),
+                    tourism_type=tourism_type or "",
+                ),
+                "amount_region_places": get_amount_region_rating(
+                    get_tourism_type_filter(tourism_type, True)
                 ),
             }
     context.update(data)
@@ -286,3 +186,70 @@ def set_regions_view(request: HttpRequest, code: str) -> HttpResponse:
         request.user.current_region = region
         request.user.save()
     return redirect("region")
+
+
+def get_recommendations_view(request: HttpRequest, part: str) -> JsonResponse:
+    """
+    Returns a JSON object with recommendations by request data
+    :param request: django.http.HttpRequest
+    :param part: str
+    :return: JsonResponse
+    """
+
+    def check_data() -> dict:
+        """
+        Checks whether the user can view the requested data.
+        :return: dict
+        """
+        data = {
+            key: item
+            for key, item in request.POST.items()
+            if key != "csrfmiddlewaretoken"
+        }
+
+        if part == settings.PART_INTEREST:
+            home_area, home_pk = data.get("data[home_area_key]").split("_")
+            audience_pk, tourism_type, area = get_audience_key_data(
+                data.get("data[audience_key]")
+            )
+
+            if not request.user.is_extended:
+                home_area = settings.REGIONS
+                area = settings.REGIONS
+
+            tourism_type = request.user.get_current_tourism_type(tourism_type)
+
+            data = dict(
+                home_area=home_area,
+                home_pk=home_pk,
+                audience_pk=audience_pk,
+                tourism_type=tourism_type,
+                area=area,
+            )
+        elif part == settings.PART_RATING:
+            group = ""
+            area, tourism_type = data.get("data[rating_key]").split("_")
+            if area == settings.AREA_SIGHTS:
+                group = tourism_type
+
+            if not request.user.is_extended:
+                area = settings.REGIONS
+
+            tourism_type = request.user.get_current_tourism_type(tourism_type)
+            group = request.user.get_current_sight_group(group)
+
+            data = dict(area=area, tourism_type=tourism_type, group=group)
+
+        return data
+
+    try:
+        recommendations = get_recommendations(
+            part,
+            request.user.current_region,
+            request.user.segment,
+            check_data(),
+        )
+    except KeyError:
+        recommendations = ""
+
+    return JsonResponse({"recommendations": recommendations})

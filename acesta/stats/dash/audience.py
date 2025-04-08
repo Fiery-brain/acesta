@@ -6,21 +6,11 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django_plotly_dash import DjangoDash
 
 from acesta.stats.apps import dash_args
-from acesta.stats.dash.helpers.audience import get_audience
-from acesta.stats.dash.helpers.audience import get_audience_key_data
 from acesta.stats.dash.helpers.audience import get_object_title
-from acesta.stats.dash.helpers.audience import round_up
-
-
-def formatted_percentage(x: int, y: int) -> str:
-    """
-    Returns formatted result
-    :return: str
-    """
-    try:
-        return str(int(round(x / y, 2) * 100)).rjust(2)
-    except ZeroDivisionError:
-        return "0"
+from acesta.stats.helpers.audience import get_audience
+from acesta.stats.helpers.audience import get_audience_key_data
+from acesta.stats.helpers.base import formatted_percentage
+from acesta.stats.helpers.base import round_up
 
 
 # Audience Application
@@ -185,8 +175,8 @@ def update_audience(key, *args, **kwargs):
         return html.P(
             html.Small(
                 "Выберите заинтересованный "
-                f"{'город' if area == settings.AREA_CITIES and kwargs.get('user').is_extended else 'регион'} "
-                "чтобы увидеть целевые группы"
+                f"{'город' if area == settings.AREA_CITIES and kwargs.get('user').is_extended else 'регион'}, "
+                "чтобы увидеть целевые группы туристов. Для этого кликните название в таблице слева."
             ),
             className="text-muted pt-2 ps-1",
         )

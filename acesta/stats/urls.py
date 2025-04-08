@@ -5,6 +5,7 @@ from django.urls import re_path
 from django.views.generic import TemplateView
 
 import acesta.stats.dash  # noqa: F401
+from acesta.stats.views import get_recommendations_view
 from acesta.stats.views import rating_view
 from acesta.stats.views import region_view
 from acesta.stats.views import set_regions_view
@@ -25,4 +26,9 @@ urlpatterns = [
         "rating/(?P<area>sights)/", login_required(rating_view), name="rating-sights"
     ),
     path("set_region/<str:code>/", login_required(set_regions_view), name="set_region"),
+    path(
+        "get_recommendations/<str:part>/",
+        login_required(get_recommendations_view),
+        name="get_recommendations",
+    ),
 ]

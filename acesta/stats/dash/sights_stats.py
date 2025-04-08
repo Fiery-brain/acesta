@@ -9,7 +9,7 @@ from django_plotly_dash import DjangoDash
 
 from acesta.stats.apps import dash_args
 from acesta.stats.dash.helpers.common import get_height_base
-from acesta.stats.dash.helpers.sights_stats import get_sight_stats
+from acesta.stats.helpers.sights import get_sight_stats
 
 
 # Sights Statistics Application
@@ -39,7 +39,9 @@ def update_stats_graph(*args, **kwargs) -> dcc.Graph:
         Returns sight stats dataframe
         :return: dcc.Graph
         """
-        sights_stats = get_sight_stats(kwargs["request"])
+        sights_stats = get_sight_stats(
+            code=kwargs.get("request").user.current_region.code
+        )
         return pd.DataFrame(sights_stats)
 
     df_sights = get_df_sight_stats()

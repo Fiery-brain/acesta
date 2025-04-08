@@ -2,9 +2,9 @@ import pandas as pd
 from dash import dependencies
 from django.conf import settings
 
-from acesta.stats.dash.helpers.interest import get_interest
 from acesta.stats.dash.helpers.interest import get_ppt_df
 from acesta.stats.dash.interest.app import interest_app
+from acesta.stats.helpers.interest import get_interest
 
 
 @interest_app.callback(
@@ -22,7 +22,7 @@ def update_interest(
     interesant_area: str,
     map_data: dict,
     sort_by: list,
-    current_state: dict,
+    table_interesants_current_state: dict,
     **kwargs,
 ):
     """
@@ -32,13 +32,13 @@ def update_interest(
     :param interesant_area: str
     :param map_data: dict
     :param sort_by: list
-    :param current_state: dict
+    :param table_interesants_current_state: dict
     :param kwargs: dict
     :return: dict
     """
     # TODO processing of an empty table
     if map_data and "id" not in map_data.get("points")[0].keys():
-        return current_state
+        return table_interesants_current_state
 
     home_id = 0
     if (
@@ -47,8 +47,7 @@ def update_interest(
         and "id" in map_data.get("points")[0].keys()
         and kwargs.get("user").is_extended
     ):
-        home_area = map_data.get("points")[0].get("id").split("_")[0]
-        home_id = map_data.get("points")[0].get("id").split("_")[1]
+        home_area, home_id = map_data.get("points")[0].get("id").split("_")
 
     return get_ppt_df(
         get_interest(
@@ -60,6 +59,51 @@ def update_interest(
         ),
         sort_by,
     ).to_dict("records")
+
+
+@interest_app.callback(
+    dependencies.Output("home-area-key", "data"),
+    [
+        dependencies.Input("home-area", "value"),
+        dependencies.Input("map", "clickData"),
+    ],
+)
+def update_home_area_key(home_area: str, map_data: dict, **kwargs) -> str:
+    """
+    :param home_area: str
+    :param map_data: dict
+    :param kwargs: dict
+    :return: str
+    """
+    home_area_key = f"{settings.AREA_REGIONS}_0"
+    if (
+        home_area != settings.AREA_REGIONS
+        and map_data
+        and "id" in map_data.get("points")[0].keys()
+        and kwargs.get("user").is_extended
+    ):
+        home_area_key = map_data.get("points")[0].get("id")
+    return f"{home_area_key}"
+
+
+@interest_app.callback(
+    dependencies.Output("context-changed", "data"),
+    [
+        dependencies.Input("table-interesants", "active_cell"),
+        dependencies.Input("home-area", "value"),
+        dependencies.Input("tourism-type", "value"),
+        dependencies.Input("tabs-interesants", "value"),
+        dependencies.State("table-interesants", "data"),
+        dependencies.State("context-changed", "data"),
+    ],
+)
+def update_context_changed(*args, **kwargs) -> bool:
+    """
+    :param args: list
+    :param kwargs: dict
+    :return: bool
+    """
+    return True
 
 
 @interest_app.callback(

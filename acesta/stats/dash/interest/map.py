@@ -43,7 +43,7 @@ def update_map(tourism_type: str, home_area: str, *args, **kwargs) -> go.Figure:
                 - (99 if kwargs.get("user").is_extended else 65)
             )
 
-        fig = px.choropleth_mapbox(
+        fig = px.choropleth_map(
             df_map,
             geojson=df_map.geometry,
             locations=df_map.index,
@@ -59,7 +59,7 @@ def update_map(tourism_type: str, home_area: str, *args, **kwargs) -> go.Figure:
                 ]
             ),
             range_color=(20, getattr(df_map, "qty").max()),
-            mapbox_style="white-bg"
+            map_style="white-bg"
             if home_area == settings.AREA_REGIONS
             else "open-street-map",
             zoom=(
@@ -113,7 +113,7 @@ def update_map(tourism_type: str, home_area: str, *args, **kwargs) -> go.Figure:
             cities = get_cities(kwargs.get("user").current_region.code)
 
             fig.add_trace(
-                go.Scattermapbox(
+                go.Scattermap(
                     lat=[city.lat for city in cities],
                     lon=[city.lon for city in cities],
                     text=[city.title for city in cities],
@@ -168,7 +168,7 @@ def update_map(tourism_type: str, home_area: str, *args, **kwargs) -> go.Figure:
             ]
 
             fig.add_trace(
-                go.Scattermapbox(
+                go.Scattermap(
                     lat=lat,
                     lon=lon,
                     text=title,

@@ -1,0 +1,18 @@
+{% load static %}
+<div class="modal fade" id="recommendations" tabindex="-1" role="dialog" aria-labelledby="recommendationsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title text-nowrap fw-bolder" id="recommendationsLabel"><svg viewBox="0 0 24 24"  width="32" height="32" class="me-2"><use href="{% static 'img/sprite.svg' %}#ai"></use></svg>Рекомендации <span class="d-none d-lg-inline">искусственного интеллекта</span><span class="d-lg-none">AI</span></h2>
+        <div class="d-flex justify-content-end align-items-center">
+        <a href="#" type="button" id="copyRecommendations" aria-label="Copy" class="me-3"><svg width="22" height="22"><use href="{% static 'img/sprite.svg' %}#copy"></use></svg></a>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="modal-body pt-2 pb-4">
+        <div id="ai-loader"></div>
+        <div id="recommendationsText"></div>
+      </div>
+    </div>
+  </div>
+</div>

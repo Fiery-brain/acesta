@@ -14,20 +14,20 @@ from acesta.stats.dash.interest.app import interest_app
     dependencies.State("title", "children"),
 )
 def update_title(
-    home_area: str, map_data: dict, current_state: str, *args, **kwargs
+    home_area: str, map_data: dict, title_current_state: str, *args, **kwargs
 ) -> str:
     """
     Updates the app title
     :param home_area: str
     :param map_data: dict
-    :param current_state: str
+    :param title_current_state: str
     :param args: list
     :param kwargs: dict
     :return: str
     """
     pattern = "Интерес к {}"
     if map_data and "id" not in map_data.get("points")[0].keys():
-        return current_state
+        return title_current_state
 
     title = pattern.format("региону")
     if (
