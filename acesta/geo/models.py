@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from model_utils.models import TimeStampedModel
 
-from acesta.geo.managers import PubManager
+from acesta.base.managers import PubManager
 from acesta.geo.utils import fill_geo_data
 from acesta.geo.utils import update_modified_kernel
 
