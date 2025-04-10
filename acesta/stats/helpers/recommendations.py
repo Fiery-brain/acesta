@@ -131,6 +131,7 @@ def get_interest_recommendations(region: Region, segment: str, data: dict) -> st
         data.get("tourism_type"),
         data.get("area"),
     )
+
     interest = get_interest(region.code, home_area, area, tourism_type, home_pk or 0)
 
     interesants_base = interest.annotate(  #
@@ -222,7 +223,8 @@ def get_interest_recommendations(region: Region, segment: str, data: dict) -> st
 
     return _get_recommendations(
         get_question(),
-        key=f"recommendations_interest_{region.code}_{segment}__{home_area}__{audience_pk}__{tourism_type}__{area}",
+        key=f"recommendations_interest_{region.code}_{segment}_"
+        "{home_area}_{home_pk}_{audience_pk}_{tourism_type}_{area}",
     )
 
 
