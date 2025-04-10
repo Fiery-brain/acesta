@@ -85,23 +85,23 @@ def fill_geo_data(sender, instance, *args, **kwargs) -> None:
             return sight
 
         if instance.pk:
-            try:
-                old = sender.objects.get(pk=instance.pk)
-                if (
-                    old.lat != instance.lat
-                    or old.lon != instance.lon
-                    or not instance.geo_data
-                    or old.address != instance.address
-                ):
-                    instance = set_instance_geo_data(instance)
-            except sender.DoesNotExist:
-                pass
+            # try:
+            #     old = sender.objects.get(pk=instance.pk)
+            #     if (
+            #         old.lat != instance.lat
+            #         or old.lon != instance.lon
+            #         or not instance.geo_data
+            #         or old.address != instance.address
+            #     ):
+            #         instance = set_instance_geo_data(instance)
+            # except sender.DoesNotExist:
+            #     pass
 
             if len(instance.query) < 2:
                 instance.query = get_query(instance.title or instance.name)
 
-        else:
-            instance = set_instance_geo_data(instance)
+        # else:
+        #     instance = set_instance_geo_data(instance)
 
     except ImportError:
         pass
