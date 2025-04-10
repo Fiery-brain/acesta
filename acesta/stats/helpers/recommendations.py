@@ -224,7 +224,7 @@ def get_interest_recommendations(region: Region, segment: str, data: dict) -> st
     return _get_recommendations(
         get_question(),
         key=f"recommendations_interest_{region.code}_{segment}_"
-        "{home_area}_{home_pk}_{audience_pk}_{tourism_type}_{area}",
+        f"{home_area}_{home_pk}_{audience_pk}_{tourism_type}_{area}",
     )
 
 
