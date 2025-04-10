@@ -185,7 +185,7 @@ def get_interest_recommendations(region: Region, segment: str, data: dict) -> st
             selected_interesant=(
                 f"""Особое внимание удели {"городу"
                 if area == settings.AREA_CITIES else "региону"} {City.objects.get(pk=int(audience_pk))
-            if area == settings.AREA_CITIES else Region.objects.get(pk=int(audience_pk))}."""
+            if area == settings.AREA_CITIES else Region.objects.get(pk=audience_pk)}."""
                 if audience_pk
                 else ""
             ),
@@ -209,7 +209,7 @@ def get_interest_recommendations(region: Region, segment: str, data: dict) -> st
                     selected_interesant=(
                         City.objects.get(pk=int(audience_pk))
                         if area == settings.AREA_CITIES
-                        else Region.objects.get(pk=int(audience_pk))
+                        else Region.objects.get(pk=audience_pk)
                     ),
                     audience=audience,
                 )

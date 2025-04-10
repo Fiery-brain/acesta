@@ -116,7 +116,7 @@ def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
 
             data = {
                 "sight_group": sight_group,
-                "sight_groups": get_sight_groups(request.user.current_region),
+                "sight_groups": get_sight_groups(),
                 "interest_sight_places": get_interest_sight_rating(
                     get_sight_group_filter(sight_group),
                     code=request.user.current_region.code,

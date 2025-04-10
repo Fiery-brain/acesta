@@ -55,13 +55,22 @@ def get_sight_stats(**kwargs) -> list:
     return list(sight_stats)
 
 
-def get_sight_groups(code):
-    return SightGroup.pub.filter(
-        name__in=[
-            group.get("group")
-            for group in Sight.pub.filter(code=code).values("group").distinct()
-        ]
-    )
+def get_sight_groups(code=None) -> models.QuerySet:
+    """
+    Returns groups of sights according to region code
+    :param code: str or None
+    :return: django.db.models.QuerySet
+    """
+    if code is not None:
+        sight_groups = SightGroup.pub.filter(
+            name__in=[
+                group.get("group")
+                for group in Sight.pub.filter(code=code).values("group").distinct()
+            ]
+        )
+    else:
+        sight_groups = SightGroup.pub.all()
+    return sight_groups
 
 
 def get_sights_by_group(code, group_filter):
