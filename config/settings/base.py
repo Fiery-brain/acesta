@@ -338,7 +338,7 @@ SEGMENT_GUIDE = "tourist-guide"
 SEGMENT_MARKETING_AGENCY = "marketing-agency"
 SEGMENT_HOSPITALITY = "hospitality"
 SEGMENT_TOURISM_EVENT = "tourism-event"
-SEGMENT_TRANSPORTATION = "transport"
+SEGMENT_TRANSPORTATION = "transportation"
 
 SEGMENTS = tuple((k, v) for k, v in env.dict("ACESTA_SEGMENTS", default={}).items())
 
