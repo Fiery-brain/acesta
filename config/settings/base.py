@@ -325,7 +325,6 @@ DADATA_SECRET = env("API_DADATA_SECRET", default="")
 
 # Application
 TITLE = "Аналитика в туризме — ацеста"
-HASH_TAGS = "#туризм #маркетинг #данные #аналитика"
 
 DEFAULT_SEGMENT = "undefined"
 SEGMENT_GOVERNMENT = "government"
@@ -340,7 +339,7 @@ SEGMENT_HOSPITALITY = "hospitality"
 SEGMENT_TOURISM_EVENT = "tourism-event"
 SEGMENT_TRANSPORTATION = "transport"
 
-SEGMENTS = env.dict("ACESTA_SEGMENTS", default={})
+SEGMENTS = tuple((k, v) for k, v in env.dict("ACESTA_SEGMENTS", default={}).items())
 
 GEOJSON = ROOT_DIR / "geojson" / "Russia.geojson"
 

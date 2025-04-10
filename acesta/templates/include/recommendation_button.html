@@ -1,10 +1,4 @@
-{% if request.user.is_authenticated and request.user.is_superuser %}
- {% comment %} and not request.user.is_accustomed
-         <span data-bs-toggle="modal" data-bs-target="#recommendations">
-          <a href="#" type="button" data-bs-toggle="tooltip" title="Получить рекомендации искусственного интеллекта" class="ms-3 ms-leg-0"><svg viewBox="0 0 24 24"  width="22" height="22"><use href="{% static 'img/sprite.svg' %}#ai"></use></svg></a>
-        </span>
-
- {% endcomment %}
+{% if request.user.is_authenticated %}
   <div class="request-button">
     <span data-bs-toggle="modal" data-bs-target="#recommendations">
       <a href="#" type="button" data-bs-toggle="tooltip" title="Получить рекомендации искусственного интеллекта">

@@ -399,6 +399,10 @@ $(function () {
 
   recommendationsModal.addEventListener("show.bs.modal", function (e) {
     if (JSON.parse(storage.getItem("context-changed"))) {
+      if (markdownPrinter) {
+        markdownPrinter.stop();
+        markdownPrinter = null;
+      }
       textElement.empty();
     }
   })
@@ -408,12 +412,6 @@ $(function () {
       JSON.parse(storage.getItem("context-changed")) ||
       textElement.text().length == 0
     ) {
-
-      if (markdownPrinter) {
-        markdownPrinter.stop();
-        markdownPrinter = null;
-      }
-
       $("#ai-loader").css("display", "block");
       $.ajax({
         url: recommendationsUrl,

@@ -217,7 +217,8 @@ def get_recommendations_view(request: HttpRequest, part: str) -> JsonResponse:
                 home_area = settings.REGIONS
                 area = settings.REGIONS
 
-            tourism_type = request.user.get_current_tourism_type(tourism_type)
+            if home_area != settings.AREA_REGIONS:
+                tourism_type = request.user.get_current_tourism_type(tourism_type)
 
             data = dict(
                 home_area=home_area,
@@ -235,8 +236,9 @@ def get_recommendations_view(request: HttpRequest, part: str) -> JsonResponse:
             if not request.user.is_extended:
                 area = settings.REGIONS
 
-            tourism_type = request.user.get_current_tourism_type(tourism_type)
-            group = request.user.get_current_sight_group(group)
+            if area != settings.AREA_REGIONS:
+                tourism_type = request.user.get_current_tourism_type(tourism_type)
+                group = request.user.get_current_sight_group(group)
 
             data = dict(area=area, tourism_type=tourism_type, group=group)
 
