@@ -223,6 +223,7 @@ class Sight(TimeStampedModel):
     )
     is_checked = models.BooleanField("Запрос проверен", default=False, db_index=True)
     is_network = models.BooleanField("Сеть", default=False, db_index=True)
+    is_archive = models.BooleanField("Архив", default=False, db_index=True)
     similarity_rate = models.FloatField(
         verbose_name="Схожесть запроса и ядра", default=0.0
     )
@@ -246,7 +247,17 @@ class Sight(TimeStampedModel):
         verbose_name = "Достопримечательность"
         verbose_name_plural = "Достопримечательности"
         unique_together = (
-            ["name", "full_name", "city", "is_pub", "code", "lat", "lon"],
+            [
+                "name",
+                "full_name",
+                "city",
+                "is_pub",
+                "code",
+                "lat",
+                "lon",
+                "is_network",
+                "is_archive",
+            ],
         )
         ordering = ("title",)
 
