@@ -42,7 +42,9 @@ from acesta.stats.helpers.update_dates import get_rating_update_date
     settings.LLM_MAX_RETRIES,
     settings.LLM_BASE_DELAY,
 )
-def _get_recommendations(question: str, model: str, **kwargs) -> str:
+def _get_recommendations(
+    question: str, model: str, provider: str = None, **kwargs
+) -> str:
     """
     Returns a recommendation
     :param question: str
@@ -64,6 +66,7 @@ def _get_recommendations(question: str, model: str, **kwargs) -> str:
                         }
                     ],
                     web_search=False,
+                    provider=provider,
                 )
                 .choices[0]
                 .message.content
