@@ -1,3 +1,5 @@
+import re
+
 from django.conf import settings
 from django.db.models import F
 from django.db.models import Max
@@ -10,6 +12,7 @@ from g4f.errors import RetryProviderError
 from g4f.errors import TimeoutError
 
 from acesta.base.decorators import append
+from acesta.base.decorators import fallback_chain
 from acesta.base.decorators import to_cache
 from acesta.geo.models import City
 from acesta.geo.models import Region
@@ -33,7 +36,13 @@ from acesta.stats.helpers.update_dates import get_rating_update_date
 
 
 @to_cache("{key}", 60 * 60 * 24 * 14)
-def _get_recommendations(question: str, **kwargs) -> str:
+@fallback_chain(
+    settings.LLM_MODELS,
+    settings.LLM_PROVIDERS,
+    settings.LLM_MAX_RETRIES,
+    settings.LLM_BASE_DELAY,
+)
+def _get_recommendations(question: str, model: str, **kwargs) -> str:
     """
     Returns a recommendation
     :param question: str
@@ -47,7 +56,7 @@ def _get_recommendations(question: str, **kwargs) -> str:
         try:
             recommendations = (
                 client.chat.completions.create(
-                    model="deepseek-chat",
+                    model=model,
                     messages=[
                         {
                             "role": "user",
@@ -69,7 +78,18 @@ def _get_recommendations(question: str, **kwargs) -> str:
             RuntimeError,
         ):
             recommendations = ""
-        return recommendations
+
+        recommendations = re.sub(
+            r"<think>.*?</think>", "", recommendations, flags=re.DOTALL
+        )
+
+        return (
+            recommendations
+            if all(
+                err not in recommendations for err in ["request limit", "request error"]
+            )
+            else ""
+        )
 
     return get_ai_recommendations(question)
 
