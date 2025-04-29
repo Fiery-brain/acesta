@@ -42,8 +42,12 @@ def fallback_chain(
 
                             result = func(*args, **modified_kwargs)
 
-                            if result and result.strip():
+                            if isinstance(result, (int, float)):
                                 return result
+
+                            if isinstance(result, str):
+                                if result.strip():
+                                    return result
 
                         except Exception as e:
                             last_exception = e

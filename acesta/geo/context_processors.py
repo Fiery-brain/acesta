@@ -12,14 +12,13 @@ def regions(request) -> dict:
     """
     result = {}
     if request.user.is_authenticated:
-        all_regions = [(region.region_type, region) for region in Region.pub.all()]
+        all_regions = [
+            (region.federal_district, region)
+            for region in Region.pub.all().order_by("code")
+        ]
         grouped_regions = {}
-        for region_type, region in all_regions:
-            grouped_regions.setdefault(region_type, []).append(region)
-        if "kray" in grouped_regions.keys():
-            grouped_regions["kray"] = sorted(
-                grouped_regions["kray"], key=lambda x: x.title
-            )
+        for federal_district, region in all_regions:
+            grouped_regions.setdefault(federal_district, []).append(region)
         result = {"grouped_regions": grouped_regions}
     return result
 
@@ -48,5 +47,6 @@ def settings(request: HttpRequest) -> dict:
         AREA_REGIONS=django_settings.AREA_REGIONS,
         AREA_CITIES=django_settings.AREA_CITIES,
         AREA_SIGHTS=django_settings.AREA_SIGHTS,
+        FEDERAL_DISTRICTS=dict(django_settings.FEDERAL_DISTRICTS),
         REGION_TYPE_FEDERAL_CITY=django_settings.REGION_TYPE_FEDERAL_CITY,
     )

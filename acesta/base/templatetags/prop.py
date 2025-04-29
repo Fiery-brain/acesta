@@ -12,8 +12,8 @@ def get_prop(obj, key):
     :return:
     """
     if isinstance(obj, dict):
-        return obj.get(key)
+        return obj.get(key, "")
     elif isinstance(obj, object):
-        return getattr(obj, key)
+        return getattr(obj, key, "")
     else:
         return obj

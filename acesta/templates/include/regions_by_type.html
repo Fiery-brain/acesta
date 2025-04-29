@@ -1,20 +1,27 @@
 {% load static %}
+{% load prop %}
 
-{% for region in regions %}
-  <li>
-    <a {% if region.code in user_regions or region.rank == 0 or region.code == request.user.region.code %}
-          href="{% url 'set_region' code=region.code %}"
-          class="open"
-          title="Выбрать"
-        {% else %}
-          href="{% url 'user' code=region.code %}"
-          title="Подать заявку"
-    {% endif %}>
-    {% if not region.code in user_regions and region.rank != 0 and region.code != request.user.region.code %}
-      <svg width="18" height="18" class="me-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>
-    {% else %}
-      <svg width="18" height="18" class="me-1"><use href="{% static 'img/sprite.svg' %}#go"></use></svg>
-    {% endif %}
-    {{ region.region_short }}</a>
-  </li>
-{% endfor %}
+{% with federal_district=federal_district|safe %}
+  <h5>{{ FEDERAL_DISTRICTS|get_prop:federal_district }} федеральный&nbsp;округ</h5>
+{% endwith %}
+
+<ul>
+  {% for region in regions %}
+    <li>
+      <a {% if region.code in user_regions or region.rank == 0 or region.code == request.user.region.code %}
+            href="{% url 'set_region' code=region.code %}"
+            class="open"
+            title="Выбрать"
+          {% else %}
+            href="{% url 'user' code=region.code %}"
+            title="Подать заявку"
+      {% endif %}>
+      {% if not region.code in user_regions and region.rank != 0 and region.code != request.user.region.code %}
+        <svg width="18" height="18" class="me-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>
+      {% else %}
+        <svg width="18" height="18" class="me-1"><use href="{% static 'img/sprite.svg' %}#go"></use></svg>
+      {% endif %}
+      {{ region.region_short }}</a>
+    </li>
+  {% endfor %}
+</ul>

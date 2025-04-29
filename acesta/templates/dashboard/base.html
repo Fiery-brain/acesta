@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load prop %}
 
 {% block meta %}{% endblock %}
 
@@ -60,51 +61,41 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-12 col-xl-3">
-                <h5>Республики</h5>
-                <ul>
-                  {% with regions=grouped_regions.republic %}
-                    {% include 'include/regions_by_type.html' %}
-                  {% endwith %}
-                </ul>
-              </div>
-              <div class="col-12 col-xl-3">
-                <h5>Города федерального подчинения</h5>
-                <ul>
-                  {% with regions=grouped_regions.federal_city %}
-                    {% include 'include/regions_by_type.html' %}
-                  {% endwith %}
-                </ul>
-                <h5>Края</h5>
-                <ul>
-                  {% with regions=grouped_regions.kray %}
-                    {% include 'include/regions_by_type.html' %}
-                  {% endwith %}
-                </ul>
-                <h5>Автономные округа и&nbsp;области</h5>
-                <ul>
-                  {% with regions=grouped_regions.autonomous_district %}
-                    {% include 'include/regions_by_type.html' %}
-                  {% endwith %}
+                {% with federal_district='ЦФО' %}
+                  {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
+                {% endwith %}
 
-                  {% with regions=grouped_regions.autonomous_region %}
-                    {% include 'include/regions_by_type.html' %}
-                  {% endwith %}
-                </ul>
+                {% with federal_district='УрФО' %}
+                  {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
+                {% endwith %}
               </div>
               <div class="col-12 col-xl-3">
-              <h5>Области</h5>
-                <ul class="mb-0">
-                  {% with regions=grouped_regions.region|slice:":24" %}
-                    {% include 'include/regions_by_type.html' %}
-                  {% endwith %}
-                </ul>
+                {% with federal_district='СЗФО' %}
+                  {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
+                {% endwith %}
+
+                {% with federal_district='ЮФО' %}
+                  {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
+                {% endwith %}
+
               </div>
               <div class="col-12 col-xl-3">
-                <ul>
-                  {% with regions=grouped_regions.region|slice:"24:" %}
-                    {% include 'include/regions_by_type.html' %}
-                  {% endwith %}
-                </ul>
+                {% with federal_district='ПФО' %}
+                  {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
+                {% endwith %}
+
+                {% with federal_district='СКФО' %}
+                  {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
+                {% endwith %}
+              </div>
+              <div class="col-12 col-xl-3">
+                {% with federal_district='СФО' %}
+                  {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
+                {% endwith %}
+
+                {% with federal_district='ДФО' %}
+                  {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
+                {% endwith %}
               </div>
             </div>
           </div>
