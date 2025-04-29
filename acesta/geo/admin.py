@@ -20,6 +20,7 @@ class RegionAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "region_type",
+        "federal_district",
         "rank",
         "is_pub",
     )

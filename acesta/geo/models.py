@@ -21,6 +21,9 @@ class Region(TimeStampedModel):
         "Внешний ID",
         unique=True,
     )
+    federal_district = models.CharField(
+        "Федеральный округ", max_length=4, choices=settings.FEDERAL_DISTRICTS
+    )
     region = models.CharField(
         "Название региона в Яндекс",
         max_length=60,
