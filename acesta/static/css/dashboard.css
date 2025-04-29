@@ -62,8 +62,8 @@ box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8)}
 .modal-header{position:relative; z-index:2}
 .modal-header .help{top:15px; margin-bottom:-100px}
 .modal-header .help .legend{width:10px;height:10px;background-color:#868686}
-.modal-header span.open{background-color:#429388!important}
-.modal-header .help .open{color:var(--acesta-primary)}
+/* .modal-header span.open{background-color:#429388!important} */
+.modal-header .help .open{color:var(--acesta-text-primary); font-weight: 500;}
 
 /* HEAD BLOCK */
 @media screen and (min-width:992px) {
