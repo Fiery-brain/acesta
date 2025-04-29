@@ -178,13 +178,8 @@ def set_regions_view(request: HttpRequest, code: str) -> HttpResponse:
     :return: django.http.HttpResponse
     """
     region = Region.objects.get(code=code)
-    if (
-        code in [region.code for region in request.user.regions.all()]
-        or region.rank == 0
-        or code == request.user.region.code
-    ):
-        request.user.current_region = region
-        request.user.save()
+    request.user.current_region = region
+    request.user.save()
     return redirect("region")
 
 

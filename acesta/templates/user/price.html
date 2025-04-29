@@ -52,7 +52,7 @@
     <div class="col pe-0">
       <table class="w-100">
         <tr>
-          <td></td>
+          <td colspan="2"></td>
           <td class="text-center plan-container bg-green text-white px-3 pt-3 pb-3 rounded-top-left">
             <h2 class="text-white fs-6">Базовый<span class="d-none d-lg-inline"> доступ</span></h2>
             <p class="fw-bold fs-5 mb-2">бесплатно</p>
@@ -83,72 +83,53 @@
           </td>
         </tr>
         <tr>
-           <td></td>
-           <td class="bg-green"></td>
-           <td class="text-center bg-yellow">
-<!--             {% if request.user.current_region.rank %}-->
-<!--              <p class="mt-0 mb-2">-->
-<!--                <a href="{% url 'offer' %}" class="text-white" title="Скачать коммерческое предложение"><small class="small text-nowrap">Коммерческое предложение</small></a>-->
-<!--              </p>-->
-<!--             {% endif %}-->
-           </td>
-           <td class="text-center bg-red">
-<!--            <p class="mt-0 mb-2">-->
-<!--              <a href="{% url 'offer_report' %}" class="text-white" title="Скачать коммерческое предложение"><small class="small text-nowrap">Коммерческое предложение</small></a>-->
-<!--            </p>-->
-           </td>
+          <td class="border px-2 py-1 rounded-top-left" rowspan="3"><small><b>Аналитика интереса к&nbsp;турпродуктам</b> на&nbsp;уровне</small></td>
+          <td class="border px-2 py-1"><small>регионов</small></td>
+          <td width="21%" class="text-center border"><span class="dot"></span></td>
+          <td width="21%" class="text-center border"><span class="dot"></span></td>
+          <td width="21%" class="text-center border p-3" rowspan="10">Создание аналитического отчета или выгрузка данных по&nbsp;техническому заданию</td>
         </tr>
         <tr>
-          <td class="border px-2 py-1 rounded-top-right"><small>Количество регионов</small></td>
-          <td width="21%" class="text-center border"><small>1</small></td>
-          <td width="21%" class="text-center border"><small>1</small></td>
-          <td width="21%" class="text-center border"><small>1</small></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1"><small>Сезонная подстройка семантических ядер</small></td>
-          <td class="text-center border"><span class="dot"></span></td>
-          <td class="text-center border"><span class="dot"></span></td>
-          <td class="text-center border p-3" rowspan="9">Создание аналитического отчета по&nbsp;техническому заданию</td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1"><small>Интерес к&nbsp;турпродуктам региона</small></td>
-          <td class="text-center border"><span class="dot"></span></td>
-          <td class="text-center border"><span class="dot"></span></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1"><small>Интерес к&nbsp;турпродуктам городов</small></td>
+          <td class="border px-2 py-1"><small>городов</small></td>
           <td class="text-center border"></td>
           <td class="text-center border"><span class="dot"></span></td>
         </tr>
         <tr>
-          <td class="border px-2 py-1"><small>Интерес к&nbsp;точкам притяжения</small></td>
+          <td class="border px-2 py-1" nowrap><small>точек притяжения</small></td>
           <td class="text-center border"></td>
           <td class="text-center border"><span class="dot"></span></td>
         </tr>
         <tr>
-          <td class="border px-2 py-1"><small>Целевые группы регионов</small></td>
+          <td class="border px-2 py-1" rowspan="2"><small><b>Аналитика целевых групп туристов</b> на&nbsp;уровне</small></td>
+          <td class="border px-2 py-1"><small>регионов</small></td>
           <td class="text-center border"><span class="dot"></span></td>
           <td class="text-center border"><span class="dot"></span></td>
         </tr>
         <tr>
-          <td class="border px-2 py-1"><small>Целевые группы городов</small></td>
+          <td class="border px-2 py-1"><small>городов</small></td>
           <td class="text-center border"></td>
           <td class="text-center border"><span class="dot"></span></td>
         </tr>
         <tr>
-          <td class="border px-2 py-1"><small>Рейтинг регионов по&nbsp;интересу к&nbsp;турпродуктам</small></td>
+          <td class="border px-2 py-1" rowspan="3"><small><b>Рейтинги по&nbsp;интересу к&nbsp;турпродуктам</b> на&nbsp;уровне</small></td>
+          <td class="border px-2 py-1"><small>регионов</small></td>
           <td class="text-center border"><span class="dot"></span></td>
           <td class="text-center border"><span class="dot"></span></td>
         </tr>
         <tr>
-          <td class="border px-2 py-1"><small>Рейтинг городов по&nbsp;интересу к&nbsp;турпродуктам</small></td>
+          <td class="border px-2 py-1"><small>городов</small></td>
           <td class="text-center border"></td>
           <td class="text-center border"><span class="dot"></span></td>
         </tr>
-        <tr class="border rounded-2 rounded-bottom">
-          <td class="border px-2 py-1"><small>Рейтинг точек притяжения по&nbsp;интересу</small></td>
+        <tr>
+          <td class="border px-2 py-1" nowrap><small>точек притяжения</small></td>
           <td class="text-center border"></td>
           <td class="text-center border"><span class="dot"></span></td>
+        </tr>
+        <tr class="border">
+          <td class="border px-2 py-1 rounded-2 rounded-bottom" colspan="2"><small><b>Рекомендации искусственного интеллекта</b></small></td>
+          <td width="21%" class="text-center border"><span class="dot"></span></td>
+          <td width="21%" class="text-center border"><span class="dot"></span></td>
         </tr>
       </table>
     </div>
