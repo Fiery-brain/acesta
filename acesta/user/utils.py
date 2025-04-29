@@ -52,6 +52,7 @@ def get_order_form(user: User) -> OrderForm:
     """
     order_form = OrderForm()
     order_form.initial["period"] = 0.25
+    order_form.initial["regions"] = [user.current_region.pk]
     order_form.initial["user"] = user
     order_form.initial["tourism_types"] = ["recreation"]
     user_field = order_form.fields["user"]

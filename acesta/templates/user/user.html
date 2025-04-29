@@ -26,7 +26,7 @@
               <div class="form-floating mb-2">
                   <select class="form-select" required name="regions" id="inputRegions" multiple>
                   {% for id, region in order_form.regions.field.choices %}
-                    <option value="{{ id }}"{% if code == id %} selected{% endif %}>{{ region.code }}{{ region }}</option>
+                    <option value="{{ id }}"{% if id in order_form.regions.value %} selected{% endif %}>{{ region.code }}{{ region }}</option>
                   {% endfor %}
                 </select>
                 <label for="inputRegions" class="form-label">Регионы</label>
