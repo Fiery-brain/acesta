@@ -51,8 +51,9 @@ def get_order_form(user: User) -> OrderForm:
     :return: OrderForm
     """
     order_form = OrderForm()
-    order_form.initial["period"] = 6
+    order_form.initial["period"] = 0.25
     order_form.initial["user"] = user
+    order_form.initial["tourism_types"] = ["recreation"]
     user_field = order_form.fields["user"]
     user_field.widget = user_field.hidden_widget()
     return order_form

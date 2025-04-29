@@ -42,7 +42,7 @@
               <div class="form-floating mb-2">
                 <select class="form-select" name="tourism_types" id="inputTourismTypes" multiple>
                   {% for name, title in tourism_types %}
-                    <option value="{{ name }}">{{ title }}</option>
+                    <option value="{{ name }}"{% if name in order_form.tourism_types.value %} selected{% endif %}>{{ title }}</option>
                   {% endfor %}
                 </select>
                 <label for="inputTourismTypes" class="form-label">Виды туризма (все или до 3 конкретных)</label>
