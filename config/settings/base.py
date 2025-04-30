@@ -477,7 +477,7 @@ ORDER_PERIODS = (
     (12.0, "12 месяцев"),
 )
 
-TOURISM_TYPES_OUTSIDE = tuple((k, v) for k, v in TOURISM_TYPES if k not in ("gastro"))
+TOURISM_TYPES_OUTSIDE = tuple((k, v) for k, v in TOURISM_TYPES)
 
 TOURISM_TYPE_DEFAULT = env("ACESTA_TOURISM_TYPE_DEFAULT", default="museum")
 
@@ -488,6 +488,8 @@ TOURISM_TYPE_PALETTE = env.dict("ACESTA_TOURISM_TYPE_PALETTE", default={})
 SIGHT_GROUPS_PALETTE = env.dict("ACESTA_SIGHT_GROUPS_PALETTE", default={})
 
 SEGMENTS_GENITIVE = env.dict("ACESTA_SEGMENTS_GENITIVE", default={})
+
+SEGMENTS_GENITIVE_SHORT = env.dict("ACESTA_SEGMENTS_GENITIVE_SHORT", default={})
 
 RECOMMENDATION_TOV = env.dict("ACESTA_RECOMMENDATION_TOV", default={})
 
