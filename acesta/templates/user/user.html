@@ -14,7 +14,7 @@
 {% block modals %}
   {{ block.super }}
   <div class="modal fade" id="newOrder" tabindex="-1" role="dialog" aria-labelledby="newOrderLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <form action="{% url 'order' %}" method="post">
           <div class="modal-header bg-accent">
@@ -209,21 +209,25 @@
       </div>
       <form id="profileForm" class="has-masked" action="" method="post">
         {% csrf_token %}
-        <div class="form-floating mb-2">
-          <input type="text" class="form-control" name="last_name" id="inputLastName" value="{{ user_form.last_name.value|default:'' }}" pattern="[А-Яа-яЁё ]+">
-          <label for="inputLastName" class="form-label">Фамилия{% if not user_form.last_name.value %} (не обязательно){% endif %}</label>
+        <div class="d-flex">
+          <div class="form-floating mb-2  w-50">
+            <input type="text" class="form-control" name="last_name" id="inputLastName" value="{{ user_form.last_name.value|default:'' }}" pattern="[А-Яа-яЁё ]+">
+            <label for="inputLastName" class="form-label">Фамилия{% if not user_form.last_name.value %} (не обязательно){% endif %}</label>
+          </div>
+          <div class="form-floating mb-2 w-50 ps-2">
+            <input type="text" required class="form-control" name="first_name" id="inputFirstName" value="{{ user_form.first_name.value }}" pattern="[А-Яа-яЁё ]+">
+            <label for="inputFirstName" class="form-label ms-2">Имя</label>
+          </div>
         </div>
-        <div class="form-floating mb-2">
-          <input type="text" required class="form-control" name="first_name" id="inputFirstName" value="{{ user_form.first_name.value }}" pattern="[А-Яа-яЁё ]+">
-          <label for="inputFirstName" class="form-label">Имя</label>
-        </div>
-        <div class="form-floating mb-2">
-          <input type="text" class="form-control" name="middle_name" id="inputMiddleName" value="{{ user_form.middle_name.value|default:'' }}" pattern="[А-Яа-яЁё ]+">
-          <label for="inputMiddleName" class="form-label">Отчество{% if not user_form.middle_name.value %} (не обязательно){% endif %}</label>
-        </div>
-        <div class="form-floating mb-2">
-          <input type="tel" required pattern="\+[0-9]\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" class="form-control" name="phone" id="inputPhone" value="{{ user_form.phone.value|default_if_none:'' }}" title="Телефон" data-mask="+0(000) 000-00-00">
-          <label for="inputPhone" class="form-label">Телефон</label>
+        <div class="d-flex">
+          <div class="form-floating mb-2 w-50">
+            <input type="text" class="form-control" name="middle_name" id="inputMiddleName" value="{{ user_form.middle_name.value|default:'' }}" pattern="[А-Яа-яЁё ]+">
+            <label for="inputMiddleName" class="form-label">Отчество{% if not user_form.middle_name.value %} (не обязательно){% endif %}</label>
+          </div>
+          <div class="form-floating mb-2 w-50 ps-2">
+            <input type="tel" required pattern="\+[0-9]\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}" class="form-control ps-2" name="phone" id="inputPhone" value="{{ user_form.phone.value|default_if_none:'' }}" title="Телефон" data-mask="+0(000) 000-00-00">
+            <label for="inputPhone" class="form-label ms-2">Телефон</label>
+          </div>
         </div>
         <div class="form-floating mb-2">
           <input type="text" class="form-control" name="company" id="inputCompany" value="{{ user_form.company.value|default_if_none:'' }}">
@@ -241,6 +245,14 @@
           </select>
           <label for="inputCity">Город {% if not user_form.city.value %}(не обязательно){% endif %}</label>
         </div>
+        <div class="form-floating mb-2">
+          <select class="form-select" name="segment" id="inputSegment">
+            {% for id, segment in user_form.segment.field.choices %}
+              <option value="{{ id }}"{% if user_form.segment.value == id %} selected{% endif %}>{{ segment }}</option>
+            {% endfor %}
+          </select>
+          <label for="inputCity">Сегмент {% if not user_form.city.value %}{% endif %}</label>
+        </div>
         <div class="mt-3">
           <button type="submit" class="btn btn-lg btn-outline-primary px-4"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg> Сохранить</button>
         </div>
@@ -256,7 +268,7 @@
           <thead>
             <tr>
               <th scope="col">Регион</th>
-              <th class="text-center text-nowrap"scope="col">Ранг</th>
+              <th class="text-center text-nowrap" scope="col">Ранг</th>
               <th class="text-center d-none d-lg-table-cell" scope="col">Окончание</th>
               <th class="text-center" scope="col">Доступ</th>
             </tr>
@@ -352,7 +364,7 @@
   </script>
   <script src="{% static 'js/user.update.costs.js' %}"></script>
   <script src="{% static 'js/user.clear.phone.mask.js' %}"></script>
-  {% if open_order %}
+  {% if code %}
     <script src="{% static 'js/user.open.order.modal.js' %}"></script>
   {% endif %}
 {% endblock %}

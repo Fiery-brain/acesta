@@ -27,6 +27,7 @@ class UserForm(forms.ModelForm):
             "position",
             "phone",
             "city",
+            "segment",
         ]
 
 
