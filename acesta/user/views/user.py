@@ -134,7 +134,7 @@ def user_profile(request: HttpRequest, code: str = None) -> HttpResponse:
     """
     User's Profile representation
     :param request: django.http.HttpRequest
-    :param code: str # TODO deprecated
+    :param code: str
     :return: django.http.HttpResponse
     """
     if request.POST:
@@ -163,6 +163,6 @@ def user_profile(request: HttpRequest, code: str = None) -> HttpResponse:
             "user_form": UserForm(instance=request.user),
             "open_order": True if code else False,
             "open_regions": Region.objects.filter(rank=0),
-            "code": code or request.user.region.code,  # TODO deprecated
+            "code": code or request.user.region.code,
         },
     )
