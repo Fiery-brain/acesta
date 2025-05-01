@@ -24,7 +24,7 @@
           <div class="modal-body">
               {% csrf_token %}
               <div class="form-floating mb-2">
-                  <select class="form-select" name="district" id="inputDistrict">
+                  <select class="form-select" name="federal_district" id="inputDistrict">
                   <option value=""></option>
                   {% for id, district in FEDERAL_DISTRICTS.items %}
                     <option value="{{ id }}"{% if not code and id == request.user.current_region.federal_district %} selected{% endif %}>{{ district }} федеральный округ</option>

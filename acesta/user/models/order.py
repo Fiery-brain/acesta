@@ -47,6 +47,13 @@ class Order(TimeStampedModel):
         null=True,
     )
     total = models.DecimalField("Итого", decimal_places=2, max_digits=10, default=0.0)
+    federal_district = models.CharField(
+        "Федеральный округ",
+        max_length=4,
+        choices=settings.FEDERAL_DISTRICTS,
+        blank=True,
+        null=True,
+    )
     regions = models.ManyToManyField(
         Region,
         verbose_name="Регионы",
@@ -138,18 +145,24 @@ class Order(TimeStampedModel):
         return discount
 
     @staticmethod
-    def get_discount_sum(period: float, regions_list: list, tourism_types: list = None):
+    def get_discount_sum(
+        period: float,
+        regions_list: list = None,
+        tourism_types: list = None,
+        district: str = None,
+    ):
         """
         Returns discount sum by period
         :param period: int
         :param regions_list: list
         :param tourism_types: list
+        :param district: str
         :return: float
         """
         return (
             Order.get_discount(period)
             / 100
-            * Order.get_cost(period, regions_list, tourism_types)
+            * Order.get_cost(period, regions_list, tourism_types, district)
         )
 
     class Meta:
@@ -168,10 +181,16 @@ def recalc_sums_after_changes(sender, instance, *args, **kwargs) -> None:
     if instance.pk:
         regions_list = [region.code for region in instance.regions.all()]
         instance.cost = Order.get_cost(
-            instance.period, regions_list, instance.tourism_types
+            instance.period,
+            regions_list,
+            instance.tourism_types,
+            instance.federal_district,
         )
         instance.discount = Order.get_discount_sum(
-            instance.period, regions_list, instance.tourism_types
+            instance.period,
+            regions_list,
+            instance.tourism_types,
+            instance.federal_district,
         )
         instance.total = instance.cost - instance.discount
 
@@ -191,9 +210,11 @@ def recalc_sums_after_change_regions(sender, **kwargs) -> None:
     """
     instance = kwargs.pop("instance")
     pk_set = kwargs.pop("pk_set")
-    instance.cost = Order.get_cost(instance.period, pk_set, instance.tourism_types)
+    instance.cost = Order.get_cost(
+        instance.period, pk_set, instance.tourism_types, instance.federal_district
+    )
     instance.discount = Order.get_discount_sum(
-        instance.period, pk_set, instance.tourism_types
+        instance.period, pk_set, instance.tourism_types, instance.federal_district
     )
     instance.total = instance.cost - instance.discount
     if (

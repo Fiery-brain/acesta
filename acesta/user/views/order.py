@@ -49,7 +49,7 @@ def get_order_data(post: QueryDict) -> tuple:
     :param post: django.http.QueryDict
     :return: tuple
     """
-    district = post.get("district") or None
+    district = post.get("federal_district") or None
     try:
         period = float(post.get("period").replace(",", "."))
     except ValueError:
@@ -76,7 +76,9 @@ def new_order(request: HttpRequest) -> HttpResponse:
         if order_form.is_valid():
             order = order_form.save(commit=False)
             order.cost = Order.get_cost(period, regions, tourism_types, district)
-            order.discount = Order.get_discount_sum(period, regions, tourism_types)
+            order.discount = Order.get_discount_sum(
+                period, regions, tourism_types, district
+            )
             order.total = order.cost - order.discount
             order.save()
             order_form.save_m2m()
@@ -112,6 +114,8 @@ def get_costs(request: HttpRequest) -> JsonResponse:
         {
             "cost": Order.get_cost(period, regions, tourism_types, district),
             "discount": Order.get_discount(period),
-            "discount_sum": Order.get_discount_sum(period, regions, tourism_types),
+            "discount_sum": Order.get_discount_sum(
+                period, regions, tourism_types, district
+            ),
         }
     )
