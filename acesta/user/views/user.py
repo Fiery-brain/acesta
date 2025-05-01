@@ -49,13 +49,14 @@ def oferta(request: HttpRequest) -> HttpResponse:
 def offer(request: HttpRequest) -> HttpResponse:
     template = get_template("user/offer.html")
 
-    region = request.user.current_region
-    regions = [region.code]
+    district = request.user.current_region.federal_district
+    district_title = dict(settings.FEDERAL_DISTRICTS).get(district)
+    regions = [request.user.current_region.code]
     html = template.render(
         {
             "TITLE": settings.TITLE,
-            "region": region,
             "discounts": DISCOUNTS,
+            "region": request.user.current_region,
             "cost_1w_1t": Order.get_cost(
                 0.25, regions, [settings.TOURISM_TYPE_DEFAULT]
             ),
@@ -75,6 +76,35 @@ def offer(request: HttpRequest) -> HttpResponse:
             ),
             "cost_12m": int(
                 Order.get_cost(12, regions) - Order.get_discount_sum(12, regions)
+            ),
+            "district_title": district_title,
+            "cost_district_1w_1t": Order.get_cost(
+                0.25, None, [settings.TOURISM_TYPE_DEFAULT], district
+            ),
+            "cost_district_1w": Order.get_cost(0.25, None, None, district),
+            "cost_district_1m_1t": Order.get_cost(
+                1, None, [settings.TOURISM_TYPE_DEFAULT], district
+            ),
+            "cost_district_1m": Order.get_cost(1, None, None, district),
+            "cost_district_6m_1t": int(
+                Order.get_cost(6, None, [settings.TOURISM_TYPE_DEFAULT], district)
+                - Order.get_discount_sum(
+                    6, None, [settings.TOURISM_TYPE_DEFAULT], district
+                )
+            ),
+            "cost_district_6m": int(
+                Order.get_cost(6, None, None, district)
+                - Order.get_discount_sum(6, None, None, district)
+            ),
+            "cost_district_12m_1t": int(
+                Order.get_cost(12, None, [settings.TOURISM_TYPE_DEFAULT], district)
+                - Order.get_discount_sum(
+                    12, None, [settings.TOURISM_TYPE_DEFAULT], district
+                )
+            ),
+            "cost_district_12m": int(
+                Order.get_cost(12, None, None, district)
+                - Order.get_discount_sum(12, None, None, district)
             ),
         }
     )

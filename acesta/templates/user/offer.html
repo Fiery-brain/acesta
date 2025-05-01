@@ -26,7 +26,7 @@
       {% include "include/offer_head.html" %}
     <tr>
       <td colspan="2" class="b2">
-        <p class="b0">Аналитический сервис ацеста предлагает рассмотреть возможность использования услуги «Полный доступ».</p>
+        <p class="b0">Аналитический сервис ацеста предлагает рассмотреть возможность использования услуги <b>«Полный доступ»</b>.</p>
         <p class="t0 b0">Преимущества использования сервиса:</p>
           <ul>
             <li>методика построения отчетов доказала свою эффективность в&nbsp;регионах</li>
@@ -34,35 +34,28 @@
             <li>сервис охватывает все регионы Российской Федерации</li>
             <li>полный доступ открывается сразу после оплаты</li>
           </ul>
-        <p class="t0">Полный доступ к&nbsp;аналитике дает дополнительную детализацию и&nbsp;подходит для&nbsp;профессиональной оценки туристического потенциала региона.</p>
-        <p class="b1">Характеристики и стоимость услуги «Полный доступ»:</p>
+        <p class="t0"><b>Полный доступ</b> к&nbsp;аналитике дает дополнительную детализацию и&nbsp;подходит для&nbsp;профессиональной оценки туристического потенциала региона.</p>
+        <p class="b1">Характеристики и стоимость услуги <b>«Полный доступ»</b>:</p>
       </td>
     </tr>
     <tr>
       <td colspan="2">
-        <table class="table-border" cellpadding="5">
-          <tr>
-            <td width="25%">Регион</td>
-            <td><strong>{{ region.title }}</strong> (ранг&nbsp;{{ region.rank }})</td>
-          </tr>
-          <tr>
-            <td>Описание</td>
-            <td>
-              <p class="b0">Возможность анализировать</p>
-              <ul>
-                <li>интерес к&nbsp;городам региона</li>
-                <li>интерес к&nbsp;точкам притяжения региона</li>
-                <li>целевые группы в&nbsp;городах</li>
-                <li>рейтинг городов региона по&nbsp;туристической привлекательности</li>
-                <li>рейтинг точек притяжения региона по&nbsp;туристической привлекательности</li>
-              </ul>
-            </td>
-          </tr>
-        </table>
+        <ul>
+          <li><b>Аналитика интереса к турпродуктам</b> на уровне городов и&nbsp;точек притяжения</li>
+          <li><b>Аналитика целевых групп туристов</b> на уровне городов и&nbsp;точек притяжения</li>
+          <li><b>Рейтинги по интересу к турпродуктам</b> на уровне городов и&nbsp;точек притяжения</li>
+          <li><b>Рекомендации искусственного интеллекта</b></li>
+        </ul>
         <br>
         <table class="table-border" cellpadding="5">
           <tr>
-            <td>Стоимость</td>
+            <td rowspan="2">Стоимость</td>
+            <td align="center" colspan="2"><strong>{{ region.title }}</strong> (ранг&nbsp;{{ region.rank }})</td>
+            <td align="center" colspan="2"><strong>{{ district_title }} федеральный округ</strong></td>
+          </tr>
+          <tr>
+            <td align="center">1 вид туризма</td>
+            <td align="center">все виды туризма</td>
             <td align="center">1 вид туризма</td>
             <td align="center">все виды туризма</td>
           </tr>
@@ -70,21 +63,29 @@
             <td>за неделю</td>
             <td align="right"><strong>{{ cost_1w_1t }} ₽</strong></td>
             <td align="right"><strong>{{ cost_1w }} ₽</strong></td>
+            <td align="right"><strong>{{ cost_district_1w_1t }} ₽</strong></td>
+            <td align="right"><strong>{{ cost_district_1w }} ₽</strong></td>
           </tr>
           <tr>
             <td>за месяц</td>
             <td align="right"><strong>{{ cost_1m_1t }} ₽</strong></td>
             <td align="right"><strong>{{ cost_1m }} ₽</strong></td>
+            <td align="right"><strong>{{ cost_district_1m_1t }} ₽</strong></td>
+            <td align="right"><strong>{{ cost_district_1m }} ₽</strong></td>
           </tr>
           <tr>
             <td>за полгода (со скидкой {{ discounts.gt_6_discount }}%)</td>
             <td align="right"><strong>{{ cost_6m_1t }} ₽</strong></td>
             <td align="right"><strong>{{ cost_6m }} ₽</strong></td>
+            <td align="right"><strong>{{ cost_district_6m_1t }} ₽</strong></td>
+            <td align="right"><strong>{{ cost_district_6m }} ₽</strong></td>
           </tr>
           <tr>
             <td>за год (со скидкой {{ discounts.gt_12_discount }}%)</td>
             <td align="right"><strong>{{ cost_12m_1t }} ₽</strong></td>
             <td align="right"><strong>{{ cost_12m }} ₽</strong></td>
+            <td align="right"><strong>{{ cost_district_12m_1t }} ₽</strong></td>
+            <td align="right"><strong>{{ cost_district_12m }} ₽</strong></td>
           </tr>
         </table>
         <p>НДС не облагается.</p>
