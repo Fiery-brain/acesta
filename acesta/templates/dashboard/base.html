@@ -140,7 +140,7 @@
           {% if request.user.is_extended %}
             <a href="{% url 'user' %}" title="Расширенный доступ. Посмотреть подробности"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#crown"></use></svg></a>
           {% else %}
-            <a href="{% url 'user' code=request.user.current_region.code %}" title="Ограниченный доступ. Расширить"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#restricted"></use></svg></a>
+            <a href="{% url 'user_order_region' code=request.user.current_region.code %}" title="Ограниченный доступ. Расширить"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#restricted"></use></svg></a>
           {% endif %}
         </li>
         <li class="nav-item dropdown">
