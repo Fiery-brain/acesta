@@ -30,7 +30,7 @@
                     <option value="{{ id }}"{% if not code and id == request.user.current_region.federal_district %} selected{% endif %}>{{ district }} федеральный округ</option>
                   {% endfor %}
                 </select>
-                <label for="inputRegions" class="form-label">Федеральный округ</label>
+                <label for="inputDistrict" class="form-label">Федеральный округ</label>
               </div>
               <div class="form-floating mb-2">
                   <select class="form-select" required name="regions" id="inputRegions" multiple>
