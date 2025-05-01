@@ -45,7 +45,7 @@ $(function () {
       url: costUrl,
       method: "POST",
       data: {
-        district: $("#inputDistrict").val(),
+        federal_district: $("#inputDistrict").val(),
         period: $("#inputPeriod").val(),
         tourism_types: $("#inputTourismTypes").val(),
         regions: $("#inputRegions").val(),

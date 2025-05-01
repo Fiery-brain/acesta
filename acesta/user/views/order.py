@@ -49,7 +49,7 @@ def get_order_data(post: QueryDict) -> tuple:
     :param post: django.http.QueryDict
     :return: tuple
     """
-    district = post.get("district") or None
+    district = post.get("federal_district") or None
     try:
         period = float(post.get("period").replace(",", "."))
     except ValueError:
