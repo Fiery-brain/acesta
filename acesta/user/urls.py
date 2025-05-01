@@ -13,6 +13,7 @@ from allauth.socialaccount import providers
 from allauth.socialaccount.providers.oauth2.urls import default_urlpatterns
 from allauth.socialaccount.views import login_cancelled
 from allauth.socialaccount.views import login_error
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 from django.urls import re_path
@@ -103,7 +104,12 @@ urlpatterns += provider_urlpatterns
 urlpatterns += default_urlpatterns(LeaderIDProvider)
 
 urlpatterns += [
-    path("user/<str:code>/", login_required(user_profile), name="user"),
+    re_path(
+        rf"^user/(?P<district>{'|'.join((key for key in dict(settings.FEDERAL_DISTRICTS).keys())) })/$",
+        login_required(user_profile),
+        name="user",
+    ),
+    re_path("user/(?P<code>[0-9]{2})/", login_required(user_profile), name="user"),
     path("user/", login_required(user_profile), name="user"),
     path("price/", login_required(price), name="price"),
     path("request/", visitor_request, name="visitor_request"),

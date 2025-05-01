@@ -1,5 +1,6 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
+{% load prop %}
 
 {% block title %}Услуги и&nbsp;цены. {% endblock %}
 
@@ -53,14 +54,39 @@
       <table class="w-100">
         <tr>
           <td colspan="2"></td>
-          <td class="text-center plan-container bg-green text-white px-3 pt-3 pb-3 rounded-top-left">
+          <td class="text-center plan-container bg-green text-white px-3 pt-3 rounded-top-left">
             <h2 class="text-white fs-6">Базовый<span class="d-none d-lg-inline"> доступ</span></h2>
+          </td>
+          <td class="text-center plan-container bg-red text-white px-3 pt-3" colspan="2">
+            <h2 class="text-white fs-6">Полный<span class="d-none d-lg-inline"> доступ</span></h2>
+          </td>
+          <td class="text-center plan-container bg-yellow  text-white px-3 pt-3 rounded-top-right">
+            <h2 class="text-white fs-6"><span class="d-inline d-xxl-none">Отчеты</span><span class="d-none d-xxl-inline"> Отчеты и данные</span></h2>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"></td>
+          <td class="text-center plan-container bg-green text-white px-3"></td>
+          <td width="18%" class="text-center plan-container bg-red text-white px-3 pt-2 pb-1">
+            <div class="w-75 d-flex justify-content-center m-auto">
+              <small><b>{{ request.user.current_region.region_short }}</b></small>
+            </div>
+          </td>
+          <td width="18%" class="text-center plan-container bg-red text-white px-3 pt-2 pb-1">
+            <div class="w-75 d-flex m-auto">
+              <small><b>{{ FEDERAL_DISTRICTS|get_prop:request.user.current_region.federal_district }} федеральный округ</b></small>
+            </div>
+          </td>
+          <td class="text-center plan-container bg-yellow text-white px-3"></td>
+        </tr>
+        <tr>
+          <td colspan="2"></td>
+          <td class="text-center plan-container bg-green text-white px-3 pb-3">
             <p class="fw-bold fs-5 mb-2">бесплатно</p>
             <a href="{% url 'region' %}" class="btn btn-outline-light px-4">Начать</a>
           </td>
-          <td class="text-center plan-container bg-yellow text-white px-3 pt-3 pb-3">
-            <h2 class="text-white fs-6">Полный<span class="d-none d-lg-inline"> доступ</span></h2>
-            <p class="fw-bold fs-5 mb-2 text-nowrap">{% if price %}от {{ price }} ₽/нед{% else %}0 ₽/мес{% endif %}
+          <td class="text-center plan-container bg-red text-white px-3 pb-3">
+            <p class="fw-bold fs-5 mb-2 text-nowrap">{% if price_region %}от {{ price_region }} ₽/нед{% else %}0 ₽/мес{% endif %}
               <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
                 <p class='mt-1 mb-1 text-nowrap'><small>Регион 0 ранга: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ prices.rank_0 }} ₽</b>/мес</small></p>
                 <p class='mb-1 text-nowrap'><small>Регион 1 ранга: <b>{{ prices.rank_1 }} ₽</b>/мес</small></p>
@@ -74,62 +100,74 @@
                 <svg fill="#ffffff" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg>
               </a>
             </p>
-            <a href="{% url 'user' code=request.user.current_region.code %}" class="btn btn-outline-light px-4{% if not request.user.current_region.rank %} disabled{% endif %}"><div class="d-block d-lg-none">Заказать</div><div class="d-none d-lg-block text-nowrap">Отправить заявку</div></a>
+            <a href="{% url 'user' code=request.user.current_region.code %}" class="btn btn-outline-light px-4{% if not request.user.current_region.rank %} opacity-0 disabled{% endif %}"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a>
           </td>
-          <td class="text-center plan-container bg-red text-white px-3 pt-3 pb-3 rounded-top-right">
-            <h2 class="text-white fs-6"><span class="d-inline d-lg-none">Отчет</span><span class="d-none d-lg-inline">Аналитический отчет</span></h2>
+          <td class="text-center plan-container bg-red text-white px-3 pb-3">
+            <p class="fw-bold fs-5 mb-2 text-nowrap">от {{ price_district }} ₽/нед
+              <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
+                <p class='mb-1 text-nowrap'><small>Округ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ prices.district }} ₽</b>/мес</small></p>
+                <hr>
+                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_6_discount}}%</b> при заказе от&nbsp;&nbsp;6&nbsp;мес</small></p>
+                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_12_discount}}%</b> при заказе от&nbsp;12&nbsp;мес</small></p>
+                ">
+                <svg fill="#ffffff" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg>
+              </a>
+            </p>
+            <a href="{% url 'user' district=request.user.current_region.federal_district %}" class="btn btn-outline-light px-4"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a>
+          </td>
+          <td class="text-center plan-container bg-yellow text-white px-3 pb-3">
             <p class="fw-bold text-nowrap fs-5 mb-2">от 100 000 ₽</p>
-            <a href="#" data-bs-toggle="modal" data-bs-target="#orderReport" class="btn btn-outline-light px-4`"><div class="d-block d-lg-none">Заказать</div><div class="d-none d-lg-block text-nowrap">Отправить заявку</div></a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#orderReport" class="btn btn-outline-light px-4`"><div class="d-block d-lg-none">Заказать</div><div class="d-none d-lg-block text-nowrap">Заказать сейчас</div></a>
           </td>
         </tr>
         <tr>
-          <td class="border px-2 py-1 rounded-top-left" rowspan="3"><small><b>Аналитика интереса к&nbsp;турпродуктам</b> на&nbsp;уровне</small></td>
+          <td class="border px-2 py-1 rounded-top-left border-bottom-3" rowspan="3"><small><b>Аналитика интереса к&nbsp;турпродуктам</b> на&nbsp;уровне</small></td>
           <td class="border px-2 py-1"><small>регионов</small></td>
-          <td width="21%" class="text-center border"><span class="dot"></span></td>
-          <td width="21%" class="text-center border"><span class="dot"></span></td>
-          <td width="21%" class="text-center border p-3" rowspan="10">Создание аналитического отчета или выгрузка данных по&nbsp;техническому заданию</td>
+          <td width="18%" class="text-center border"><span class="dot"></span></td>
+          <td width="36%" class="text-center border" colspan="2"><span class="dot" colspan="2"></span></td>
+          <td width="18%" class="text-center border p-3" rowspan="10">Создание аналитического отчета или выгрузка данных по&nbsp;техническому заданию</td>
         </tr>
         <tr>
           <td class="border px-2 py-1"><small>городов</small></td>
           <td class="text-center border"></td>
-          <td class="text-center border"><span class="dot"></span></td>
+          <td class="text-center border" colspan="2"><span class="dot"></span></td>
         </tr>
         <tr>
-          <td class="border px-2 py-1" nowrap><small>точек притяжения</small></td>
-          <td class="text-center border"></td>
-          <td class="text-center border"><span class="dot"></span></td>
+          <td class="border px-2 py-1 border-bottom-3" nowrap><small>точек притяжения</small></td>
+          <td class="text-center border border-bottom-3"></td>
+          <td class="text-center border border-bottom-3" colspan="2"><span class="dot"></span></td>
         </tr>
         <tr>
-          <td class="border px-2 py-1" rowspan="2"><small><b>Аналитика целевых групп туристов</b> на&nbsp;уровне</small></td>
+          <td class="border px-2 py-1 border-bottom-3" rowspan="2"><small><b>Аналитика целевых групп туристов</b> на&nbsp;уровне</small></td>
           <td class="border px-2 py-1"><small>регионов</small></td>
           <td class="text-center border"><span class="dot"></span></td>
+          <td class="text-center border" colspan="2"><span class="dot"></span></td>
+        </tr>
+        <tr>
+          <td class="border px-2 py-1 border-bottom-3"><small>городов</small></td>
+          <td class="text-center border border-bottom-3"></td>
+          <td class="text-center border border-bottom-3" colspan="2"><span class="dot"></span></td>
+        </tr>
+        <tr>
+          <td class="border px-2 py-1 border-bottom-3" rowspan="3"><small><b>Рейтинги по&nbsp;интересу к&nbsp;турпродуктам</b> на&nbsp;уровне</small></td>
+          <td class="border px-2 py-1"><small>регионов</small></td>
           <td class="text-center border"><span class="dot"></span></td>
+          <td class="text-center border" colspan="2"><span class="dot"></span></td>
         </tr>
         <tr>
           <td class="border px-2 py-1"><small>городов</small></td>
           <td class="text-center border"></td>
-          <td class="text-center border"><span class="dot"></span></td>
+          <td class="text-center border" colspan="2"><span class="dot"></span></td>
         </tr>
         <tr>
-          <td class="border px-2 py-1" rowspan="3"><small><b>Рейтинги по&nbsp;интересу к&nbsp;турпродуктам</b> на&nbsp;уровне</small></td>
-          <td class="border px-2 py-1"><small>регионов</small></td>
-          <td class="text-center border"><span class="dot"></span></td>
-          <td class="text-center border"><span class="dot"></span></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1"><small>городов</small></td>
-          <td class="text-center border"></td>
-          <td class="text-center border"><span class="dot"></span></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1" nowrap><small>точек притяжения</small></td>
-          <td class="text-center border"></td>
-          <td class="text-center border"><span class="dot"></span></td>
+          <td class="border px-2 py-1 border-bottom-3" nowrap><small>точек притяжения</small></td>
+          <td class="text-center border border-bottom-3"></td>
+          <td class="text-center border border-bottom-3" colspan="2"><span class="dot"></span></td>
         </tr>
         <tr class="border">
           <td class="border px-2 py-1 rounded-2 rounded-bottom" colspan="2"><small><b>Рекомендации искусственного интеллекта</b></small></td>
           <td width="21%" class="text-center border"><span class="dot"></span></td>
-          <td width="21%" class="text-center border"><span class="dot"></span></td>
+          <td width="21%" class="text-center border" colspan="2"><span class="dot"></span></td>
         </tr>
       </table>
     </div>

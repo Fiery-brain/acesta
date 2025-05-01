@@ -77,12 +77,18 @@ class Order(TimeStampedModel):
     )
 
     @staticmethod
-    def get_cost(period: float, regions_list: list, tourism_types: list = None):
+    def get_cost(
+        period: float,
+        regions_list: list = None,
+        tourism_types: list = None,
+        district: str = None,
+    ):
         """
         Returns access cost by period and regions list
         :param period: float
         :param regions_list: list
-        :param tourism_types: list
+        :param tourism_types: list or None
+        :param district: str or None
         :return: int
         """
 
@@ -94,13 +100,24 @@ class Order(TimeStampedModel):
                 coef = settings.PERIOD_2_WEEKS_COEF
             return coef
 
-        regions = Region.objects.filter(code__in=regions_list)
-        cost = 0
+        if district is not None:
+            if regions_list is not None:
+                if set(regions_list) != set(
+                    Region.pub.filter(federal_district=district).values_list(
+                        "code", flat=True
+                    )
+                ):
+                    district = None
+        if district is None:
+            regions = Region.objects.filter(code__in=regions_list)
+            cost = 0
 
-        for region in regions:
-            cost += get_period_coef(period) * settings.PRICES.get(
-                f"rank_{region.rank}", 0
-            )
+            for region in regions:
+                cost += get_period_coef(period) * settings.PRICES.get(
+                    f"rank_{region.rank}", 0
+                )
+        else:
+            cost = get_period_coef(period) * settings.PRICES.get("district", 0)
 
         if tourism_types is not None and len(tourism_types):
             cost *= settings.TOURISM_TYPE_COEF * len(tourism_types)

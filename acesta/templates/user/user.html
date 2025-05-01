@@ -24,6 +24,15 @@
           <div class="modal-body">
               {% csrf_token %}
               <div class="form-floating mb-2">
+                  <select class="form-select" name="district" id="inputDistrict">
+                  <option value=""></option>
+                  {% for id, district in FEDERAL_DISTRICTS.items %}
+                    <option value="{{ id }}"{% if not code and id == request.user.current_region.federal_district %} selected{% endif %}>{{ district }} федеральный округ</option>
+                  {% endfor %}
+                </select>
+                <label for="inputRegions" class="form-label">Федеральный округ</label>
+              </div>
+              <div class="form-floating mb-2">
                   <select class="form-select" required name="regions" id="inputRegions" multiple>
                   {% for id, region in order_form.regions.field.choices %}
                     <option value="{{ id }}"{% if id in order_form.regions.value %} selected{% endif %}>{{ region.code }}{{ region }}</option>
@@ -47,6 +56,7 @@
                 </select>
                 <label for="inputTourismTypes" class="form-label">Виды туризма (все или до 3 конкретных)</label>
               </div>
+
               <div class="form-floating mb-2">
                 <input type="text" pattern="\d{10,12}" class="form-control" minlength="10" maxlength="12" name="inn" id="inputInn" placeholder="ИНН для выставления счета" title="ИНН организации (10 или 12 цифр)">
                 <label for="inputInn" class="form-label">ИНН организации (обязательно для организаций)</label>
@@ -60,6 +70,7 @@
                 <div class="text-nowrap text-end text-muted mt-3 fs-6">
                     Сумма: <span id="cost" class="fw-bold"></span> ₽
                     <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
+                      <p class='mb-1 text-nowrap'><small>Округ: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ prices.district }} ₽</b>/мес</small></p>
                       <p class='mb-1 text-nowrap'><small>Регион 4 ранга: <b>{{ prices.rank_4 }} ₽</b>/мес</small></p>
                       <p class='mb-1 text-nowrap'><small>Регион 3 ранга: <b>{{ prices.rank_3 }} ₽</b>/мес</small></p>
                       <p class='mb-1 text-nowrap'><small>Регион 2 ранга: <b>{{ prices.rank_2 }} ₽</b>/мес</small></p>
@@ -361,10 +372,13 @@
   <script src="{% static 'js/city.selector.js' %}"></script>
   <script>
     const costUrl = "{% url 'costs' %}";
+    const federalDistricts = {
+      {% for id in FEDERAL_DISTRICTS.keys %}"{{ id }}": [{% for region in grouped_regions|get_prop:id %}'{{ region.code }}', {% endfor %}],{% endfor %}
+    };
   </script>
   <script src="{% static 'js/user.update.costs.js' %}"></script>
   <script src="{% static 'js/user.clear.phone.mask.js' %}"></script>
-  {% if open_order %}
+  {% if code or district %}
     <script src="{% static 'js/user.open.order.modal.js' %}"></script>
   {% endif %}
 {% endblock %}

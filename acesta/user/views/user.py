@@ -9,7 +9,6 @@ from django.template.loader import get_template
 from django.utils import timezone
 from xhtml2pdf import pisa
 
-from acesta.geo.models import Region
 from acesta.user.apps import DISCOUNTS
 from acesta.user.apps import PRICES
 from acesta.user.forms import UserForm
@@ -130,11 +129,14 @@ def offer_report(request: HttpRequest) -> HttpResponse:
     return response
 
 
-def user_profile(request: HttpRequest, code: str = None) -> HttpResponse:
+def user_profile(
+    request: HttpRequest, code: str = None, district: str = None
+) -> HttpResponse:
     """
     User's Profile representation
     :param request: django.http.HttpRequest
     :param code: str
+    :param district: str
     :return: django.http.HttpResponse
     """
     if request.POST:
@@ -161,8 +163,7 @@ def user_profile(request: HttpRequest, code: str = None) -> HttpResponse:
             "tourism_types": settings.TOURISM_TYPES_OUTSIDE,
             "order_form": get_order_form(request.user),
             "user_form": UserForm(instance=request.user),
-            "open_order": True if code else False,
-            "open_regions": Region.objects.filter(rank=0),
-            "code": code or request.user.region.code,
+            "code": code,
+            "district": district,
         },
     )

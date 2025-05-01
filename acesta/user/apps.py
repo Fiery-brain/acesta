@@ -14,6 +14,7 @@ PRICES = {
     "rank_2": settings.PRICES.get("rank_2"),
     "rank_3": settings.PRICES.get("rank_3"),
     "rank_4": settings.PRICES.get("rank_4"),
+    "district": settings.PRICES.get("district"),
 }
 
 DISCOUNTS = {

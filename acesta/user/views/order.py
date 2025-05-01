@@ -25,10 +25,16 @@ def price(request: HttpRequest) -> HttpResponse:
         request,
         "user/price.html",
         {
-            "price": Order.get_cost(
+            "price_region": Order.get_cost(
                 0.25,
                 [request.user.current_region.code],
                 [settings.TOURISM_TYPE_DEFAULT],
+            ),
+            "price_district": Order.get_cost(
+                0.25,
+                None,
+                [settings.TOURISM_TYPE_DEFAULT],
+                request.user.current_region.federal_district,
             ),
             "prices": PRICES,
             "discounts": DISCOUNTS,
@@ -43,13 +49,14 @@ def get_order_data(post: QueryDict) -> tuple:
     :param post: django.http.QueryDict
     :return: tuple
     """
+    district = post.get("district") or None
     try:
         period = float(post.get("period").replace(",", "."))
     except ValueError:
         period = 0
     tourism_types = post.getlist("tourism_types") or post.getlist("tourism_types[]")
     regions = post.getlist("regions") or post.getlist("regions[]")
-    return period, tourism_types, regions
+    return district, period, tourism_types, regions
 
 
 def new_order(request: HttpRequest) -> HttpResponse:
@@ -61,14 +68,14 @@ def new_order(request: HttpRequest) -> HttpResponse:
     if request.POST:
         data = request.POST.copy()
 
-        period, tourism_types, regions = get_order_data(request.POST)
+        district, period, tourism_types, regions = get_order_data(request.POST)
         data["period"] = period
 
         order_form = OrderForm(data=data)
 
         if order_form.is_valid():
             order = order_form.save(commit=False)
-            order.cost = Order.get_cost(period, regions, tourism_types)
+            order.cost = Order.get_cost(period, regions, tourism_types, district)
             order.discount = Order.get_discount_sum(period, regions, tourism_types)
             order.total = order.cost - order.discount
             order.save()
@@ -100,10 +107,10 @@ def get_costs(request: HttpRequest) -> JsonResponse:
     :param request: django.http.HttpRequest
     :return: int
     """
-    period, tourism_types, regions = get_order_data(request.POST)
+    district, period, tourism_types, regions = get_order_data(request.POST)
     return JsonResponse(
         {
-            "cost": Order.get_cost(period, regions, tourism_types),
+            "cost": Order.get_cost(period, regions, tourism_types, district),
             "discount": Order.get_discount(period),
             "discount_sum": Order.get_discount_sum(period, regions, tourism_types),
         }

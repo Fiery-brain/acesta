@@ -213,7 +213,7 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 
 .bg-green{background-color:var(--acesta-dark-primary)}
 .bg-yellow{background-color:var(--acesta-accent-secondary)}
-.bg-red{background-color:var(--acesta-accent-primary-dark)}
+.bg-red{background-color:#c73b55}
 
 .bg-museum{background-image:url('../img/sprite.svg#museum')!important}
 .bg-spa{background-image:url('../img/sprite.svg#spa')!important}
