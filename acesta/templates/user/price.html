@@ -100,7 +100,7 @@
                 <svg fill="#ffffff" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg>
               </a>
             </p>
-            <a href="{% url 'user' code=request.user.current_region.code %}" class="btn btn-outline-light px-4{% if not request.user.current_region.rank %} opacity-0 disabled{% endif %}"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a>
+            <a href="{% url 'user_order_region' code=request.user.current_region.code %}" class="btn btn-outline-light px-4{% if not request.user.current_region.rank %} opacity-0 disabled{% endif %}"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a>
           </td>
           <td class="text-center plan-container bg-red text-white px-3 pb-3">
             <p class="fw-bold fs-5 mb-2 text-nowrap">от {{ price_district }} ₽/нед
@@ -113,7 +113,7 @@
                 <svg fill="#ffffff" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg>
               </a>
             </p>
-            <a href="{% url 'user' district=request.user.current_region.federal_district %}" class="btn btn-outline-light px-4"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a>
+            <a href="{% url 'user_order_district' district=request.user.current_region.federal_district %}" class="btn btn-outline-light px-4"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a>
           </td>
           <td class="text-center plan-container bg-yellow text-white px-3 pb-3">
             <p class="fw-bold text-nowrap fs-5 mb-2">от 100 000 ₽</p>

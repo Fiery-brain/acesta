@@ -9,6 +9,7 @@
     rank: 1
     is_pub: true
     synonyms: адыгея
+    federal_district: ЮФО
 - model: geo.region
   pk: '02'
   fields:
@@ -20,3 +21,4 @@
     rank: 2
     is_pub: true
     synonyms: башкирия
+    federal_district: ПФО

@@ -107,9 +107,13 @@ urlpatterns += [
     re_path(
         rf"^user/(?P<district>{'|'.join((key for key in dict(settings.FEDERAL_DISTRICTS).keys())) })/$",
         login_required(user_profile),
-        name="user",
+        name="user_order_district",
     ),
-    re_path("user/(?P<code>[0-9]{2})/", login_required(user_profile), name="user"),
+    re_path(
+        "user/(?P<code>[0-9]{2})/",
+        login_required(user_profile),
+        name="user_order_region",
+    ),
     path("user/", login_required(user_profile), name="user"),
     path("price/", login_required(price), name="price"),
     path("request/", visitor_request, name="visitor_request"),
