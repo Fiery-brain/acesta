@@ -2,6 +2,16 @@
 {% load static %}
 {% load requests %}
 {% load stats %}
+{% load prop %}
+{% load text %}
+
+{% block title %}{{ segment.page.title }}{% endblock %}
+
+{% block ogtitle %}{{ segment.page.title }}{% endblock %}
+
+{% block description %}{{ segment.page.text }}{% endblock %}
+
+{% block ogdescription %}{{ segment.page.text }}{% endblock %}
 
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/landing.css' %}">
@@ -56,15 +66,21 @@
   </svg>
   <div class="wrapper d-flex flex-column justify-content-between">
     <div class="container-fluid px-0">
-      <nav class="navbar fixed-top navbar-expand-lg bg-white navbar-light navbar-landing">
+      <nav class="navbar fixed-top navbar-expand-lg bg-white navbar-light navbar-landing flex-nowrap">
         <div class="container">
-          <svg class="logo" viewBox="0 0 281 62" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <use href="{% static 'img/sprite.svg' %}#logo-2"></use>
-          </svg>
+          {% if segment_name != DEFAULT_SEGMENT %}
+          <a href="/" class="opacity-100">
+          {% endif %}
+            <svg class="logo" viewBox="0 0 281 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <use href="{% static 'img/sprite.svg' %}#logo-2"></use>
+            </svg>
+          {% if segment_name != DEFAULT_SEGMENT %}
+          </a>
+          {% endif %}
           <div class="d-flex justify-content-end">
             {% include "include/contact_block.html" %}
             <div class="d-none d-md-block">
-              <a class="btn btn-accent btn-lg px-5 ms-5 my-3 text-nowrap" href="{% url 'region' %}"><svg fill="#ffffff" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
+              <a class="btn btn-accent btn-lg px-5 ms-4 my-3 text-nowrap" href="{% url 'region' %}"><svg fill="#ffffff" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
             </div>
           </div>
         </div>
@@ -75,9 +91,14 @@
             <div class="row content">
               <div class="col-12 col-lg-5 d-flex align-items-center">
                 <div class="hero-text">
-                  <div><h1 class="hashtags text-green mb-2">{{ HASH_TAGS }}</h1></div>
-                  <div class="utp mb-2">Уникальные инструменты<br><span class="text-nowrap colored">анализа потенциальной аудитории</span> <span class="text-accent-primary text-nowrap">в туризме</span></div>
-                  <p>Используя наши инструменты, вы можете разработать стратегии развития на&nbsp;уровне точки притяжения, города или&nbsp;региона, что делает ваши туристические предложения более привлекательными и&nbsp;приводит к&nbsp;росту числа гостей. В&nbsp;результате вы не только улучшаете качество обслуживания туристов, но и&nbsp;способствуете развитию вашего региона, делая его более конкурентоспособным на туристическом рынке.</p>
+                  <div class="utp mb-2">
+                    <h1>
+                      <div class="hashtags text-green mb-2">{{ segment.hash }}</div>
+                      <span class="colored">{{ segment.hero.title|nobreak_spaces }}</span>
+                    </h1>
+                    {% comment %} Уникальные инструменты<br><span class="text-nowrap colored">анализа потенциальной аудитории</span> <span class="text-accent-primary text-nowrap">в туризме</span> {% endcomment %}
+                  </div>
+                  <p>{{ segment.hero.text|safe|nobreak_spaces }}</p>
                   <a class="btn btn-accent btn-lg{% if request.user.is_authenticated %} px-5{% else %} px-4 px-md-5{% endif %} text-nowrap" href="{% url 'region' %}"><svg fill="#FFFFFF" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать{% if not request.user.is_authenticated %} бесплатно{% endif %}</a>
                   {% if not request.user.is_authenticated %}
                     <p class="mt-2 ms-1 lh-1 d-block w-75"><small class="opacity-25">Получить доступ к&nbsp;бесплатной базовой версии сразу после авторизации</small></p>
@@ -90,7 +111,327 @@
           </div>
       </div>
     </div>
-      <div class="screen-block situation">
+    {% if segment_name != DEFAULT_SEGMENT %}
+      <div class="screen-block problem">
+        <div class="container border border-1">
+          <div class="row content">
+            <div class="col-12 col-lg-6 d-lg-flex justify-content-lg-center align-items-center pb-2 pb-lg-5 pt-5">
+              <h3>Проблема</h3>
+            </div>
+            <div class="col-12 col-lg-6 d-lg-flex align-items-center pt-2 pt-lg-5 pb-5">
+              <div class="w-75">
+                <h4>{{ segment.problem.title|safe }}</h4>
+                {{ segment.problem.text|safe }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-block problem">
+        <div class="container border border-1">
+          <div class="row content d-flex align-content-center">
+            <div class="container border border-1">
+              <div class="row">
+                <div class="col-12">
+                  <h3>{{ segment.problem_consequences.title|safe }}</h3>
+                </div>
+              </div>
+              <div class="row py-3 pb-5">
+                <div class="col-12 col-lg-6">
+                  <div class="w-75">
+                    <h4>{{ segment.problem_consequences.emotional.title|safe }}</h4>
+                    <div>{{ segment.problem_consequences.emotional.text|safe }}</div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6 ps-lg-4 pt-3 pt-lg-0">
+                  <div class="w-75">
+                    <h4>{{ segment.problem_consequences.logical.title|safe }}</h4>
+                    <div>{{ segment.problem_consequences.logical.text|safe }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {% endif %}
+      <div class="screen-block solution screen-demo">
+        <div class="container">
+          <div class="row content d-flex align-content-center">
+            <div class="container border border-1">
+              <div class="row">
+                <div class="col-12 col-lg-5">
+                  <h3>Наша аналитическая система позволяет лучше понять целевую аудиторию</h3>
+                  <p>Аналитическая система позволяет собирать и анализировать оперативную информацию о поведении, предпочтениях и потребностях туристов</p>
+                  <p>Открытые источники</p>
+                  <p>Система помогает на основе анализа цифрового следа туриста в Интернет выявить наиболее привлекательные направления и услуги для различных сегментов аудитории</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% if segment_name == DEFAULT_SEGMENT %}
+        <div class="screen-block2">
+          <div class="container">
+            <div class="row title d-flex align-items-end pt-5 mb-3">
+              <h5 class="fs-4">Сервис используют</h5>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-4 segment-container">
+                <div class="segment">
+                  <a href="{% url 'segment_index' segment=SEGMENT_GOVERNMENT %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_GOVERNMENT }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_GOVERNMENT|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_GOVERNMENT|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 segment-container align-items-md-end align-items-lg-end">
+                <div class="segment">
+                  <a href="{% url 'segment_index' segment=SEGMENT_TIC %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TIC }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_TIC|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_TIC|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 segment-container">
+                <div class="segment">
+                  <a href="{% url 'segment_index' segment=SEGMENT_TOUR_OPERATOR %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOUR_OPERATOR }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_TOUR_OPERATOR|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_TOUR_OPERATOR|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 segment-container align-items-md-end align-items-lg-start">
+                <div class="segment">
+                  <a href="{% url 'segment_index' segment=SEGMENT_TOUR_AGENT %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOUR_AGENT }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_TOUR_AGENT|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_TOUR_AGENT|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 segment-container align-items-lg-end">
+                <div class="segment">
+                  <a href="{% url 'segment_index' segment=SEGMENT_TOURISM_PRODUCT_OWNER %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOURISM_PRODUCT_OWNER }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_TOURISM_PRODUCT_OWNER|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_TOURISM_PRODUCT_OWNER|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 segment-container align-items-md-end align-items-lg-start">
+                <div class="segment px-2">
+                  <a href="{% url 'segment_index' segment=SEGMENT_HOSPITALITY %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_HOSPITALITY }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_HOSPITALITY|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_HOSPITALITY|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 segment-container align-items-lg-start">
+                <div class="segment">
+                  <a href="{% url 'segment_index' segment=SEGMENT_GUIDE %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_GUIDE }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_GUIDE|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_GUIDE|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 segment-container align-items-md-end align-items-lg-end">
+                <div class="segment">
+                  <a href="{% url 'segment_index' segment=SEGMENT_TOURISM_EVENT %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOURISM_EVENT }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_TOURISM_EVENT|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_TOURISM_EVENT|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 segment-container align-items-lg-start">
+                <div class="segment px-2">
+                  <a href="{% url 'segment_index' segment=SEGMENT_INVESTORS %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_INVESTORS }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_INVESTORS|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_INVESTORS|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 segment-container align-items-md-end">
+                <div class="segment px-2">
+                  <a href="{% url 'segment_index' segment=SEGMENT_TRANSPORTATION %}">
+                    <div class="mb-2">
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TRANSPORTATION }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_TRANSPORTATION|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_TRANSPORTATION|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 offset-lg-4 segment-container align-items-lg-start mb-5">
+                <div class="segment px-2">
+                  <a href="{% url 'segment_index' segment=SEGMENT_MARKETING_AGENCY %}">
+                    <div>
+                      <svg width="50%" height="50%" viewBox="0 0 180 180">
+                        <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_MARKETING_AGENCY }}"></use>
+                      </svg>
+                      <h2>{{ SEGMENTS|get_prop:SEGMENT_MARKETING_AGENCY|nobreak_spaces }}</h2>
+                      <p>{{ segments|get_prop:SEGMENT_MARKETING_AGENCY|get_prop:"used_for"|nobreak_spaces }}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+        </div>
+      {% endif %}
+
+      <img src="{% static "/helper/download.png" %}">
+      <div class="screen-block solution tasks">
+        <div class="container">
+          <div class="row content d-flex align-content-center">
+            <div class="container border border-1">
+              <div class="row">
+                <div class="col-12 py-5 border border-1">
+                  <h3 class="mb-4">Оказываем информационную поддержку при&nbsp;решении задач</h3>
+                  <div class="tasks-container">
+                    {% for task in segment.tasks %}
+                    <div class="task pt-1">
+                      <h4>{{ task.title|safe }}</h4>
+                      <p>{{ task.text|safe }}</p>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-block result">
+        <div class="container">
+          <div class="row content d-flex align-content-center">
+            <div class="container border border-1 py-5">
+              <div class="row">
+                <div class="col-12">
+                  <h3>В результате вы получаете</h3>
+                </div>
+              </div>
+              <div class="row py-3">
+                <div class="col-12 col-lg-6">
+                  <div class="">
+                    <h4>{{ segment.result.emotional.title|safe }}</h4>
+                    <p>{{ segment.result.emotional.text|safe }}</p>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6 ps-lg-4 pt-3 pt-lg-0">
+                  <div class="">
+                    <h4>{{ segment.result.logical.title|safe }}</h4>
+                    <p>{{ segment.result.logical.text|safe }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <strong>{{ segment.result.title|safe }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-block why">
+        <div class="container h-100">
+          <div class="container">
+            <div class="row title pt-5 mb-3">
+              <h5 class="fs-3 p-0"><b>211&nbsp;экспертов</b> в&nbsp;туризме из&nbsp;<b>64&nbsp;регионов</b> России уже используют сервис, потому что <b>ацеста</b>&nbsp;это</h5>
+            </div>
+          </div>
+          <div class="container d-flex h-75 pb-5">
+            <div class="row">
+              <div class="col-md-6 col-lg-4 mt-5 pe-3 px-0 flex-fill">
+                  <div class="">
+                    <h3 class="text-available">Доступно</h3>
+                    <p>Работа с&nbsp;данными начинается сразу после регистрации, без&nbsp;долгих переговоров и&nbsp;сложного внедрения, а&nbsp;доступ к&nbsp;аналитике 24/7 позволяет получать информацию в&nbsp;любое время и&nbsp;оперативно реагировать на&nbsp;изменения в&nbsp;туристических трендах</p>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mt-5 pe-3 px-0 flex-fill">
+                <div class="">
+                  <h3 class="text-flex">Гибко</h3>
+                  <p>Аналитические инструменты адаптируются под&nbsp;задачи пользователей, а&nbsp;бесплатное обучение и&nbsp;консультации наших экспертов помогают эффективно использовать сервис, обеспечивая уверенность в&nbsp;решениях благодаря индивидуальным рекомендациям</p>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mt-5 pe-3 px-0 flex-fill">
+                <div class="">
+                  <h3 class="text-effect">Эффективно</h3>
+                  <p>Возможность оценивать и&nbsp;прогнозировать спрос, создавать персонализированные предложения укрепляют позиции на&nbsp;рынке, способствует увеличению конверсии, росту продаж и лидерству в&nbsp;отрасли</p>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mt-5 pe-3 px-0 flex-fill">
+                  <div class="">
+                    <h3 class="text-modern">Современно</h3>
+                    <p>Использование инновационных подходов для&nbsp;оценки аудитории для&nbsp;разработки маркетинговых стратегий повышает доверие инвесторов, партнеров и&nbsp;гостей, подчеркивая готовность к&nbsp;инновация</p>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mt-5 pe-3 px-0 flex-fill">
+                <div class="">
+                  <h3 class="text-reliably">Надежно</h3>
+                  <p>Для построения аналитических отчетов используются только надежные и&nbsp;проверенные источники данных, что гарантирует точность и&nbsp;актуальность информации для&nbsp;построения стратегий развития</p>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mt-5 pe-3 px-0 flex-fill">
+                <div class="">
+                  <h3 class="text-wow">Впечатляюще</h3>
+                  <p>Рост туристического потока, увеличение доходов и&nbsp;положительные отзывы усиливают репутацию компаний и&nbsp;регионов, создавая мощный стимул для&nbsp;дальнейшего развития и&nbsp;инноваций в&nbsp;сфере туризма</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      {% comment %} <div class="screen-block situation">
         <div class="container">
           <div class="row content">
             <div class="col flex-wrap d-flex align-content-center">
@@ -181,6 +522,25 @@
               <div class="audience-text">
                 <h3 class="text-red">Маркетинговые агентства</h3>
                 <p>используют сервис, как дополнительный источник данных для&nbsp;построения аналитических отчетов и&nbsp;построения стратегий развития по&nbsp;запросам клиентов</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> {% endcomment %}
+      <div class="screen-block why diploma-demo">
+        <div class="container">
+          <div class="row content d-flex align-content-center">
+            <div class="container border border-1">
+              <div class="row">
+                <h3 class="mb-4">Почему нас выбирают</h3>
+                <div class="col-12 col-lg-4 border border-1 pe-5">
+                  <h4>1 место в Конкурсе цифровых решений для регионов </h4>
+                  <p>Методика сбора и анализа данных прошла экспертизу и стала победителем Конкурса цифровых решений для регионов, что подтверждает его высокую эффективность и инновационный подход к решению поставленной задачи. </p>
+                  <p>Это достижение подчеркивает нашу способность предоставлять качественные решения, способствующие развитию туризма и улучшению жизни в регионах</p>
+                </div>
+                <div class="col-12 d-none d-lg-flex justify-content-center align-items-center col-lg-8 p-0 py-2 diploma-demo">
+                  <img src="{% static 'helper/asi-diploma.svg' %}" alt="Первое место в Конкурсе цифровых решений для регионов Агентства стратегических инициатив" class="rounded-2">
+                </div>
               </div>
             </div>
           </div>
@@ -506,4 +866,5 @@
   <script src="{% static 'js/select2.min.js' %}"></script>
   <script src="{% static 'js/jquery.mask.min.js' %}"></script>
   <script src="{% static 'js/user.clear.phone.mask.js' %}"></script>
+  <script src="{% static 'js/navbar.show.hide.js' %}"></script>
 {% endblock %}

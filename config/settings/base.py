@@ -324,8 +324,8 @@ DADATA_TOKEN = env("API_DADATA_TOKEN", default="")
 DADATA_SECRET = env("API_DADATA_SECRET", default="")
 
 # Application
-TITLE = "Аналитика в туризме — ацеста"
-HASH_TAGS = "#туризм #маркетинг #данные #аналитика #ии"
+TITLE = "ацеста"
+HASH_TAGS = "#туризм #ии #данные #аналитика"
 
 DEFAULT_SEGMENT = "undefined"
 SEGMENT_GOVERNMENT = "government"

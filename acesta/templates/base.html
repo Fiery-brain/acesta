@@ -5,7 +5,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}{% if TITLE %}{{ TITLE }}{% else %}Аналитика в туризме — ацеста{% endif %}</title>
+    <title>{% block title %}{% endblock %} | {% if TITLE %}{{ TITLE }}{% else %}ацеста{% endif %}</title>
     <meta name="description" content="{% block description %}Аналитический сервис для оценки туристического потенциала, нахождения точек роста и разработки эффективных стратегий развития туризма{% endblock %}"/>
     {% block meta %}
     <meta property="og:type" content="website" />
@@ -39,6 +39,8 @@
     <link rel="shortcut icon" href="{{ HOST }}{% static 'img/favicon.svg' %}" type="image/svg+xml">
   </head>
   <body>
+    {% block body %}{% endblock %}
+
     {% block modals %}
       {% request_modal subject=REQUEST_CONSULTATION %}
 
@@ -74,7 +76,6 @@
       {% endwith %}
     {% endblock %}
 
-    {% block body %}{% endblock %}
     {% block js %}
       <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
       <script src="{% static 'js/jquery.min.js' %}"></script>
