@@ -57,9 +57,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "quarter",
-                    models.PositiveSmallIntegerField(
-                        choices=[(1, 1), (2, 2), (3, 3), (4, 4)], verbose_name="Квартал"
-                    ),
+                    models.PositiveSmallIntegerField(choices=[(1, 1), (2, 2), (3, 3), (4, 4)], verbose_name="Квартал"),
                 ),
                 (
                     "month",

@@ -65,13 +65,16 @@ def get_last_update_indicator_date(value_type=settings.AVERAGE_SALARY):
     :param value_type: str
     :return: dict
     """
-    year_month = (
-        Indicator.objects.filter(value_type=value_type)
-        .annotate(year_month=F("year") * 100 + F("month"))
-        .order_by("-year_month")
-        .values("year", "month")
-        .first()
-    ) or {}
+    try:
+        year_month = (
+            Indicator.objects.filter(value_type=value_type)
+            .annotate(year_month=F("year") * 100 + F("month"))
+            .order_by("-year_month")
+            .values("year", "month")
+            .first()
+        ) or {}
+    except RuntimeError:
+        year_month = {}
     return year_month.get("year", DEFAULT_AVG_SALARY_UPDATE_DATE.year), year_month.get(
         "month", DEFAULT_AVG_SALARY_UPDATE_DATE.month
     )
