@@ -129,9 +129,9 @@ class Migration(migrations.Migration):
             model_name="salary",
             name="code",
         ),
-        migrations.DeleteModel(
-            name="AvgBill",
-        ),
+        # migrations.DeleteModel(
+        #     name="AvgBill",
+        # ),
         migrations.DeleteModel(
             name="Salary",
         ),
