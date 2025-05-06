@@ -5,9 +5,9 @@ from model_utils.models import TimeStampedModel
 from acesta.geo.models import Region
 
 
-class Salary(TimeStampedModel):
+class Indicator(TimeStampedModel):
     """
-    Regions salary
+    Regions indicators
     """
 
     code = models.ForeignKey(
@@ -25,15 +25,20 @@ class Salary(TimeStampedModel):
     quarter = models.PositiveSmallIntegerField(
         "Квартал", choices=((q, q) for q in range(1, 5))
     )
+    month = models.PositiveSmallIntegerField(
+        "Месяц", choices=((q, q) for q in range(1, 13)), null=True, blank=True
+    )
     year = models.PositiveSmallIntegerField(
         "Год", choices=((y, y) for y in range(2019, 2031, 1))
     )
     value = models.FloatField("Значение", default=0.0)
+    change = models.FloatField("Изменение", default=0.0)
 
     class Meta:
         unique_together = (
             "code",
             "value_type",
+            "month",
             "quarter",
             "year",
         )
@@ -45,5 +50,5 @@ class Salary(TimeStampedModel):
             "-quarter",
             "code",
         )
-        verbose_name = "Доходы"
-        verbose_name_plural = "Доходы"
+        verbose_name = "Экономические показатели"
+        verbose_name_plural = "Экономические показатели"

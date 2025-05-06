@@ -1,5 +1,6 @@
 from acesta.stats.models.audience import AudienceCities  # noqa: F401
 from acesta.stats.models.audience import AudienceRegions  # noqa: F401
+from acesta.stats.models.indicator import Indicator  # noqa: F401
 from acesta.stats.models.popularity import AllCityPopularity  # noqa: F401
 from acesta.stats.models.popularity import AllRegionPopularity  # noqa: F401
 from acesta.stats.models.popularity import CityCityPopularity  # noqa: F401
@@ -9,4 +10,3 @@ from acesta.stats.models.popularity import RegionRegionPopularity  # noqa: F401
 from acesta.stats.models.ratings import CityRating  # noqa: F401
 from acesta.stats.models.ratings import RegionRating  # noqa: F401
 from acesta.stats.models.ratings import SightRating  # noqa: F401
-from acesta.stats.models.salary import Salary  # noqa: F401

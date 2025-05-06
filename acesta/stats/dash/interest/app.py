@@ -1,3 +1,5 @@
+import time
+
 import plotly.graph_objects as go
 from dash import dash_table
 from dash import dcc
@@ -5,16 +7,12 @@ from dash import html
 from dash.dash_table.Format import Format
 from dash.dash_table.Format import Scheme
 from django.conf import settings
-from django.utils.timesince import timesince
 from django_plotly_dash import DjangoDash
 
-from acesta.base.utils import timesince_accusatifier as accusatifier
-from acesta.base.utils import timesince_cutter as cutter
 from acesta.stats.apps import dash_args
+from acesta.stats.dash.helpers.interest import generate_update_tooltip_content
 from acesta.stats.dash.helpers.interest import get_ppt_df
 from acesta.stats.helpers.interest import get_interest
-from acesta.stats.helpers.update_dates import get_auditory_update_date
-from acesta.stats.helpers.update_dates import get_rating_update_date
 
 
 # Interest Application
@@ -50,16 +48,11 @@ interest_app.layout = html.Div(
                                 html.A(
                                     id="updated-link",
                                     href="#",
+                                    key=f"nocache-{time.time()}",
                                     **{
                                         "data-bs-toggle": "tooltip",
                                         "data-bs-html": "true",
-                                        "data-title": f"""
-                                            Данные об интересе обновлены <span class='text-nowrap'>
-                                            { cutter(accusatifier(timesince(get_rating_update_date()))) } назад
-                                            </span><br><br>
-                                            Данные о целевых группах обновлены <span class='text-nowrap'>
-                                            { cutter(accusatifier(timesince(get_auditory_update_date()))) } назад</span>
-                                        """,
+                                        "data-title": generate_update_tooltip_content(),
                                     },
                                     className="ms-3 ms-leg-0 me-0 me-lg-3",
                                 ),
@@ -81,11 +74,6 @@ interest_app.layout = html.Div(
             ],
             style={"zIndex": "1"},
         ),
-        # html.Script(
-        #     children="""
-        #     let dataAI = {"d": "123"}
-        #     """
-        # ),
         html.Div(
             children=[
                 # dcc.Interval(id="helper-map", n_intervals=0, max_intervals=0, interval=1),

@@ -9,6 +9,7 @@ from acesta.stats.apps import dash_args
 from acesta.stats.dash.helpers.audience import get_object_title
 from acesta.stats.helpers.audience import get_audience
 from acesta.stats.helpers.audience import get_audience_key_data
+from acesta.stats.helpers.audience import get_indicator_data
 from acesta.stats.helpers.base import formatted_percentage
 from acesta.stats.helpers.base import round_up
 
@@ -86,6 +87,8 @@ def update_audience(key, *args, **kwargs):
         or (area == settings.AREA_CITIES and kwargs.get("user").is_extended)
     ):
         audience = get_audience(area, tourism_type, pk)
+        avg_salary = get_indicator_data(settings.AVERAGE_SALARY, area, pk)
+        avg_bill = get_indicator_data(settings.AVERAGE_BILL, area, pk)
         return [
             html.Div(
                 children=[
@@ -161,6 +164,52 @@ def update_audience(key, *args, **kwargs):
                                     ),
                                 ],
                                 className="mb-0 text-end",
+                            ),
+                            html.Hr() if avg_salary or avg_bill else None,
+                            (
+                                html.P(
+                                    children=[
+                                        "средняя зарплата ",
+                                        html.Strong(
+                                            f"{intcomma(int(avg_salary.value))} ₽"
+                                        ),
+                                    ],
+                                    className="mb-0 text-end",
+                                )
+                                if avg_salary
+                                else None
+                            ),
+                            (
+                                html.P(
+                                    children=[
+                                        "средний чек ",
+                                        html.Strong(
+                                            f"{intcomma(int(avg_bill.value))} ₽"
+                                        ),
+                                    ],
+                                    className="mb-0 text-end",
+                                )
+                                if avg_bill
+                                else None
+                            ),
+                            (
+                                html.P(
+                                    children=[
+                                        "изменение среднего чека ",
+                                        html.Strong(
+                                            f"{'+' if avg_bill.change > 0 else '-'}"
+                                            f"{avg_bill.change} %",
+                                            **{
+                                                "data-value": f"{'+' if avg_bill.change > 0 else '-'}"
+                                                f"{avg_bill.change}"
+                                            },
+                                            className="colored-percentage",
+                                        ),
+                                    ],
+                                    className="mb-0 text-end",
+                                )
+                                if avg_bill
+                                else None
                             ),
                         ],
                         className="mt-2 audience-more",

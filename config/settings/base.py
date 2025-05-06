@@ -356,9 +356,14 @@ RATING_TYPES = (
 
 RATING_TYPE_DEFAULT = "amount"
 
+AVERAGE_SALARY = "average_salary"
+AVERAGE_BILL = "average_bill"
+AVERAGE_PER_PERSON = "average_per_person"
+
 SALARY_TYPES = (
-    ("average_salary", "Средняя зарплата"),
-    ("average_per_person", "Средний доход на человека"),
+    (AVERAGE_SALARY, "Средняя начисленная зарплата"),
+    (AVERAGE_BILL, "Средний чек"),
+    (AVERAGE_PER_PERSON, "Средний доход на человека"),
 )
 
 SALARY_TYPE_DEFAULT = "average_salary"

@@ -19,6 +19,7 @@ from acesta.geo.models import Region
 from acesta.geo.models import Sight
 from acesta.geo.models import SightGroup
 from acesta.stats.helpers.audience import get_audience
+from acesta.stats.helpers.audience import get_indicator_data
 from acesta.stats.helpers.base import formatted_percentage
 from acesta.stats.helpers.base import get_regions_cnt
 from acesta.stats.helpers.base import round_up
@@ -188,6 +189,19 @@ def get_interest_recommendations(region: Region, segment: str, data: dict) -> st
             )
             for a in get_audience(area, tourism_type, audience_pk)
         ]
+        average_salary = average_bill = average_bill_change = ""
+        average_salary_rec = get_indicator_data(
+            settings.AVERAGE_SALARY, area, audience_pk
+        )
+        if average_salary_rec is not None:
+            average_salary = average_salary_rec.value
+
+        average_bill_rec = get_indicator_data(
+            settings.AVERAGE_SALARY, area, audience_pk
+        )
+        if average_bill_rec is not None:
+            average_bill = average_bill_rec.value
+            average_bill_change = average_bill_rec.change
 
     @append(f" {dict(settings.RECOMMENDATION_NOTE).get(segment)}")
     @append(f" Tone of voice {dict(settings.RECOMMENDATION_TOV).get(segment)}")
@@ -236,6 +250,9 @@ def get_interest_recommendations(region: Region, segment: str, data: dict) -> st
                         else Region.objects.get(pk=audience_pk)
                     ),
                     audience=audience,
+                    average_salary=average_salary,
+                    average_bill=average_bill,
+                    average_bill_change=average_bill_change,
                 )
                 if audience_pk
                 else ""

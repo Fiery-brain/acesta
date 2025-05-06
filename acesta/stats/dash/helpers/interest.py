@@ -2,10 +2,34 @@ import geopandas as gpd
 import pandas as pd
 from django.conf import settings
 from django.db import models
+from django.utils.timesince import timesince
 
+from acesta.base.utils import timesince_accusatifier as accusatifier
+from acesta.base.utils import timesince_cutter as cutter
 from acesta.geo.models import City
 from acesta.geo.models import Sight
+from acesta.stats.helpers.update_dates import get_auditory_update_date
+from acesta.stats.helpers.update_dates import get_avg_bill_update_date
+from acesta.stats.helpers.update_dates import get_avg_salary_update_date
+from acesta.stats.helpers.update_dates import get_rating_update_date
 from acesta.stats.models import RegionRegionPopularity
+
+
+def generate_update_tooltip_content():
+    return f"""
+        Данные об интересе обновлены <span class='text-nowrap'>
+        {cutter(accusatifier(timesince(get_rating_update_date())))} назад
+        </span><br><br>
+        Данные о целевых группах обновлены <span class='text-nowrap'>
+        {cutter(accusatifier(timesince(get_auditory_update_date())))} назад
+        </span><br><br>
+        Данные о средней зарплате обновлены <span class='text-nowrap'>
+        {cutter(accusatifier(timesince(get_avg_salary_update_date())))} назад
+        </span><br><br>
+        Данные о среднем чеке обновлены <span class='text-nowrap'>
+        {cutter(accusatifier(timesince(get_avg_bill_update_date())))} назад
+        </span>
+    """
 
 
 def get_geojson() -> gpd.GeoDataFrame:
@@ -60,7 +84,7 @@ def get_map_df(tourism_type: str, home_code: str) -> pd.DataFrame:
                 dict(tourism_type=tourism_type)
                 if tourism_type
                 else dict(tourism_type__isnull=True)
-            )
+            ),
         )
         .values("code")
         .annotate(qty=models.Sum("qty"), ppt=models.Avg("popularity_mean"))
@@ -85,7 +109,7 @@ def get_sights(region: str, tourism_type: str) -> models.QuerySet:
         .filter(
             code=region,
             is_pub=True,
-            **dict() if not tourism_type else dict(group__tourism_type=tourism_type)
+            **dict() if not tourism_type else dict(group__tourism_type=tourism_type),
         )
         .annotate(qty=models.Sum("sight_all_region_popularity__qty"))
     )

@@ -2,9 +2,19 @@ import pandas as pd
 from dash import dependencies
 from django.conf import settings
 
+from acesta.stats.dash.helpers.interest import generate_update_tooltip_content
 from acesta.stats.dash.helpers.interest import get_ppt_df
 from acesta.stats.dash.interest.app import interest_app
 from acesta.stats.helpers.interest import get_interest
+
+
+@interest_app.callback(
+    dependencies.Output("updated-link", "data-title"),
+    dependencies.Input("interval-component", "n_intervals"),
+    prevent_initial_call=True,
+)
+def update_tooltip(n):
+    return generate_update_tooltip_content()
 
 
 @interest_app.callback(

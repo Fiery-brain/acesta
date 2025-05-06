@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from acesta.stats.models import Salary
+from acesta.stats.models import Indicator
 
 
-@admin.register(Salary)
-class SalaryAdmin(admin.ModelAdmin):
+@admin.register(Indicator)
+class IndicatorAdmin(admin.ModelAdmin):
     """
     Управление уровнями дохода
     """
