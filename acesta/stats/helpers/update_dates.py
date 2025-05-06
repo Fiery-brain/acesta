@@ -73,7 +73,7 @@ def get_last_update_indicator_date(value_type=settings.AVERAGE_SALARY):
             .values("year", "month")
             .first()
         ) or {}
-    except RuntimeError:
+    except BaseException:
         year_month = {}
     return year_month.get("year", DEFAULT_AVG_SALARY_UPDATE_DATE.year), year_month.get(
         "month", DEFAULT_AVG_SALARY_UPDATE_DATE.month
