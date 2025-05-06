@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("geo", "0016_region_federal_district"),
-        #("stats", "0016_avgbill"),
+        ("stats", "0016_avgbill"),
     ]
 
     operations = [
