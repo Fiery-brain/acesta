@@ -158,7 +158,15 @@ def update_audience(key, *args, **kwargs):
                             ),
                             html.P(
                                 children=[
-                                    "отношения с родителями ",
+                                    "отношения ",
+                                    html.Span(
+                                        "с родителями ",
+                                        className="d-none d-lg-inline",
+                                    ),
+                                    html.Span(
+                                        "с род. ",
+                                        className="d-inline d-lg-none",
+                                    ),
                                     html.B(
                                         f"{formatted_percentage(rec.v_sex_age_parents, rec.v_sex_age)}%"
                                     ),
@@ -169,7 +177,14 @@ def update_audience(key, *args, **kwargs):
                             (
                                 html.P(
                                     children=[
-                                        "средняя зарплата ",
+                                        html.Span(
+                                            "средняя зарплата ",
+                                            className="d-none d-lg-inline",
+                                        ),
+                                        html.Span(
+                                            "ср. зарплата ",
+                                            className="d-inline d-lg-none",
+                                        ),
                                         html.Strong(
                                             f"{intcomma(int(avg_salary.value))} ₽"
                                         ),
@@ -182,7 +197,14 @@ def update_audience(key, *args, **kwargs):
                             (
                                 html.P(
                                     children=[
-                                        "средний чек ",
+                                        html.Span(
+                                            "средний чек ",
+                                            className="d-none d-lg-inline",
+                                        ),
+                                        html.Span(
+                                            "ср. чек ",
+                                            className="d-inline d-lg-none",
+                                        ),
                                         html.Strong(
                                             f"{intcomma(int(avg_bill.value))} ₽"
                                         ),
@@ -195,13 +217,23 @@ def update_audience(key, *args, **kwargs):
                             (
                                 html.P(
                                     children=[
-                                        "изменение среднего чека ",
+                                        html.Span(
+                                            "изменение среднего чека ",
+                                            className="d-none d-xl-inline",
+                                        ),
+                                        html.Span(
+                                            "изменение ср. чека ",
+                                            className="d-none d-lg-inline d-xl-none",
+                                        ),
+                                        html.Span(
+                                            "изм. ср. чека ",
+                                            className="d-inline d-lg-none",
+                                        ),
                                         html.Strong(
                                             f"{'+' if avg_bill.change > 0 else '-'}"
                                             f"{avg_bill.change} %",
                                             **{
                                                 "data-value": f"{'+' if avg_bill.change > 0 else '-'}"
-                                                f"{avg_bill.change}"
                                             },
                                             className="colored-percentage",
                                         ),

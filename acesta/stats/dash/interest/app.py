@@ -45,6 +45,14 @@ interest_app.layout = html.Div(
                     children=[
                         html.Div(
                             children=[
+                                html.Div(
+                                    dcc.Interval(
+                                        id="interval-background",
+                                        interval=60 * 1000,
+                                        n_intervals=0,
+                                    ),
+                                    style={"display": "none"},
+                                ),
                                 html.A(
                                     id="updated-link",
                                     href="#",
@@ -76,7 +84,6 @@ interest_app.layout = html.Div(
         ),
         html.Div(
             children=[
-                # dcc.Interval(id="helper-map", n_intervals=0, max_intervals=0, interval=1),
                 dcc.Interval(
                     id="helper-interesant", n_intervals=0, max_intervals=0, interval=1
                 ),

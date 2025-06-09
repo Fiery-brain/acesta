@@ -10,8 +10,8 @@ from acesta.stats.helpers.interest import get_interest
 
 @interest_app.callback(
     dependencies.Output("updated-link", "data-title"),
-    dependencies.Input("interval-component", "n_intervals"),
-    prevent_initial_call=True,
+    dependencies.Input("interval-background", "n_intervals"),
+    prevent_initial_call=False,
 )
 def update_tooltip(n):
     return generate_update_tooltip_content()

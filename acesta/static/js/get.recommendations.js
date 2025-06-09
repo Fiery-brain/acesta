@@ -206,7 +206,7 @@ function typeMarkdown(initialText, element, speed = 50) {
 
       // Курсив
       if ((char === "*" || char === "_") && !state.inBold) {
-        visibleText += state.inItalic ? "</em>" : "<em>";
+        //visibleText += state.inItalic ? "</em>" : "<em>";
         state.inItalic = !state.inItalic;
         i += 1;
         return true;
