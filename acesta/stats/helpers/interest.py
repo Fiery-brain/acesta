@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 
 from acesta.base.decorators import to_cache
+from acesta.stats.helpers.audience import get_empty_cities
 from acesta.stats.models import AllCityPopularity
 from acesta.stats.models import AllRegionPopularity
 from acesta.stats.models import CityCityPopularity
@@ -28,12 +29,6 @@ def get_interest(
         60 * 60 * 24 * 7,
     )
     def _get_interest(**kwargs):
-        #
-        # region = kwargs.get("region")
-        # home_area = kwargs.get("home_area")
-        # interesant_area = kwargs.get("interesant_area")
-        # tourism_type = kwargs.get("tourism_type")
-        # id = kwargs.get("id")
 
         if home_area == settings.AREA_REGIONS or id == 0:
             ppt_model = (
@@ -65,6 +60,11 @@ def get_interest(
                     if interesant_area == settings.AREA_REGIONS
                     else CityCityPopularity
                 )
+                empty_cities_filter = (
+                    dict(code__in=get_empty_cities())
+                    if interesant_area == settings.AREA_CITIES
+                    else {}
+                )
                 return (
                     ppt_model.objects.filter(
                         home_code=id,
@@ -75,6 +75,7 @@ def get_interest(
                             else dict(tourism_type__isnull=True)
                         )
                     )
+                    .exclude(**empty_cities_filter)
                     .annotate(
                         ppt=models.functions.Round(
                             "popularity_mean", output_field=models.IntegerField()

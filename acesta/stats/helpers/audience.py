@@ -18,6 +18,19 @@ def get_audience_key_data(key) -> tuple:
     return key.split("_") if key else ("01", "", "regions")
 
 
+@to_cache("audience_empty_cities", 60 * 60 * 24 * 7)
+def get_empty_cities():
+    """
+    Returns the list of cities ids with empty auditory
+    :return: list
+    """
+    return list(
+        AudienceCities.objects.filter(v_all=0)
+        .values_list("code_id", flat=True)
+        .distinct()
+    )
+
+
 def get_audience(area: str, tourism_type: str, code: str) -> models.QuerySet:
     """
     Returns audience according to area and tourism type
