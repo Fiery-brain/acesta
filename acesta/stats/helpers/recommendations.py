@@ -1,19 +1,11 @@
-import re
-
 from django.conf import settings
 from django.db.models import F
 from django.db.models import Max
 from django.template.defaultfilters import date as _date
-from g4f import Client
-from g4f.errors import RateLimitError
-from g4f.errors import ResponseError
-from g4f.errors import ResponseStatusError
-from g4f.errors import RetryProviderError
-from g4f.errors import TimeoutError
 
 from acesta.base.decorators import append
-from acesta.base.decorators import fallback_chain
 from acesta.base.decorators import to_cache
+from acesta.base.utils import request_gpt
 from acesta.geo.models import City
 from acesta.geo.models import Region
 from acesta.geo.models import Sight
@@ -37,65 +29,14 @@ from acesta.stats.helpers.update_dates import get_rating_update_date
 
 
 @to_cache("{key}", 60 * 60 * 24 * 14)
-@fallback_chain(
-    settings.LLM_MODELS,
-    settings.LLM_PROVIDERS,
-    settings.LLM_MAX_RETRIES,
-    settings.LLM_BASE_DELAY,
-)
-def _get_recommendations(
-    question: str, model: str, provider: str = None, **kwargs
-) -> str:
+def _get_recommendations(question: str, **kwargs) -> str:
     """
     Returns a recommendation
     :param question: str
     :param kwargs: dict
     :return: str
     """
-
-    # 4096 токенов = 16384 символов
-    def get_ai_recommendations(question):
-        client = Client()
-        try:
-            recommendations = (
-                client.chat.completions.create(
-                    model=model,
-                    messages=[
-                        {
-                            "role": "user",
-                            "content": f"{question}. {settings.RECOMMENDATION_RULES}",
-                        }
-                    ],
-                    web_search=False,
-                    provider=provider,
-                )
-                .choices[0]
-                .message.content
-            )
-
-        except (
-            TimeoutError,
-            ResponseError,
-            RateLimitError,
-            ResponseStatusError,
-            RetryProviderError,
-            RuntimeError,
-        ):
-            recommendations = ""
-
-        recommendations = re.sub(
-            r"<think>.*?</think>", "", recommendations, flags=re.DOTALL
-        )
-
-        return (
-            recommendations
-            if all(
-                err not in recommendations for err in ["request limit", "request error"]
-            )
-            else ""
-        )
-
-    return get_ai_recommendations(question)
+    return request_gpt(question)
 
 
 def get_region_recommendations(region: Region, segment: str, data: dict) -> str:
