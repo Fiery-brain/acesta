@@ -520,6 +520,7 @@ textarea.form-control{min-height: 100px;}
 .bg-telegram{background-image:url('../img/sprite.svg#telegram')!important }
 .bg-whatsapp{background-image:url('../img/sprite.svg#whatsapp')!important }
 .bg-viber{background-image:url('../img/sprite.svg#viber')!important }
+.bg-max{background-image:url('../img/sprite.svg#max')!important }
 
 .dot {height:8px;width:8px;background-color:var(--acesta-dark-primary);border-radius:50%;display:inline-block;transform:translateY(-2px)}
 .request-button{position:fixed;bottom:20px;right:20px;z-index: 99;font-size: 18px;border:none;outline:none;color:white;cursor:pointer;border-radius:4px}

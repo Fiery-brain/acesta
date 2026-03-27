@@ -399,6 +399,7 @@ CHANNEL_VIBER = "viber"
 CHANNEL_VK = "vk"
 CHANNEL_FB = "facebook"
 CHANNEL_EMAIL = "email"
+CHANNEL_MAX = "max"
 
 REQUEST_CHANNELS = (
     (CHANNEL_PHONE, "Телефон"),
@@ -408,13 +409,13 @@ REQUEST_CHANNELS = (
     (CHANNEL_VK, "VK"),
     (CHANNEL_FB, "Facebook"),
     (CHANNEL_EMAIL, "Email"),
+    (CHANNEL_MAX, "Max"),
 )
 
 REQUEST_CHANNELS_OUTSIDE = (
     (CHANNEL_PHONE, "Телефон"),
+    (CHANNEL_MAX, "Max"),
     (CHANNEL_TELEGRAM, "Telegram"),
-    (CHANNEL_WHATSAPP, "WhatsApp"),
-    (CHANNEL_VIBER, "Viber"),
 )
 
 FEDERAL_DISTRICTS = (
