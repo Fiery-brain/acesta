@@ -94,6 +94,12 @@ class User(AbstractUser):
         blank=True,
         null=True,
     )
+    hidden_last_name = models.CharField(
+        "Скрытая фамилия",
+        max_length=150,
+        blank=True,
+        null=True,
+    )
     phone = models.CharField(
         "Телефон",
         max_length=12,

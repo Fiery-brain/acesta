@@ -52,7 +52,7 @@ class AccountAdapter(DefaultAccountAdapter):
         data = form.cleaned_data
         user_field(user, "phone", data.get("phone"), "")
         if user.last_name is not None and len(user.last_name):
-            user.note = user.last_name
+            user.hidden_last_name = user.last_name
             user.last_name = None
         user.save()
         return user
