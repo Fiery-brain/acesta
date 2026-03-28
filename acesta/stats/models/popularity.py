@@ -42,7 +42,10 @@ class AllCityPopularity(CityPopularity, StorageMixin, SightGroupMixin):
         ordering = ("-qty",)
         verbose_name = "Вся популярность в городах"
         verbose_name_plural = "Вся популярность в городах"
-        unique_together = ("sight", "home_code", "code", "source_code", "sight_group")
+        unique_together = (
+            ("sight", "home_code", "code", "source_code", "sight_group"),
+            ("sight", "code", "source_code", "sight_group"),  # home_code can be null
+        )
 
 
 class AllRegionPopularity(RegionPopularity, StorageMixin, SightGroupMixin):
