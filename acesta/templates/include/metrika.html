@@ -6,26 +6,7 @@
         metricaId = 79321300,
         timerId;
 
-        if ( navigator.userAgent.indexOf( 'YandexMetrika' ) > -1 ) {
-            loadMetrica();
-        } else {
-            window.addEventListener( 'scroll', loadMetrica, {passive: true} );
-            window.addEventListener( 'touchstart', loadMetrica );
-            document.addEventListener( 'mouseenter', loadMetrica );
-            document.addEventListener( 'click', loadMetrica );
-            document.addEventListener( 'DOMContentLoaded', loadFallback );
-        }
-
-        function loadFallback() {
-            timerId = setTimeout( loadMetrica, 3000 );
-        }
-
-        function loadMetrica( e ) {
-            // if ( e && e.type ) {
-            //    console.log( e.type );
-            // } else {s
-            //  console.log( 'DOMContentLoaded' );
-            // }
+        function loadMetrica() {
             if ( loadedMetrica ) {
                 return;
             }
@@ -36,11 +17,8 @@
             loadedMetrica = true;
 
             clearTimeout( timerId );
-            window.removeEventListener( 'scroll', loadMetrica );
-            window.removeEventListener( 'touchstart', loadMetrica );
-            document.removeEventListener( 'mouseenter', loadMetrica );
-            document.removeEventListener( 'click', loadMetrica );
-            document.removeEventListener( 'DOMContentLoaded', loadFallback );
         }
+
+        timerId = setTimeout( loadMetrica, 5000 );
     } )()
 </script>
