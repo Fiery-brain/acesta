@@ -1,6 +1,8 @@
 from allauth.socialaccount.providers.base import ProviderAccount
 from allauth.socialaccount.providers.oauth2.provider import OAuth2Provider
 
+from acesta.socialaccount.providers.leaderid.views import LeaderIDAuth2Adapter
+
 
 class LeaderIDAccount(ProviderAccount):
     pass
@@ -10,6 +12,7 @@ class LeaderIDProvider(OAuth2Provider):
     id = "leaderid"
     name = "LeaderID"
     account_class = LeaderIDAccount
+    oauth2_adapter_class = LeaderIDAuth2Adapter
 
     def extract_uid(self, data):
         """Extract uid ('id') and ensure it's a str."""

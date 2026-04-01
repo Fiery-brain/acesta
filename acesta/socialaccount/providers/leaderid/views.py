@@ -3,11 +3,9 @@ from allauth.socialaccount.providers.oauth2.views import OAuth2Adapter
 from allauth.socialaccount.providers.oauth2.views import OAuth2CallbackView
 from allauth.socialaccount.providers.oauth2.views import OAuth2LoginView
 
-from .provider import LeaderIDProvider
-
 
 class LeaderIDAuth2Adapter(OAuth2Adapter):
-    provider_id = LeaderIDProvider.id
+    provider_id = "leaderid"
     access_token_url = "https://leader-id.ru/oauth/access_token"
     authorize_url = "https://leader-id.ru/oauth/authorize"
     profile_url = "https://leader-id.ru/api/users"

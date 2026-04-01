@@ -122,14 +122,12 @@ LOGIN_REDIRECT_URL = "/dashboard/"
 LOGIN_URL = "/login/"
 LOGOUT_REDIRECT_URL = "/"
 
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*"]
+ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_LOGOUT_ON_GET = False
 ACCOUNT_FORMS = {"signup": "acesta.account.forms.SignupForm"}
 ACCOUNT_USER_DISPLAY = "acesta.account.utils.user_display"
 ACCOUNT_ADAPTER = "acesta.account.adapter.AccountAdapter"
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 SOCIALACCOUNT_ADAPTER = "acesta.socialaccount.adapter.SocialAccountAdapter"
 SOCIALACCOUNT_AUTO_SIGNUP = False
 SOCIALACCOUNT_LOGIN_ON_GET = True
@@ -179,6 +177,7 @@ MIDDLEWARE = [
     "acesta.user.middleware.clean_up_old_periods",
     "acesta.user.middleware.set_last_hit",
     "acesta.user.middleware.check_registered",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 # STATIC

@@ -92,7 +92,7 @@ urlpatterns += [
 
 # Provider urlpatterns, as separate attribute (for reusability).
 provider_urlpatterns = []
-for provider in providers.registry.get_list():
+for provider in providers.registry.get_class_list():
     try:
         prov_mod = import_module(provider.get_package() + ".urls")
     except ImportError:
