@@ -294,27 +294,10 @@ DB_MUTEX_TTL_SECONDS = 9 * 60 * 60
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "loggers": {
-        "django.request": {
-            "handlers": ["mail_admins"],
-            "level": "ERROR",
-            "propagate": False,
-        },
-        "django.security": {
-            "handlers": ["mail_admins"],
-            "level": "ERROR",
-            "propagate": False,
-        },
-    },
     "filters": {
         "require_debug_false": {
             "()": "django.utils.log.RequireDebugFalse",
         },
-    },
-    "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
-        }
     },
     "handlers": {
         "console": {
@@ -327,6 +310,25 @@ LOGGING = {
             "filters": ["require_debug_false"],
             "class": "django.utils.log.AdminEmailHandler",
         },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+        "django.request": {
+            "handlers": ["mail_admins"],
+            "level": "ERROR",
+        },
+        "django.security": {
+            "handlers": ["mail_admins"],
+            "level": "ERROR",
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
+        }
     },
     "root": {"level": "INFO", "handlers": ["console"]},
 }
