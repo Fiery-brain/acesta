@@ -254,6 +254,7 @@ X_FRAME_OPTIONS = env("DJANGO_X_FRAME_OPTIONS", default="DENY")
 
 # EMAIL
 # ------------------------------------------------------------------------------
+SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default="")
 DEFAULT_FROM_EMAIL = env("DJANGO_DEFAULT_FROM_EMAIL", default="")
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
