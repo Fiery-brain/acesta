@@ -294,6 +294,9 @@ DB_MUTEX_TTL_SECONDS = 9 * 60 * 60
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "loggers": {
+        "django": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True}
+    },
     "filters": {
         "require_debug_false": {
             "()": "django.utils.log.RequireDebugFalse",
