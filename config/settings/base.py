@@ -295,7 +295,16 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "loggers": {
-        "django": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True}
+        "django.request": {
+            "handlers": ["mail_admins"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.security": {
+            "handlers": ["mail_admins"],
+            "level": "ERROR",
+            "propagate": False,
+        },
     },
     "filters": {
         "require_debug_false": {
