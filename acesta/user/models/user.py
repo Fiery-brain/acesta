@@ -139,10 +139,9 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         if self.pk is None:
-            if not hasattr(self, "region"):
-                self.region = Region.objects.get(
-                    pk=User._meta.get_field("region").get_default()
-                )
+            self.region = Region.objects.get(
+                pk=User._meta.get_field("region").get_default()
+            )
             self.current_region = self.region
         self.username = self.email
         super().save(*args, **kwargs)
