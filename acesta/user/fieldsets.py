@@ -16,6 +16,7 @@ user_form_fieldset = (
         {
             "fields": (
                 "last_name",
+                "hidden_last_name",
                 "first_name",
                 "middle_name",
             )
