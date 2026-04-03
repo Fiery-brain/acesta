@@ -125,6 +125,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
                 phone=extra_data.get("phone"),
                 extra_data=json.dumps(
                     dict(
+                        last_name=extra_data.get("last_name"),
                         middle_name=extra_data.get("middle_name"),
                         company=extra_data.get("company"),
                         position=extra_data.get("position"),
@@ -147,6 +148,9 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         :return: acesta.user.models.User
         """
         extra_data = json.loads(request.POST.get("extra_data"))
+        user_field(
+            sociallogin.user, "hidden_last_name", extra_data.get("last_name", "")
+        )
         user_field(sociallogin.user, "middle_name", extra_data.get("middle_name", ""))
         user_field(sociallogin.user, "company", extra_data.get("company"), "")
         user_field(sociallogin.user, "position", extra_data.get("position"), "")

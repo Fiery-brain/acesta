@@ -39,7 +39,7 @@ class LeaderIDProvider(OAuth2Provider):
         if user_data:
             extra_fields.update(
                 dict(
-                    hidden_last_name=user_data.get("LastName"),
+                    last_name=user_data.get("LastName"),
                     middle_name=user_data.get("FatherName"),
                     phone=user_data.get("Phones")[0],
                     email=user_data.get("Email"),
