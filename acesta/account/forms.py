@@ -26,6 +26,7 @@ class SignupNextForm(forms.ModelForm):
     def __init__(self, user=None, *args, **kwargs):
         self.user = user
         super().__init__(*args, **kwargs)
+        self.fields["region"].initial = user.region
         self.fields["password1"] = PasswordField(
             label=_("Password"), autocomplete="new-password"
         )
@@ -44,6 +45,7 @@ class SignupNextForm(forms.ModelForm):
         fields = (
             "region",
             "purpose",
+            "segment",
             "subscription",
         )
 

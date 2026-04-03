@@ -1,3 +1,4 @@
+import json
 import re
 
 from allauth.account.utils import perform_login
@@ -12,6 +13,35 @@ from acesta.geo.models import Region
 User = get_user_model()
 
 
+def get_phone(phone_str):
+    return re.sub(r"[^\d]", "", phone_str)
+
+
+def get_region_by_title(region_str):
+    region = None
+    try:
+        region = Region.objects.get(title__startswith=region_str.split(" ")[0])
+    except Region.MultipleObjectsReturned:
+        try:
+            region = Region.objects.get(title=region_str)
+        except Region.DoesNotExist:
+            pass
+    except (Region.DoesNotExist, AttributeError):
+        pass
+    return region
+
+
+def get_city_by_title(city_str):
+
+    city = None
+    try:
+        city = City.objects.get(title=city_str)
+        print(city)
+    except City.DoesNotExist:
+        pass
+    return city
+
+
 def user_phone(user, *args):
     """
     Sets phone
@@ -19,8 +49,10 @@ def user_phone(user, *args):
     :param args: list
     :return: None
     """
-    if args[0]:
-        user_field(user, "phone", re.sub(r"[^\d]", "", args[0]))
+    try:
+        user_field(user, "phone", get_phone(args[0]))
+    except IndexError:
+        pass
 
 
 def user_region(user, *args):
@@ -31,15 +63,11 @@ def user_region(user, *args):
     :return: None
     """
     try:
-        region = Region.objects.get(title__startswith=args[0].split(" ")[0])
-    except Region.MultipleObjectsReturned:
-        try:
-            region = Region.objects.get(title=args[0])
-        except Region.DoesNotExist:
-            return
-    except Region.DoesNotExist:
-        return
-    setattr(user, "region", region)
+        region = get_region_by_title(args[0])
+        if region is not None:
+            setattr(user, "region", region)
+    except IndexError:
+        pass
 
 
 def user_city(user, *args):
@@ -50,10 +78,12 @@ def user_city(user, *args):
     :return: None
     """
     try:
-        city = City.objects.get(title=args[0])
-    except Region.DoesNotExist:
-        return
-    setattr(user, "city", city)
+        print(args)
+        city = get_city_by_title(args[0])
+        if city is not None:
+            setattr(user, "city", city)
+    except IndexError:
+        pass
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
@@ -73,23 +103,6 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         except User.DoesNotExist:
             pass
 
-    def populate_user(self, request, sociallogin, data):
-        """
-        Instantiates and populates a `SocialLogin` model based on the data
-        retrieved in `response`. The method does NOT save the model to the
-        DB.
-        """
-        user = super().populate_user(request, sociallogin, data)
-        user_field(user, "middle_name", data.get("middle_name"))
-        user_field(user, "company", data.get("company"))
-        user_field(user, "position", data.get("position"))
-        user_phone(user, data.get("phone"))
-        if data.get("region"):
-            user_region(user, data.get("region"))
-        if data.get("city"):
-            user_city(user, data.get("city"))
-        return user
-
     def get_connect_redirect_url(self, request, socialaccount):
         """
         Returns the default URL to redirect to after successfully
@@ -106,27 +119,22 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         :return: dict
         """
         initial = super().get_signup_form_initial_data(sociallogin)
-        user = sociallogin.user
+        extra_data = sociallogin.account.extra_data
         initial.update(
             dict(
-                middle_name=user_field(user, "middle_name") or "",
-                company=user_field(user, "company") or "",
-                position=user_field(user, "position") or "",
-                phone=user_field(user, "phone") or "",
+                phone=extra_data.get("phone"),
+                extra_data=json.dumps(
+                    dict(
+                        middle_name=extra_data.get("middle_name"),
+                        company=extra_data.get("company"),
+                        position=extra_data.get("position"),
+                        region=extra_data.get("region"),
+                        city=extra_data.get("city"),
+                    )
+                ),
             )
         )
-        if hasattr(user, "region"):
-            initial.update(
-                dict(
-                    region=getattr(user, "region"),
-                )
-            )
-        if hasattr(user, "city"):
-            initial.update(
-                dict(
-                    city=getattr(user, "city"),
-                )
-            )
+
         return initial
 
     def save_user(self, request, sociallogin, form=None):
@@ -138,10 +146,11 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         :param form: django.Form
         :return: acesta.user.models.User
         """
-        user_field(sociallogin.user, "middle_name", request.POST.get("middle_name", ""))
-        user_field(sociallogin.user, "company", request.POST.get("company"), "")
-        user_field(sociallogin.user, "position", request.POST.get("position"), "")
-        user_field(sociallogin.user, "phone", request.POST.get("phone"), "")
-        user_field(sociallogin.user, "region_id", request.POST.get("region"))
-        user_field(sociallogin.user, "city_id", request.POST.get("city"))
+        extra_data = json.loads(request.POST.get("extra_data"))
+        user_field(sociallogin.user, "middle_name", extra_data.get("middle_name", ""))
+        user_field(sociallogin.user, "company", extra_data.get("company"), "")
+        user_field(sociallogin.user, "position", extra_data.get("position"), "")
+        user_field(sociallogin.user, "phone", extra_data.get("phone"), "")
+        user_region(sociallogin.user, extra_data.get("region"))
+        user_city(sociallogin.user, extra_data.get("city"))
         return super().save_user(request, sociallogin, form)

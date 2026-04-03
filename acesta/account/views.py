@@ -92,6 +92,7 @@ class SignupnextView(FormView):
         self.request.user.region = data.get("region")
         self.request.user.current_region = data.get("region")
         self.request.user.purpose = data.get("purpose")
+        self.request.user.segment = data.get("segment")
         self.request.user.subscription = data.get("subscription", True)
         self.request.user.registered = True
         self.request.user.set_password(data.get("password1"))
@@ -101,6 +102,7 @@ class SignupnextView(FormView):
                 "current_region",
                 "registered",
                 "purpose",
+                "segment",
                 "subscription",
                 "password",
             ]

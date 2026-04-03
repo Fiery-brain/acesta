@@ -27,33 +27,44 @@ class LeaderIDProvider(OAuth2Provider):
         if user_data:
             common_fields.update(
                 dict(
-                    last_name=user_data.get("LastName"),
                     first_name=user_data.get("FirstName"),
+                    email=user_data.get("Email"),
+                )
+            )
+        return common_fields
+
+    def extract_extra_data(self, data):
+        extra_fields = {}
+        user_data = data.get("Data")
+        if user_data:
+            extra_fields.update(
+                dict(
+                    hidden_last_name=user_data.get("LastName"),
                     middle_name=user_data.get("FatherName"),
                     phone=user_data.get("Phones")[0],
                     email=user_data.get("Email"),
                 )
             )
             if "Work" in user_data.keys():
-                common_fields.update(
+                extra_fields.update(
                     dict(
                         position=user_data.get("Work").get("Position"),
                     )
                 )
                 if "Company" in user_data.get("Work").keys():
-                    common_fields.update(
+                    extra_fields.update(
                         dict(
                             company=user_data.get("Work").get("Company").get("Name"),
                         )
                     )
             if "Address" in user_data.keys():
-                common_fields.update(
+                extra_fields.update(
                     dict(
                         region=user_data.get("Address").get("Region"),
                         city=user_data.get("Address").get("City"),
                     )
                 )
-        return common_fields
+        return extra_fields
 
 
 provider_classes = [LeaderIDProvider]

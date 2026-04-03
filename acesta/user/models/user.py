@@ -139,9 +139,10 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         if self.pk is None:
-            self.region = Region.objects.get(
-                pk=User._meta.get_field("region").get_default()
-            )
+            if self.region is None:
+                self.region = Region.objects.get(
+                    pk=User._meta.get_field("region").get_default()
+                )
             self.current_region = self.region
         self.username = self.email
         super().save(*args, **kwargs)

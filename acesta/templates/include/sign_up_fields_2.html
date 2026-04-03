@@ -3,10 +3,18 @@
   <select class="form-select" required name="region" id="inputRegion" autocomplete="newRegion">
     <option value="">-----</option>
     {% for id, region in form.region.field.choices %}
-      <option value="{{ id }}"{% if request.POST and form.region.value == id %} selected{% endif %}>{{ region }}</option>
+      <option value="{{ id }}"{% if form.region.value == id %} selected{% endif %}>{{ region }}</option>
     {% endfor %}
   </select>
-  <label for="inputRegion">Домашний регион (регион, в который поедут туристы)</label>
+  <label for="inputRegion">Регион (регион, в который поедут туристы)</label>
+</div>
+<div class="form-floating mt-3 mb-2">
+  <select class="form-select" required name="segment" id="inputSegment" autocomplete="newSegment">
+    {% for key, segment in SEGMENTS.items %}
+      <option value="{{ key }}">{{ segment }}</option>
+    {% endfor %}
+  </select>
+  <label for="inputSegment">Сегмент</label>
 </div>
 <div class="form-floating mb-2">
   <textarea class="form-control" required minlength="5" placeholder="Задачи, которые собираетесь решать" name="purpose" id="txtPurpose">{{ form.purpose.value|default:"" }}</textarea>
