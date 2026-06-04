@@ -1,35 +1,161 @@
 {% load static %}
+{% load prop %}
+{% load text %}
 <footer class="footer">
+  <div class="container-fluid px-0 bg-white pt-5 footer-wave footer-wave-{{ segment_name|default:DEFAULT_SEGMENT }}">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1439 191"><path fill="currentColor" d="m0 34.775 48.027 4.082c62.992 5.206 125.84 12.713 187.753 26.626 74.702 16.776 145.519 48.123 219.915 65.906 71.932 17.202 138.216 10.778 206.227-19.311C729.609 82.143 792.691 39.38 863.4 17.553c95.873-29.606 187.46-18.408 287.97 12.243 95.58 29.148 189.18 42.398 287.63 0v160.586H0V34.774Z"/><path fill="#0c4940" d="m0 87.315 48.027 19.97c47.846 19.969 143.9 59.907 239.773 50 95.873-9.733 191.927-69.447 287.8-100.89 162.679-53.62 330.282-37.275 497.12 1.16 126.45 29.13 248.69 77.065 366.28 40.17V191H0z"/></svg>
+  </div>
   <div class="main">
     <div class="container">
       <div class="row">
-        <div class="col-12 col-sm-6 col-xl-3 logo_col d-flex flex-column justify-content-between">
+        <div class="col-12 col-sm-5 col-xl-3 logo_col d-flex flex-column justify-content-between">
           <div>
-            <svg width="170" class="logo_img my-0"><use href="{% static 'img/sprite.svg' %}#logo-2-dark"></use></svg>
-            <h5>{{ HASH_TAGS }}</h5>
+            {% if segment_name != DEFAULT_SEGMENT %}
+            <a href="/" class="text-white">
+            {% endif %}
+
+              <svg width="150" class="logo_img my-0"><use href="{% static 'img/sprite.svg' %}#logo-2-dark"></use></svg>
+              <h5 class="w-75">{{ HASH_TAGS }}</h5>
+            {% if segment_name != DEFAULT_SEGMENT %}
+            </a>
+            {% endif %}
           </div>
-          <div class="logo_legacy">
+          <div class="d-none d-sm-block d-xl-none">
+            {% include "include/about_service_block.html" %}
+          </div>
+        </div>
+        <div class="col-12 col-sm-7 col-xl-6 mt-3 mt-sm-0 ps-sm-5">
+          <div class="container px-0">
+            <div class="row">
+              <h5 class="text-uppercase">Аналитика</h5>
+              <div class="col-12 col-lg-6 col-xl-5">
+                <ul class="list-unstyled mb-0">
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_INVESTORS|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_INVESTORS %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_INVESTORS %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_TOURISM_PRODUCT_OWNER|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_TOURISM_PRODUCT_OWNER %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_TOURISM_PRODUCT_OWNER %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_TOUR_OPERATOR|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_TOUR_OPERATOR %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_TOUR_OPERATOR %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_TOUR_AGENT|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_TOUR_AGENT %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_TOUR_AGENT %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_GOVERNMENT|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_GOVERNMENT %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_GOVERNMENT %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_TIC|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_TIC %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_TIC %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                </ul>
+              </div>
+              <div class="col-12 col-lg-6 col-xl-5">
+                <ul class="list-unstyled">
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_HOSPITALITY|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_HOSPITALITY %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_HOSPITALITY %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_GUIDE|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_GUIDE %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_GUIDE %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_MARKETING_AGENCY|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_MARKETING_AGENCY %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_MARKETING_AGENCY %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_TOURISM_EVENT|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_TOURISM_EVENT %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_TOURISM_EVENT %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                  <li>
+                    {% with footer_segment_title=SEGMENTS_GENITIVE|get_prop:SEGMENT_TRANSPORTATION|nobreak_spaces %}
+                      {% if segment_name == SEGMENT_TRANSPORTATION %}
+                        <strong class="py-2">{{ footer_segment_title }}</strong>
+                      {% else %}
+                        <a href="{% url 'segment_index' segment=SEGMENT_TRANSPORTATION %}" class="py-2">{{ footer_segment_title }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-block d-sm-none d-xl-block col-xl-3 mt-2 mt-lg-0">
+          {% include "include/about_service_block.html" %}
+        </div>
+      </div>
+      <div class="row footer-border mt-5 mt-sm-4">
+        <div class="col-12 col-lg-6 mt-4 d-flex">
+          <div class="logo_legacy d-flex align-items-center">
             <ul class="list-unstyled mb-0">
-              <li><a href="{% url 'terms' %}" ><small>Условия использования</small></a></li>
-              <li><a href="{% url 'privacy' %}"><small>Политика конфиденциальности</small></a></li>
+              <li class="d-sm-inline-block"><a href="{% url 'terms' %}" class="py-2"><small>Условия использования</small></a></li>
+              <li class="d-sm-inline-block ms-sm-3"><a href="{% url 'privacy' %}" class="py-2"><small>Политика конфиденциальности</small></a></li>
             </ul>
           </div>
         </div>
-        <div class="col-12 col-sm-6 col-xl-4 winner mt-5 mt-sm-0">
-          <svg class="winner_img" width="83" height="120"><use href="{% static 'img/sprite.svg' %}#winner"></use></svg>
-          <span class="desc">Основано<br>на методике<br>победителе</span><br><strong>Конкурса цифровых<br>решений для&nbsp;регионов</strong>
-        </div>
-        <div class="col-12 col-sm-6 col-xl-2 mt-5 mt-xl-0">
-          <ul class="list-unstyled">
-            <li class="mt-2"><a href="{% url 'help' %}" title="Открыть подробное описание"><svg fill="#95f0e8" width="26" height="26" class="me-2"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>О сервисе</a></li>
-            <li class="mt-2"><a href="#" data-bs-toggle="modal" data-bs-target="#{{ REQUEST_PRESENTATION }}" title="Скачать презентацию"><svg fill="#95f0e8" width="26" height="26" class="me-2"><use href="{% static 'img/sprite.svg' %}#presentation"></use></svg>Презентация</a></li>
-            <li class="mt-2"><a href="#" data-bs-toggle="modal" data-bs-target="#{{ REQUEST_CONSULTATION }}" title="Запросить консультацию"><svg fill="#95f0e8" width="26" height="26" class="me-2"><use href="{% static 'img/sprite.svg' %}#consultation"></use></svg>Консультация</a></li>
-          </ul>
-        </div>
-        <div class="col-12 col-sm-6 col-xl-3 mt-5 mt-xl-0 d-xl-flex justify-content-end">
-          <div>
-            <div class="ps-1 mt-2">Мы в&nbsp;сети</div>
-            <ul class="list-unstyled mt-2 we-are-in-network">
+        <div class="col-12 col-lg-6 mt-4 d-flex justify-content-lg-end">
+          <div class="d-flex align-items-center">
+            {% comment %} <div class="ps-1 mt-2">Мы в&nbsp;сети</div> {% endcomment %}
+            <ul class="list-unstyled mb-0 we-are-in-network">
+              <li class="d-none d-sm-inline-block ms-1">Мы в&nbsp;сети</li>
               {% comment %}
               <li class="d-inline-block ms-1"><a href="https://www.facebook.com/analyticsInTourism/" target="_blank"><svg fill="#95f0e8" width="48" height="48"><use href="{% static 'img/sprite.svg' %}#facebook_nocolor"></use></svg></a></li> -->
               {% endcomment %}

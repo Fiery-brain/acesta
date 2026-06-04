@@ -1,0 +1,20 @@
+      {% load static %}
+      <nav class="navbar fixed-top navbar-expand-lg bg-white navbar-light navbar-landing flex-nowrap">
+        <div class="container">
+          {% if segment_name != DEFAULT_SEGMENT %}
+          <a href="/" class="opacity-100">
+          {% endif %}
+            <svg class="logo" viewBox="0 0 281 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <use href="{% static 'img/sprite.svg' %}#logo-2"></use>
+            </svg>
+          {% if segment_name != DEFAULT_SEGMENT %}
+          </a>
+          {% endif %}
+          <div class="d-flex justify-content-end">
+            {% include "include/contact_block.html" %}
+            <div class="d-none d-md-block">
+              <a class="btn btn-accent btn-lg px-5 ms-4 my-3 text-nowrap" href="{% url 'region' %}"><svg fill="#ffffff" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
+            </div>
+          </div>
+        </div>
+      </nav>

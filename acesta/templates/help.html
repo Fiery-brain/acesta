@@ -1,11 +1,11 @@
 {% extends 'outside.html' %}
 {% load static %}
 
-{% block title %}О сервисе {% endblock %}
+{% block title %}Как это работает {% endblock %}
 
-{% block page_title %}О сервисе{% endblock %}
+{% block page_title %}Как это работает{% endblock %}
 
-{% block ogtitle %}О сервисе. {% endblock %}
+{% block ogtitle %}Как это работает. {% endblock %}
 
 {% block description %}Описание аналитического сервиса для развития туризма ацеста{% endblock %}
 
@@ -105,7 +105,8 @@
         {% if request.user.is_authenticated %}
           <div class="tab-pane fade" id="pills-3" role="tabpanel" aria-labelledby="pills-3-tab">
             <h2 class="mb-3">Данные</h2>
-            <p>Для построения отчетов используем цифровой след туриста в&nbsp;Интернет: данные <b>Яндекс.Подбор Слов</b>, <b>ВКонтакте</b>, открытые источники для загрузки информации точках притяжения. Для&nbsp;нормализации данных используем <b>Росстат</b>.</p>
+            <p>Для&nbsp;построения дашбордов используем цифровой след туриста в&nbsp;Интернет: данные <b>Яндекс.Подбор Слов</b>, <b>ВКонтакте</b>, открытые источники для загрузки информации точках притяжения.
+            <p>Для&nbsp;получения данных о&nbsp;доходах и&nbsp;нормализации данных используем <b>Росстат</b>. Для&nbsp;получения данных о&nbsp;среднем чеке используем <b>МСП.рф</b>.</p>
             <h3 class="mt-4">График обновления данных</h3>
             <table class="table table-hover table-responsive mt-3">
               <thead>
@@ -135,6 +136,16 @@
                   <td>Потенциальная аудитория</td>
                   <td>раз в&nbsp;полгода</td>
                   <td>январь и&nbsp;июль</td>
+                </tr>
+                <tr>
+                  <td>Средняя зарплата</td>
+                  <td>раз в&nbsp;квартал</td>
+                  <td>конец квартала</td>
+                </tr>
+                <tr>
+                  <td>Средний чек</td>
+                  <td>раз в&nbsp;месяц</td>
+                  <td>конец месяца</td>
                 </tr>
               </tbody>
             </table>

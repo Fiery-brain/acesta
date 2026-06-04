@@ -1,0 +1,68 @@
+
+{% load static %}
+<section class="container-fluid px-0 interest-comparison-section">
+  <div class="container">
+    <div class="interest-comparison">
+      <header class="interest-comparison-header landing-section-header">
+        <p>Подход к&nbsp;данным</p>
+        <h2>Мы&nbsp;работаем с&nbsp;интересом, а&nbsp;не&nbsp;с&nbsp;историей поездок</h2>
+        <div>Турпоток показывает прошлое, интерес &dash; будущий спрос</div>
+      </header>
+
+      <div class="interest-comparison-grid">
+        <article class="interest-card interest-card-history">
+          <div class="interest-card-heading">
+            <div class="interest-card-icon" aria-hidden="true">
+              <svg>
+                <use href="{% static 'img/sprite.svg' %}#history"></use>
+              </svg>
+            </div>
+            <div>
+              <h3>Турпоток&nbsp;&mdash; это история</h3>
+              <p>Показывает прошлые поездки</p>
+            </div>
+          </div>
+
+          <div class="interest-chart interest-chart-history" aria-label="График турпотока по историческим данным" role="img">
+            <img src="{% static 'img/data_approacth_history.svg' %}" alt="">
+          </div>
+
+          <p class="interest-card-text">Прогноз по&nbsp;историческим данным предполагает, что прошлые тенденции сохранятся. Но&nbsp;интерес туристов меняется быстрее, поэтому реальная ситуация часто отличается от&nbsp;ожидаемой.</p>
+
+          <p class="interest-card-note">История показывает, что было, но не&nbsp;предсказывает, что будет дальше</p>
+        </article>
+
+        <div class="interest-vs" aria-hidden="true">VS</div>
+
+        <article class="interest-card interest-card-signal">
+          <div class="interest-card-heading">
+            <div class="interest-card-icon" aria-hidden="true">
+              <svg>
+                <use href="{% static 'img/sprite.svg' %}#heart"></use>
+              </svg>
+            </div>
+            <div>
+              <h3>Интерес&nbsp;&mdash;&nbsp;это сигнал перед&nbsp;поездкой</h3>
+              <p>Показывает интерес к направлениям</p>
+            </div>
+          </div>
+
+          <div class="interest-chart interest-chart-signal" aria-label="График интереса перед поездкой" role="img">
+            <img src="{% static 'img/data_approach_interest.svg' %}" alt="">
+          </div>
+
+          <p class="interest-card-text">Интерес появляется до&nbsp;поездки. Он помогает раньше заметить изменения внимания к&nbsp;направлениям и&nbsp;увидеть сигналы, которые ещё не&nbsp;отражены в&nbsp;статистике прошлых поездок.</p>
+
+          <p class="interest-card-note interest-card-note-accent">
+            <span class="interest-card-note-icon" aria-hidden="true">
+              <svg>
+                <use href="{% static 'img/sprite.svg' %}#check"></use>
+              </svg>
+            </span>
+            Интерес показывает изменения спроса раньше других сигналов
+          </p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

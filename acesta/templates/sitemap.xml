@@ -1,31 +1,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
-<loc>https://{{ request.META.HTTP_HOST }}/</loc>
+<loc>{{ request.scheme }}://{{ request.META.HTTP_HOST }}/</loc>
 <lastmod>{{ now|date:"c" }}</lastmod>
 <priority>1.00</priority>
 </url>
+{% for segment in segment_pages %}
 <url>
-<loc>https://{{ request.META.HTTP_HOST }}/signup/</loc>
+<loc>{{ request.scheme }}://{{ request.META.HTTP_HOST }}/{{ segment }}/</loc>
+<lastmod>{{ now|date:"c" }}</lastmod>
+<priority>0.90</priority>
+</url>
+{% endfor %}
+<url>
+<loc>{{ request.scheme }}://{{ request.META.HTTP_HOST }}/signup/</loc>
 <lastmod>{{ week_ago|date:"c" }}</lastmod>
 <priority>0.80</priority>
 </url>
 <url>
-<loc>https://{{ request.META.HTTP_HOST }}/login/</loc>
+<loc>{{ request.scheme }}://{{ request.META.HTTP_HOST }}/login/</loc>
 <lastmod>{{ week_ago|date:"c" }}</lastmod>
 <priority>0.80</priority>
 </url>
 <url>
-<loc>https://{{ request.META.HTTP_HOST }}/terms/</loc>
+<loc>{{ request.scheme }}://{{ request.META.HTTP_HOST }}/terms/</loc>
 <lastmod>{{ week_ago|date:"c" }}</lastmod>
 <priority>0.80</priority>
 </url>
 <url>
-<loc>https://{{ request.META.HTTP_HOST }}/privacy/</loc>
+<loc>{{ request.scheme }}://{{ request.META.HTTP_HOST }}/privacy/</loc>
 <lastmod>{{ week_ago|date:"c" }}</lastmod>
 <priority>0.80</priority>
 </url>
 <url>
-<loc>https://{{ request.META.HTTP_HOST }}/help/</loc>
+<loc>{{ request.scheme }}://{{ request.META.HTTP_HOST }}/help/</loc>
 <lastmod>{{ week_ago|date:"c" }}</lastmod>
 <priority>0.80</priority>
 </url>

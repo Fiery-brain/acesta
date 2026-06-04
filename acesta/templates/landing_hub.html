@@ -1,0 +1,512 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load requests %}
+{% load stats %}
+{% load prop %}
+{% load text %}
+{% load segments %}
+
+{% block title %}{{ PAGE_META.title }}{% endblock %}
+
+{% block ogtitle %}{{ PAGE_META.title }}{% endblock %}
+
+{% block description %}{{ PAGE_META.text }}{% endblock %}
+
+{% block ogdescription %}{{ PAGE_META.text }}{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/landings.css' %}">
+{% endblock %}
+
+{% block modals %}
+  {{ block.super }}
+  {% request_modal subject="presentation" %}
+{% endblock %}
+
+{% block body %}
+  <div class="wrapper landing-hub-page d-flex flex-column justify-content-between">
+    <div class="container-fluid px-0">
+
+      {% include "include/landing_nav.html" %}
+
+      {% include "include/landing_hero.html" %}
+
+      {% include 'include/flow_vs_interest.html' %}
+
+      <section class="container-fluid px-0 tourism-roles-section">
+        <div class="container">
+          <div class="tourism-roles">
+            <header class="tourism-roles-header landing-section-header">
+              <p>Ваша ниша</p>
+              <h2>Чем вы&nbsp;занимаетесь в&nbsp;туризме?</h2>
+              <div>Покажем аналитику, сценарии и&nbsp;решения, которые подходят именно для&nbsp;вашей сферы</div>
+            </header>
+
+            <div class="tourism-roles-grid">
+              <div class="tourism-roles-row tourism-roles-row-four">
+                <a class="tourism-role-card bg_{{ SEGMENT_INVESTORS }}" href="{% url 'segment_index' segment=SEGMENT_INVESTORS %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_INVESTORS }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with INVESTORS_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_INVESTORS %}
+                    <span class="tourism-role-title">{{ INVESTORS_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ INVESTORS_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+
+                <a class="tourism-role-card bg_{{ SEGMENT_TOURISM_PRODUCT_OWNER }}" href="{% url 'segment_index' segment=SEGMENT_TOURISM_PRODUCT_OWNER %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOURISM_PRODUCT_OWNER }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with TOURISM_PRODUCT_OWNER_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_TOURISM_PRODUCT_OWNER %}
+                    <span class="tourism-role-title">{{ TOURISM_PRODUCT_OWNER_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ TOURISM_PRODUCT_OWNER_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+
+                <a class="tourism-role-card bg_{{ SEGMENT_TOUR_OPERATOR }}" href="{% url 'segment_index' segment=SEGMENT_TOUR_OPERATOR %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOUR_OPERATOR }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with TOUR_OPERATOR_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_TOUR_OPERATOR %}
+                    <span class="tourism-role-title">{{ TOUR_OPERATOR_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ TOUR_OPERATOR_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+
+                <a class="tourism-role-card bg_{{ SEGMENT_TOUR_AGENT }}" href="{% url 'segment_index' segment=SEGMENT_TOUR_AGENT %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOUR_AGENT }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with TOUR_AGENT_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_TOUR_AGENT %}
+                    <span class="tourism-role-title">{{ TOUR_AGENT_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ TOUR_AGENT_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+              </div>
+
+              <div class="tourism-roles-row tourism-roles-row-three">
+                <a class="tourism-role-card bg_{{ SEGMENT_GOVERNMENT }}" href="{% url 'segment_index' segment=SEGMENT_GOVERNMENT %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_GOVERNMENT }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with GOVERNMENT_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_GOVERNMENT %}
+                    <span class="tourism-role-title">{{ GOVERNMENT_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ GOVERNMENT_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+
+                <a class="tourism-role-card bg_{{ SEGMENT_TIC }}" href="{% url 'segment_index' segment=SEGMENT_TIC %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TIC }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with TIC_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_TIC %}
+                    <span class="tourism-role-title">{{ TIC_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ TIC_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+
+                <a class="tourism-role-card bg_{{ SEGMENT_HOSPITALITY }}" href="{% url 'segment_index' segment=SEGMENT_HOSPITALITY %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_HOSPITALITY }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with HOSPITALITY_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_HOSPITALITY %}
+                    <span class="tourism-role-title">{{ HOSPITALITY_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ HOSPITALITY_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+              </div>
+
+              <div class="tourism-roles-row tourism-roles-row-four">
+                <a class="tourism-role-card bg_{{ SEGMENT_GUIDE }}" href="{% url 'segment_index' segment=SEGMENT_GUIDE %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_GUIDE }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with GUIDE_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_GUIDE %}
+                    <span class="tourism-role-title">{{ GUIDE_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ GUIDE_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+
+                <a class="tourism-role-card bg_{{ SEGMENT_MARKETING_AGENCY }}" href="{% url 'segment_index' segment=SEGMENT_MARKETING_AGENCY %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_MARKETING_AGENCY }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with MARKETING_AGENCY_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_MARKETING_AGENCY %}
+                    <span class="tourism-role-title">{{ MARKETING_AGENCY_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ MARKETING_AGENCY_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+
+                <a class="tourism-role-card bg_{{ SEGMENT_TOURISM_EVENT }}" href="{% url 'segment_index' segment=SEGMENT_TOURISM_EVENT %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOURISM_EVENT }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with TOURISM_EVENT_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_TOURISM_EVENT %}
+                    <span class="tourism-role-title">{{ TOURISM_EVENT_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ TOURISM_EVENT_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+
+                <a class="tourism-role-card bg_{{ SEGMENT_TRANSPORTATION }}" href="{% url 'segment_index' segment=SEGMENT_TRANSPORTATION %}">
+                  <span class="tourism-role-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TRANSPORTATION }}"></use>
+                    </svg>
+                  </span>
+                  <span class="tourism-role-copy">
+                    {% with TRANSPORTATION_ITEM=YOUR_SEGMENT|get_prop:SEGMENT_TRANSPORTATION %}
+                    <span class="tourism-role-title">{{ TRANSPORTATION_ITEM.title|safe }}</span>
+                    <span class="tourism-role-text">{{ TRANSPORTATION_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="container-fluid px-0 instant-insight-section">
+        <div class="container">
+          <div class="instant-insight">
+            <header class="instant-insight-header landing-section-header">
+              <p>а что внутри</p>
+              <h2>Вы заходите и&nbsp;сразу видите</h2>
+            </header>
+
+            <div class="instant-insight-main">
+              <div class="instant-insight-copy">
+                <p class="instant-insight-lead">Главные сигналы интереса собраны на&nbsp;одном экране, чтобы быстро перейти от&nbsp;наблюдения к&nbsp;решению</p>
+                <ul class="instant-insight-list">
+                  <li>
+                    <span aria-hidden="true">
+                    <svg>
+                      <use href="{% static 'img/sprite.svg' %}#location"></use>
+                    </svg>
+                    </span>
+                    <span>
+                      <strong>К&nbsp;чему есть интерес</strong>
+                      <small>какие направления, территории и&nbsp;точки притяжения привлекают внимание туристов</small>
+                    </span>
+                  </li>
+                  <li>
+                    <span aria-hidden="true">
+                    <svg>
+                      <use href="{% static 'img/sprite.svg' %}#territory"></use>
+                    </svg>
+                    </span>
+                    <span>
+                      <strong>Откуда есть интерес</strong>
+                      <small>из&nbsp;каких регионов и&nbsp;городов люди интересуются поездками</small>
+                    </span>
+                  </li>
+                  <li>
+                    <span aria-hidden="true">
+                    <svg>
+                      <use href="{% static 'img/sprite.svg' %}#attract"></use>
+                    </svg>
+                    </span>
+                    <span>
+                      <strong>Что важно туристам</strong>
+                      <small>какие виды отдыха, темы и&nbsp;форматы вызывают наибольший интерес</small>
+                    </span>
+                  </li>
+                </ul>
+                <p class="instant-insight-tag">
+                  <span aria-hidden="true">
+                    <svg width="38" height="38">
+                      <use href="{% static 'img/sprite.svg' %}#simple"></use>
+                    </svg>
+                  </span>
+                  Просто, быстро, наглядно
+                </p>
+              </div>
+
+              <div class="instant-dashboard" aria-label="Пример экрана с аналитикой интереса" role="img">
+                <a class="landing-dashboard-link" href="{% url 'interest' %}" aria-label="Узнать текущую ситуацию в вашей локации" title="Узнать текущую ситуацию в вашей локации" ></a>
+                <div class="segment-overview-top" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="instant-dashboard-body">
+                  <div class="instant-dashboard-head">
+                    <div>
+                      <strong>Интерес к&nbsp;региону</strong>
+                    </div>
+                    <div class="instant-dashboard-select">
+                      <svg width="24" height="24">
+                        <use href="{% static 'img/sprite.svg' %}#spa"></use>
+                      </svg>
+                      оздоровительный туризм
+                      <i aria-hidden="true"></i>
+                    </div>
+                  </div>
+
+                  <div class="instant-dashboard-content">
+                      <article class="segment-overview-table-card segment-overview-table">
+                        <div class="segment-overview-table-tabs" aria-label="Источник интереса">
+                          <div class="segment-overview-table-tab">из&nbsp;регионов</div>
+                          <div class="segment-overview-table-tab is-active">из&nbsp;городов</div>
+                        </div>
+                        <ul class="segment-overview-table-rows">
+                          <li class="segment-overview-table-row"><span>Москва</span>2&nbsp;433</li>
+                          <li class="segment-overview-table-row is-primary"><span>Махачкала</span><strong>2&nbsp;225</strong></li>
+                          <li class="segment-overview-table-row is-active"><span>Санкт-Петербург</span>1&nbsp;057</li>
+                          <li class="segment-overview-table-row is-primary"><span>Каспийск</span><strong>519</strong></li>
+                          <li class="segment-overview-table-row"><span>Екатеринбург</span>335</li>
+                          <li class="segment-overview-table-row"><span>Казань</span>291</li>
+                          <li class="segment-overview-table-row is-primary"><span>Саратов</span><strong>283</strong></li>
+                          <li class="segment-overview-table-row"><span>Нижний Новгород</span>256</li>
+                        </ul>
+                      </article>
+
+                    <div class="segment-overview-map" aria-hidden="true">
+                      <img src="{% static 'img/landing_hub_demo_map.svg' %}" alt="Интерес туристов к региону">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container-fluid px-0 scenario-section">
+        <div class="container">
+          <div class="scenario-block">
+            <header class="scenario-header landing-section-header">
+              <p>Ваши задачи</p>
+              <h2>Выберите свой сценарий</h2>
+              <div>Мы&nbsp;покажем, что важно именно для&nbsp;вас</div>
+            </header>
+
+            <div class="scenario-grid">
+              <div class="scenario-row scenario-row-four">
+                <a class="scenario-card bg_{{ SEGMENT_INVESTORS }}" href="{% url 'segment_index' segment=SEGMENT_INVESTORS %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_INVESTORS }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with INVESTORS_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_INVESTORS %}
+                    <span class="scenario-title">{{ INVESTORS_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ INVESTORS_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+
+                <a class="scenario-card bg_{{ SEGMENT_TOURISM_PRODUCT_OWNER }}" href="{% url 'segment_index' segment=SEGMENT_TOURISM_PRODUCT_OWNER %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOURISM_PRODUCT_OWNER }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with TOURISM_PRODUCT_OWNER_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_TOURISM_PRODUCT_OWNER %}
+                    <span class="scenario-title">{{ TOURISM_PRODUCT_OWNER_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ TOURISM_PRODUCT_OWNER_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+
+                <a class="scenario-card bg_{{ SEGMENT_TOUR_OPERATOR }}" href="{% url 'segment_index' segment=SEGMENT_TOUR_OPERATOR %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOUR_OPERATOR }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with TOUR_OPERATOR_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_TOUR_OPERATOR %}
+                    <span class="scenario-title">{{ TOUR_OPERATOR_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ TOUR_OPERATOR_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+
+                <a class="scenario-card bg_{{ SEGMENT_TOUR_AGENT }}" href="{% url 'segment_index' segment=SEGMENT_TOUR_AGENT %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOUR_AGENT }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with TOUR_AGENT_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_TOUR_AGENT %}
+                    <span class="scenario-title">{{ TOUR_AGENT_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ TOUR_AGENT_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+              </div>
+
+              <div class="scenario-row scenario-row-three">
+                <a class="scenario-card bg_{{ SEGMENT_GOVERNMENT }}" href="{% url 'segment_index' segment=SEGMENT_GOVERNMENT %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_GOVERNMENT }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with GOVERNMENT_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_GOVERNMENT %}
+                    <span class="scenario-title">{{ GOVERNMENT_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ GOVERNMENT_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+
+                <a class="scenario-card bg_{{ SEGMENT_TIC }}" href="{% url 'segment_index' segment=SEGMENT_TIC %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TIC }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with TIC_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_TIC %}
+                    <span class="scenario-title">{{ TIC_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ TIC_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+
+                <a class="scenario-card bg_{{ SEGMENT_HOSPITALITY }}" href="{% url 'segment_index' segment=SEGMENT_HOSPITALITY %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_HOSPITALITY }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with HOSPITALITY_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_HOSPITALITY %}
+                    <span class="scenario-title">{{ HOSPITALITY_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ HOSPITALITY_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+              </div>
+
+              <div class="scenario-row scenario-row-four">
+                <a class="scenario-card bg_{{ SEGMENT_GUIDE }}" href="{% url 'segment_index' segment=SEGMENT_GUIDE %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_GUIDE }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with GUIDE_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_GUIDE %}
+                    <span class="scenario-title">{{ GUIDE_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ GUIDE_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+
+                <a class="scenario-card bg_{{ SEGMENT_MARKETING_AGENCY }}" href="{% url 'segment_index' segment=SEGMENT_MARKETING_AGENCY %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_MARKETING_AGENCY }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with MARKETING_AGENCY_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_MARKETING_AGENCY %}
+                    <span class="scenario-title">{{ MARKETING_AGENCY_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ MARKETING_AGENCY_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+
+                <a class="scenario-card bg_{{ SEGMENT_TOURISM_EVENT }}" href="{% url 'segment_index' segment=SEGMENT_TOURISM_EVENT %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TOURISM_EVENT }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with TOURISM_EVENT_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_TOURISM_EVENT %}
+                    <span class="scenario-title">{{ TOURISM_EVENT_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ TOURISM_EVENT_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+
+                <a class="scenario-card bg_{{ SEGMENT_TRANSPORTATION }}" href="{% url 'segment_index' segment=SEGMENT_TRANSPORTATION %}">
+                  <span class="scenario-icon" aria-hidden="true">
+                    <svg viewBox="0 0 180 180">
+                      <use href="{% static 'img/sprite.svg' %}#segment_{{ SEGMENT_TRANSPORTATION }}"></use>
+                    </svg>
+                  </span>
+                  <span class="scenario-copy">
+                    {% with TRANSPORTATION_ITEM=YOUR_SCENARIO|get_prop:SEGMENT_TRANSPORTATION %}
+                    <span class="scenario-title">{{ TRANSPORTATION_ITEM.title|safe }}</span>
+                    <span class="scenario-text">{{ TRANSPORTATION_ITEM.text|safe }}</span>
+                    {% endwith %}
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <div class="container-fluid px-0">
+      {% include 'include/footer.html' %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+  <script src="{% static 'js/user.clear.phone.mask.js' %}"></script>
+  <script src="{% static 'js/navbar.show.hide.js' %}"></script>
+{% endblock %}

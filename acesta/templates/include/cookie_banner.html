@@ -1,0 +1,19 @@
+ {% load static %}
+
+<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Уведомление об использовании cookie">
+  <div class="container">
+    <div class="cookie-banner-inner">
+      <div class="cookie-banner-icon" aria-hidden="true">
+        <svg focusable="false">
+          <use href="{% static 'img/sprite.svg' %}#cookie"></use>
+        </svg>
+      </div>
+      <div class="cookie-banner-copy">
+        <h2>Мы&nbsp;используем файлы cookie</h2>
+        <p>Они помогают нам&nbsp;улучшать работу&nbsp;сайта, анализировать трафик&nbsp;и&nbsp;показывать вам&nbsp;более подходящий контент</p>
+      </div>
+      <a class="cookie-banner-link" href="{% url 'privacy' %}">Политика конфиденциальности</a>
+      <button class="btn btn-primary cookie-banner-button" id="cookieBannerButton" type="button">Понятно</button>
+    </div>
+  </div>
+</div>

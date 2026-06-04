@@ -1,0 +1,10 @@
+{% load static %}
+
+<div>
+  <h5 class="text-uppercase d-block d-sm-none d-xl-block">Сервис</h5>
+  <ul class="list-unstyled">
+    <li class="mt-2"><a href="{% url 'help' %}" title="Открыть подробное описание" class="py-2 text-nowrap"><svg fill="#95f0e8" width="26" height="26" class="me-2"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>Как&nbsp;это&nbsp;работает</a></li>
+    <li class="mt-2"><a href="#" data-bs-toggle="modal" data-bs-target="#{{ REQUEST_PRESENTATION }}" title="Скачать презентацию" class="py-2 text-nowrap"><svg fill="#95f0e8" width="26" height="26" class="me-2"><use href="{% static 'img/sprite.svg' %}#presentation"></use></svg>Скачать&nbsp;презентацию</a></li>
+    <li class="mt-2"><a href="#" data-bs-toggle="modal" data-bs-target="#{{ REQUEST_CONSULTATION }}" title="Запросить консультацию" class="py-2 text-nowrap"><svg fill="#95f0e8" width="26" height="26" class="me-2"><use href="{% static 'img/sprite.svg' %}#consultation"></use></svg>Запросить&nbsp;консультацию</a></li>
+  </ul>
+</div>

@@ -40,6 +40,7 @@
   </head>
   <body>
     {% block body %}{% endblock %}
+    {% include "include/cookie_banner.html" %}
 
     {% block modals %}
       {% request_modal subject=REQUEST_CONSULTATION %}
@@ -80,6 +81,7 @@
       <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
       <script src="{% static 'js/jquery.min.js' %}"></script>
       <script src="{% static 'js/jquery.cookie.min.js' %}"></script>
+      <script src="{% static 'js/cookie.banner.js' %}"></script>
       <script src="{% static 'js/size.to.cookie.js' %}"></script>
       <script src="{% static 'js/tooltip.js' %}"></script>
       <script src="{% static 'js/toast.min.js' %}"></script>

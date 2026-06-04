@@ -1,0 +1,28 @@
+{% load static %}
+{% load text %}
+
+<div class="container-fluid hero-outside-container-{{ segment_name }}">
+  <div class="screen-block hero">
+    <div class="container">
+      <div class="row content">
+        <div class="col-12 col-lg-5 d-flex align-items-center">
+          <div class="hero-text">
+            <div class="utp mb-2">
+              <h1>
+                <div class="hashtags text-green mb-2">{{ SEGMENT_HASH_TAGS|default:HASH_TAGS }}</div>
+                <span class="colored">{{ HERO.title|nobreak_spaces }}</span>
+              </h1>
+            </div>
+            <p>{{ HERO.text|safe|nobreak_spaces }}</p>
+            <a class="btn btn-accent btn-lg{% if request.user.is_authenticated %} px-5{% else %} px-4 px-md-5{% endif %} text-nowrap" href="{% url 'region' %}"><svg fill="#FFFFFF" width="24" height="24" class="me-2"><use href="{% static 'img/sprite.svg' %}#start"></use></svg>Начать</a>
+            {% if not request.user.is_authenticated %}
+              <p class="mt-2 ms-1 lh-1 d-block w-75"><small class="opacity-25">Получить доступ к&nbsp;бесплатной базовой версии сразу после авторизации</small></p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-12 col-md-7 d-none d-lg-block">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

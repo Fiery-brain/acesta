@@ -1,5 +1,4 @@
 import datetime
-from math import ceil
 
 from django.conf import settings
 from django.http import HttpRequest
@@ -8,39 +7,58 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import TemplateView
 
-from acesta.front.helpers import get_random_sight_group
-from acesta.front.helpers import get_random_tourism_type
-from acesta.front.helpers import get_sights_cnt
-from acesta.front.helpers import get_top_regions
-from acesta.front.helpers import get_top_sights
-from acesta.stats.helpers.base import get_regions_cnt
+from acesta.front.segment_settings import SECTION_FEATURES
+from acesta.front.segment_settings import SECTION_HASH_TAGS
+from acesta.front.segment_settings import SECTION_HERO
+from acesta.front.segment_settings import SECTION_PAGE_META
+from acesta.front.segment_settings import SECTION_WORKFLOW
+from acesta.front.segment_settings import SECTION_YOUR_SCENARIO
+from acesta.front.segment_settings import SECTION_YOUR_SEGMENT
+from acesta.front.segment_settings import SEGMENT_CONFIG
 from acesta.user.utils import get_support_form
 
 
-def index(request: HttpRequest) -> HttpResponse:
+def landing_hub(request: HttpRequest) -> HttpResponse:
     """
-    Index page
+    Landing Hub page
     :param request: django.http.HttpRequest
     :return: django.http.HttpResponse
     """
-    tourism_type_name, tourism_type = get_random_tourism_type()
-    sight_group_name, sight_group = get_random_sight_group()
-
     return render(
         request,
-        "index.html",
+        "landing_hub.html",
         {
-            "tourism_types": settings.TOURISM_TYPES_OUTSIDE,
-            "tourism_types_col_qty": str(ceil(len(settings.TOURISM_TYPES_OUTSIDE) / 2)),
-            "tourism_type_name": tourism_type_name,
-            "tourism_type": tourism_type,
-            "sight_group_name": sight_group_name,
-            "sight_group": sight_group,
-            "top_regions": get_top_regions(tourism_type_name),
-            "top_sights": get_top_sights(sight_group_name),
-            "regions_cnt": get_regions_cnt(),
-            "sights_cnt": get_sights_cnt(),
-            "tourism_types_cnt": len(settings.TOURISM_TYPES_OUTSIDE),
+            "segment_name": settings.DEFAULT_SEGMENT,
+            "PAGE_META": SEGMENT_CONFIG[SECTION_PAGE_META].get(
+                settings.DEFAULT_SEGMENT
+            ),
+            "HERO": SEGMENT_CONFIG[SECTION_HERO].get(settings.DEFAULT_SEGMENT),
+            "YOUR_SEGMENT": SEGMENT_CONFIG[SECTION_YOUR_SEGMENT],
+            "YOUR_SCENARIO": SEGMENT_CONFIG[SECTION_YOUR_SCENARIO],
+        },
+    )
+
+
+def segment_landing(
+    request: HttpRequest, segment: str = settings.DEFAULT_SEGMENT
+) -> HttpResponse:
+    """
+    Segment Landing page
+    :param request: django.http.HttpRequest
+    :param segment: str
+    :return: django.http.HttpResponse
+    """
+    request.session["current_segment"] = segment
+    return render(
+        request,
+        "segment_landing.html",
+        {
+            "segment_name": segment,
+            "SEGMENT_HASH_TAGS": SEGMENT_CONFIG[SECTION_HASH_TAGS].get(segment),
+            "PAGE_META": SEGMENT_CONFIG[SECTION_PAGE_META].get(segment),
+            "HERO": SEGMENT_CONFIG[SECTION_HERO].get(segment),
+            "FEATURES": SEGMENT_CONFIG[SECTION_FEATURES].get(segment),
+            "WORKFLOW": SEGMENT_CONFIG[SECTION_WORKFLOW].get(segment),
         },
     )
 
@@ -72,6 +90,19 @@ class SitemapView(TemplateView):
         context = super().get_context_data(*args, **kwargs)
         context["now"] = timezone.now()
         context["week_ago"] = timezone.now() - datetime.timedelta(days=7)
+        context["segment_pages"] = (
+            settings.SEGMENT_GOVERNMENT,
+            settings.SEGMENT_TIC,
+            settings.SEGMENT_TOUR_OPERATOR,
+            settings.SEGMENT_TOUR_AGENT,
+            settings.SEGMENT_TOURISM_PRODUCT_OWNER,
+            settings.SEGMENT_INVESTORS,
+            settings.SEGMENT_GUIDE,
+            settings.SEGMENT_MARKETING_AGENCY,
+            settings.SEGMENT_HOSPITALITY,
+            settings.SEGMENT_TOURISM_EVENT,
+            settings.SEGMENT_TRANSPORTATION,
+        )
         return context
 
 

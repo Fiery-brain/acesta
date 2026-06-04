@@ -6,14 +6,16 @@
 @font-face {font-family:'Golos';font-style:normal;font-weight:900;src:url('../font/GolosText-Black.ttf');format('truetype')}
 
 :root{
-    --acesta-text-primary:#4b4a4a;
-    --acesta-text-secondary:#959090;
+    --acesta-text-primary:#2f4d5a;
+    --acesta-text-secondary:#7e838b;
     --acesta-primary:#429388;
     --acesta-dark-primary:#34766A;
     --acesta-very-dark-primary:#244F47;
     --acesta-light-primary:#B2DFDB;
     --acesta-accent-secondary:#fab222;
+    --acesta-light-accent-secondary:#f8d691;
     --acesta-accent-primary:#C44D63;
+    --acesta-light-accent-primary:#d97a8c;
     --acesta-accent-primary-dark:#ad223c;
     --acesta-divider:#DCDCDC;
     --acesta-bg:#f8f9fc;
@@ -69,7 +71,51 @@
     --acesta-kitchen:#C54B68;
     --acesta-gastroenterprise:#C84B7F;
 
-    --acesta-border-light:#e2e1e1;
+    --acesta-segment-tourist-investor:#F8B62E;
+    --acesta-segment-tourist-investor-wave:rgba(248,182,46,.34);
+    --acesta-segment-tourist-investor-bg:rgba(248,182,46,.11);
+
+    --acesta-segment-tourism-product-owner:#A4B169;
+    --acesta-segment-tourism-product-owner-wave:rgba(164,177,105,.34);
+    --acesta-segment-tourism-product-owner-bg:rgba(164,177,105,.16);
+
+    --acesta-segment-tour-operator:#7BB165;
+    --acesta-segment-tour-operator-wave:rgba(123,177,101,.34);
+    --acesta-segment-tour-operator-bg:rgba(123,177,101,.13);
+
+    --acesta-segment-tour-agent:#DC8535;
+    --acesta-segment-tour-agent-wave:rgba(220,133,53,.33);
+    --acesta-segment-tour-agent-bg:rgba(220,133,53,.13);
+
+    --acesta-segment-government:#48929E;
+    --acesta-segment-government-wave:rgba(72,146,158,.33);
+    --acesta-segment-government-bg:rgba(72,146,158,.16);
+
+    --acesta-segment-tic:#5AAA6B;
+    --acesta-segment-tic-wave:rgba(90,170,107,.34);
+    --acesta-segment-tic-bg:rgba(90,170,107,.14);
+
+    --acesta-segment-hospitality:#CA6E4C;
+    --acesta-segment-hospitality-wave:rgba(202,110,76,.33);
+    --acesta-segment-hospitality-bg:rgba(202,110,76,.13);
+
+    --acesta-segment-tourist-guide:#429388;
+    --acesta-segment-tourist-guide-wave:rgba(66,147,136,.33);
+    --acesta-segment-tourist-guide-bg:rgba(66,147,136,.13);
+
+    --acesta-segment-marketing-agency:#C44D63;
+    --acesta-segment-marketing-agency-wave:rgba(196,77,99,.32);
+    --acesta-segment-marketing-agency-bg:rgba(196,77,99,.11);
+
+    --acesta-segment-tourism-event:#A8AE5A;
+    --acesta-segment-tourism-event-wave:rgba(168,174,90,.34);
+    --acesta-segment-tourism-event-bg:rgba(168,174,90,.13);
+
+    --acesta-segment-transportation:#D86060;
+    --acesta-segment-transportation-wave:rgba(216,96,96,.33);
+    --acesta-segment-transportation-bg:rgba(216,96,96,.06);
+
+    --acesta-border-light:#d3dee1;
 }
 body{background-color:#0C4940}
 h1{font-size:32px; color:var(--acesta-text-primary);font-weight:600}
@@ -467,6 +513,9 @@ input:checked {background-color:var(--acesta-light-primary);border-color:var(--a
 .footer .winner .desc{font-weight:400;display:inline-block;margin-top:6px}
 .footer .winner_img{float:left;transform:translateY(1px);height:120px;margin-right:24px}
 .we-are-in-network svg{fill:#95f0e8;width:42px;height:42px;}
+.footer-wave{position: relative;top:2px}
+footer .footer-wave-undefined{color:#9cd3cf}
+footer .footer-border{border-top: 1px solid #9cd3cf1f}
 
 @media (max-width:832px){
     body{font-size:.85rem}
@@ -525,6 +574,18 @@ textarea.form-control{min-height: 100px;}
 .dot {height:8px;width:8px;background-color:var(--acesta-dark-primary);border-radius:50%;display:inline-block;transform:translateY(-2px)}
 .request-button{position:fixed;bottom:20px;right:20px;z-index: 99;font-size: 18px;border:none;outline:none;color:white;cursor:pointer;border-radius:4px}
 
+.cookie-banner{display:none;position:fixed;left:0;right:0;bottom:24px;z-index:1035;width:100%}
+.cookie-banner.is-visible{display:block}
+.cookie-banner-inner{display:grid;grid-template-columns:86px minmax(280px,1fr) minmax(180px,270px) auto;align-items:center;column-gap:32px;min-width:0;padding:28px 34px;border-radius:28px;background:rgba(238,244,244,.9);box-shadow:0 16px 48px rgba(12,73,64,.18);border:1px solid #d7e8e7;backdrop-filter: blur(18px) saturate(1.15); -webkit-backdrop-filter: blur(18px) saturate(1.15);}
+.cookie-banner-icon{display:flex;align-items:center;justify-content:center;width:86px;height:86px;border-radius:50%;color:var(--acesta-dark-primary);background:rgba(178,223,219,.55)}
+.cookie-banner-icon svg{display:block;width:56px;height:56px;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:.4;}
+.cookie-banner-copy{min-width:0;overflow-wrap:break-word}
+.cookie-banner-copy h2{margin-bottom:6px;color:var(--acesta-text-primary);font-size:18px;line-height:1.2}
+.cookie-banner-copy p{margin:0;color:var(--acesta-text-secondary);font-size:14px;line-height:1.35}
+.cookie-banner-link{color:#abb1b6;font-size:14px;line-height:1.25;text-align:center;text-decoration:underline!important;overflow-wrap:break-word;}
+.cookie-banner-link:hover{color:var(--acesta-primary)}
+.cookie-banner-button{min-width:184px;padding-right:32px;padding-left:32px}
+
 .accordion-button{color:var(--acesta-primary)}
 .accordion-button:not(.collapsed) {color:var(--bs-white);background-color:var(--acesta-primary);box-shadow:inset 0 calc(var(--bs-accordion-border-width) * -1) 0 var(--bs-accordion-border-color)}
 .accordion-button:not(.collapsed)::after {background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23FFFFFF'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e")}
@@ -538,3 +599,22 @@ textarea.form-control{min-height: 100px;}
 }
 .modal-body .tab-pane h2{font-size: 20px}
 .modal-backdrop{opacity:0.5 !important;}
+
+@media (min-width:768px) and (max-width:1199px){
+    .cookie-banner-inner{display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding:24px}
+    .cookie-banner-icon{width:72px;height:72px}
+    .cookie-banner-icon svg{width:48px;height:48px}
+    .cookie-banner-copy p{font-size:16px}
+    .cookie-banner-link{text-align:left}
+    .cookie-banner-button{min-width:150px;padding-right:24px;padding-left:24px}
+}
+
+@media (max-width:767px){
+    .cookie-banner{bottom:0}
+    .cookie-banner-inner{display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding:24px 20px;border-radius:24px 24px 0 0}
+    .cookie-banner-icon{width:72px;height:72px}
+    .cookie-banner-icon svg{width:48px;height:48px}
+    .cookie-banner-copy p{font-size:16px}
+    .cookie-banner-link{text-align:left}
+    .cookie-banner-button{min-width:0}
+}

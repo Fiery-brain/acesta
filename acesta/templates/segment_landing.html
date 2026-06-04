@@ -1,0 +1,504 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load requests %}
+{% load prop %}
+{% load segments %}
+{% load text %}
+
+{% block title %}{{ PAGE_META.title|default:'' }}{% endblock %}
+
+{% block ogtitle %}{{ PAGE_META.title|default:'' }}{% endblock %}
+
+{% block description %}{{ PAGE_META.text|default:'' }}{% endblock %}
+
+{% block ogdescription %}{{ PAGE_META.text|default:'' }}{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/landings.css' %}">
+{% endblock %}
+
+{% block modals %}
+  {{ block.super }}
+  {% request_modal subject="presentation" %}
+{% endblock %}
+
+{% block body %}
+  <div class="wrapper segment-landing-page d-flex flex-column justify-content-between">
+    <div class="container-fluid px-0">
+
+      {% include "include/landing_nav.html" %}
+
+      {% include "include/landing_hero.html" %}
+
+      <section class="container-fluid px-0 segment-risk-section">
+        <div class="container">
+          <div class="segment-risk">
+            <header class="segment-risk-header landing-section-header">
+              <p>Проблема</p>
+              <h2>Решения вслепую&nbsp;&mdash; это риск</h2>
+              <div>Без актуальных данных сложно понять реальный спрос, увидеть точки роста и&nbsp;выбрать решение вовремя</div>
+            </header>
+
+            <div class="segment-risk-grid">
+              <article class="segment-risk-card segment-risk-card-red">
+                <div class="segment-risk-card-head">
+                  <div class="segment-risk-icon" aria-hidden="true">
+                    <svg>
+                      <use href="{% static 'img/sprite.svg' %}#blind"></use>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Сложно оценить реальный интерес</h3>
+                    <p>Не&nbsp;всегда понятно, какие направления будут востребованы</p>
+                  </div>
+                </div>
+                <div class="segment-risk-visual" aria-hidden="true">
+                  <img src="{% static 'img/risk_bg_blind.svg' %}" alt="Сложно оценить реальный интерес">
+                </div>
+              </article>
+
+              <article class="segment-risk-card segment-risk-card-yellow">
+                <div class="segment-risk-card-head">
+                  <div class="segment-risk-icon" aria-hidden="true">
+                    <svg>
+                      <use href="{% static 'img/sprite.svg' %}#find"></use>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Сложно понять, что сработает</h3>
+                    <p>Интерес туристов меняется быстрее привычных подходов и&nbsp;прошлых решений</p>
+                  </div>
+                </div>
+                <div class="segment-risk-visual" aria-hidden="true">
+                  <img src="{% static 'img/risk_bg_find.svg' %}" alt="Сложно понять, что сработает">
+                </div>
+              </article>
+
+              <article class="segment-risk-card segment-risk-card-green">
+                <div class="segment-risk-card-head">
+                  <div class="segment-risk-icon" aria-hidden="true">
+                    <svg>
+                      <use href="{% static 'img/sprite.svg' %}#dots"></use>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Сложно увидеть точки роста</h3>
+                    <p>Без актуальных данных трудно понимать, куда двигаться дальше</p>
+                  </div>
+                </div>
+                <div class="segment-risk-visual" aria-hidden="true">
+                  <img src="{% static 'img/risk_bg_dots.svg' %}" alt="Сложно увидеть точки роста">
+                </div>
+              </article>
+            </div>
+
+            <div class="segment-risk-solution">
+              <div class="segment-risk-dashboard" aria-hidden="true">
+                <img src="{% static 'img/solution_demo_mini.svg' %}" alt="ацеста помогает увидеть картину целиком">
+              </div>
+              <div class="segment-risk-solution-copy mt-sm-4 mt-lg-0">
+                <span>Решение</span>
+                <h3>Помогаем увидеть картину целиком</h3>
+                <p>Сервис объединяет данные об&nbsp;интересах туристов, показывает реальную ситуацию и&nbsp;помогает принимать решения с&nbsp;меньшими рисками и&nbsp;большей уверенностью</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {% include 'include/flow_vs_interest.html' %}
+
+      <section class="container-fluid px-0 segment-overview-section">
+        <div class="container">
+          <div class="segment-overview">
+            <header class="segment-overview-header landing-section-header">
+              <p>а что внутри</p>
+              <h2>Вы заходите и&nbsp;сразу видите</h2>
+              <div>Ключевые сигналы интереса собраны в&nbsp;одном интерфейсе, чтобы быстрее понять ситуацию и&nbsp;перейти к&nbsp;решениям</div>
+            </header>
+
+            <div class="segment-overview-content">
+              <div class="segment-overview-copy">
+                <ul class="segment-overview-list">
+                  <li>
+                    <span class="segment-overview-icon" aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#heart"></use>
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>Какой интерес туристы проявляют к&nbsp;регионам и&nbsp;направлениям</strong>
+                      <small>из&nbsp;каких регионов и&nbsp;городов люди интересуются поездками</small>
+                    </span>
+                  </li>
+                  <li>
+                    <span class="segment-overview-icon" aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#territory"></use>
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>Какие территории выглядят перспективнее</strong>
+                      <small>сравнение регионов, городов и&nbsp;точек притяжения по&nbsp;интересу и&nbsp;потенциалу</small>
+                    </span>
+                  </li>
+                  <li>
+                    <span class="segment-overview-icon" aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#auditory"></use>
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>Кто интересуется направлениями и&nbsp;регионами</strong>
+                      <small>целевые группы туристов, интересы аудитории и&nbsp;особенности спроса</small>
+                    </span>
+                  </li>
+                  <li>
+                    <span class="segment-overview-icon" aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#trophy"></use>
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>Какие направления выделяются сейчас</strong>
+                      <small>рейтинги, туристический потенциал и&nbsp;рекомендации системы</small>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+            <div class="segment-overview-dashboard">
+              <a class="landing-dashboard-link" href="{% url 'interest' %}" title="Узнать текущую ситуацию в вашей локации" aria-label="Узнать текущую ситуацию в вашей локации"></a>
+              <div class="segment-overview-top" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="segment-overview-panel">
+                <div class="segment-overview-nav">
+                  <div class="segment-overview-title">
+                    <strong>Интерес к региону</strong>
+                  </div>
+                  <div class="segment-overview-select">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                      <use href="{% static 'img/sprite.svg' %}#tourism"></use>
+                    </svg>
+                    <span>все виды туризма</span>
+                    <i></i>
+                  </div>
+                </div>
+
+                <div class="segment-overview-main">
+                  <article class="segment-overview-table-card segment-overview-table">
+                    <div class="segment-overview-table-tabs" aria-label="Источник интереса">
+                      <div class="segment-overview-table-tab">из&nbsp;регионов</div>
+                      <div class="segment-overview-table-tab is-active">из&nbsp;городов</div>
+                    </div>
+                    <ul class="segment-overview-table-rows">
+                      <li class="segment-overview-table-row is-primary"><span>Махачкала</span><strong>112&nbsp;944</strong></li>
+                      <li class="segment-overview-table-row"><span>Москва</span>33&nbsp;152</li>
+                      <li class="segment-overview-table-row is-primary is-active"><span>Каспийск</span><strong>25&nbsp;581</strong></li>
+                      <li class="segment-overview-table-row"><span>Санкт-Петербург</span>13&nbsp;828</li>
+                      <li class="segment-overview-table-row is-primary"><span>Дербент</span><strong>12&nbsp;522</strong></li>
+                      <li class="segment-overview-table-row"><span>Новосибирск</span>5&nbsp;767</li>
+                      <li class="segment-overview-table-row is-primary"><span>Избербаш</span><strong>4&nbsp;884</strong></li>
+                      <li class="segment-overview-table-row is-primary"><span>Хасавюрт</span><strong>4&nbsp;368</strong></li>
+                    </ul>
+                  </article>
+
+                  <div class="segment-overview-map" aria-hidden="true">
+                    <img src="{% static 'img/segment_landing_demo_map.svg' %}" alt="Интерес туристов к региону">
+                  </div>
+                  <div class="segment-overview-widgets">
+                    <article class="segment-overview-widget">
+                      <h3>Целевые группы<span class="tail"> туристов</span></h3>
+                      <img src="{% static 'img/segment_landing_demo_target.svg' %}" alt="Целевые группы туристов">
+                    </article>
+                    <article class="segment-overview-widget">
+                      <h3>Рейтинги</h3>
+                      <img src="{% static 'img/segment_landing_demo_rating.svg' %}" alt="Рейтинг регионов по интересу туристов">
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="container-fluid px-0 segment-workflow-section">
+        <div class="container">
+          <div class="segment-workflow">
+            <div class="segment-workflow-shell">
+              <header class="segment-workflow-header landing-section-header">
+                <p>Как это работает</p>
+                <h2>От&nbsp;интереса к&nbsp;решению</h2>
+                <div>{{ WORKFLOW.description|default:''|safe }}</div>
+              </header>
+
+              <div class="segment-workflow-grid">
+                <article class="segment-workflow-card segment-workflow-card-map">
+                  <div class="segment-workflow-card-head">
+                    <span class="segment-workflow-icon" aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#territory"></use>
+                      </svg>
+                    </span>
+                    <div>
+                      <h3>Территории</h3>
+                      <p>Сравнивайте регионы, города и&nbsp;точки притяжения, находите сильные направления и&nbsp;территории</p>
+                    </div>
+                  </div>
+                  <div class="segment-workflow-visual" aria-hidden="true">
+                    <img src="{% static 'img/workflow_map.svg' %}" alt="Анализ территорий">
+                  </div>
+                  <div class="segment-workflow-note">
+                    <span>
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#check"></use>
+                      </svg>
+                    </span>
+                    <p>Ясно, какие территории реально привлекают, а какие сейчас переоценены</p>
+                  </div>
+                </article>
+
+                <article class="segment-workflow-card segment-workflow-card-interest">
+                  <div class="segment-workflow-card-head">
+                    <span class="segment-workflow-icon" aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#heart"></use>
+                      </svg>
+                    </span>
+                    <div>
+                      <h3>Интерес туристов</h3>
+                      <p>Узнайте, что вызывает интерес у&nbsp;разных аудиторий, какие темы, места и&nbsp;форматы отдыха людям ближе</p>
+                    </div>
+                  </div>
+                  <div class="segment-workflow-visual" aria-hidden="true">
+                    <img src="{% static 'img/workflow_target_groups.svg' %}" alt="Выбор целевых групп">
+                  </div>
+
+                  <div class="segment-workflow-note">
+                    <span>
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#check"></use>
+                      </svg>
+                    </span>
+                    <p>Понятно, какие темы, места и&nbsp;форматы отдыха реально интересны туристам</p>
+                  </div>
+                </article>
+
+                <article class="segment-workflow-card segment-workflow-card-decision">
+                  <div class="segment-workflow-card-head">
+                    <span class="segment-workflow-icon" aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#goal"></use>
+                      </svg>
+                    </span>
+                    <div>
+                      <h3>{{ WORKFLOW.decision.title|default:''|safe }}</h3>
+                      <p>{{ WORKFLOW.decision.text|default:''|safe }}</p>
+                    </div>
+                  </div>
+                  <div class="segment-workflow-visual">
+                    <img src="{% static 'img/workflow_result.svg' %}" alt="Результат работы и принятие решений">
+                  </div>
+
+                  <div class="segment-workflow-note">
+                    <span>
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#check"></use>
+                      </svg>
+                    </span>
+                    <p>Видно, какие решения дадут результат, а какие не&nbsp;дадут ожидаемого эффекта</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container-fluid px-0 segment-flexibility-section">
+        <div class="container">
+          <div class="segment-flexibility">
+            <header class="segment-flexibility-header landing-section-header">
+              <p>Работайте как удобно вам</p>
+              <h2>Интерпретируйте данные самостоятельно или с&nbsp;помощью&nbsp;ИИ</h2>
+              <div>Сервис подстраивается под ваши задачи и&nbsp;привычный формат работы</div>
+            </header>
+
+            <div class="segment-flexibility-main">
+              <div class="segment-flexibility-copy">
+                <div class="segment-flexibility-list">
+                  <article class="segment-flexibility-item">
+                    <span class="segment-flexibility-icon" aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#analysis"></use>
+                      </svg>
+                    </span>
+                    <div>
+                      <h3>Исследуйте в&nbsp;удобном формате</h3>
+                      <p>Сравнивайте территории, анализируйте интерес и&nbsp;исследуйте аудитории в&nbsp;понятных дашбордах и&nbsp;визуализациях</p>
+                    </div>
+                  </article>
+
+                  <article class="segment-flexibility-item">
+                    <span class="segment-flexibility-icon" aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#ai"></use>
+                      </svg>
+                    </span>
+                    <div>
+                      <h3>Получайте подсказки от&nbsp;ИИ</h3>
+                      <p>Сервис помогает выделить важное, находит скрытые сигналы и&nbsp;предлагает направления для роста</p>
+                    </div>
+                  </article>
+                </div>
+
+                <div class="segment-flexibility-note">
+                  <span aria-hidden="true">
+                      <svg>
+                        <use href="{% static 'img/sprite.svg' %}#fork"></use>
+                      </svg>
+                  </span>
+                  <p><strong>Выбирайте подходящий формат работы, чтобы быстрее перейти к действиям</strong></p>
+                </div>
+              </div>
+
+              <div class="segment-flexibility-demo" aria-hidden="true">
+                <img src="{% static 'img/working_flexibility_demo.svg' %}" alt="Интерпретируйте данные самостоятельно или с помощью ИИ">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container-fluid px-0 segment-faq-section">
+        <div class="container">
+          <div class="segment-faq">
+            <header class="segment-faq-header landing-section-header">
+              <p>FAQ</p>
+              <h2>Часто задаваемые вопросы</h2>
+              <div>Мы собрали ответы на&nbsp;вопросы, которые возникают чаще всего. Если не&nbsp;нашли нужное&nbsp;&mdash; задайте свой, мы&nbsp;всегда рядом.</div>
+            </header>
+
+            <div class="segment-faq-grid">
+              <div class="segment-faq-column">
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Откуда берутся данные?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Мы используем открытые источники и&nbsp;структурируем сигналы интереса так, чтобы их было удобно сравнивать между территориями и&nbsp;направлениями</p>
+                </details>
+
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Что именно показывает интерес?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Интерес показывает, чем люди интересуются до&nbsp;поездки: какие регионы, города, темы и&nbsp;форматы отдыха вызывают спрос</p>
+                </details>
+
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Чем интерес отличается от&nbsp;турпотока?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Турпоток показывает то, что уже произошло. Интерес помогает увидеть спрос до&nbsp;поездки и&nbsp;подготовить решения заранее.</p>
+                </details>
+
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Как понять потенциал территории?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Сравнивайте интерес, динамику, аудитории и&nbsp;точки притяжения. Так проще увидеть, где спрос растёт и&nbsp;куда стоит направлять усилия.</p>
+                </details>
+
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Можно&nbsp;ли сравнивать регионы?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Да, сравнение территорий помогает увидеть сильные стороны, точки роста и&nbsp;разницу в&nbsp;поведении туристической аудитории</p>
+                </details>
+              </div>
+
+              <div class="segment-faq-column">
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Как часто обновляются данные?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Данные обновляются регулярно, чтобы вы&nbsp;видели актуальную динамику интереса и&nbsp;могли реагировать быстрее сезонных отчётов</p>
+                </details>
+
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Для кого подходит ацеста?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Сервис подходит тем, кто принимает решения в&nbsp;туризме: территориям, бизнесу, инвесторам, туроператорам, отелям и&nbsp;командам продвижения</p>
+                </details>
+
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Нужно&nbsp;ли разбираться в&nbsp;аналитике?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Нет. Интерфейс и&nbsp;подсказки помогают читать данные без сложной подготовки, а&nbsp;глубокий анализ можно подключать постепенно.</p>
+                </details>
+
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Можно&nbsp;ли выгружать отчёты и&nbsp;графики?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Да, данные и&nbsp;визуализации можно использовать для рабочих обсуждений, отчётов, презентаций и&nbsp;стратегических решений</p>
+                </details>
+
+                <details class="segment-faq-item">
+                  <summary>
+                    <strong>Можно&nbsp;ли использовать данные для&nbsp;презентаций и&nbsp;стратегий?</strong>
+                    <i aria-hidden="true"></i>
+                  </summary>
+                  <p>Да. Данные можно брать как основу для аргументации, приоритизации проектов и&nbsp;обсуждения развития туристических направлений.</p>
+                </details>
+              </div>
+            </div>
+
+            <div class="segment-faq-contact">
+              <span class="segment-faq-contact-icon" aria-hidden="true">
+                <svg aria-hidden="true">
+                  <use href="{% static 'img/sprite.svg' %}#support"></use>
+                </svg>
+              </span>
+              <div>
+                <h3>Есть другой вопрос?</h3>
+                <p>Напишите нам&nbsp;&mdash; мы&nbsp;будем рады помочь и&nbsp;подсказать лучшее решение</p>
+              </div>
+              <a href="#" class="btn btn-primary btn-lg segment-faq-contact-button text-nowrap" data-bs-toggle="modal" data-bs-target="#{{ REQUEST_CONSULTATION }}">
+                <svg fill="#FFFFFF" aria-hidden="true">
+                  <use href="{% static 'img/sprite.svg' %}#consultation"></use>
+                </svg>
+                Запросить&nbsp;консультацию
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="container-fluid px-0">
+        {% include 'include/footer.html' %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+  <script src="{% static 'js/user.clear.phone.mask.js' %}"></script>
+  <script src="{% static 'js/navbar.show.hide.js' %}"></script>
+{% endblock %}

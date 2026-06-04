@@ -1,4 +1,5 @@
 from django import test
+from django.conf import settings
 from django.urls import reverse
 
 
@@ -15,6 +16,13 @@ class FrontTest(test.TestCase):
         # sitemap
         response = self.client.get(reverse("sitemap"))
         self.assertEqual(response.status_code, 200)
+        for segment in (
+            settings.SEGMENT_GOVERNMENT,
+            settings.SEGMENT_TIC,
+            settings.SEGMENT_TOUR_OPERATOR,
+        ):
+            self.assertContains(response, f"/{segment}/")
+        self.assertContains(response, "<priority>0.90</priority>")
 
         # robots
         response = self.client.get(reverse("robots"))
