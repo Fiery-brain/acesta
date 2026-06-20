@@ -2,13 +2,13 @@
 {% load static %}
 {% load prop %}
 
-{% block title %}Услуги и&nbsp;цены {% endblock %}
+{% block title %}Уровни доступа к&nbsp;данным {% endblock %}
 
 {% block part_title %}
   <div class="container pt-5 mb-3">
     <div class="row">
       <div class="col-12 col-md-3">
-        <h1 class="fs-4 mb-2 text-muted text-nowrap">Услуги и&nbsp;цены</h1>
+        <h1 class="fs-4 mb-2 text-muted text-nowrap">Уровни доступа к&nbsp;данным</h1>
       </div>
       <div class="col-12 col-md-9 pt-3 pt-md-0 d-flex align-items-center justify-content-md-end text-nowrap">
         {% if request.user.current_region.rank > 0%}

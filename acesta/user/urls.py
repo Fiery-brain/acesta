@@ -26,7 +26,9 @@ from acesta.account.views import signupnext
 from acesta.socialaccount.providers.leaderid.provider import LeaderIDProvider
 from acesta.socialaccount.views import connections
 from acesta.socialaccount.views import social_signup
+from acesta.user.views import dashboard_start_presentation
 from acesta.user.views import get_costs
+from acesta.user.views import hide_start_modal
 from acesta.user.views import new_order
 from acesta.user.views import oferta
 from acesta.user.views import offer
@@ -121,6 +123,16 @@ urlpatterns += [
     path("oferta/", oferta, name="oferta"),
     path("offer/", login_required(offer), name="offer"),
     path("offer_report/", login_required(offer_report), name="offer_report"),
+    path(
+        "start/hide/",
+        login_required(hide_start_modal),
+        name="hide_start_modal",
+    ),
+    path(
+        "start/presentation/",
+        login_required(dashboard_start_presentation),
+        name="dashboard_start_presentation",
+    ),
     path("new_order/", login_required(new_order), name="order"),
     path("get_costs/", login_required(get_costs), name="costs"),
 ]

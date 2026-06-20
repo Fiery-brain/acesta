@@ -2,11 +2,15 @@ from io import BytesIO
 
 from django.conf import settings
 from django.contrib import messages
+from django.http import FileResponse
 from django.http import HttpRequest
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import get_template
 from django.utils import timezone
+from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_POST
 from xhtml2pdf import pisa
 
 from acesta.user.apps import DISCOUNTS
@@ -16,6 +20,25 @@ from acesta.user.models import Order
 from acesta.user.utils import fetch_pdf_resources
 from acesta.user.utils import get_order_form
 from acesta.user.utils import send_message
+
+
+@require_POST
+def hide_start_modal(request: HttpRequest) -> JsonResponse:
+    request.user.is_show_start = False
+    request.user.save(update_fields=["is_show_start"])
+
+    return JsonResponse({"status": "ok"})
+
+
+@require_GET
+def dashboard_start_presentation(request: HttpRequest) -> FileResponse:
+    return FileResponse(
+        open(
+            f'{str(settings.APPS_DIR / "templates")}/Tourism-analytics-acesta-presentation.pdf',
+            "rb",
+        ),
+        content_type="application/pdf",
+    )
 
 
 def oferta(request: HttpRequest) -> HttpResponse:

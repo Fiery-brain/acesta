@@ -180,7 +180,7 @@ def set_regions_view(request: HttpRequest, code: str) -> HttpResponse:
     region = Region.objects.get(code=code)
     request.user.current_region = region
     request.user.save()
-    return redirect("region")
+    return redirect(request.META.get("HTTP_REFERER", "region"))
 
 
 def get_recommendations_view(request: HttpRequest, part: str) -> JsonResponse:

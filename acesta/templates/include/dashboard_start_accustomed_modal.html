@@ -1,0 +1,65 @@
+{% load static %}
+<div
+  class="modal fade dashboard-start-modal acesta-segment-theme-{{ request.user.segment }}"
+  id="dashboardStartModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dashboardStartModalLabel"
+  aria-hidden="true"
+  data-hide-url="{% url 'hide_start_modal' %}"
+  data-auto-show="{% if request.user.is_show_start %}{% if url == 'region' or url == 'interest' or url == 'rating' or url == 'rating-cities' or url == 'rating-sights' %}true{% endif %}{% endif %}"
+  data-session-key="{{ request.session.session_key|default:'' }}"
+  data-user-id="{{ request.user.pk }}"
+>
+  <div class="modal-dialog modal-dialog-centered modal-95" role="document">
+    <div class="modal-content d-flex flex-column justify-content-between">
+      {% include "include/dashboard_start_balloon.html"%}
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body">
+        <section class="dashboard-start-hero">
+          <div>
+            <h2 class="dashboard-start-title" id="dashboardStartModalLabel">С&nbsp;возвращением <span class="dashboard-start-logo-word">в&nbsp;<svg viewbox="0 0 281 62"><use href="{% static 'img/sprite.svg' %}#logo-2"></use></svg>!</span></h2>
+            <p class="dashboard-start-subtitle mt-3 ms-1"><strong>Выберите</strong>, какая задача для&nbsp;вас сейчас <strong>наиболее актуальна</strong>:</p>
+          </div>
+        </section>
+
+        <div class="dashboard-start-grid">
+          <a class="dashboard-start-card dashboard-start-card-region" href="{% url 'region' %}">
+            <div>
+              <h4 class="mt-0">Понять туристические возможности вашего региона</h4>
+              <span class="py-1">Смотрите ключевые показатели, динамику и&nbsp;тенденции развития региона во&nbsp;времени</span>
+            </div>
+            <div class="mt-1 open-part bg-region"><p class="mb-0"><span>Открыть раздел</span> <b>«Регион»</b></p></div>
+          </a>
+
+          <a class="dashboard-start-card dashboard-start-card-interest" href="{% url 'interest' %}">
+            <div>
+              <h4 class="mt-0">Узнать, что интересует потенциальных туристов</h4>
+              <span class="py-1">Анализируйте спрос, интересы, направления и&nbsp;сезонность туристического потока</span>
+            </div>
+            <div class="mt-1 open-part bg-interest"><p class="mb-0"><span>Открыть раздел</span> <b>«Интерес»</b></p></div>
+          </a>
+
+          <a class="dashboard-start-card dashboard-start-card-rating" href="{% url 'rating' %}">
+            <div>
+              <h4 class="mt-0">Оценить позиции, сравнить территории и&nbsp;точки притяжения</h4>
+              <span class="py-1">Сравнивайте показатели с&nbsp;другими регионами и&nbsp;находите точки роста</span>
+            </div>
+            <div class="mt-1 open-part bg-rating"><p class="mb-0"><span>Открыть раздел</span> <b>«Рейтинг»</b></p></div>
+          </a>
+        </div>
+
+        {% include "include/dashboard_start_note.html" %}
+
+        {% include "include/dashboard_start_help.html" %}
+
+        {% if request.user.is_show_start %}
+          <div class="form-check dashboard-start-check ms-1 d-none">
+            <input class="form-check-input" type="checkbox" value="1" id="dashboardStartDontShow">
+            <label class="form-check-label" for="dashboardStartDontShow">Больше не&nbsp;показывать</label>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -271,8 +271,8 @@
     </div>
     <div class="col-12 ps-2 ps-lg-4 pt-5 pt-lg-0 col-lg-7">
       <div class="d-md-flex justify-content-between align-items-end">
-        <h3 class="fs-4">Доступные регионы</h3>
-        <button type="button" class="btn btn-lg btn-accent mb-1 d-none d-lg-inline position-relative btn-expand px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg> Расширить доступ</button>
+        <h3 class="fs-4">Управление доступом</h3>
+        <button type="button" class="btn btn-lg btn-accent mb-1 d-none d-lg-inline position-relative btn-expand px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg>Управлять</button>
       </div>
       <div class="overflow-auto mt-1 table-fixed-head allowed-regions">
         <table class="table table-hover table-responsive">
@@ -324,7 +324,7 @@
           </tbody>
         </table>
       </div>
-      <button class="btn btn-lg btn-accent d-lg-none mt-1 px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg> Расширить доступ</button>
+      <button class="btn btn-lg btn-accent d-lg-none mt-1 px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg> Управлять</button>
       <h3 class="fs-4 pt-5">Заявки</h3>
       <div class="overflow-auto mt-2 table-fixed-head orders">
         {% if request.user.user_orders.all %}

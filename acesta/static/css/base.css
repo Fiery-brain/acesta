@@ -20,7 +20,7 @@
     --acesta-divider:#DCDCDC;
     --acesta-bg:#f8f9fc;
 
-    --acesta-rank0:#959090;
+    --acesta-rank0:#808898;
     --acesta-rank1:#7B8986;
     --acesta-rank2:#66847E;
     --acesta-rank3:#517E76;
@@ -74,49 +74,72 @@
     --acesta-segment-tourist-investor:#F8B62E;
     --acesta-segment-tourist-investor-wave:rgba(248,182,46,.34);
     --acesta-segment-tourist-investor-bg:rgba(248,182,46,.11);
+    --acesta-segment-tourist-investor-dark:color-mix(in srgb, var(--acesta-segment-tourist-investor) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-tourism-product-owner:#A4B169;
     --acesta-segment-tourism-product-owner-wave:rgba(164,177,105,.34);
     --acesta-segment-tourism-product-owner-bg:rgba(164,177,105,.16);
+    --acesta-segment-tourism-product-owner-dark:color-mix(in srgb, var(--acesta-segment-tourism-product-owner) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-tour-operator:#7BB165;
     --acesta-segment-tour-operator-wave:rgba(123,177,101,.34);
     --acesta-segment-tour-operator-bg:rgba(123,177,101,.13);
+    --acesta-segment-tour-operator-dark:color-mix(in srgb, var(--acesta-segment-tour-operator) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-tour-agent:#DC8535;
     --acesta-segment-tour-agent-wave:rgba(220,133,53,.33);
     --acesta-segment-tour-agent-bg:rgba(220,133,53,.13);
+    --acesta-segment-tour-agent-dark:color-mix(in srgb, var(--acesta-segment-tour-agent) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-government:#48929E;
     --acesta-segment-government-wave:rgba(72,146,158,.33);
     --acesta-segment-government-bg:rgba(72,146,158,.16);
+    --acesta-segment-government-dark:color-mix(in srgb, var(--acesta-segment-government) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-tic:#5AAA6B;
     --acesta-segment-tic-wave:rgba(90,170,107,.34);
     --acesta-segment-tic-bg:rgba(90,170,107,.14);
+    --acesta-segment-tic-dark:color-mix(in srgb, var(--acesta-segment-tic) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-hospitality:#CA6E4C;
     --acesta-segment-hospitality-wave:rgba(202,110,76,.33);
     --acesta-segment-hospitality-bg:rgba(202,110,76,.13);
+    --acesta-segment-hospitality-dark:color-mix(in srgb, var(--acesta-segment-hospitality) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-tourist-guide:#429388;
     --acesta-segment-tourist-guide-wave:rgba(66,147,136,.33);
     --acesta-segment-tourist-guide-bg:rgba(66,147,136,.13);
+    --acesta-segment-tourist-guide-dark:color-mix(in srgb, var(--acesta-segment-tourist-guide) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-marketing-agency:#C44D63;
     --acesta-segment-marketing-agency-wave:rgba(196,77,99,.32);
     --acesta-segment-marketing-agency-bg:rgba(196,77,99,.11);
+    --acesta-segment-marketing-agency-dark:color-mix(in srgb, var(--acesta-segment-marketing-agency) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-tourism-event:#A8AE5A;
     --acesta-segment-tourism-event-wave:rgba(168,174,90,.34);
     --acesta-segment-tourism-event-bg:rgba(168,174,90,.13);
+    --acesta-segment-tourism-event-dark:color-mix(in srgb, var(--acesta-segment-tourism-event) 70%, var(--acesta-very-dark-primary));
 
     --acesta-segment-transportation:#D86060;
     --acesta-segment-transportation-wave:rgba(216,96,96,.33);
     --acesta-segment-transportation-bg:rgba(216,96,96,.06);
+    --acesta-segment-transportation-dark:color-mix(in srgb, var(--acesta-segment-transportation) 70%, var(--acesta-very-dark-primary));
 
-    --acesta-border-light:#d3dee1;
+    --acesta-border-light-color: 211, 222, 225;
+    --acesta-border-light: rgb(var(--acesta-border-light-color))
 }
+.acesta-segment-theme-tourist-investor{--acesta-current-segment-color:var(--acesta-segment-tourist-investor);--acesta-current-segment-color-dark:var(--acesta-segment-tourist-investor-dark)}
+.acesta-segment-theme-tourism-product-owner{--acesta-current-segment-color:var(--acesta-segment-tourism-product-owner);--acesta-current-segment-color-dark:var(--acesta-segment-tourism-product-owner-dark)}
+.acesta-segment-theme-tour-operator{--acesta-current-segment-color:var(--acesta-segment-tour-operator);--acesta-current-segment-color-dark:var(--acesta-segment-tour-operator-dark)}
+.acesta-segment-theme-tour-agent{--acesta-current-segment-color:var(--acesta-segment-tour-agent);--acesta-current-segment-color-dark:var(--acesta-segment-tour-agent-dark)}
+.acesta-segment-theme-government{--acesta-current-segment-color:var(--acesta-segment-government);--acesta-current-segment-color-dark:var(--acesta-segment-government-dark)}
+.acesta-segment-theme-tic{--acesta-current-segment-color:var(--acesta-segment-tic);--acesta-current-segment-color-dark:var(--acesta-segment-tic-dark)}
+.acesta-segment-theme-hospitality{--acesta-current-segment-color:var(--acesta-segment-hospitality);--acesta-current-segment-color-dark:var(--acesta-segment-hospitality-dark)}
+.acesta-segment-theme-tourist-guide{--acesta-current-segment-color:var(--acesta-segment-tourist-guide);--acesta-current-segment-color-dark:var(--acesta-segment-tourist-guide-dark)}
+.acesta-segment-theme-marketing-agency{--acesta-current-segment-color:var(--acesta-segment-marketing-agency);--acesta-current-segment-color-dark:var(--acesta-segment-marketing-agency-dark)}
+.acesta-segment-theme-tourism-event{--acesta-current-segment-color:var(--acesta-segment-tourism-event);--acesta-current-segment-color-dark:var(--acesta-segment-tourism-event-dark)}
+.acesta-segment-theme-transportation{--acesta-current-segment-color:var(--acesta-segment-transportation);--acesta-current-segment-color-dark:var(--acesta-segment-transportation-dark)}
 body{background-color:#0C4940}
 h1{font-size:32px; color:var(--acesta-text-primary);font-weight:600}
 h2{font-size:24px; color:var(--acesta-text-primary);font-weight:600}
@@ -325,8 +348,8 @@ body{min-width:320px;width:auto !important;width:320px; color:var(--acesta-text-
 
 ::-webkit-scrollbar {background:#f8f8f8;width:8px;height:8px}
 ::-webkit-scrollbar-track {box-shadow:inset 0 0 8px #f8f8f8;border-radius:8px}
-::-webkit-scrollbar-thumb {background:#9f9f9f;border-radius:8px}
-::-webkit-scrollbar-thumb:hover {background:#bcbbbb}
+::-webkit-scrollbar-thumb {background:#9a9ea5;border-radius:8px}
+::-webkit-scrollbar-thumb:hover {background:#adb4be}
 
 .jq-toast-wrap{width:320px}
 .jq-toast-single{font-family:Golos,sans-serif;font-size:15px;overflow-wrap:break-word}
@@ -337,7 +360,7 @@ body{min-width:320px;width:auto !important;width:320px; color:var(--acesta-text-
 
 .dropdown-toggle::after{vertical-align:.12em}
 .dropdown-item{padding-right:2em}
-th{background-color:#f7f7f7!important}
+th{background-color:var(--acesta-bg)!important}
 .table-fixed-head thead th{ position:sticky; top:0; z-index:1; }
 
 .modal-header svg,
@@ -469,7 +492,7 @@ box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8);border:1px solid #ececec}
 .btn-outline-light{opacity:.9}
 .btn-outline-light:active, .btn-outline-light:hover, .btn-outline-light:focus{opacity:1;color:var(--bs-white);background-color:transparent;border-color:var(--bs-white);}
 
-.bg-basic {--bs-bg-opacity:1;background-color:#979ea5!important}
+.bg-basic {--bs-bg-opacity:1;background-color:#96a3b0!important}
 .bg-new, .bg-info {--bs-bg-opacity:1;background-color:#4a87a5!important}
 .bg-waiting {--bs-bg-opacity:1;background-color:#ec616f!important}
 .bg-paid {--bs-bg-opacity:1;background-color:#eb9147!important}

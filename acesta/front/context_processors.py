@@ -1,6 +1,9 @@
 from django.conf import settings as django_settings
 from django.http import HttpRequest
 
+from acesta.front.segment_settings import SECTION_DASHBOARD_TASKS
+from acesta.front.segment_settings import SEGMENT_CONFIG
+
 
 def settings(request: HttpRequest) -> dict:
     """
@@ -25,6 +28,14 @@ def settings(request: HttpRequest) -> dict:
         SEGMENT_HOSPITALITY=django_settings.SEGMENT_HOSPITALITY,
         SEGMENT_TOURISM_EVENT=django_settings.SEGMENT_TOURISM_EVENT,
         SEGMENT_TRANSPORTATION=django_settings.SEGMENT_TRANSPORTATION,
+        PART_REGION=django_settings.PART_REGION,
+        PART_INTEREST=django_settings.PART_INTEREST,
+        PART_RATING=django_settings.PART_RATING,
+        USER_SEGMENT_TASKS=SEGMENT_CONFIG[SECTION_DASHBOARD_TASKS].get(
+            request.user.segment, {}
+        )
+        if request.user.is_authenticated
+        else {},
         DEBUG=django_settings.DEBUG,
         REQUEST_CONSULTATION="consultation",
         REQUEST_PRESENTATION="presentation",

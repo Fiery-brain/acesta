@@ -149,7 +149,57 @@ interest_app.layout = html.Div(
                                         {
                                             "if": {"column_id": "code__title"},
                                             "textAlign": "left",
-                                        }
+                                        },
+                                    ],
+                                    style_data_conditional=[
+                                        {
+                                            "if": {
+                                                "filter_query": "{ppt} >= 1 && {ppt} < 10",
+                                                "column_id": "ppt",
+                                            },
+                                            "color": "#429388",
+                                            # "fontWeight": "600",
+                                        },
+                                        {
+                                            "if": {
+                                                "filter_query": "{ppt} >= 10",
+                                                "column_id": "ppt",
+                                            },
+                                            "color": "#429388",
+                                        },
+                                        {
+                                            "if": {
+                                                "filter_query": "{ppt} > 10",
+                                                "column_id": [
+                                                    "code__title",
+                                                    "qty",
+                                                    "ppt",
+                                                ],
+                                            },
+                                            "fontWeight": "700",
+                                        },
+                                        {
+                                            "if": {
+                                                "filter_query": "{ppt} >= 1 && {ppt} < 10",
+                                                "column_id": [
+                                                    "code__title",
+                                                    "qty",
+                                                    "ppt",
+                                                ],
+                                            },
+                                            "fontWeight": "500",
+                                        },
+                                        {
+                                            "if": {
+                                                "filter_query": "{ppt} < 1",
+                                                "column_id": [
+                                                    "code__title",
+                                                    "qty",
+                                                    "ppt",
+                                                ],
+                                            },
+                                            "color": "#959090",
+                                        },
                                     ],
                                     locale_format={"group": " "},
                                 )

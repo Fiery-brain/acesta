@@ -1,0 +1,7 @@
+{% with url=request.resolver_match.url_name %}
+  {% if request.user.is_accustomed %}
+    {% include "include/dashboard_start_accustomed_modal.html" %}
+  {% else %}
+    {% include "include/dashboard_start_beginner_modal.html" %}
+  {% endif %}
+{% endwith %}

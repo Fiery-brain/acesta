@@ -1,0 +1,47 @@
+{% load static %}
+<div class="dashboard-start-help mt-4">
+  <div class="dashboard-start-help-grid">
+    <a class="dashboard-start-help-item" href="{% url 'help' %}">
+      <span class="dashboard-start-help-icon">
+        <svg width="38" height="38"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>
+      </span>
+      <span>
+        <strong>Как это работает</strong>
+        <small>Подробнее о&nbsp;возможностях сервиса</small>
+      </span>
+    </a>
+
+    <a class="dashboard-start-help-item" href="{% url 'dashboard_start_presentation' %}" target="_blank" rel="noopener">
+      <span class="dashboard-start-help-icon">
+        <svg width="38" height="38"><use href="{% static 'img/sprite.svg' %}#presentation"></use></svg>
+      </span>
+      <span>
+        <strong>Презентация</strong>
+        <small>Краткий обзор сервиса за&nbsp;5 минут</small>
+        {% comment %} <strong>Демо-презентация</strong>
+        <small>Краткий обзор системы за&nbsp;5 минут</small> {% endcomment %}
+      </span>
+    </a>
+
+    <div class="dashboard-start-help-item dashboard-start-chat dropup">
+      <button type="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false">
+        <span class="dashboard-start-help-icon">
+          <svg width="38" height="38"><use href="{% static 'img/sprite.svg' %}#consultation"></use></svg>
+        </span>
+        <span>
+          <strong>Чат с&nbsp;командой</strong>
+          <small>Задайте вопрос или&nbsp;напишите нам</small>
+        </span>
+      </button>
+      <div class="dropdown-menu dropdown-menu-start dashboard-start-chat-panel">
+        <div class="dashboard-start-chat-panel-title">Пишите, где удобно:</div>
+        <a class="dashboard-start-qr-link" href="https://max.ru/u/f9LHodD0cOKxYiTuAPxhRcoMCPqI_HoMUxH3eSQinF2Mhjb65BFs765bXpw" target="_blank" rel="noopener" title="Написать в Max">
+          <img src="{% static 'img/qr_max_chat.svg' %}">
+        </a>
+        <a class="dashboard-start-qr-link" href="https://t.me/eugena" target="_blank" rel="noopener" title="Написать в Telegram">
+          <img src="{% static 'img/qr_telegram_chat.svg' %}">
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

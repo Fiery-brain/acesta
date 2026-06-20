@@ -55,8 +55,8 @@ def update_tabs(*args, **kwargs):
     """
     if kwargs.get("user").is_extended:
         return [
-            dcc.Tab(label="Регионы", value=settings.AREA_REGIONS),
-            dcc.Tab(label="Города", value=settings.AREA_CITIES),
+            dcc.Tab(label="из регионов", value=settings.AREA_REGIONS),
+            dcc.Tab(label="из городов", value=settings.AREA_CITIES),
         ]
     else:
         return []
@@ -70,7 +70,7 @@ def update_interesants_dummy(*args, **kwargs):
     """
     Returns interesants area tabs
     :param kwargs:
-    :return:
+    :return: list
     """
     if kwargs.get("user").is_extended:
         return []
@@ -83,10 +83,10 @@ def update_interesants_dummy(*args, **kwargs):
                         href="/price/",
                         children=[
                             html.Img(
-                                src="/static/img/dummy-tabs-interesants.svg", width=200
+                                src="/static/img/dummy-tabs-interesants.svg", width=230
                             )
                         ],
-                        title="Показать цены",
+                        title="Управлять доступом",
                     )
                 ],
             )
@@ -218,7 +218,7 @@ def update_home_area_dummy(*args, **kwargs):
             html.A(
                 href="/price/",
                 children=[html.Img(src="/static/img/dummy-home-area.svg", height=36)],
-                title="Показать цены",
+                title="Управлять доступом",
             )
         ]
 

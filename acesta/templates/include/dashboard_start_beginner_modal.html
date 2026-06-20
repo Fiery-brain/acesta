@@ -1,0 +1,176 @@
+{% load static %}
+{% load text %}
+{% load prop %}
+<div
+  class="modal fade dashboard-start-modal dashboard-start-beginner acesta-segment-theme-{{ request.user.segment }}"
+  id="dashboardStartModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dashboardStartModalLabel"
+  aria-hidden="true"
+  data-hide-url="{% url 'hide_start_modal' %}"
+  data-auto-show="{% if request.user.is_show_start %}{% if url == 'region' or url == 'interest' or url == 'rating' or url == 'rating-cities' or url == 'rating-sights' %}true{% endif %}{% endif %}"
+  data-session-key="{{ request.session.session_key|default:'' }}"
+  data-user-id="{{ request.user.pk }}"
+  data-step="1"
+>
+  <div class="modal-dialog modal-dialog-centered modal-95" role="document">
+    <div class="modal-content">
+      {% include "include/dashboard_start_balloon.html"%}
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body">
+        <div class="dashboard-start-beginner-frame">
+          <div class="dashboard-start-beginner-viewport">
+            <div class="dashboard-start-beginner-track">
+              <section class="dashboard-start-beginner-slide  d-flex flex-column justify-content-between" aria-labelledby="dashboardStartModalLabel">
+                <div class="dashboard-start-beginner-grid">
+                  <div class="dashboard-start-beginner-intro">
+                    {% comment %} <span>ацеста</span> {% endcomment %}
+                    <h2 class="dashboard-start-title" id="dashboardStartModalLabel">Добро пожаловать <span class="dashboard-start-logo-word">в&nbsp;<svg viewbox="0 0 281 62"><use href="{% static 'img/sprite.svg' %}#logo-2"></use></svg>!</span></h2>
+                    <p class="dashboard-start-subtitle">Помогаем понять, какие направления и&nbsp;точки притяжения интересуют потенциальных туристов</p>
+
+                    <h3 class="dashboard-start-beginner-kicker">Показываем:</h3>
+                    <div class="dashboard-start-beginner-benefits">
+                      <article class="dashboard-start-beginner-benefit dashboard-start-card-region">
+                        <span class="dashboard-start-icon bg-region">
+                          <svg width="42" height="42"><use href="{% static 'img/sprite.svg' %}#tourist"></use></svg>
+                        </span>
+                        <strong>Кто ваш турист</strong>
+                        <p>Кто проявляет интерес к&nbsp;вашей территории и&nbsp;её&nbsp;туристическим возможностям</p>
+                      </article>
+                      <article class="dashboard-start-beginner-benefit dashboard-start-card-interest">
+                        <span class="dashboard-start-icon bg-interest">
+                          <svg width="42" height="42"><use href="{% static 'img/sprite.svg' %}#heart"></use></svg>
+                        </span>
+                        <strong>Какие у&nbsp;него интересы</strong>
+                        <p>Какие локации и&nbsp;форматы отдыха интересуют потенциальных туристов</p>
+                      </article>
+                      <article class="dashboard-start-beginner-benefit dashboard-start-card-rating">
+                        <span class="dashboard-start-icon bg-rating">
+                          <svg width="42" height="42"><use href="{% static 'img/sprite.svg' %}#advert"></use></svg>
+                        </span>
+                        <strong>Как его привлечь</strong>
+                        <p>Как использовать актуальный интерес для&nbsp;развития своих проектов и&nbsp;инициатив</p>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+
+                {% include "include/dashboard_start_note.html" %}
+
+              </section>
+
+              <section class="dashboard-start-beginner-slide dashboard-start-beginner-start" aria-label="С чего начнем">
+                <div class="dashboard-start-beginner-top">
+                  <div class="dashboard-start-beginner-dots" aria-hidden="true">
+                    <span></span>
+                    <span class="is-active"></span>
+                    <span></span>
+                  </div>
+                </div>
+                <h2 class="dashboard-start-title">С чего начнём?</h2>
+                <p class="dashboard-start-subtitle my-3"><strong>Выберите</strong>, какая задача для&nbsp;вас сейчас наиболее актуальна:</p>
+
+                <div class="dashboard-start-grid">
+                  <a class="dashboard-start-card dashboard-start-card-region" href="{% url 'region' %}">
+                    <div>
+                      {% with region_task=USER_SEGMENT_TASKS|get_prop:PART_REGION %}
+                        <h4>{{ region_task.title|nobreak_spaces }}<br>&mdash;</h4>
+                        <span class="mt-1"><b>{{ region_task.lead|nobreak_spaces }}</b></span>
+                        <span class="my-2">{{ region_task.text|nobreak_spaces }}</span>
+                      {% endwith %}
+                    </div>
+                    <div class="mt-2 open-part bg-region"><p class="mb-0"><span>Открыть раздел</span> <b>«Регион»</b></p></div>
+                  </a>
+
+                  <a class="dashboard-start-card dashboard-start-card-interest" href="{% url 'interest' %}">
+                    <div>
+                      {% with interest_task=USER_SEGMENT_TASKS|get_prop:PART_INTEREST %}
+                        <h4>{{ interest_task.title|nobreak_spaces }}<br>&mdash;</h4>
+                        <span  class="mt-1"><b>{{ interest_task.lead|nobreak_spaces }}</b></span>
+                        <span class="my-2">{{ interest_task.text|nobreak_spaces }}</span>
+                      {% endwith %}
+                    </div>
+                    <div class="mt-2 open-part bg-interest"><p class="mb-0"><span>Открыть раздел</span> <b>«Интерес»</b></p></div>
+                  </a>
+
+                  <a class="dashboard-start-card dashboard-start-card-rating" href="{% url 'rating' %}">
+                    <div>
+                      {% with rating_task=USER_SEGMENT_TASKS|get_prop:PART_RATING %}
+                        <h4>{{ rating_task.title|nobreak_spaces }}<br>&mdash;</h4>
+                        <span  class="mt-1"><b>{{ rating_task.lead|nobreak_spaces }}</b></span>
+                        <span class="my-2">{{ rating_task.text|nobreak_spaces }}</span>
+                      {% endwith %}
+                    </div>
+                    <div class="mt-2 open-part bg-rating"><p class="mb-0"><span>Открыть раздел</span> <b>«Рейтинг»</b></p></div>
+                  </a>
+                </div>
+              </section>
+
+              <section class="dashboard-start-beginner-slide d-flex flex-column justify-content-between" aria-label="Остались вопросы">
+                <div>
+                  <div class="dashboard-start-beginner-top">
+                    <div class="dashboard-start-beginner-dots" aria-hidden="true">
+                      <span></span>
+                      <span></span>
+                      <span class="is-active"></span>
+                    </div>
+                  </div>
+                  <h2 class="dashboard-start-title mb-1">Остались вопросы?</h2>
+                  <p class="dashboard-start-subtitle my-3">Здесь собраны основные возможности сервиса. Выберите раздел, который поможет решить вашу текущую задачу:</p>
+
+                  <div class="dashboard-start-grid">
+                    <a class="dashboard-start-card dashboard-start-card-region" href="{% url 'region' %}">
+                      <div>
+                        <h4>Если вы хотите разобраться, что есть в&nbsp;регионе<br>&mdash;</h4>
+                        <span class="pb-2">Узнайте, чем может заинтересовать туристов ваша территория и&nbsp;что выделяет её среди других.</span>
+                      </div>
+                      <div class="mt-2 open-part bg-region"><p class="mb-0"><span>Открыть раздел</span> <b>«Регион»</b></p></div>
+                    </a>
+                    <a class="dashboard-start-card dashboard-start-card-interest" href="{% url 'interest' %}">
+                      <div>
+                        <h4>Если вы хотите понять, кто проявляет интерес к&nbsp;территории<br>&mdash;</h4>
+                        <span>Узнайте, что привлекает потенциальных туристов и&nbsp;какие особенности стоит учитывать при&nbsp;работе с&nbsp;ними.</span>
+                      </div>
+                      <div class="mt-2 open-part bg-interest"><p class="mb-0"><span>Открыть раздел</span> <b>«Интерес»</b></p></div>
+                    </a>
+                    <a class="dashboard-start-card dashboard-start-card-rating" href="{% url 'rating' %}">
+                      <div>
+                        <h4>Если вы хотите оценить позиции своей локации<br>&mdash;</h4>
+                        <span>Узнайте, какие локации вызывают больше интереса и&nbsp;создают больше возможностей для&nbsp;привлечения туристов.</span>
+                      </div>
+                      <div class="mt-2 open-part bg-rating"><p class="mb-0"><span>Открыть раздел</span> <b>«Рейтинг»</b></p></div>
+                    </a>
+                  </div>
+                </div>
+
+                {% include "include/dashboard_start_help.html" %}
+
+              </section>
+            </div>
+          </div>
+
+          <div class="dashboard-start-beginner-footer">
+            <div class="dashboard-start-check-slot">
+              {% if request.user.is_show_start %}
+                <div class="form-check dashboard-start-check ms-1 d-none">
+                  <input class="form-check-input" type="checkbox" value="1" id="dashboardStartDontShow">
+                  <label class="form-check-label" for="dashboardStartDontShow">Больше не&nbsp;показывать</label>
+                </div>
+              {% endif %}
+            </div>
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-outline-light dashboard-start-beginner-back" type="button">
+                <span aria-hidden="true">←</span>
+              </button>
+
+              <button class="btn btn-primary dashboard-start-beginner-next ms-2" type="button">
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
