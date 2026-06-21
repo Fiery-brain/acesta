@@ -264,7 +264,7 @@ SEGMENT_CONFIG = {
             "для&nbsp;развития",
         ),
         settings.SEGMENT_INVESTORS: Block(
-            "Куда вкладыватьa в&nbsp;туризме",
+            "Куда вкладывать в&nbsp;туризме",
             "Оценивайте территории, спрос и&nbsp;точки роста " "для&nbsp;инвестиций",
         ),
         settings.SEGMENT_MARKETING_AGENCY: Block(
