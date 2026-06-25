@@ -34,7 +34,8 @@ class Region(TimeStampedModel):
         max_length=30,
         choices=settings.REGION_TYPES,
     )
-    rank = models.IntegerField("Ранг", default=0)
+    rank = models.IntegerField("Ранг", default=0, choices=settings.REGION_RANKS)
+    rank_change = models.IntegerField("Изменение ранга", default=0)
     territory = models.IntegerField("Территория", default=0)
     population = models.IntegerField("Численность", default=0)
     zoom_regions = models.FloatField("Zoom", default=3.5)
