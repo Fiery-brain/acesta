@@ -414,6 +414,14 @@ REGION_TYPES = (
     ("autonomous_region", "Автономная область"),
 )
 
+REGION_RANKS = (
+    (0, "Начальный"),
+    (1, "Низкий"),
+    (2, "Средний"),
+    (3, "Высокий"),
+    (4, "Лидер"),
+)
+
 AREA_REGIONS = "regions"
 AREA_CITIES = "cities"
 AREA_SIGHTS = "sights"
