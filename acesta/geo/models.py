@@ -51,6 +51,7 @@ class Region(TimeStampedModel):
     is_pub = models.BooleanField("Публиковать", default=False, db_index=True)
     objects = models.Manager()
     pub = PubManager()
+    description = models.CharField("Описание", max_length=255, blank=True, null=True)
 
     @property
     def region_short(self):
@@ -100,6 +101,7 @@ class City(TimeStampedModel):
         null=True,
     )
     objects = PubManager()
+    description = models.CharField("Описание", max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.title

@@ -14,7 +14,7 @@ def regions(request) -> dict:
     if request.user.is_authenticated:
         all_regions = [
             (region.federal_district, region)
-            for region in Region.pub.all().order_by("code")
+            for region in Region.pub.all().order_by("title")
         ]
         grouped_regions = {}
         for federal_district, region in all_regions:
