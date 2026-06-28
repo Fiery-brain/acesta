@@ -1,3 +1,4 @@
+import numpy as np
 from django.conf import settings
 from django.db import models
 
@@ -53,6 +54,36 @@ def get_sight_stats(**kwargs) -> list:
         for stat in sight_stats
     ]
     return list(sight_stats)
+
+
+def get_strong_tourism_types(stats: list) -> list:
+    """
+    Returns a list of strong tourism types in a region.
+    :param stats: list
+    :return: list
+    """
+    q75 = np.quantile([s["cnt"] for s in stats], 0.75) if len(stats) else 0
+    return [
+        stat.get("title").replace("туризм", "").lower().strip("- ")
+        for stat in stats
+        if stat.get("cnt") >= q75 and stat.get("title") is not None
+    ]
+
+
+def get_weak_tourism_types(stats: list) -> list:
+    """
+    Returns a list of weak tourism types in a region.
+    :param stats: list
+    :return: list
+    """
+    weak_names = set(list(dict(settings.TOURISM_TYPES_OUTSIDE).keys())) - set(
+        [stat["name"] for stat in stats]
+    )
+    return [
+        title.replace("туризм", "").lower().strip("- ")
+        for name, title in settings.TOURISM_TYPES_OUTSIDE
+        if name in weak_names
+    ]
 
 
 def get_sight_groups(code=None) -> models.QuerySet:

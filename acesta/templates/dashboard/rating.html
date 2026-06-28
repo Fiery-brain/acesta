@@ -78,7 +78,7 @@
   <div class="row pt-3 pb-4">
     {% if area == AREA_SIGHTS %}
       <div class="col-12 col-xl-6 pe-3 pt-1">
-        <h3 class="fs-6 rating-title ms-1">по интересу</h3>
+        <h3 class="fs-6 rating-title ms-1"><svg width="18" height="18" class="mx-1 interest"><use href="{% static 'img/sprite.svg' %}#interest"></use></svg>по интересу</h3>
         <div class="overflow-auto table-fixed-head rating-container">
           <table class="table table-hover table-responsive">
             <thead>
@@ -91,7 +91,16 @@
             <tbody>
               {% for place in interest_sight_places %}
               <tr>
-                <td class="text-center rating-place"><div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div></td>
+                <td class="text-center rating-place">
+                  <div class="d-inline-flex align-items-center gap-1">
+                    {% if place.value == 0 and interest_sight_zero_count > 1 %}
+                      <div>-</div>
+                    {% else %}
+                      <div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div>
+                      {% place_change place %}
+                    {% endif %}
+                  </div>
+                </td>
                 <td width="22" class="pe-1">
                     <div class="d-flex">
                       <a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.all.0.title }}">
@@ -99,16 +108,14 @@
                       </a>
                       {% if place.sight.rate > 4.5 %}
                         <a href="#" data-bs-toggle="tooltip" title="Нравится туристам, оценка: {{ place.sight.rate }}">
-                          <svg viewBox="0 0 32 32" class="rating-heart" fill="#e9336d" width="15" height="15"><use href="{% static 'img/sprite.svg' %}#heart"></use></svg>
+                          <svg viewBox="0 0 32 32" class="rating-heart" fill="#e9336d" width="15" height="15"><use href="{% static 'img/sprite.svg' %}#liked"></use></svg>
                         </a>
                       {% endif %}
                     </div>
-
                 </td>
                 <td class="ps-1">
                   <p class="mb-0 sight-title">
                     {{ place.sight }}
-
                   </p>
                   <div class="text-muted sight-description">
                     <small class="d-inline-flex sight-location">
@@ -152,7 +159,7 @@
         </div>
       </div>
       <div class="col-12 col-xl-6 mt-2 mt-lg-0 ps-3 pt-1">
-        <h3 class="fs-6 rating-title ms-1">топ-10 по&nbsp;интересу во всех регионам</h3>
+        <h3 class="fs-6 rating-title ms-1"><svg width="18" height="18" class="mx-1 interest"><use href="{% static 'img/sprite.svg' %}#trophy"></use></svg>топ-10 по&nbsp;интересу во всех регионам</h3>
         <div class="overflow-auto table-fixed-head rating-container">
           <table class="table table-hover table-responsive">
             <thead>
@@ -165,7 +172,12 @@
             <tbody>
               {% for place in top_sights %}
               <tr>
-                <td class="text-center rating-place"><div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div></td>
+                <td class="text-center rating-place">
+                  <div class="d-inline-flex align-items-center gap-1">
+                    <div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div>
+                    {% place_change place %}
+                  </div>
+                </td>
                 <td width="22" class="pe-1">
                     <div class="d-flex">
                       <a href="#" data-bs-toggle="tooltip" title="{{ place.sight.group.all.0.title }}">
@@ -173,7 +185,7 @@
                       </a>
                       {% if place.sight.rate > 4.5 %}
                         <a href="#" data-bs-toggle="tooltip" title="Нравится туристам, оценка: {{ place.sight.rate }}">
-                          <svg viewBox="0 0 32 32" class="rating-heart" fill="#e9336d" width="15" height="15"><use href="{% static 'img/sprite.svg' %}#heart"></use></svg>
+                          <svg viewBox="0 0 32 32" class="rating-heart" fill="#e9336d" width="15" height="15"><use href="{% static 'img/sprite.svg' %}#liked"></use></svg>
                         </a>
                       {% endif %}
                     </div>
@@ -202,34 +214,7 @@
       </div>
     {% elif area == AREA_CITIES %}
       <div class="col-12 col-xl-6 pe-3 pt-1">
-        <h3 class="fs-6 rating-title ms-1">по&nbsp;интересу к&nbsp;турпродуктам</h3>
-        <div class="overflow-auto table-fixed-head rating-container">
-          <table class="table table-hover table-responsive">
-            <thead>
-              <tr>
-                <th scope="col" class="text-center w-25">Место</th>
-                <th scope="col">Город</th>
-                <th scope="col" class="text-nowrap text-end pe-2">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения города за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for place in interest_city_places %}
-              <tr>
-                <td class="text-center rating-place"><div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div></td>
-                <td><svg width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#city"></use></svg>{{ place.home_code }}</td>
-                <td class="text-end pe-4">{{ place.value }}</td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="3" class="ps-5">Данных пока нет</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="col-12 col-xl-6 mt-2 mt-lg-0 ps-3 pt-1">
-        <h3 class="fs-6 rating-title ms-1">по количеству точек притяжения</h3>
+        <h3 class="fs-6 rating-title ms-1"><svg width="18" height="18" class="mx-1 sights"><use href="{% static 'img/sprite.svg' %}#location"></use></svg>по количеству точек притяжения</h3>
         <div class="overflow-auto table-fixed-head rating-container">
           <table class="table table-hover table-responsive">
             <thead>
@@ -242,7 +227,12 @@
             <tbody>
               {% for place in amount_city_places %}
               <tr>
-                <td class="text-center rating-place"><div{% if forloop.counter <= 3 %} class="{{ forloop.counter|get_medal_class }}"{% endif %}>{{ forloop.counter }}</div></td>
+                <td class="text-center rating-place">
+                  <div class="d-inline-flex align-items-center gap-1">
+                    <div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div>
+                    {% place_change place %}
+                  </div>
+                </td>
                 <td class="text-nowrap"><svg width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#city"></use></svg>{{ place.city__title }}</td>
                 <td class="text-end pe-4">{{ place.qty }}</td>
               </tr>
@@ -255,48 +245,164 @@
           </table>
         </div>
       </div>
-    {% else %}
-      <div class="col-12 col-xl-6 pe-3 pt-1">
-        <h3 class="fs-6 rating-title ms-1">по&nbsp;интересу к&nbsp;турпродуктам</h3>
+      <div class="col-12 col-xl-6 mt-2 mt-lg-0 ps-3 pt-1">
+        <h3 class="fs-6 rating-title ms-1"><svg width="18" height="18" class="mx-1 interest"><use href="{% static 'img/sprite.svg' %}#interest"></use></svg>по&nbsp;интересу к&nbsp;турпродуктам</h3>
         <div class="overflow-auto table-fixed-head rating-container">
           <table class="table table-hover table-responsive">
             <thead>
               <tr>
                 <th scope="col" class="text-center w-25">Место</th>
-                <th scope="col">Регион</th>
-                <th scope="col" class="text-nowrap text-end pe-2">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения региона за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
+                <th scope="col">Город</th>
+                <th scope="col" class="text-nowrap text-end pe-2">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения города за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
             </thead>
             <tbody>
-              {% for place in interest_region_places %}
+              {% for place in interest_city_places %}
               <tr>
-                <td class="text-center rating-place"><div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div></td>
-                <td class=""><img class="blazon-icon me-2" src="{% static 'img/blazon/'|add:place.home_code.code|add:'.svg'%}">{{ place.home_code }}</td>
+                <td class="text-center rating-place">
+                  <div class="d-inline-flex align-items-center gap-1">
+                    {% if place.value == 0 and interest_city_zero_count > 1 %}
+                      <div>-</div>
+                    {% else %}
+                      <div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div>
+                      {% place_change place %}
+                    {% endif %}
+                  </div>
+                </td>
+                <td><svg width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#city"></use></svg>{{ place.home_code }}</td>
                 <td class="text-end pe-4">{{ place.value }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3" class="ps-5">Данных пока нет</td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
       </div>
-      <div class="col-12 col-xl-6 mt-2 mt-lg-0 ps-3 pt-1">
-        <h3 class="fs-6 rating-title ms-1">по количеству точек притяжения</h3>
-        <div class="overflow-auto table-fixed-head rating-container">
+    {% else %}
+      <div class="col-12 col-xl-6 pe-3 pt-1 rating-region-block">
+        <div class="d-flex align-items-center justify-content-between">
+          <h3 class="fs-6 rating-title ms-1"><svg width="18" height="18" class="mx-1 sights"><use href="{% static 'img/sprite.svg' %}#location"></use></svg>по количеству точек притяжения</h3>
+          <button type="button" class="btn btn-link rating-region-compact-link" data-rating-compact>Компактный вид</button>
+        </div>
+        <div class="overflow-auto table-fixed-head rating-container rating-region-table" data-rating-table="amount">
           <table class="table table-hover table-responsive">
             <thead>
               <tr>
-                <th scope="col" class="text-center w-25">Место</th>
+                <th scope="col" class="rating-region-league-heading"></th>
+                <th scope="col" class="text-center rating-region-place-heading">Место</th>
                 <th scope="col">Регион</th>
-                <th scope="col" class="text-nowrap text-end pe-2">Количество <a href="#" data-bs-toggle="tooltip" title="Количество значимых точек притяжения в&nbsp;выбранном виде туризма"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
+                <th scope="col" class="text-nowrap text-end pe-2 rating-region-value-heading">Количество <a href="#" data-bs-toggle="tooltip" title="Количество значимых точек притяжения в&nbsp;выбранном виде туризма"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
             </thead>
             <tbody>
-              {% for place in amount_region_places %}
-              <tr>
-                <td class="text-center rating-place"><div{% if forloop.counter <= 3 %} class="{{ forloop.counter|get_medal_class }}"{% endif %}>{{ forloop.counter }}</div></td>
-                <td class=""><img class="blazon-icon me-2" src="{% static 'img/blazon/'|add:place.code|add:'.svg'%}">{{ place.code__title }}</td>
-                <td class="text-end pe-4">{{ place.qty }}</td>
+              {% for row in amount_region_places.rows %}
+              {% if row.type == "gap" %}
+              <tr class="rating-region-gap" title="Показать скрытые регионы">
+                <td class="rating-region-gap-league-cell"></td>
+                <td colspan="3" class="text-center">
+                  <button type="button" class="rating-region-gap-link">...</button>
+                </td>
               </tr>
+              {% else %}
+              <tr class="{% if not row.is_compact_visible %}rating-region-extra{% endif %}{% if row.is_current %} rating-current-region{% endif %}" data-rating-rank="{{ row.rank }}">
+                {% metric_rank metric="rank" rank=row.rank group=True as league %}
+                <td class="rating-region-league-cell {{ league.metric_class }} {{ league.rank_class }}{% if row.is_rank_start %} rating-region-league-start{% endif %}{% if row.is_rank_end %} rating-region-league-end{% endif %}" data-bs-toggle="tooltip" title="{{ league.text }}">
+                  {% if row.is_rank_start %}
+                  <svg class="rating-region-league-icon">
+                    <use href="{% static 'img/sprite.svg' %}#rank-{{ row.rank }}"></use>
+                  </svg>
+                  {% endif %}
+                  <span class="rating-region-league-line"></span>
+                  <span class="rating-region-league-point rating-region-league-point-start"></span>
+                  <span class="rating-region-league-point rating-region-league-point-end"></span>
+                </td>
+                <td class="text-center rating-place">
+                  <div class="d-inline-flex align-items-center gap-1">
+                    {% if row.item.is_virtual or row.item.qty == 0 and amount_zero_count > 1 %}
+                      <div>-</div>
+                    {% else %}
+                      <div{% if row.place <= 3 %} class="{{ row.place|get_medal_class }}"{% endif %}>{{ row.place }}</div>
+                      {% place_change row.change %}
+                    {% endif %}
+                  </div>
+                </td>
+                <td class="rating-region-name">
+                  <span class="rating-region-name-inner">
+                    <span class="rating-region-blazon">
+                      <img class="blazon-icon" src="{% static 'img/blazon/'|add:row.item.code|add:'.svg'%}">
+                    </span>
+                    <span class="rating-region-name-text">{{ row.item.code__title }}</span>
+                  </span>
+                </td>
+                <td class="text-end pe-4">{{ row.item.qty }}</td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-12 col-xl-6 mt-2 mt-lg-0 ps-3 pt-1 rating-region-block">
+        <div class="d-flex align-items-center justify-content-between">
+          <h3 class="fs-6 rating-title ms-1"><svg width="18" height="18" class="mx-1 interest"><use href="{% static 'img/sprite.svg' %}#interest"></use></svg>по&nbsp;интересу к&nbsp;турпродуктам</h3>
+          <button type="button" class="btn btn-link rating-region-compact-link" data-rating-compact>Компактный вид</button>
+        </div>
+        <div class="overflow-auto table-fixed-head rating-container rating-region-table" data-rating-table="interest">
+          <table class="table table-hover table-responsive">
+            <thead>
+              <tr>
+                <th scope="col" class="rating-region-league-heading"></th>
+                <th scope="col" class="text-center rating-region-place-heading">Место</th>
+                <th scope="col">Регион</th>
+                <th scope="col" class="text-nowrap text-end pe-2 rating-region-value-heading">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения региона за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in interest_region_places.rows %}
+              {% if row.type == "gap" %}
+              <tr class="rating-region-gap" title="Показать скрытые регионы">
+                <td class="rating-region-gap-league-cell"></td>
+                <td colspan="3" class="text-center">
+                  <button type="button" class="rating-region-gap-link">...</button>
+                </td>
+              </tr>
+              {% else %}
+              <tr class="{% if not row.is_compact_visible %}rating-region-extra{% endif %}{% if row.is_current %} rating-current-region{% endif %}" data-rating-rank="{{ row.rank }}">
+                {% metric_rank metric="interest" rank=row.rank group=True as league %}
+                <td class="rating-region-league-cell {{ league.metric_class }} {{ league.rank_class }}{% if row.is_rank_start %} rating-region-league-start{% endif %}{% if row.is_rank_end %} rating-region-league-end{% endif %}" data-bs-toggle="tooltip" title="{{ league.text }}">
+                  {% if row.is_rank_start %}
+                  <svg class="rating-region-league-icon">
+                    <use href="{% static 'img/sprite.svg' %}#rank-{{ row.rank }}"></use>
+                  </svg>
+                  {% endif %}
+                  <span class="rating-region-league-line"></span>
+                  <span class="rating-region-league-point rating-region-league-point-start"></span>
+                  <span class="rating-region-league-point rating-region-league-point-end"></span>
+                </td>
+                <td class="text-center rating-place">
+                  <div class="d-inline-flex align-items-center gap-1">
+                    {% if row.item.value == 0 and interest_zero_count > 1 %}
+                      <div>-</div>
+                    {% else %}
+                      <div{% if row.place <= 3 %} class="{{ row.place|get_medal_class }}"{% endif %}>{{ row.place }}</div>
+                      {% place_change row.change %}
+                    {% endif %}
+                  </div>
+                </td>
+                <td class="rating-region-name">
+                  <span class="rating-region-name-inner">
+                    <span class="rating-region-blazon">
+                      <img class="blazon-icon" src="{% static 'img/blazon/'|add:row.item.home_code.code|add:'.svg'%}">
+                    </span>
+                    <span class="rating-region-name-text">{{ row.item.home_code }}</span>
+                  </span>
+                </td>
+                <td class="text-end pe-4">{{ row.item.value }}</td>
+              </tr>
+              {% endif %}
               {% endfor %}
             </tbody>
           </table>
@@ -311,6 +417,7 @@
   <script src="{% static 'js/select2.min.js' %}"></script>
   <script src="{% static 'js/sight.group.selector.js' %}"></script>
   <script src="{% static 'js/tourism.type.selector.js' %}"></script>
+  <script src="{% static 'js/rating.region.toggle.js' %}"></script>
   {% include "include/recommendation_data_rating.html" %}
   <script src="{% static 'js/get.recommendations.js' %}"></script>
 {% endblock %}

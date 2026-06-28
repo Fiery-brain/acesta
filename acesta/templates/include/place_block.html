@@ -1,16 +1,20 @@
 {% load static %}
-<div class="place-block {{ border_class_base }}{{ border_class }} d-inline-flex flex-column justify-content-between">
-  <div class="place-container">
+{% load stats %}
+{% load text %}
+
+<div class="place-block {{ border_class_base }}{{ border_class }} d-inline-flex flex-column justify-content-between overflow-hidden bg-white">
+  <div class="place-container p-2 pb-0">
     <div class="d-flex flex-nowrap justify-content-between">
-      <div class="p-1 d-inline-flex flex-nowrap">
-        <div class="d-inline-block {{ text_class_base }}{{ text_class }} place_value me-1">{{ value }}</div>
-        <div class=" d-inline-block">
+      <div class="px-0 py-1 d-inline-flex flex-nowrap">
+        <div class="d-inline-block {{ text_class_base }}{{ text_class }} place_value">{{ value }}</div>
+        <div class=" d-inline-flex flex-column justify-content-between">
+          {% place_change change %}
           <div class="place_total">
             {% if total %}
               из {{ total }}
             {% endif %}
           </div>
-          <div>
+          <div class="place_name">
             <span class="{{ text_class_base }}{{ text_class }} place_value_name">{{ value_name }}</span>
           </div>
         </div>
@@ -19,10 +23,17 @@
         <div>
           <a href="#" data-bs-toggle="tooltip" title="{{ tooltip_text }}"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
         </div>
+      {% elif place_group %}
+        <div class="{{ text_class_base }}{{ text_class }} opacity-75 pt-1">
+          <svg width="36" height="36" viewbox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#{{ border_class }}"></use></svg>
+        </div>
       {% endif %}
     </div>
   </div>
   <div class="place_description">
-    {{ desc }}
+    <div class="px-2 py-1">{{ desc|nobreak_spaces }}</div>
+    {% if metric_rank %}
+      <div class="px-2 py-1 {{ metric_rank.class_name }} d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ metric_rank.text }}"><svg width="16" height="16" class="me-1"><use href="{% static 'img/sprite.svg' %}#rank-{{ metric_rank.rank }}"></use></svg><small>{{ metric_rank.title }}</small></div>
+    {% endif %}
   </div>
 </div>

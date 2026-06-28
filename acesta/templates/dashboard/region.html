@@ -3,6 +3,7 @@
 {% load plotly_dash %}
 {% load stats %}
 {% load timesince %}
+{% load text %}
 
 {% block title %}Регион {{ request.user.current_region }} {% endblock %}
 
@@ -54,22 +55,23 @@
   <div class="row pt-4">
     <div class="col-12 col-lg-5 d-flex flex-column">
       <div class="place-blocks overflow-auto d-inline-flex flex-lg-wrap pt-2 pe-0">
-        {% place_block value=request.user.current_region.rank value_name="ранг" total=4 border_class_base="border-rank" border_class=request.user.current_region.rank text_class_base="text-rank" text_class=request.user.current_region.rank desc="по туристическому потенциалу" tooltip_text="Ранг региона по&nbsp;туристическому потенциалу рассчитывается по&nbsp;количеству значимых точек притяжения. Самый высокий ранг — 4, самый низкий — 0" %}
-        {% place_block value=amount_rating_place total=places_amount border_class_base="border-accent-secondary" text_class_base="text-accent-secondary" desc="по количеству точек притяжения" tooltip_text="" %}
+        {% place_block value=request.user.current_region.rank value_name="ранг" total=4 border_class_base="border-rank" border_class=request.user.current_region.rank text_class_base="text-rank" text_class=request.user.current_region.rank desc="по туристическому потенциалу" tooltip_text="Ранг региона по&nbsp;туристическому потенциалу рассчитывается по&nbsp;количеству значимых точек притяжения. Самый высокий ранг — 4, самый низкий — 0" change=request.user.current_region.rank_change metric="rank" rank=request.user.current_region.rank %}
+        {% place_block value=amount_rating_place.place total=places_amount border_class_base="border-accent-secondary" text_class_base="text-accent-secondary" desc="по количеству точек притяжения" tooltip_text="Место региона в&nbsp;рейтинге по&nbsp;количеству точек притяжения регионального уровня" change=amount_rating_place.change metric="sights" %}
         {% if interest_rating_place %}
-          {% place_block value=interest_rating_place total=places_amount border_class_base="border-accent-primary" text_class_base="text-accent-primary" desc="по интересу к&nbsp;турпродуктам" tooltip_text="Место региона в&nbsp;рейтинге по&nbsp;интересу определяется по&nbsp;количеству запросов его точек притяжения за&nbsp;месяц" %}
+          {% place_block value=interest_rating_place.place total=places_amount border_class_base="border-accent-primary" text_class_base="text-accent-primary" desc="по интересу к&nbsp;турпродуктам" tooltip_text="Место региона в&nbsp;рейтинге по&nbsp;интересу определяется по&nbsp;количеству запросов его точек притяжения за&nbsp;месяц" change=interest_rating_place.change metric="interest" %}
         {% endif %}
         {% for place in outstanding_places %}
           {% with desc="по количеству "|add:place.group_title_gen|safe %}
-            {% place_block value=place.place total=places_amount border_class_base="border-" border_class=place.group text_class_base="text-" text_class=place.group desc=desc tooltip_text="" %}
+            {% place_block value=place.place total=places_amount border_class_base="border-" border_class=place.group text_class_base="text-" text_class=place.group desc=desc place_group=True %}
           {% endwith %}
         {% endfor %}
       </div>
       {% if strong_types %}
         <p class="mt-3">
-          В&nbsp;регионе лучше всего развит{% if strong_types|length > 1 %}ы{% endif %}
+          {{ request.user.current_region.description|nobreak_spaces }}
+          {% comment %} В&nbsp;регионе лучше всего развит{% if strong_types|length > 1 %}ы{% endif %}
           {% for type in strong_types %}<b class="text-nowrap text-rank4">{{ type }}</b>{% if not forloop.last %}{% if strong_types|length|add:"-1" == forloop.counter %} и&nbsp;{% else %}, {% endif %}{% endif %}{% endfor %} туризм{% if weak_types %}, меньше
-          {% for type in weak_types %}<b class="text-nowrap text-rank0">{{ type }}</b>{% if not forloop.last %}{% if weak_types|length|add:"-1" == forloop.counter %} и&nbsp;{% else %}, {% endif %}{% endif %}{% endfor %} туризм{% endif %}
+          {% for type in weak_types %}<b class="text-nowrap text-rank0">{{ type }}</b>{% if not forloop.last %}{% if weak_types|length|add:"-1" == forloop.counter %} и&nbsp;{% else %}, {% endif %}{% endif %}{% endfor %} туризм{% endif %} {% endcomment %}
         </p>
       {% endif %}
     </div>

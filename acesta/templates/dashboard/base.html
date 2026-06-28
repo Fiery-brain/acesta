@@ -48,20 +48,32 @@
   {% endwith %}
 
   <div class="modal fade" id="selectRegion" tabindex="-1" role="dialog" aria-labelledby="selectRegionLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-95" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-95 region-modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-nowrap" id="selectRegionLabel">Выберите регион <a href="#regionSelectionExplanation" data-bs-toggle="collapse"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></h5>
-          <div class="collapse position-relative help border p-3 rounded-2" id="regionSelectionExplanation">
-            <p class="m-0 open"><svg width="18" height="18" class="me-1"><use href="{% static 'img/sprite.svg' %}#go"></use></svg> Полный доступ</p>
-            <p class="mt-1 mb-0 open"><svg width="18" height="18" class="me-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg> Ограниченный доступ</p>
+          <div class="collapse position-relative help border p-3 rounded-2 bg-white" id="regionSelectionExplanation">
+            <p class="m-0"><svg width="19" height="19" class="me-1 text-white"><use fill="#5dbaad" href="{% static 'img/sprite.svg' %}#selected"></use></svg> <strong>Выбранный регион</strong></p>
+            <p class="mt-1 m-0"><svg width="18" height="18" class="me-1 text-white opacity-75"><use fill="#22786C" href="{% static 'img/sprite.svg' %}#go"></use></svg> Регион с полным доступом</p>
+            <p class="mt-1 mb-0"><svg width="18" height="18" class="me-1 text-white opacity-75"><use fill="#FFBA0C" href="{% static 'img/sprite.svg' %}#go"></use></svg> Регион с ограниченным доступом</p>
+          </div>
+          <div class="region-search ms-auto" data-region-search>
+            <label class="visually-hidden" for="regionSearchInput">Найти регион</label>
+            <input type="search" class="form-control region-search-input" id="regionSearchInput" placeholder="Найти регион" autocomplete="off" tabindex="-1" data-region-search-input>
+            <button type="button" class="region-search-clear btn-close" aria-label="Очистить поиск" tabindex="-1" hidden data-region-search-clear></button>
+            <button type="button" class="region-search-toggle" title="Найти регион" aria-label="Открыть поиск по регионам" aria-controls="regionSearchInput" aria-expanded="false" data-region-search-toggle>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="10.5" cy="10.5" r="6.5"></circle>
+                <path d="M15.5 15.5L21 21"></path>
+              </svg>
+            </button>
           </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="container-fluid">
-            <div class="row">
-              <div class="col-12 col-xl-3">
+            <div class="row region-districts" data-region-districts>
+              <div class="col-12 col-xl-3 region-district-column">
                 {% with federal_district='ЦФО' %}
                   {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
                 {% endwith %}
@@ -70,7 +82,7 @@
                   {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
                 {% endwith %}
               </div>
-              <div class="col-12 col-xl-3">
+              <div class="col-12 col-xl-3 region-district-column">
                 {% with federal_district='СЗФО' %}
                   {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
                 {% endwith %}
@@ -78,9 +90,8 @@
                 {% with federal_district='ЮФО' %}
                   {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
                 {% endwith %}
-
               </div>
-              <div class="col-12 col-xl-3">
+              <div class="col-12 col-xl-3 region-district-column">
                 {% with federal_district='ПФО' %}
                   {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
                 {% endwith %}
@@ -89,7 +100,7 @@
                   {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
                 {% endwith %}
               </div>
-              <div class="col-12 col-xl-3">
+              <div class="col-12 col-xl-3 region-district-column">
                 {% with federal_district='СФО' %}
                   {% include 'include/regions_by_type.html' with regions=grouped_regions|get_prop:federal_district %}
                 {% endwith %}
@@ -99,6 +110,7 @@
                 {% endwith %}
               </div>
             </div>
+            <p class="region-search-empty mb-0" role="status" aria-live="polite" hidden data-region-search-empty>Регионы не найдены</p>
           </div>
         </div>
       </div>
@@ -164,7 +176,9 @@
     <div class="container">
       <div class="row">
         <div class="col-12 col-lg-5 d-flex align-items-end">
-          <h2><img height="32" class="me-2 mb-1" src="{% static 'img/blazon/'|add:request.user.current_region.code|add:'.svg'%}"><a class="region-selector" title="Выбрать регион" href="#" type="button" data-bs-toggle="modal" data-bs-target="#selectRegion"> {{ request.user.current_region.region_short }}</a></h2>
+          <div data-bs-toggle="modal" data-bs-target="#selectRegion">
+            <h2><a class="region-selector" title="Выбрать регион" href="#" type="button" data-bs-toggle="tooltip"><img height="32" class="me-2 mb-1" src="{% static 'img/blazon/'|add:request.user.current_region.code|add:'.svg'%}"><span>{{ request.user.current_region.region_short }}</span></a></h2>
+          </div>
         </div>
         <div class="col-12 col-lg-7 d-none d-lg-flex align-items-end justify-content-end">
           <ul class="nav justify-content-end flex-nowrap">
@@ -208,5 +222,6 @@
   {{ block.super }}
   <script src="{% static 'js/dashboard.menu.js' %}"></script>
   <script src="{% static 'js/dashboard.start.js' %}"></script>
+  <script src="{% static 'js/region_selector.search.js' %}"></script>
   <script src="{% static 'js/logout.js' %}"></script>
 {% endblock %}

@@ -1,5 +1,9 @@
+from datetime import date
+from datetime import datetime
+
 from django.conf import settings
 from django.db import models
+from django.utils.dateparse import parse_date
 from model_utils.models import TimeStampedModel
 
 from acesta.geo.models import City
@@ -17,6 +21,36 @@ class HistoryMixin(models.Model):
         max_length=2500,
         default=list,
     )
+
+    @staticmethod
+    def _normalize_history_date(value):
+        if isinstance(value, datetime):
+            return value.date()
+        if isinstance(value, date):
+            return value
+        if isinstance(value, str):
+            return parse_date(value)
+        return None
+
+    @property
+    def previous_history_item(self):
+        current_date = self._normalize_history_date(getattr(self, "date", None))
+        if current_date is None:
+            return {}
+
+        previous_item = {}
+        previous_date = None
+        for item in self.history or []:
+            item_date = self._normalize_history_date(item.get("date"))
+            if item_date is None or item_date >= current_date:
+                continue
+            if previous_date is None or item_date > previous_date:
+                previous_item = item
+                previous_date = item_date
+        return previous_item
+
+    def get_previous_history_value(self, key, default=None):
+        return self.previous_history_item.get(key, default)
 
     class Meta:
         abstract = True
@@ -206,6 +240,13 @@ class Rating(TimeStampedModel, HistoryMixin):
         blank=True,
         null=True,
     )
+
+    @property
+    def change(self):
+        previous_place = self.get_previous_history_value("place")
+        if previous_place is None or self.place is None:
+            return None
+        return previous_place - self.place
 
     class Meta:
         abstract = True

@@ -57,8 +57,10 @@ def get_region_recommendations(region: Region, segment: str, data: dict) -> str:
                 f"{item['title']} ({item['groups'].replace('<br>', ', ')}): {item['cnt']}"
                 for item in get_sight_stats(code=region.code)
             ],
-            interest_rating_place=get_interest_rating_place(code=region.code),
-            amount_rating_place=get_amount_rating_place(code=region.code),
+            interest_rating_place=get_interest_rating_place(code=region.code).get(
+                "place"
+            ),
+            amount_rating_place=get_amount_rating_place(code=region.code).get("place"),
             outstanding_places=(
                 ", ".join(
                     [
@@ -108,9 +110,9 @@ def get_interest_recommendations(region: Region, segment: str, data: dict) -> st
     if audience_pk:
         audience = [
             settings.AUDIENCE_SEGMENT_RECOMMENDATION_TEMPLATE.format(
-                area_prepositional="городе"
-                if area == settings.AREA_CITIES
-                else "регионе",
+                area_prepositional=(
+                    "городе" if area == settings.AREA_CITIES else "регионе"
+                ),
                 v_all=int(round_up(a.v_all * a.coeff, -3)),
                 v_types=int(round_up(a.v_types * a.coeff, -3)),
                 tourism_type=dict(settings.TOURISM_TYPES).get(a.tourism_type),
@@ -176,15 +178,15 @@ def get_interest_recommendations(region: Region, segment: str, data: dict) -> st
                 (i.code.title, i.qty, i.ppt)
                 for i in interesants_base.filter(popularity_mean__lte=100)
             ],
-            interesant_area_genitive_plural="городов"
-            if area == settings.AREA_CITIES
-            else "регионов",
+            interesant_area_genitive_plural=(
+                "городов" if area == settings.AREA_CITIES else "регионов"
+            ),
             interesant_area="город" if area == settings.AREA_CITIES else "регион",
             audience=(
                 settings.AUDIENCE_RECOMMENDATION_TEMPLATE.format(
-                    area_prepositional="городе"
-                    if area == settings.AREA_CITIES
-                    else "регионе",
+                    area_prepositional=(
+                        "городе" if area == settings.AREA_CITIES else "регионе"
+                    ),
                     selected_interesant=(
                         City.objects.get(pk=int(audience_pk))
                         if area == settings.AREA_CITIES
@@ -256,9 +258,11 @@ def get_rating_recommendations(region: Region, segment: str, data: dict) -> str:
             interest_rating=[
                 (
                     r.place,
-                    r.home_code.title
-                    if area in (settings.AREA_CITIES, settings.AREA_REGIONS)
-                    else r.sight.title,
+                    (
+                        r.home_code.title
+                        if area in (settings.AREA_CITIES, settings.AREA_REGIONS)
+                        else r.sight.title
+                    ),
                     r.value,
                 )
                 for r in rating
@@ -266,17 +270,21 @@ def get_rating_recommendations(region: Region, segment: str, data: dict) -> str:
             subject=(
                 "городов"
                 if area == settings.AREA_CITIES
-                else "точек притяжения"
-                if area == settings.AREA_SIGHTS
-                else f"региона {region}"
+                else (
+                    "точек притяжения"
+                    if area == settings.AREA_SIGHTS
+                    else f"региона {region}"
+                )
             ),
             tourism_type=(
                 f"по виду туризма {dict(settings.TOURISM_TYPES).get(tourism_type)}"
                 if tourism_type
                 and area in (settings.AREA_CITIES, settings.AREA_REGIONS)
-                else f"{'по группе ' + SightGroup.objects.get(pk=group).title}"
-                if group
-                else ""
+                else (
+                    f"{'по группе ' + SightGroup.objects.get(pk=group).title}"
+                    if group
+                    else ""
+                )
             ),
             area=(
                 "город"

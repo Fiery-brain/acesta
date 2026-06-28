@@ -52,6 +52,52 @@ $(function () {
 
   var interest = document.querySelector("#interest-container");
 
+  function initializeInterestTooltips(root) {
+    if (!root) {
+      return;
+    }
+
+    var tooltipTriggerList = [].slice.call(
+      root.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+      bootstrap.Tooltip.getOrCreateInstance(tooltipTriggerEl);
+    });
+  }
+
+  function initializeUpdatedLink() {
+    var updatedLink = interest.querySelector("#updated-link");
+
+    if (
+      !updatedLink ||
+      updatedLink.dataset.updatedLinkInitialized === "true"
+    ) {
+      return;
+    }
+
+    if (!updatedLink.querySelector("svg")) {
+      updatedLink.innerHTML =
+        '<svg width="22" height="22"><use href="/static/img/sprite.svg#updated"></use></svg>';
+    }
+
+    var tooltipTitle = updatedLink.getAttribute("data-title");
+
+    if (!tooltipTitle) {
+      return;
+    }
+
+    var tooltip = bootstrap.Tooltip.getInstance(updatedLink);
+
+    if (tooltip) {
+      tooltip.dispose();
+    }
+
+    updatedLink.setAttribute("title", tooltipTitle);
+    bootstrap.Tooltip.getOrCreateInstance(updatedLink);
+    updatedLink.dataset.updatedLinkInitialized = "true";
+  }
+
   var interestObserver = new MutationObserver(function (mutations) {
 
     mutations.forEach(function(e) {
@@ -59,6 +105,8 @@ $(function () {
         $(".Select-noresults").text("Вид не найден");
       }
       if (typeof e.target.tagName !== "undefined") {
+        var hasAddedTooltips = false;
+
         if (e.target.tagName.toLowerCase() == "h3") {
           $("#title-container").attr("type", "button");
           $("#title-container").attr("title", $("#title").text());
@@ -73,6 +121,7 @@ $(function () {
                 $(this).text() +
                   '<a href="#" class="ms-1" data-bs-toggle="tooltip" title="Количество запросов туристических объектов за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg></a>'
               );
+              hasAddedTooltips = true;
             } else if (
               $(this).parent().parent().attr("class").includes("column-2")
             ) {
@@ -80,12 +129,18 @@ $(function () {
                 $(this).text() +
                   '<a href="#" class="ms-1" data-bs-toggle="tooltip" title="Региональная популярность или&nbsp;доля, которую занимает регион в&nbsp;показах запросу туристических объектов, деленная на&nbsp;долю всех показов результатов в&nbsp;регионе. Если популярность более 100%, это означает, что в&nbsp;данном регионе существует повышенный интерес к&nbsp;этому запросу, если меньше 100% - пониженный."><svg fill="#939699" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg></a>'
               );
+              hasAddedTooltips = true;
             }
           });
+        }
+        if (hasAddedTooltips) {
+          initializeInterestTooltips(interest);
         }
         $("#map-container").css("minHeight", containerHeight - 242 + "px");
       }
     });
+
+    initializeUpdatedLink();
   });
 
   interestObserver.observe(interest, {
@@ -95,18 +150,10 @@ $(function () {
     characterData: true,
   });
 
+  initializeUpdatedLink();
+
   $(window).on("load", function() {
-
-    $("#updated-link").attr("title", $("#updated-link").attr("data-title"))
-    $("#updated-link").html(
-      '<svg width="22" height="22"><use href="/static/img/sprite.svg#updated"></use></svg>'
-    )
-
-    var tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    initializeUpdatedLink();
+    initializeInterestTooltips(interest);
   });
 });

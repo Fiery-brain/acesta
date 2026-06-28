@@ -1,20 +1,35 @@
 {% load static %}
 {% load prop %}
 
-{% with federal_district=federal_district|safe %}
-  <h5>{{ FEDERAL_DISTRICTS|get_prop:federal_district }} федеральный&nbsp;округ</h5>
-{% endwith %}
+<section class="region-district" data-region-district>
+  {% with federal_district=federal_district|safe %}
+    <h6>{{ FEDERAL_DISTRICTS|get_prop:federal_district }} федеральный&nbsp;округ</h6>
+  {% endwith %}
 
-<ul>
-  {% for region in regions %}
-    <li>
-      <a href="{% url 'set_region' code=region.code %}" class="open" {% if region.code in user_regions or region.rank == 0 or region.code == request.user.region.code %}title="Полный доступ"{% else %}title="Ограниченный доступ"{% endif %}>
-      {% if not region.code in user_regions and region.rank != 0 and region.code != request.user.region.code %}
-        <svg width="18" height="18" class="me-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>
-      {% else %}
-        <svg width="18" height="18" class="me-1"><use href="{% static 'img/sprite.svg' %}#go"></use></svg>
-      {% endif %}
-      {{ region.region_short }}</a>
-    </li>
-  {% endfor %}
-</ul>
+  <ul>
+    {% for region in regions %}
+      <li data-region-name="{{ region.region_short }}">
+        {% if request.user.current_region.code != region.code %}
+        <a href="{% url 'set_region' code=region.code %}" {% if region.code in user_regions or region.rank == 0 or region.code == request.user.region.code %}title="Полный доступ"{% else %}title="Ограниченный доступ"{% endif %} data-bs-toggle="tooltip" data-bs-placement="right" data-region-link>
+        {% else %}
+        <strong>
+        {% endif %}
+        {% if request.user.current_region.code != region.code %}
+          {% if not region.code in user_regions and region.rank != 0 and region.code != request.user.region.code %}
+            <svg width="18" height="18" class="me-1 text-white"><use fill="#FFBA0C" href="{% static 'img/sprite.svg' %}#go"></use></svg>
+          {% else %}
+            <svg width="18" height="18" class="me-1 text-white"><use fill="#22786C" href="{% static 'img/sprite.svg' %}#go"></use></svg>
+          {% endif %}
+        {% else %}
+          <svg width="19" height="19" class="me-1 text-white"><use fill="#5dbaad" href="{% static 'img/sprite.svg' %}#selected"></use></svg>
+        {% endif %}
+        <span data-region-label>{{ region.region_short }}</span>
+        {% if request.user.current_region.code != region.code %}
+        </a>
+        {% else %}
+        </strong>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
