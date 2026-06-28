@@ -137,7 +137,7 @@ def get_amount_city_rating_state(**kwargs) -> list:
     return _add_previous_amount_rating(rating_rows, previous_rating_rows, "city")
 
 
-@to_cache("interest_rating_place_v2_{code}", 60 * 60 * 24 * 7)
+@to_cache("interest_rating_place_v3_{code}", 60 * 60 * 24 * 7)
 def get_interest_rating_place(**kwargs) -> dict:
     """
     Returns rating place by interest
@@ -211,7 +211,7 @@ def get_amount_rating_by_group_outstanding_places(**kwargs) -> list:
     return outstanding_places
 
 
-@to_cache("rating_sight_{code}_{sight_group}", 60 * 60 * 24 * 7)
+@to_cache("rating_sight_v2_{code}_{sight_group}", 60 * 60 * 24 * 7)
 def get_interest_sight_rating(group_filter, **kwargs):
     return SightRating.objects.filter(
         region_code=kwargs.get("code"), **group_filter
@@ -240,7 +240,7 @@ def get_sight_group_filter(sight_group, include_isnull=True):
         return dict(group=sight_group) if sight_group is not None else {}
 
 
-@to_cache("rating_region_{tourism_type}", 60 * 60 * 24 * 7)
+@to_cache("rating_region_v2_{tourism_type}", 60 * 60 * 24 * 7)
 def get_interest_region_rating(tourism_type_filter, **kwargs):
     return RegionRating.objects.filter(
         region_code__isnull=True,
@@ -404,7 +404,7 @@ def get_synced_region_rating_places(
     return compact_places
 
 
-@to_cache("rating_cities_{code}_{tourism_type}", 60 * 60 * 24 * 7)
+@to_cache("rating_cities_v2_{code}_{tourism_type}", 60 * 60 * 24 * 7)
 def get_interest_cities_rating(tourism_type_filter, **kwargs):
     return CityRating.objects.filter(
         home_region__code=kwargs.get("code"),

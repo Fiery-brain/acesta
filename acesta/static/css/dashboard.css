@@ -307,8 +307,8 @@ ul.nav.rating-tabs a:hover{text-decoration:none}
 .rating-region-gap-league-cell{width:50px;min-width:50px;padding:0!important;border-top-color:transparent!important;border-bottom-color:transparent!important;background:transparent!important}
 .rating-region-gap-link{border:0;background:transparent;padding:0;color:inherit;letter-spacing:inherit;font:inherit;cursor:pointer}
 .rating-region-gap-link:focus-visible{outline:2px solid var(--acesta-primary);outline-offset:3px}
-.rating-region-compact-link{display:none;padding:0;font-weight:600;color:var(--acesta-primary);text-decoration:none}
-.rating-region-compact-link:hover{color:var(--acesta-dark-primary);text-decoration:none}
+.rating-region-compact-link{display:none;padding:0;color:var(--acesta-text-secondary);text-decoration:none;font-size:14px;}
+.rating-region-compact-link:hover,.rating-region-compact-link:active{color:var(--acesta-primary);text-decoration:none}
 .rating-region-compact-link.rating-region-compact-visible{display:inline-block}
 .rating-region-name{min-width:0;overflow:hidden}
 .rating-region-name-inner{display:flex;align-items:center;min-width:0;white-space:nowrap}

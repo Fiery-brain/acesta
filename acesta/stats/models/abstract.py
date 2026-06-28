@@ -1,5 +1,6 @@
 from datetime import date
 from datetime import datetime
+from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
@@ -34,15 +35,18 @@ class HistoryMixin(models.Model):
 
     @property
     def previous_history_item(self):
+        """Return the latest history item from the previous calendar month."""
         current_date = self._normalize_history_date(getattr(self, "date", None))
         if current_date is None:
             return {}
 
+        previous_month_date = current_date.replace(day=1) - timedelta(days=1)
+        previous_month = (previous_month_date.year, previous_month_date.month)
         previous_item = {}
         previous_date = None
         for item in self.history or []:
             item_date = self._normalize_history_date(item.get("date"))
-            if item_date is None or item_date >= current_date:
+            if item_date is None or (item_date.year, item_date.month) != previous_month:
                 continue
             if previous_date is None or item_date > previous_date:
                 previous_item = item

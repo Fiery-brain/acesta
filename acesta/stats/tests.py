@@ -383,37 +383,53 @@ class AmountRatingPlaceTest(test.TestCase):
 
 
 class HistoryMixinTest(test.SimpleTestCase):
-    def test_previous_history_item_skips_current_date(self):
+    def test_previous_history_item_uses_previous_month(self):
         rating = RegionRating(
-            date=date(2026, 2, 16),
+            date=date(2026, 6, 28),
             history=[
-                {"date": "2026-02-16", "place": 7},
-                {"date": "2026-01-20", "place": 10},
+                {"date": "2026-06-20", "place": 7},
+                {"date": "2026-05-20", "place": 10},
             ],
         )
 
         self.assertEqual(
-            rating.previous_history_item, {"date": "2026-01-20", "place": 10}
+            rating.previous_history_item, {"date": "2026-05-20", "place": 10}
         )
 
-    def test_previous_history_item_uses_nearest_previous_date(self):
+    def test_previous_history_item_uses_latest_date_in_previous_month(self):
         rating = RegionRating(
-            date=date(2026, 2, 16),
+            date=date(2026, 6, 28),
             history=[
-                {"date": "2025-12-23", "place": 12},
-                {"date": "2026-01-20", "place": 10},
-                {"date": "2025-11-19", "place": 14},
+                {"date": "2026-05-10", "place": 12},
+                {"date": "2026-05-25", "place": 10},
+                {"date": "2026-04-19", "place": 14},
             ],
         )
 
         self.assertEqual(
-            rating.previous_history_item, {"date": "2026-01-20", "place": 10}
+            rating.previous_history_item, {"date": "2026-05-25", "place": 10}
         )
 
-    def test_previous_history_item_returns_empty_dict_without_previous_date(self):
+    def test_previous_history_item_handles_year_boundary(self):
         rating = RegionRating(
-            date=date(2026, 2, 16),
-            history=[{"date": "2026-02-16", "place": 7}],
+            date=date(2026, 1, 16),
+            history=[
+                {"date": "2026-01-10", "place": 7},
+                {"date": "2025-12-23", "place": 10},
+            ],
+        )
+
+        self.assertEqual(
+            rating.previous_history_item, {"date": "2025-12-23", "place": 10}
+        )
+
+    def test_previous_history_item_returns_empty_without_exact_previous_month(self):
+        rating = RegionRating(
+            date=date(2026, 6, 16),
+            history=[
+                {"date": "2026-06-10", "place": 7},
+                {"date": "2026-04-20", "place": 10},
+            ],
         )
 
         self.assertEqual(rating.previous_history_item, {})
