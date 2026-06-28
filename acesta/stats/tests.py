@@ -111,6 +111,96 @@ class StatsTest(CredentialsMixin, test.TestCase):
         self.assertEqual(last_url, "/dashboard/")
 
 
+class RegionSightsLoadingTest(CredentialsMixin, test.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.region = Region.objects.get(pk="01")
+        self.group = SightGroup.objects.create(
+            name="test_sights",
+            title="Test sights",
+            title_gen="Test sights",
+            tourism_type="culture",
+            is_pub=True,
+        )
+
+    def create_sights(self, amount, prefix="Sight", group=None):
+        sights = []
+        for index in range(amount):
+            sight = Sight.objects.create(
+                code=self.region,
+                title=f"{prefix} {index:02d}",
+                is_pub=True,
+            )
+            sight.group.add(group or self.group)
+            sights.append(sight)
+        return sights
+
+    def test_region_renders_only_first_twenty_sights(self):
+        self.create_sights(25)
+        self.client.login(**self.credentials)
+
+        response = self.client.get(f'{reverse("region")}?group=')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["region_sights"]), 20)
+        self.assertTrue(response.context["region_sights_has_more"])
+        self.assertEqual(response.content.count(b"<tr data-sight-row"), 20)
+        self.assertContains(response, reverse("region_sights_remaining"))
+        self.assertContains(response, 'aria-disabled="true" disabled')
+
+    def test_remaining_sights_endpoint_returns_the_complete_remainder(self):
+        self.create_sights(25)
+        self.client.login(**self.credentials)
+
+        response = self.client.get(reverse("region_sights_remaining"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content.count(b"<tr data-sight-row"), 5)
+        self.assertNotContains(response, "Sight 19")
+        for index in range(20, 25):
+            self.assertContains(response, f"Sight {index:02d}")
+
+    def test_remaining_sights_endpoint_respects_group_filter(self):
+        other_group = SightGroup.objects.create(
+            name="other_sights",
+            title="Other sights",
+            title_gen="Other sights",
+            tourism_type="culture",
+            is_pub=True,
+        )
+        self.create_sights(22, prefix="Selected", group=self.group)
+        self.create_sights(22, prefix="Other", group=other_group)
+        self.client.login(**self.credentials)
+
+        response = self.client.get(
+            reverse("region_sights_remaining"), {"group": self.group.pk}
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content.count(b"<tr data-sight-row"), 2)
+        self.assertContains(response, "Selected 20")
+        self.assertContains(response, "Selected 21")
+        self.assertNotContains(response, "Other")
+
+    def test_short_sight_list_is_complete_in_initial_response(self):
+        self.create_sights(5)
+        self.client.login(**self.credentials)
+
+        response = self.client.get(f'{reverse("region")}?group=')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context["region_sights_has_more"])
+        self.assertEqual(response.content.count(b"<tr data-sight-row"), 5)
+        self.assertNotContains(response, reverse("region_sights_remaining"))
+        self.assertNotContains(response, 'aria-disabled="true" disabled')
+
+    def test_remaining_sights_endpoint_requires_authentication(self):
+        response = self.client.get(reverse("region_sights_remaining"))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/login/?next=", response.url)
+
+
 class AmountRatingPlaceTest(test.TestCase):
     def setUp(self):
         self.old_date = timezone.now() - relativedelta(months=2)

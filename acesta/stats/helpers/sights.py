@@ -105,7 +105,12 @@ def get_sight_groups(code=None) -> models.QuerySet:
 
 
 def get_sights_by_group(code, group_filter):
-    return Sight.pub.filter(
-        code=code,
-        **group_filter,
-    ).prefetch_related("group", "code", "city")
+    return (
+        Sight.pub.filter(
+            code=code,
+            **group_filter,
+        )
+        .select_related("code", "city")
+        .prefetch_related("group")
+        .order_by("title", "id")
+    )

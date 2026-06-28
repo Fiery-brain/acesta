@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.views.decorators.http import require_GET
 
 from acesta.geo.models import Region
 from acesta.stats.helpers.audience import get_audience_key_data
@@ -32,6 +33,9 @@ from acesta.stats.helpers.sights import get_weak_tourism_types
 from acesta.stats.helpers.update_dates import get_rating_update_date
 from acesta.stats.helpers.update_dates import get_sights_update_date
 from acesta.user.utils import get_support_form
+
+
+REGION_SIGHTS_INITIAL_LIMIT = 20
 
 
 def region_view(request) -> HttpResponse:
@@ -63,16 +67,38 @@ def region_view(request) -> HttpResponse:
         group_filter = (
             dict(group=request.GET.get("group")) if request.GET.get("group") else {}
         )
+        region_sights = list(
+            get_sights_by_group(request.user.current_region, group_filter)[
+                : REGION_SIGHTS_INITIAL_LIMIT + 1
+            ]
+        )
         context.update(
             {
                 "support_form": get_support_form(request.user, settings.SUPPORT_SIGHTS),
-                "region_sights": get_sights_by_group(
-                    request.user.current_region, group_filter
+                "region_sights": region_sights[:REGION_SIGHTS_INITIAL_LIMIT],
+                "region_sights_has_more": (
+                    len(region_sights) > REGION_SIGHTS_INITIAL_LIMIT
                 ),
                 "sight_groups": get_sight_groups(request.user.current_region),
             }
         )
     return render(request, "dashboard/region.html", context)
+
+
+@require_GET
+def region_sights_remaining_view(request) -> HttpResponse:
+    """Return all region sights omitted from the initial dashboard response."""
+
+    group = request.GET.get("group")
+    group_filter = {"group": group} if group else {}
+    region_sights = get_sights_by_group(request.user.current_region, group_filter)[
+        REGION_SIGHTS_INITIAL_LIMIT:
+    ]
+    return render(
+        request,
+        "dashboard/include/region_sight_rows.html",
+        {"region_sights": region_sights},
+    )
 
 
 def rating_view(request, area=settings.AREA_REGIONS) -> HttpResponse:
