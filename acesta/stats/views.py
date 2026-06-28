@@ -25,6 +25,7 @@ from acesta.stats.helpers.rating import get_synced_region_rating_places
 from acesta.stats.helpers.rating import get_top_sights
 from acesta.stats.helpers.rating import get_tourism_type_filter
 from acesta.stats.helpers.recommendations import get_recommendations
+from acesta.stats.helpers.sights import get_sight_group_counts
 from acesta.stats.helpers.sights import get_sight_groups
 from acesta.stats.helpers.sights import get_sight_stats
 from acesta.stats.helpers.sights import get_sights_by_group
@@ -64,6 +65,9 @@ def region_view(request) -> HttpResponse:
     }
 
     if request.GET.get("group", None) is not None:
+        sight_group_counts = get_sight_group_counts(
+            code=request.user.current_region.code
+        )
         group_filter = (
             dict(group=request.GET.get("group")) if request.GET.get("group") else {}
         )
@@ -80,6 +84,8 @@ def region_view(request) -> HttpResponse:
                     len(region_sights) > REGION_SIGHTS_INITIAL_LIMIT
                 ),
                 "sight_groups": get_sight_groups(request.user.current_region),
+                "region_sight_count": sight_group_counts["total"],
+                "sight_group_counts": sight_group_counts["groups"],
             }
         )
     return render(request, "dashboard/region.html", context)

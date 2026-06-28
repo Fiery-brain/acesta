@@ -23,6 +23,7 @@ from acesta.stats.helpers.rating import get_compact_region_rating_rows
 from acesta.stats.helpers.rating import get_interest_rating_place
 from acesta.stats.helpers.rating import get_rating_place_change
 from acesta.stats.helpers.rating import get_synced_region_rating_places
+from acesta.stats.helpers.sights import get_sight_group_counts
 from acesta.stats.helpers.sights import get_strong_tourism_types
 from acesta.stats.helpers.sights import get_weak_tourism_types
 from acesta.stats.models import RegionRating
@@ -147,6 +148,51 @@ class RegionSightsLoadingTest(CredentialsMixin, test.TestCase):
         self.assertEqual(response.content.count(b"<tr data-sight-row"), 20)
         self.assertContains(response, reverse("region_sights_remaining"))
         self.assertContains(response, 'aria-disabled="true" disabled')
+        self.assertContains(response, "все разделы&nbsp;(25)")
+        self.assertContains(response, "Test sights&nbsp;(25)")
+
+    def test_sight_group_counts_include_only_published_data(self):
+        other_group = SightGroup.objects.create(
+            name="other_sights",
+            title="Other sights",
+            title_gen="Other sights",
+            tourism_type="culture",
+            is_pub=True,
+        )
+        hidden_group = SightGroup.objects.create(
+            name="hidden_sights",
+            title="Hidden sights",
+            title_gen="Hidden sights",
+            tourism_type="culture",
+            is_pub=False,
+        )
+        _, second = self.create_sights(2)
+        second.group.add(other_group)
+        Sight.objects.create(code=self.region, title="Without group", is_pub=True)
+        hidden_group_sight = Sight.objects.create(
+            code=self.region, title="Hidden group sight", is_pub=True
+        )
+        hidden_group_sight.group.add(hidden_group)
+        unpublished_sight = Sight.objects.create(
+            code=self.region, title="Unpublished sight", is_pub=False
+        )
+        unpublished_sight.group.add(self.group)
+
+        counts = get_sight_group_counts(code=self.region.code, force_refresh=True)
+
+        self.assertEqual(counts["total"], 4)
+        self.assertEqual(counts["groups"], {self.group.pk: 2, other_group.pk: 1})
+
+    def test_sight_group_counts_are_read_from_cache(self):
+        self.create_sights(2)
+        cached_counts = get_sight_group_counts(
+            code=self.region.code, force_refresh=True
+        )
+        self.create_sights(1, prefix="Added after caching")
+
+        counts = get_sight_group_counts(code=self.region.code)
+
+        self.assertEqual(counts, cached_counts)
 
     def test_remaining_sights_endpoint_returns_the_complete_remainder(self):
         self.create_sights(25)

@@ -27,6 +27,25 @@ class GroupConcat(models.Aggregate):
         return super(GroupConcat, self).as_sql(compiler, connection)
 
 
+@to_cache("sight_group_counts_v1_{code}", 60 * 60 * 24 * 30)
+def get_sight_group_counts(**kwargs) -> dict:
+    """Return cached sight counts for a region and its published groups."""
+
+    code = kwargs.get("code")
+    group_counts = (
+        Sight.pub.filter(code=code, group__is_pub=True)
+        .values("group__name")
+        .annotate(count=models.Count("id", distinct=True))
+    )
+    return {
+        "total": Sight.pub.filter(code=code).count(),
+        "groups": {
+            group_count["group__name"]: group_count["count"]
+            for group_count in group_counts
+        },
+    }
+
+
 @to_cache("sight_stats_{code}", 60 * 60 * 24 * 7)
 def get_sight_stats(**kwargs) -> list:
     """

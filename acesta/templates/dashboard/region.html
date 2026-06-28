@@ -1,6 +1,7 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
 {% load plotly_dash %}
+{% load prop %}
 {% load stats %}
 {% load timesince %}
 {% load text %}
@@ -92,9 +93,9 @@
       <div class=" mt-3">
         <div class="container sight-list-container" data-sight-list{% if region_sights_has_more %} data-sight-load-url="{% url 'region_sights_remaining' %}{% if request.GET.group %}?group={{ request.GET.group|urlencode }}{% endif %}"{% endif %}>
           <div class="row">
-            <div class="col-12 px-0 d-flex flex-wrap align-items-center sight-list-toolbar">
+            <div class="col-12 col-md-6 px-0 d-flex align-items-center sight-list-toolbar">
               <div class="d-flex align-items-center sight-list-actions">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#addSight" class="btn btn-outline-primary fw-bold mb-2 text-nowrap" data-sight-add-button><svg fill="#34766A" width="18" height="18" class="me-lg-1"><use href="{% static 'img/sprite.svg' %}#add"></use></svg><span class="d-none d-md-inline sight-add-label">Добавить</span></a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#addSight" class="btn btn-outline-primary fw-bold mb-2 text-nowrap" data-sight-add-button><svg fill="#34766A" width="18" height="18" class="me-lg-1"><use href="{% static 'img/sprite.svg' %}#add"></use></svg><span class="sight-add-label">Добавить</span></a>
                 <div class="sight-search ms-2 mb-2" data-sight-search>
                   <label class="visually-hidden" for="sightSearchInput">Найти точки</label>
                   <input type="text" class="form-control sight-search-input" id="sightSearchInput" placeholder="Найти точки" autocomplete="off" tabindex="-1" data-sight-search-input>
@@ -107,13 +108,15 @@
                   </button>
                 </div>
               </div>
-              <div class="d-flex justify-content-end align-items-center mb-2 ms-auto sight-list-filters">
-                <a href="#" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="Точки притяжения региона обновлены <span class='text-nowrap'>{{ sights_update_date|timesince|accusatifier|cutter }} назад</span>" class="me-3"><svg viewBox="0 0 24 24" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#updated"></use></svg></a>
+            </div>
+            <div class="col-12 col-md-6 px-0 d-flex align-items-center mb-2 mb-md-0">
+              <div class="d-flex justify-content-start justify-content-md-end align-items-center flex-row-reverse flex-md-row mb-2 ms-auto sight-list-filters">
+                <a href="#" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="Точки притяжения региона обновлены <span class='text-nowrap'>{{ sights_update_date|timesince|accusatifier|cutter }} назад</span>" class="mx-3"><svg viewBox="0 0 24 24" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#updated"></use></svg></a>
                 <form action="" id="groupSelector">
                   <select id="groupType" name="group">
-                    <option value="">все разделы</option>
+                    <option value="">все разделы&nbsp;({{ region_sight_count }})</option>
                     {% for group in sight_groups %}
-                      <option value="{{ group.name }}"{% if group.name == request.GET.group %} selected{% endif %}>{{ group.title }}</option>
+                      <option value="{{ group.name }}"{% if group.name == request.GET.group %} selected{% endif %}>{{ group.title }}&nbsp;({{ sight_group_counts|get_prop:group.name }})</option>
                     {% endfor %}
                   </select>
                 </form>
