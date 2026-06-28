@@ -96,7 +96,7 @@ def region_sights_remaining_view(request) -> HttpResponse:
     ]
     return render(
         request,
-        "dashboard/include/region_sight_rows.html",
+        "include/region_sight_rows.html",
         {"region_sights": region_sights},
     )
 
