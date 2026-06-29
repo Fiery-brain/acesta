@@ -71,9 +71,9 @@ a.nav-link.dropdown-toggle:hover{text-decoration:none;color:var(--acesta-text-se
 #selectRegion a:hover{opacity:1; font-weight: 500;}
 .region-modal-dialog{transition:max-width 180ms ease}
 #selectRegion.region-search-mode .region-modal-dialog{max-width:560px}
-#selectRegion .modal-content{max-height:calc(100vh - var(--bs-modal-margin) * 2);max-height:calc(100dvh - var(--bs-modal-margin) * 2)}
+#selectRegion.region-search-mode .modal-content{max-height:calc(100vh - var(--bs-modal-margin) * 2);max-height:calc(100dvh - var(--bs-modal-margin) * 2)}
 #selectRegion .modal-header{flex-shrink:0}
-#selectRegion .modal-body{min-height:0;overflow-y:auto;overscroll-behavior:contain}
+#selectRegion.region-search-mode .modal-body{min-height:0;overflow-y:auto;overscroll-behavior:contain}
 #selectRegion.region-search-mode .region-help-toggle{display:none}
 #selectRegion.region-search-mode #regionSelectionExplanation{display:none}
 .region-search{position:relative;display:flex;flex-shrink:0;align-items:center;width:38px;height:38px;overflow:hidden;transition:width 180ms ease}
@@ -96,6 +96,8 @@ a.nav-link.dropdown-toggle:hover{text-decoration:none;color:var(--acesta-text-se
 
 @media (max-width:1199px) {
   .region-modal-dialog{max-width:560px}
+  #selectRegion .modal-content{max-height:calc(100vh - var(--bs-modal-margin) * 2);max-height:calc(100dvh - var(--bs-modal-margin) * 2)}
+  #selectRegion .modal-body{min-height:0;overflow-y:auto;overscroll-behavior:contain}
 }
 
 @media (max-width:767px) {
