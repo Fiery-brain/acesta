@@ -1,5 +1,8 @@
 from dateutil.relativedelta import relativedelta
 from django.db import models
+from django.db.models import Exists
+from django.db.models import OuterRef
+from django.db.models import Prefetch
 from django.utils import timezone
 
 from acesta.base.decorators import to_cache
@@ -10,7 +13,63 @@ from acesta.stats.models import RegionRating
 from acesta.stats.models import SightRating
 
 
-@to_cache("amount_rating_state_v1", 60 * 60 * 24 * 7)
+RATING_FIELDS = (
+    "id",
+    "modified",
+    "history",
+    "rating_type",
+    "place",
+    "value",
+)
+SIGHT_FIELDS = (
+    "id",
+    "title",
+    "rate",
+    "code_id",
+    "city_id",
+)
+REGION_FIELDS = (
+    "code",
+    "title",
+    "region_type",
+)
+CITY_FIELDS = (
+    "id",
+    "title",
+)
+
+
+def _filter_sights_by_tourism_type(sights, tourism_type):
+    if not tourism_type:
+        return sights
+
+    sight_groups = Sight.group.through.objects.filter(
+        sight_id=OuterRef("pk"),
+        sightgroup__tourism_type=tourism_type,
+    )
+    return sights.filter(Exists(sight_groups))
+
+
+def _sight_rating_relations(ratings):
+    return (
+        ratings.select_related("sight", "sight__code", "sight__city")
+        .prefetch_related(
+            Prefetch(
+                "sight__group",
+                queryset=SightGroup.objects.only("name", "title"),
+            )
+        )
+        .only(
+            *RATING_FIELDS,
+            "sight_id",
+            *(f"sight__{field}" for field in SIGHT_FIELDS),
+            *(f"sight__code__{field}" for field in REGION_FIELDS),
+            *(f"sight__city__{field}" for field in CITY_FIELDS),
+        )
+    )
+
+
+@to_cache("amount_rating_state_v2", 60 * 60 * 24 * 7)
 def get_amount_rating_state(**kwargs) -> dict:
     """
     Returns rating state by sights amount
@@ -96,41 +155,48 @@ def _add_previous_amount_rating(rows, previous_rows, key) -> list:
     return rows
 
 
-@to_cache("amount_region_rating_state_v1_{tourism_type}", 60 * 60 * 24 * 7)
+@to_cache("amount_region_rating_state_v3_{tourism_type}", 60 * 60 * 24 * 7)
 def get_amount_region_rating_state(**kwargs) -> list:
     tourism_type = kwargs.get("tourism_type") or ""
-    tourism_type_filter = get_tourism_type_filter(tourism_type, True)
     previous_date = timezone.now() - relativedelta(months=1)
     rating_rows = _build_amount_rating_rows(
-        Sight.pub.filter(**tourism_type_filter),
+        _filter_sights_by_tourism_type(Sight.pub.all(), tourism_type),
         "code",
         "code__title",
     )
     previous_rating_rows = _build_amount_rating_rows(
-        Sight.pub.filter(created__lte=previous_date, **tourism_type_filter),
+        _filter_sights_by_tourism_type(
+            Sight.pub.filter(created__lte=previous_date),
+            tourism_type,
+        ),
         "code",
         "code__title",
     )
     return _add_previous_amount_rating(rating_rows, previous_rating_rows, "code")
 
 
-@to_cache("amount_city_rating_state_v1_{code}_{tourism_type}", 60 * 60 * 24 * 7)
+@to_cache("amount_city_rating_state_v3_{code}_{tourism_type}", 60 * 60 * 24 * 7)
 def get_amount_city_rating_state(**kwargs) -> list:
     tourism_type = kwargs.get("tourism_type") or ""
-    tourism_type_filter = get_tourism_type_filter(tourism_type, True)
+    code = kwargs.get("code")
     previous_date = timezone.now() - relativedelta(months=1)
     sight_filter = {
         "city__isnull": False,
-        "code": kwargs.get("code"),
-        **tourism_type_filter,
+        "code": code,
     }
     rating_rows = _build_amount_rating_rows(
-        Sight.pub.filter(**sight_filter),
+        _filter_sights_by_tourism_type(
+            Sight.pub.filter(**sight_filter),
+            tourism_type,
+        ),
         "city",
         "city__title",
     )
     previous_rating_rows = _build_amount_rating_rows(
-        Sight.pub.filter(created__lte=previous_date, **sight_filter),
+        _filter_sights_by_tourism_type(
+            Sight.pub.filter(created__lte=previous_date, **sight_filter),
+            tourism_type,
+        ),
         "city",
         "city__title",
     )
@@ -211,11 +277,11 @@ def get_amount_rating_by_group_outstanding_places(**kwargs) -> list:
     return outstanding_places
 
 
-@to_cache("rating_sight_v2_{code}_{sight_group}", 60 * 60 * 24 * 7)
+@to_cache("rating_sight_v3_{code}_{sight_group}", 60 * 60 * 24 * 7)
 def get_interest_sight_rating(group_filter, **kwargs):
-    return SightRating.objects.filter(
-        region_code=kwargs.get("code"), **group_filter
-    ).prefetch_related("sight", "sight__group", "sight__code", "sight__city")
+    return _sight_rating_relations(
+        SightRating.objects.filter(region_code=kwargs.get("code"), **group_filter)
+    )
 
 
 def get_tourism_type_filter(tourism_type, from_group=False):
@@ -240,12 +306,21 @@ def get_sight_group_filter(sight_group, include_isnull=True):
         return dict(group=sight_group) if sight_group is not None else {}
 
 
-@to_cache("rating_region_v2_{tourism_type}", 60 * 60 * 24 * 7)
+@to_cache("rating_region_v3_{tourism_type}", 60 * 60 * 24 * 7)
 def get_interest_region_rating(tourism_type_filter, **kwargs):
-    return RegionRating.objects.filter(
-        region_code__isnull=True,
-        **tourism_type_filter,
-    ).select_related()
+    return (
+        RegionRating.objects.filter(
+            region_code__isnull=True,
+            **tourism_type_filter,
+        )
+        .select_related("home_code")
+        .only(
+            *RATING_FIELDS,
+            "home_code_id",
+            "home_code__code",
+            "home_code__title",
+        )
+    )
 
 
 def _get_rank_by_place(place, total):
@@ -404,13 +479,21 @@ def get_synced_region_rating_places(
     return compact_places
 
 
-@to_cache("rating_cities_v2_{code}_{tourism_type}", 60 * 60 * 24 * 7)
+@to_cache("rating_cities_v3_{code}_{tourism_type}", 60 * 60 * 24 * 7)
 def get_interest_cities_rating(tourism_type_filter, **kwargs):
-    return CityRating.objects.filter(
-        home_region__code=kwargs.get("code"),
-        **tourism_type_filter,
-        # **dict(tourism_type=tourism_type) if tourism_type is not None else dict(tourism_type__isnull=True),
-    ).select_related()
+    return (
+        CityRating.objects.filter(
+            home_region__code=kwargs.get("code"),
+            **tourism_type_filter,
+        )
+        .select_related("home_code")
+        .only(
+            *RATING_FIELDS,
+            "home_code_id",
+            "home_code__id",
+            "home_code__title",
+        )
+    )
 
 
 def get_amount_cities_rating(code, tourism_type_filter=None, tourism_type=""):
@@ -425,10 +508,26 @@ def get_amount_region_rating(tourism_type_filter=None, tourism_type=""):
 
 
 def get_top_sights(group_filter):
-    return SightRating.objects.filter(
-        region_code__isnull=True, **group_filter
-    ).prefetch_related("sight", "sight__group", "sight__code", "sight__city")[:10]
+    return _sight_rating_relations(
+        SightRating.objects.filter(region_code__isnull=True, **group_filter)
+    )[:10]
 
 
 def get_outside_rating_sight(code, sight_group_filter):
-    return Sight.pub.filter(code=code, sight_ratings__isnull=True, **sight_group_filter)
+    ratings = SightRating.objects.filter(sight_id=OuterRef("pk"))
+    return (
+        Sight.pub.filter(code=code, **sight_group_filter)
+        .filter(~Exists(ratings))
+        .select_related("code", "city")
+        .prefetch_related(
+            Prefetch(
+                "group",
+                queryset=SightGroup.objects.only("name", "title"),
+            )
+        )
+        .only(
+            *SIGHT_FIELDS,
+            *(f"code__{field}" for field in REGION_FIELDS),
+            *(f"city__{field}" for field in CITY_FIELDS),
+        )
+    )

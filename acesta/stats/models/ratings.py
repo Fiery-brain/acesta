@@ -117,7 +117,15 @@ class SightRating(Rating, SightGroupMixin):
                     "rating_type",
                     "place",
                 ]
-            )
+            ),
+            models.Index(
+                fields=["rating_type", "place"],
+                name="stats_sight_global_top_idx",
+                condition=models.Q(
+                    region_code__isnull=True,
+                    sight_group__isnull=True,
+                ),
+            ),
         ]
         ordering = (
             "rating_type",
