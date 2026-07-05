@@ -450,7 +450,10 @@ TOURISM_TYPES = tuple(
         lambda x: tuple(x.split("=")),
         env.list("ACESTA_TOURISM_TYPES", default=()),
     )
-) or (("museum", "музейный туризм"),)
+) or (
+    ("museum", "музейный туризм"),
+    ("spa", "оздоровительный туризм"),
+)
 
 PERIOD_DATE_FORMAT = "%d.%m.%Y %H:%M:%S %z"
 TOURISM_TYPE_COEF = env("ACESTA_TOURISM_TYPE_COEF", default=0.27)
