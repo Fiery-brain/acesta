@@ -36,7 +36,7 @@ class HistoryMixin(models.Model):
     @property
     def previous_history_item(self):
         """Return the latest history item from the previous calendar month."""
-        current_date = self._normalize_history_date(getattr(self, "date", None))
+        current_date = self._normalize_history_date(getattr(self, "modified", None))
         if current_date is None:
             return {}
 

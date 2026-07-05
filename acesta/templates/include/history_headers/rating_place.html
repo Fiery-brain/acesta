@@ -1,0 +1,40 @@
+{% extends "include/history_headers/base.html" %}
+{% load static %}
+
+{% block history_blocks %}
+  <div class="history-modal-header-block">
+    {% include "include/history_headers/entity_icon.html" with entity_type=target_type entity=target sight_group=sight_group only %}
+    <span class="history-modal-block-copy">
+      <span class="history-modal-block-label interest-object-label">позиция в рейтинге</span>
+      <strong class="history-modal-block-value">{{ target }}</strong>
+    </span>
+  </div>
+
+  {% if target_type == "sight" %}
+    {% comment %} {% if sight_group %}
+      <div class="history-modal-header-block">
+        <span class="history-modal-block-icon bg-{{ sight_group.name }}" aria-hidden="true"></span>
+        <span class="history-modal-block-copy">
+          <span class="history-modal-block-label">ТИП ТОЧКИ ПРИТЯЖЕНИЯ</span>
+          <strong class="history-modal-block-value">{{ sight_group.title }}</strong>
+        </span>
+      </div>
+    {% endif %} {% endcomment %}
+  {% else %}
+    <div class="history-modal-header-block">
+      {% if tourism_type %}
+        <span class="history-modal-block-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#{{ tourism_type }}"></use></svg>
+        </span>
+      {% else %}
+        <span class="history-modal-block-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#tourism"></use></svg>
+        </span>
+      {% endif %}
+      <span class="history-modal-block-copy">
+        <span class="history-modal-block-label muted-label">вид туризма</span>
+        <strong class="history-modal-block-value">{% if tourism_type %}{{ tourism_type_title }}{% else %}все виды туризма{% endif %}</strong>
+      </span>
+    </div>
+  {% endif %}
+{% endblock %}

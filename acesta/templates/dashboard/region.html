@@ -10,7 +10,6 @@
 
 {% block css_external %}
 <link rel="stylesheet" href="{% static 'css/select2.min.css' %}" xmlns="http://www.w3.org/1999/html">
-  {% plotly_header %}
   {{ block.super }}
 {% endblock %}
 
@@ -153,7 +152,6 @@
   <script src="{% static 'js/select2.min.js' %}"></script>
   <script src="{% static 'js/sight.group.selector.js' %}"></script>
   <script src="{% static 'js/region.sights.search.js' %}"></script>
-  <script src="{% static 'js/plotly-locale-ru-latest.js' %}"></script>
   {% plotly_footer %}
   <script src="{% static 'js/dashboard.loader.js' %}"></script>
   {% include "include/recommendation_data_region.html" %}

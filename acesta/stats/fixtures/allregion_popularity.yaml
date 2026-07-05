@@ -1,0 +1,154 @@
+- model: stats.allregionpopularity
+  pk: 275243
+  fields:
+    created: 2022-12-20 18:13:45.220689+00:00
+    modified: 2023-05-12 13:05:57.166278+00:00
+    history: []
+    storage:
+      max: 5655.0
+      qty: 79.0
+      mean: 5391.0
+      datetime: 2023-05-12 13:05
+      mean_all: 5391.0
+    date: 2023-04-15 04:14:56.388842+00:00
+    qty: 79
+    popularity_mean_all: 6409.75
+    popularity_mean: 6409.75
+    popularity_max: 7947.0
+    code: '01'
+    sight_group: snow
+    sight: 33
+    home_code: '01'
+    source_city: null
+- model: stats.allregionpopularity
+  pk: 277553
+  fields:
+    created: 2022-12-20 18:16:14.751213+00:00
+    modified: 2023-04-15 04:14:56.628520+00:00
+    history: []
+    storage:
+      max: 42120.0
+      qty: 4.0
+      mean: 42120.0
+      datetime: 2023-04-15 04:13
+      mean_all: 42120.0
+    date: 2023-04-15 04:14:56.628497+00:00
+    qty: 4
+    popularity_mean_all: 42120.0
+    popularity_mean: 42120.0
+    popularity_max: 42120.0
+    code: '01'
+    sight_group: snow
+    sight: null
+    home_code: '01'
+    source_city: null
+- model: stats.allregionpopularity
+  pk: 277630
+  fields:
+    created: 2022-12-20 18:16:17.428706+00:00
+    modified: 2023-04-15 04:14:57.496458+00:00
+    history: []
+    storage:
+      max: 5265.0
+      qty: 3.0
+      mean: 5265.0
+      datetime: 2023-04-15 04:13
+      mean_all: 5265.0
+    date: 2023-04-15 04:14:57.496428+00:00
+    qty: 3
+    popularity_mean_all: 5265.0
+    popularity_mean: 5265.0
+    popularity_max: 5265.0
+    code: '01'
+    sight_group: snow
+    sight: null
+    home_code: '01'
+    source_city: 103
+- model: stats.allregionpopularity
+  pk: 1246844
+  fields:
+    created: 2023-01-26 08:40:57.725086+00:00
+    modified: 2023-04-15 04:15:01.013880+00:00
+    history: []
+    storage:
+      max: 0
+      qty: 0
+      mean: 0
+      datetime: 2023-04-15 04:13
+      mean_all: 0
+    date: 2023-04-15 04:15:01.013856+00:00
+    qty: 0
+    popularity_mean_all: 0.0
+    popularity_mean: 0.0
+    popularity_max: 0.0
+    code: '02'
+    sight_group: snow
+    sight: null
+    home_code: '01'
+    source_city: 7
+- model: stats.allregionpopularity
+  pk: 277554
+  fields:
+    created: 2022-12-20 18:16:14.754203+00:00
+    modified: 2023-04-15 04:14:59.322222+00:00
+    history: []
+    storage:
+      max: 0
+      qty: 0
+      mean: 0
+      datetime: 2023-04-15 04:13
+      mean_all: 0
+    date: 2023-04-15 04:14:59.322177+00:00
+    qty: 0
+    popularity_mean_all: 0.0
+    popularity_mean: 0.0
+    popularity_max: 0.0
+    code: '02'
+    sight_group: snow
+    sight: null
+    home_code: '01'
+    source_city: null
+- model: stats.allregionpopularity
+  pk: 1246843
+  fields:
+    created: 2023-01-26 08:40:57.719112+00:00
+    modified: 2023-04-15 04:14:59.625677+00:00
+    history: []
+    storage:
+      max: 0
+      qty: 0
+      mean: 0
+      datetime: 2023-04-15 04:13
+      mean_all: 0
+    date: 2023-04-15 04:14:59.625654+00:00
+    qty: 0
+    popularity_mean_all: 0.0
+    popularity_mean: 0.0
+    popularity_max: 0.0
+    code: '01'
+    sight_group: snow
+    sight: null
+    home_code: '01'
+    source_city: 7
+- model: stats.allregionpopularity
+  pk: 275244
+  fields:
+    created: 2022-12-20 18:13:45.223927+00:00
+    modified: 2023-04-15 04:14:57.125623+00:00
+    history: []
+    storage:
+      max: 0
+      qty: 0
+      mean: 0
+      datetime: 2023-05-12 13:05
+      mean_all: 0
+    date: 2023-04-15 04:14:57.125571+00:00
+    qty: 0
+    popularity_mean_all: 17.5
+    popularity_mean: 0.0
+    popularity_max: 19.0
+    code: '02'
+    sight_group: snow
+    sight: 33
+    home_code: '01'
+    source_city: null

@@ -1,11 +1,133 @@
 import pandas as pd
 from dash import dependencies
+from dash.exceptions import PreventUpdate
 from django.conf import settings
+from django.db import models
 
+from acesta.geo.models import City
+from acesta.geo.models import Sight
 from acesta.stats.dash.helpers.interest import generate_update_tooltip_content
+from acesta.stats.dash.helpers.interest import get_callback_triggered_id
 from acesta.stats.dash.helpers.interest import get_ppt_df
+from acesta.stats.dash.helpers.interest import get_restorable_interest_state
+from acesta.stats.dash.helpers.interest import INTEREST_SESSION_VERSION
+from acesta.stats.dash.helpers.interest import normalize_interest_context
+from acesta.stats.dash.helpers.interest import normalize_interest_sort
 from acesta.stats.dash.interest.app import interest_app
+from acesta.stats.dash.interest.map_connections import get_click_entity_key
+from acesta.stats.dash.interest.map_connections import get_source_click_entity_key
+from acesta.stats.dash.interest.map_connections import parse_entity_key
 from acesta.stats.helpers.interest import get_interest
+
+
+def is_valid_target(
+    region_code: str,
+    home_area: str,
+    target_id: int,
+    tourism_type: str,
+) -> bool:
+    """Keep a persisted point target only while it belongs to the visible map."""
+    if home_area == settings.AREA_CITIES:
+        return City.objects.filter(pk=target_id, code_id=region_code).exists()
+    if home_area == settings.AREA_SIGHTS:
+        filters = {
+            "pk": target_id,
+            "code_id": region_code,
+            "is_pub": True,
+        }
+        if tourism_type:
+            filters["group__tourism_type"] = tourism_type
+        return Sight.objects.filter(**filters).exists()
+    return False
+
+
+def get_default_target_key(user, home_area: str, tourism_type: str) -> str:
+    """Return the deterministic target used when no point has been selected."""
+    if home_area == settings.AREA_REGIONS:
+        return f"{settings.AREA_REGIONS}_0"
+
+    if home_area == settings.AREA_CITIES:
+        capital = (
+            City.objects.filter(
+                code_id=user.current_region.code,
+                is_capital=True,
+            )
+            .order_by("pk")
+            .first()
+        )
+        return f"{home_area}_{capital.pk}" if capital else f"{home_area}_0"
+
+    filters = {
+        "code_id": user.current_region.code,
+        "is_pub": True,
+    }
+    if tourism_type:
+        filters["group__tourism_type"] = tourism_type
+    sight = (
+        Sight.objects.filter(**filters)
+        .annotate(qty=models.Sum("sight_all_region_popularity__qty"))
+        .order_by(models.F("qty").desc(nulls_last=True), "pk")
+        .first()
+    )
+    return f"{home_area}_{sight.pk}" if sight else f"{home_area}_0"
+
+
+def resolve_target_key(
+    user,
+    home_area: str,
+    tourism_type: str,
+    candidate_key: str = "",
+) -> str:
+    """Keep a valid point target or replace it with the area's default target."""
+    if home_area == settings.AREA_REGIONS:
+        return f"{settings.AREA_REGIONS}_0"
+
+    candidate_kind, candidate_identifier = parse_entity_key(candidate_key)
+    if candidate_kind == home_area and candidate_identifier not in (None, "0"):
+        try:
+            candidate_id = int(candidate_identifier)
+        except (TypeError, ValueError):
+            candidate_id = 0
+        if candidate_id and is_valid_target(
+            user.current_region.code,
+            home_area,
+            candidate_id,
+            tourism_type,
+        ):
+            return f"{home_area}_{candidate_id}"
+
+    return get_default_target_key(user, home_area, tourism_type)
+
+
+def get_interest_active_cells(table_data: list, source_id) -> tuple:
+    """Build the DataTable selection shared by map and table-driven updates."""
+    for row_index, row in enumerate(table_data):
+        if str(row.get("code")) != str(source_id):
+            continue
+
+        columns = ["code__title", "qty_display", "ppt_display"]
+        selected_cells = [
+            {
+                "row": row_index,
+                "column": column,
+                "column_id": column_id,
+                "row_id": row.get("id", row.get("code")),
+            }
+            for column, column_id in enumerate(columns, start=1)
+        ]
+        return selected_cells, selected_cells[0]
+
+    return [], None
+
+
+def get_validated_target_key(state: dict, user) -> str:
+    """Return the saved target only while it is available in the restored context."""
+    return resolve_target_key(
+        user,
+        state["homeArea"],
+        state["tourismType"],
+        state.get("targetKey"),
+    )
 
 
 @interest_app.callback(
@@ -18,21 +140,50 @@ def update_tooltip(n):
 
 
 @interest_app.callback(
+    dependencies.Output("interest-initial-state", "data"),
+    dependencies.Input("helper-interesant", "interval"),
+    dependencies.State("interest-session-state", "data"),
+)
+def initialize_interest_session(interval, persisted_state: dict, **kwargs) -> dict:
+    """Create one access-checked snapshot used by every restoration callback."""
+    return get_restorable_interest_state(persisted_state, kwargs.get("user"))
+
+
+@interest_app.callback(
+    dependencies.Output("table-interesants", "sort_by"),
+    dependencies.Input("interest-initial-state", "data"),
+)
+def restore_interest_sort(initial_state: dict) -> list:
+    if not initial_state:
+        raise PreventUpdate
+    return initial_state["sortBy"]
+
+
+@interest_app.callback(
     dependencies.Output("table-interesants", "data"),
+    dependencies.Output("table-interesants", "selected_cells"),
+    dependencies.Output("table-interesants", "active_cell"),
+    dependencies.Output("interest-table-state", "data"),
     dependencies.Input("tourism-type", "value"),
     dependencies.Input("home-area", "value"),
     dependencies.Input("tabs-interesants", "value"),
     dependencies.Input("map", "clickData"),
+    dependencies.Input("home-area-key", "data"),
     dependencies.Input("table-interesants", "sort_by"),
-    dependencies.State("table-interesants", "data"),
+    dependencies.State("table-interesants", "active_cell"),
+    dependencies.State("interest-initial-state", "data"),
+    dependencies.State("interest-session-hydrated", "data"),
 )
 def update_interest(
     tourism_type: str,
     home_area: str,
     interesant_area: str,
     map_data: dict,
+    target_key: str,
     sort_by: list,
-    table_interesants_current_state: dict,
+    current_active_cell: dict,
+    initial_state: dict = None,
+    hydrated: bool = False,
     **kwargs,
 ):
     """
@@ -42,26 +193,69 @@ def update_interest(
     :param interesant_area: str
     :param map_data: dict
     :param sort_by: list
-    :param table_interesants_current_state: dict
     :param kwargs: dict
     :return: dict
     """
-    # TODO processing of an empty table
-    if map_data and "id" not in map_data.get("points")[0].keys():
-        return table_interesants_current_state
+    user = kwargs.get("user")
+    home_area, interesant_area, tourism_type = normalize_interest_context(
+        user, home_area, interesant_area, tourism_type
+    )
+    sort_by = normalize_interest_sort(sort_by)
 
+    # TODO processing of an empty table
+    selected_cells = []
+    active_cell = None
+    selected_source_id = None
+    clicked_target_key = None
+    trigger = get_callback_triggered_id(kwargs.get("callback_context"))
+    clicked_key = get_click_entity_key(map_data) if trigger == "map" else None
+    clicked_kind, clicked_identifier = parse_entity_key(clicked_key)
+    if trigger == "map":
+        source_clicked_key = get_source_click_entity_key(map_data)
+        source_clicked_kind, source_clicked_identifier = parse_entity_key(
+            source_clicked_key
+        )
+        if source_clicked_key is not None:
+            if source_clicked_kind != interesant_area:
+                raise PreventUpdate
+            selected_source_id = source_clicked_identifier
+        elif home_area != settings.AREA_REGIONS and clicked_kind == home_area:
+            clicked_target_key = clicked_key
+        elif clicked_kind == interesant_area:
+            selected_source_id = clicked_identifier
+        else:
+            raise PreventUpdate
+    elif trigger == "table-interesants" and current_active_cell:
+        selected_source_id = current_active_cell.get("row_id")
+    elif not current_active_cell and not hydrated:
+        restored = initial_state or get_restorable_interest_state({}, user)
+        if (
+            restored["homeArea"] == home_area
+            and restored["interesantArea"] == interesant_area
+            and restored["tourismType"] == tourism_type
+            and restored["sortBy"] == sort_by
+        ):
+            selected_source_id = restored.get("sourceRowId")
+
+    resolved_target_key = resolve_target_key(
+        user,
+        home_area,
+        tourism_type,
+        clicked_target_key or target_key,
+    )
     home_id = 0
+    target_kind, target_identifier = parse_entity_key(resolved_target_key)
     if (
         home_area != settings.AREA_REGIONS
-        and map_data
-        and "id" in map_data.get("points")[0].keys()
-        and kwargs.get("user").is_extended
+        and target_kind == home_area
+        and target_identifier not in (None, "0")
+        and user.is_extended
     ):
-        home_area, home_id = map_data.get("points")[0].get("id").split("_")
+        home_id = int(target_identifier)
 
-    return get_ppt_df(
+    table_data = get_ppt_df(
         get_interest(
-            kwargs.get("user").current_region.code,
+            user.current_region.code,
             home_area,
             interesant_area,
             tourism_type,
@@ -70,30 +264,194 @@ def update_interest(
         sort_by,
     ).to_dict("records")
 
+    if selected_source_id is not None:
+        selected_cells, active_cell = get_interest_active_cells(
+            table_data, selected_source_id
+        )
+        if active_cell is None and trigger in {"map", "table-interesants"}:
+            raise PreventUpdate
+
+    table_state = {
+        "homeArea": home_area,
+        "interesantArea": interesant_area,
+        "tourismType": tourism_type,
+        "sortBy": sort_by,
+        "sourceRowId": active_cell.get("row_id") if active_cell else None,
+    }
+    return table_data, selected_cells, active_cell, table_state
+
+
+@interest_app.callback(
+    dependencies.Output("interest-session-state", "data"),
+    dependencies.Input("tourism-type", "value"),
+    dependencies.Input("home-area", "value"),
+    dependencies.Input("tabs-interesants", "value"),
+    dependencies.Input("table-interesants", "sort_by"),
+    dependencies.Input("table-interesants", "active_cell"),
+    dependencies.Input("home-area-key", "data"),
+    dependencies.Input("interest-session-hydrated", "data"),
+    dependencies.State("interest-session-state", "data"),
+    prevent_initial_call=True,
+)
+def save_interest_session_state(
+    tourism_type: str,
+    home_area: str,
+    interesant_area: str,
+    sort_by: list,
+    active_cell: dict,
+    target_key: str,
+    hydrated: bool,
+    current_state: dict,
+    **kwargs,
+) -> dict:
+    """Persist the current working context without treating it as authorization."""
+    if not hydrated:
+        raise PreventUpdate
+    user = kwargs.get("user")
+    home_area, interesant_area, tourism_type = normalize_interest_context(
+        user, home_area, interesant_area, tourism_type
+    )
+    trigger = get_callback_triggered_id(kwargs.get("callback_context"))
+    source_row_id = active_cell.get("row_id") if active_cell else None
+    if home_area == settings.AREA_REGIONS and trigger == "home-area":
+        source_row_id = None
+    normalized_target_key = resolve_target_key(
+        user,
+        home_area,
+        tourism_type,
+        target_key,
+    )
+    state = {
+        "version": INTEREST_SESSION_VERSION,
+        "regionCode": str(user.current_region.code),
+        "homeArea": home_area,
+        "interesantArea": interesant_area,
+        "tourismType": tourism_type,
+        "sortBy": normalize_interest_sort(sort_by),
+        "sourceRowId": source_row_id,
+        "targetKey": normalized_target_key,
+    }
+    if state == current_state:
+        raise PreventUpdate
+    return state
+
 
 @interest_app.callback(
     dependencies.Output("home-area-key", "data"),
-    [
-        dependencies.Input("home-area", "value"),
-        dependencies.Input("map", "clickData"),
-    ],
+    dependencies.Input("home-area", "value"),
+    dependencies.Input("map", "clickData"),
+    dependencies.Input("tourism-type", "value"),
+    dependencies.Input("interest-initial-state", "data"),
+    dependencies.State("home-area-key", "data"),
+    dependencies.State("interest-session-hydrated", "data"),
 )
-def update_home_area_key(home_area: str, map_data: dict, **kwargs) -> str:
+def update_home_area_key(
+    home_area: str,
+    map_data: dict,
+    tourism_type: str,
+    initial_state: dict,
+    current_key: str,
+    hydrated: bool = False,
+    **kwargs,
+) -> str:
     """
     :param home_area: str
     :param map_data: dict
     :param kwargs: dict
     :return: str
     """
-    home_area_key = f"{settings.AREA_REGIONS}_0"
-    if (
-        home_area != settings.AREA_REGIONS
-        and map_data
-        and "id" in map_data.get("points")[0].keys()
-        and kwargs.get("user").is_extended
+    user = kwargs.get("user")
+    home_area, _, tourism_type = normalize_interest_context(
+        user, home_area, settings.AREA_REGIONS, tourism_type
+    )
+    trigger = get_callback_triggered_id(kwargs.get("callback_context"))
+
+    restored = initial_state or get_restorable_interest_state({}, user)
+    restored_matches = (
+        restored["homeArea"] == home_area and restored["tourismType"] == tourism_type
+    )
+
+    if trigger == "home-area":
+        if home_area == settings.AREA_REGIONS:
+            return f"{settings.AREA_REGIONS}_0"
+        if not hydrated and restored_matches:
+            return get_validated_target_key(restored, user)
+        return resolve_target_key(user, home_area, tourism_type)
+
+    if trigger == "interest-initial-state":
+        return (
+            get_validated_target_key(restored, user)
+            if restored_matches
+            else resolve_target_key(user, home_area, tourism_type)
+        )
+
+    if trigger == "map" and get_source_click_entity_key(map_data) is not None:
+        raise PreventUpdate
+
+    if trigger == "map" and home_area == settings.AREA_REGIONS:
+        raise PreventUpdate
+
+    if trigger == "map" and home_area != settings.AREA_REGIONS:
+        clicked_key = get_click_entity_key(map_data)
+        clicked_kind, _ = parse_entity_key(clicked_key)
+        if clicked_kind == home_area:
+            return resolve_target_key(user, home_area, tourism_type, clicked_key)
+        raise PreventUpdate
+
+    if trigger == "tourism-type":
+        return resolve_target_key(user, home_area, tourism_type, current_key)
+
+    return resolve_target_key(user, home_area, tourism_type, current_key)
+
+
+@interest_app.callback(
+    dependencies.Output("interest-session-hydrated", "data"),
+    dependencies.Input("tourism-type", "value"),
+    dependencies.Input("home-area", "value"),
+    dependencies.Input("tabs-interesants", "value"),
+    dependencies.Input("table-interesants", "sort_by"),
+    dependencies.Input("home-area-key", "data"),
+    dependencies.Input("interest-table-state", "data"),
+    dependencies.State("interest-initial-state", "data"),
+)
+def mark_interest_session_hydrated(
+    tourism_type: str,
+    home_area: str,
+    interesant_area: str,
+    sort_by: list,
+    target_key: str,
+    table_state: dict,
+    initial_state: dict,
+    **kwargs,
+) -> bool:
+    """Open persistence only after every restored value has settled."""
+    if not initial_state or not table_state:
+        raise PreventUpdate
+
+    user = kwargs.get("user")
+    expected_target_key = get_validated_target_key(initial_state, user)
+    expected_context = {
+        "homeArea": initial_state["homeArea"],
+        "interesantArea": initial_state["interesantArea"],
+        "tourismType": initial_state["tourismType"],
+        "sortBy": initial_state["sortBy"],
+    }
+    current_context = {
+        "homeArea": home_area,
+        "interesantArea": interesant_area,
+        "tourismType": tourism_type or "",
+        "sortBy": normalize_interest_sort(sort_by),
+    }
+    table_context = {key: table_state.get(key) for key in expected_context}
+    if not all(
+        (
+            current_context == expected_context,
+            table_context == expected_context,
+            target_key == expected_target_key,
+        )
     ):
-        home_area_key = map_data.get("points")[0].get("id")
-    return f"{home_area_key}"
+        raise PreventUpdate
+    return True
 
 
 @interest_app.callback(
@@ -146,11 +504,18 @@ def update_audience_key(
     :return: str
     """
     actual_data = pd.DataFrame(table_data)
-    pk = ""
+    pk = active_cell.get("row_id", "") if active_cell else ""
+    if pk:
+        return f"{pk}_{tourism_type}_{interesant_area}"
+
     try:
+        sort_column = {
+            "qty_display": "qty",
+            "ppt_display": "ppt",
+        }.get(sort_by[0].get("column_id"), sort_by[0].get("column_id"))
         actual_data = actual_data.sort_values(
-            [sort_by[0].get("column_id"), "code"],
-            ascending=[True if sort_by[0].get("direction") != "asc" else False, True],
+            [sort_column, "code"],
+            ascending=[sort_by[0].get("direction") == "asc", True],
         )
     except (IndexError, KeyError):
         pass

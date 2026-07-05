@@ -15,6 +15,158 @@ from acesta.stats.helpers.update_dates import get_rating_update_date
 from acesta.stats.models import RegionRegionPopularity
 
 
+HISTORY_ENTITY_TYPES = {
+    "RegionRegionPopularity": "region_region",
+    "RegionCityPopularity": "region_city",
+    "CityRegionPopularity": "city_region",
+    "CityCityPopularity": "city_city",
+    "AllRegionPopularity": "sight_region",
+    "AllCityPopularity": "sight_city",
+}
+INTEREST_SESSION_VERSION = 2
+LEGACY_INTEREST_SESSION_VERSION = 1
+DEFAULT_INTEREST_SORT = {"column_id": "qty_display", "direction": "desc"}
+INTEREST_SORT_ALIASES = {
+    "ppt": "ppt_display",
+    "qty": "qty_display",
+}
+INTEREST_SORT_COLUMNS = {
+    "code__title",
+    "ppt_display",
+    "qty_display",
+}
+INTEREST_NUMERIC_SORT_COLUMNS = {"ppt_display", "qty_display"}
+
+
+def normalize_interest_context(
+    user,
+    home_area: str,
+    interesant_area: str,
+    tourism_type: str,
+) -> tuple[str, str, str]:
+    """Validate client-restored filters against the user's current access."""
+    if not user.is_extended:
+        return settings.AREA_REGIONS, settings.AREA_REGIONS, ""
+
+    allowed_home_areas = {settings.AREA_REGIONS, settings.AREA_SIGHTS}
+    if (
+        getattr(user.current_region, "region_type", None)
+        != settings.REGION_TYPE_FEDERAL_CITY
+    ):
+        allowed_home_areas.add(settings.AREA_CITIES)
+    if home_area not in allowed_home_areas:
+        home_area = settings.AREA_REGIONS
+
+    if interesant_area not in {settings.AREA_REGIONS, settings.AREA_CITIES}:
+        interesant_area = settings.AREA_REGIONS
+
+    tourism_type = tourism_type or ""
+    known_tourism_types = dict(settings.TOURISM_TYPES_OUTSIDE)
+    if tourism_type not in known_tourism_types:
+        tourism_type = ""
+    if home_area != settings.AREA_REGIONS and getattr(
+        user, "is_set_tourism_types", False
+    ):
+        tourism_type = user.get_current_tourism_type(tourism_type)
+
+    return home_area, interesant_area, tourism_type
+
+
+def normalize_interest_sort(sort_by: list) -> list:
+    """Return a safe DataTable sort definition restored from the browser."""
+    if not isinstance(sort_by, list) or not sort_by:
+        return [DEFAULT_INTEREST_SORT.copy()]
+    item = sort_by[0]
+    if not isinstance(item, dict):
+        return [DEFAULT_INTEREST_SORT.copy()]
+    column_id = INTEREST_SORT_ALIASES.get(item.get("column_id"), item.get("column_id"))
+    direction = item.get("direction")
+    if column_id not in INTEREST_SORT_COLUMNS or direction not in {"asc", "desc"}:
+        return [DEFAULT_INTEREST_SORT.copy()]
+    return [{"column_id": column_id, "direction": direction}]
+
+
+def migrate_interest_sort(sort_by: list, session_version: int) -> list:
+    """Convert legacy inverted numeric sorting to standard Dash semantics."""
+    normalized = normalize_interest_sort(sort_by)
+    if session_version != LEGACY_INTEREST_SESSION_VERSION:
+        return normalized
+
+    legacy_item = sort_by[0] if isinstance(sort_by, list) and sort_by else None
+    if not isinstance(legacy_item, dict):
+        return [DEFAULT_INTEREST_SORT.copy()]
+    legacy_column = INTEREST_SORT_ALIASES.get(
+        legacy_item.get("column_id"), legacy_item.get("column_id")
+    )
+    if legacy_column not in INTEREST_SORT_COLUMNS or legacy_item.get(
+        "direction"
+    ) not in {"asc", "desc"}:
+        return [DEFAULT_INTEREST_SORT.copy()]
+    if normalized[0]["column_id"] in INTEREST_NUMERIC_SORT_COLUMNS:
+        normalized[0]["direction"] = (
+            "desc" if normalized[0]["direction"] == "asc" else "asc"
+        )
+    return normalized
+
+
+def get_restorable_interest_state(state: dict, user) -> dict:
+    """Normalize session state and reject data saved for another region."""
+    defaults = {
+        "version": INTEREST_SESSION_VERSION,
+        "regionCode": str(user.current_region.code),
+        "homeArea": settings.AREA_REGIONS,
+        "interesantArea": settings.AREA_REGIONS,
+        "tourismType": "",
+        "sortBy": [DEFAULT_INTEREST_SORT.copy()],
+        "sourceRowId": None,
+        "targetKey": f"{settings.AREA_REGIONS}_0",
+    }
+    if (
+        not isinstance(state, dict)
+        or state.get("version")
+        not in {LEGACY_INTEREST_SESSION_VERSION, INTEREST_SESSION_VERSION}
+        or str(state.get("regionCode")) != str(user.current_region.code)
+    ):
+        return defaults
+
+    home_area, interesant_area, tourism_type = normalize_interest_context(
+        user,
+        state.get("homeArea"),
+        state.get("interesantArea"),
+        state.get("tourismType"),
+    )
+    normalized = {
+        **defaults,
+        "homeArea": home_area,
+        "interesantArea": interesant_area,
+        "tourismType": tourism_type,
+        "sortBy": migrate_interest_sort(state.get("sortBy"), state.get("version")),
+    }
+    if (
+        home_area == state.get("homeArea")
+        and interesant_area == state.get("interesantArea")
+        and tourism_type == (state.get("tourismType") or "")
+    ):
+        normalized["sourceRowId"] = state.get("sourceRowId")
+        normalized["targetKey"] = state.get("targetKey") or defaults["targetKey"]
+    return normalized
+
+
+def get_callback_triggered_id(callback_context) -> str | None:
+    """Return the component id that triggered a django-plotly-dash callback."""
+    triggered = getattr(callback_context, "triggered", None)
+    if not triggered:
+        return None
+
+    try:
+        prop_id = triggered[0].get("prop_id", "")
+    except (AttributeError, IndexError, TypeError):
+        return None
+
+    component_id, separator, _ = prop_id.rpartition(".")
+    return component_id if separator else None
+
+
 def generate_update_tooltip_content():
     return f"""
         Данные об интересе обновлены <span class='text-nowrap'>
@@ -50,21 +202,95 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
     :return: pd.DataFrame
     """
     columns = (
+        "pk",
         "code__title",
         "code",
         "qty",
         "ppt",
+        "modified",
+        "history",
     )
     df = pd.DataFrame(list(ppt_data.values(*columns)))
     if not len(df):
-        df = pd.DataFrame([["Запрашивают редко", "", "", ""]], columns=columns)
+        df = pd.DataFrame(
+            [[None, "Запрашивают редко", "", "", "", None, []]], columns=columns
+        )
     else:
+
+        def get_previous_item(row):
+            popularity = ppt_data.model(
+                modified=row["modified"], history=row["history"]
+            )
+            return popularity.previous_history_item
+
+        def get_trend(current, previous):
+            if previous is None or current == previous:
+                return (
+                    '<span class="interest-trend-slot place_change '
+                    'place_change_neural">-</span>'
+                )
+            if current > previous:
+                return '<span class="interest-trend-slot place_change">' "&uarr;</span>"
+            return (
+                '<span class="interest-trend-slot place_change '
+                'place_change_negative">&darr;</span>'
+            )
+
+        def format_number(value):
+            return f"{round(value):,}".replace(",", " ")
+
+        previous_items = df.apply(get_previous_item, axis=1)
+        df["qty_display"] = [
+            f'{format_number(current)}{get_trend(current, previous.get("qty"))}'
+            for current, previous in zip(df["qty"], previous_items)
+        ]
+        df["ppt_display"] = [
+            f'{format_number(current)}%{get_trend(current, previous.get("mean"))}'
+            for current, previous in zip(df["ppt"], previous_items)
+        ]
         df["ppt"] = df["ppt"] / 100
 
-    if len(sort_by):
+        entity_type = HISTORY_ENTITY_TYPES.get(ppt_data.model.__name__, "")
+        sprite_url = f"{settings.STATIC_URL}img/sprite.svg#history"
+        df["history_action"] = [
+            (
+                (
+                    '<button type="button" class="history-action" '
+                    'title="Показать историю" aria-label="Показать историю" '
+                    'data-bs-toggle="tooltip" '
+                    'data-history-domain="popularity" '
+                    f'data-history-entity-type="{entity_type}" '
+                    f'data-history-entity-id="{pk}">'
+                    f'<svg aria-hidden="true"><use href="{sprite_url}"></use></svg>'
+                    "</button>"
+                )
+                if pk and entity_type
+                else ""
+            )
+            for pk in df["pk"]
+        ]
+
+    if not df.iloc[0].get("qty_display"):
+        empty_slot = '<span class="interest-trend-slot">&nbsp;</span>'
+        df["qty_display"] = empty_slot
+        df["ppt_display"] = empty_slot
+        df["history_action"] = ""
+
+    df = df.drop(columns=["modified", "history"])
+
+    # Dash DataTable uses this special field as a stable row identifier. It
+    # keeps the selected region attached to its code when the table is sorted.
+    df["id"] = df["code"]
+
+    if len(sort_by) and sort_by[0].get("column_id") != "history_action":
+        sort_column = {
+            "qty_display": "qty",
+            "ppt_display": "ppt",
+        }.get(sort_by[0]["column_id"], sort_by[0]["column_id"])
+        ascending = sort_by[0]["direction"] == "asc"
         df = df.sort_values(
-            [sort_by[0]["column_id"], "code"],
-            ascending=[(sort_by[0]["direction"] != "asc"), True],
+            [sort_column, "code"],
+            ascending=[ascending, True],
         )
     return df
 
@@ -90,10 +316,11 @@ def get_map_df(tourism_type: str, home_code: str) -> pd.DataFrame:
         .annotate(qty=models.Sum("qty"), ppt=models.Avg("popularity_mean"))
     )
     try:
-        df_map = df_map.join(pd.DataFrame(list(ppt_data)).set_index("code")).fillna(0)
+        df_map = df_map.join(pd.DataFrame(list(ppt_data)).set_index("code"))
+        df_map["qty"] = df_map["qty"].fillna(0)
     except KeyError:
         df_map["qty"] = 0
-        df_map["ppt"] = 0
+        df_map["ppt"] = float("nan")
     return df_map
 
 
@@ -112,6 +339,7 @@ def get_sights(region: str, tourism_type: str) -> models.QuerySet:
             **dict() if not tourism_type else dict(group__tourism_type=tourism_type),
         )
         .annotate(qty=models.Sum("sight_all_region_popularity__qty"))
+        .prefetch_related("group")
     )
 
 

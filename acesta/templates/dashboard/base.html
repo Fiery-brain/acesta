@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load prop %}
+{% load plotly_dash %}
 
 {% block meta %}{% endblock %}
+
+{% block css_external %}
+  {{ block.super }}
+  {% plotly_header %}
+{% endblock %}
 
 {% block css %}
   {{ block.super }}
@@ -45,6 +51,7 @@
     {% endif %}
     {% block recommendation_modal %}{% endblock %}
     {% include "include/dashboard_start_modal.html" %}
+    {% include "include/history_modal.html" %}
   {% endwith %}
 
   <div class="modal fade" id="selectRegion" tabindex="-1" role="dialog" aria-labelledby="selectRegionLabel" aria-hidden="true">
@@ -220,6 +227,10 @@
 
 {% block js %}
   {{ block.super }}
+  <script src="{% static 'js/plotly.min.js' %}"></script>
+  <script src="{% static 'js/plotly-locale-ru-latest.js' %}"></script>
+  <script>window.acestaHistoryUrl = "{% url 'history' %}";</script>
+  <script src="{% static 'js/dashboard.history.js' %}"></script>
   <script src="{% static 'js/dashboard.menu.js' %}"></script>
   <script src="{% static 'js/dashboard.start.js' %}"></script>
   <script src="{% static 'js/region_selector.search.js' %}"></script>

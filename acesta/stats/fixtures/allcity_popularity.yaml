@@ -1,0 +1,88 @@
+- model: stats.allcitypopularity
+  pk: 609579
+  fields:
+    created: 2022-12-20 18:13:45.818406+00:00
+    modified: 2023-05-12 13:05:57.406600+00:00
+    history: []
+    storage:
+      max: 12401.0
+      qty: 58.0
+      mean: 10809.25
+      datetime: 2023-05-12 13:05
+      mean_all: 10809.25
+    date: 2023-04-15 04:15:02.379543+00:00
+    qty: 58
+    popularity_mean_all: 6976.0
+    popularity_mean: 6976.0
+    popularity_max: 8435.0
+    code: 103
+    sight_group: snow
+    sight: 33
+    home_code: null
+    source_code: '01'
+- model: stats.allcitypopularity
+  pk: 614287
+  fields:
+    created: 2022-12-20 18:16:14.996872+00:00
+    modified: 2023-04-15 04:15:02.903248+00:00
+    history: []
+    storage:
+      max: 103852.0
+      qty: 4.0
+      mean: 103852.0
+      datetime: 2023-04-15 04:13
+      mean_all: 103852.0
+    date: 2023-04-15 04:15:02.903201+00:00
+    qty: 4
+    popularity_mean_all: 103852.0
+    popularity_mean: 103852.0
+    popularity_max: 103852.0
+    code: 103
+    sight_group: snow
+    sight: null
+    home_code: null
+    source_code: '01'
+- model: stats.allcitypopularity
+  pk: 614382
+  fields:
+    created: 2022-12-20 18:16:17.582511+00:00
+    modified: 2023-04-15 04:15:04.466874+00:00
+    history: []
+    storage:
+      max: 12981.0
+      qty: 3.0
+      mean: 12981.0
+      datetime: 2023-04-15 04:13
+      mean_all: 12981.0
+    date: 2023-04-15 04:15:04.466825+00:00
+    qty: 3
+    popularity_mean_all: 12981.0
+    popularity_mean: 12981.0
+    popularity_max: 12981.0
+    code: 103
+    sight_group: snow
+    sight: null
+    home_code: 103
+    source_code: '01'
+- model: stats.allcitypopularity
+  pk: 2569945
+  fields:
+    created: 2023-01-26 08:40:58.170061+00:00
+    modified: 2023-04-15 04:15:10.117530+00:00
+    history: []
+    storage:
+      max: 0
+      qty: 0
+      mean: 0
+      datetime: 2023-04-15 04:13
+      mean_all: 0
+    date: 2023-04-15 04:15:10.117500+00:00
+    qty: 0
+    popularity_mean_all: 0.0
+    popularity_mean: 0.0
+    popularity_max: 0.0
+    code: 103
+    sight_group: snow
+    sight: null
+    home_code: 7
+    source_code: '01'

@@ -4,15 +4,10 @@ import plotly.graph_objects as go
 from dash import dash_table
 from dash import dcc
 from dash import html
-from dash.dash_table.Format import Format
-from dash.dash_table.Format import Scheme
 from django.conf import settings
 from django_plotly_dash import DjangoDash
 
 from acesta.stats.apps import dash_args
-from acesta.stats.dash.helpers.interest import generate_update_tooltip_content
-from acesta.stats.dash.helpers.interest import get_ppt_df
-from acesta.stats.helpers.interest import get_interest
 
 
 # Interest Application
@@ -60,7 +55,7 @@ interest_app.layout = html.Div(
                                     **{
                                         "data-bs-toggle": "tooltip",
                                         "data-bs-html": "true",
-                                        "data-title": generate_update_tooltip_content(),
+                                        "data-title": "",
                                     },
                                     className="ms-3 ms-leg-0 me-0 me-lg-3",
                                 ),
@@ -89,7 +84,13 @@ interest_app.layout = html.Div(
                 ),
                 dcc.Store(id="audience-key", storage_type="session"),
                 dcc.Store(data=False, id="context-changed", storage_type="session"),
-                dcc.Store(data="", id="home-area-key", storage_type="session"),
+                dcc.Store(data="", id="home-area-key"),
+                dcc.Store(data={}, id="interest-session-state", storage_type="session"),
+                dcc.Store(data=None, id="interest-initial-state"),
+                dcc.Store(data=None, id="interest-table-state"),
+                dcc.Store(data=False, id="interest-session-hydrated"),
+                dcc.Store(data={}, id="interest-map-viewport"),
+                dcc.Store(data={}, id="interest-map-camera"),
                 html.Div(
                     id="interest",
                     children=[
@@ -106,40 +107,41 @@ interest_app.layout = html.Div(
                         html.Div(
                             children=[
                                 dash_table.DataTable(
-                                    get_ppt_df(
-                                        get_interest(
-                                            "00",
-                                            settings.AREA_REGIONS,
-                                            settings.AREA_REGIONS,
-                                            "",
-                                            0,
-                                        ),
-                                        [],
-                                    ).to_dict("records"),
+                                    [],
                                     id="table-interesants",
                                     columns=[
+                                        dict(
+                                            id="history_action",
+                                            name="",
+                                            type="text",
+                                            presentation="markdown",
+                                        ),
                                         dict(id="code__title", name="", type="str"),
                                         dict(
-                                            id="qty",
+                                            id="qty_display",
                                             name="Запросы",
-                                            type="numeric",
-                                            format=Format().group(True),
+                                            type="text",
+                                            presentation="markdown",
                                         ),
                                         dict(
-                                            id="ppt",
+                                            id="ppt_display",
                                             name="Популярность",
-                                            type="numeric",
-                                            format=Format(
-                                                precision=0, scheme=Scheme.percentage
-                                            ).group(True),
+                                            type="text",
+                                            presentation="markdown",
                                         ),
                                     ],
+                                    markdown_options={"html": True},
                                     page_current=0,
                                     page_size=20000,
                                     page_action="native",
                                     sort_action="custom",
                                     sort_mode="single",
-                                    sort_by=[{"column_id": "qty", "direction": "asc"}],
+                                    sort_by=[
+                                        {
+                                            "column_id": "qty_display",
+                                            "direction": "desc",
+                                        }
+                                    ],
                                     style_data={
                                         "whiteSpace": "normal",
                                         "height": "auto",
@@ -150,12 +152,29 @@ interest_app.layout = html.Div(
                                             "if": {"column_id": "code__title"},
                                             "textAlign": "left",
                                         },
+                                        {
+                                            "if": {
+                                                "column_id": [
+                                                    "qty_display",
+                                                    "ppt_display",
+                                                ]
+                                            },
+                                            "textAlign": "right",
+                                        },
+                                        {
+                                            "if": {"column_id": "history_action"},
+                                            "textAlign": "center",
+                                            "width": "38px",
+                                            "minWidth": "38px",
+                                            "maxWidth": "38px",
+                                            "padding": "0",
+                                        },
                                     ],
                                     style_data_conditional=[
                                         {
                                             "if": {
                                                 "filter_query": "{ppt} >= 1 && {ppt} < 10",
-                                                "column_id": "ppt",
+                                                "column_id": "ppt_display",
                                             },
                                             "color": "#429388",
                                             # "fontWeight": "600",
@@ -163,7 +182,7 @@ interest_app.layout = html.Div(
                                         {
                                             "if": {
                                                 "filter_query": "{ppt} >= 10",
-                                                "column_id": "ppt",
+                                                "column_id": "ppt_display",
                                             },
                                             "color": "#429388",
                                         },
@@ -172,8 +191,8 @@ interest_app.layout = html.Div(
                                                 "filter_query": "{ppt} > 10",
                                                 "column_id": [
                                                     "code__title",
-                                                    "qty",
-                                                    "ppt",
+                                                    "qty_display",
+                                                    "ppt_display",
                                                 ],
                                             },
                                             "fontWeight": "700",
@@ -183,8 +202,8 @@ interest_app.layout = html.Div(
                                                 "filter_query": "{ppt} >= 1 && {ppt} < 10",
                                                 "column_id": [
                                                     "code__title",
-                                                    "qty",
-                                                    "ppt",
+                                                    "qty_display",
+                                                    "ppt_display",
                                                 ],
                                             },
                                             "fontWeight": "500",
@@ -194,14 +213,42 @@ interest_app.layout = html.Div(
                                                 "filter_query": "{ppt} < 1",
                                                 "column_id": [
                                                     "code__title",
-                                                    "qty",
-                                                    "ppt",
+                                                    "qty_display",
+                                                    "ppt_display",
                                                 ],
                                             },
-                                            "color": "#959090",
+                                            "color": "#8c9fa7",
                                         },
                                     ],
                                     locale_format={"group": " "},
+                                    css=[
+                                        {
+                                            "selector": 'th[data-dash-column="history_action"]',
+                                            "rule": (
+                                                "pointer-events:none;width:38px;"
+                                                "min-width:38px;max-width:38px;padding:0;"
+                                                "cursor:default;background-image:none;"
+                                            ),
+                                        },
+                                        {
+                                            "selector": (
+                                                'th[data-dash-column="history_action"] '
+                                                ".column-header--sort"
+                                            ),
+                                            "rule": "display:none!important;",
+                                        },
+                                        {
+                                            "selector": (
+                                                'th[data-dash-column="history_action"] '
+                                                ".column-header-name"
+                                            ),
+                                            "rule": "display:none!important;",
+                                        },
+                                        {
+                                            "selector": 'td[data-dash-column="history_action"] p',
+                                            "rule": "margin:0;display:flex;align-items:center;justify-content:center;",
+                                        },
+                                    ],
                                 )
                             ],
                             id="interest-table-container",
@@ -234,7 +281,10 @@ interest_app.layout = html.Div(
                                     id="map",
                                     config={
                                         "scrollZoom": True,
-                                        "displayModeBar": False,
+                                        "displayModeBar": True,
+                                        "displaylogo": False,
+                                        "locale": "ru",
+                                        "modeBarButtons": [["zoomInMap", "zoomOutMap"]],
                                         "doubleClick": "autosize",
                                     },
                                     figure=go.Figure(
@@ -245,9 +295,74 @@ interest_app.layout = html.Div(
                                             plot_bgcolor="rgba(0,0,0,0)",
                                         ),
                                     ),
-                                )
+                                ),
+                                html.Div(
+                                    id="interest-map-balloons",
+                                    className="interest-map-balloons",
+                                    children=[],
+                                    **{"aria-live": "polite"},
+                                ),
+                                html.Aside(
+                                    id="region-current-card",
+                                    className="region-current-card",
+                                    children=[
+                                        html.Div(id="region-current-card-content"),
+                                        html.Div(
+                                            className="region-current-card__actions",
+                                            children=[
+                                                html.Button(
+                                                    html.Span(
+                                                        className=(
+                                                            "region-current-card__"
+                                                            "toggle-icon"
+                                                        ),
+                                                        **{"aria-hidden": "true"},
+                                                    ),
+                                                    id="region-current-card-toggle",
+                                                    className=(
+                                                        "region-current-card__control "
+                                                        "region-current-card__toggle"
+                                                    ),
+                                                    type="button",
+                                                    title="Свернуть карточку региона",
+                                                    **{
+                                                        "aria-label": (
+                                                            "Свернуть карточку региона"
+                                                        ),
+                                                        "aria-expanded": "true",
+                                                    },
+                                                ),
+                                                html.Button(
+                                                    html.Span(
+                                                        className=(
+                                                            "region-current-card__"
+                                                            "close-icon"
+                                                        ),
+                                                        **{"aria-hidden": "true"},
+                                                    ),
+                                                    id="region-current-card-close",
+                                                    className=(
+                                                        "region-current-card__control "
+                                                        "region-current-card__close"
+                                                    ),
+                                                    type="button",
+                                                    title="Закрыть карточку региона",
+                                                    **{
+                                                        "aria-label": (
+                                                            "Закрыть карточку региона"
+                                                        )
+                                                    },
+                                                ),
+                                            ],
+                                        ),
+                                    ],
+                                    **{"aria-live": "polite"},
+                                ),
                             ],
-                            className="overflow-hidden",
+                            className=(
+                                "interest-map-stage position-relative "
+                                "overflow-hidden"
+                            ),
                         ),
                     ],
                     className="col-12 col-lg-6 col-xl-7 overflow-hidden px-0 rounded-2",

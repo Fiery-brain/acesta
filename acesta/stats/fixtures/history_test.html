@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/css/dashboard.css">
+<style>
+  [hidden] { display: none !important; }
+  #historyModal { width: min(100%, 900px); }
+  .history-modal-chart { width: 100%; height: 500px; }
+</style>
+<script src="/js/plotly.min.js"></script>
+<div id="historyModal">
+  <div data-history-loading></div>
+  <div data-history-message hidden></div>
+  <div data-history-content hidden>
+    <p data-history-subtitle></p>
+    <div class="history-modal-chart" data-history-chart></div>
+  </div>
+</div>
+<script>
+  const small = new URLSearchParams(location.search).has("small");
+  const points = small
+    ? [
+        { date: "2026-01-01", value: 3, is_imputed: false },
+        { date: "2026-02-01", value: 7, is_imputed: false },
+      ]
+    : [
+        { date: "2025-12-01", value: 49, is_imputed: false },
+        { date: "2026-01-01", value: 63, is_imputed: false },
+      ];
+  const forecast = small
+    ? [{ date: "2026-03-01", value: 5, is_forecast: true }]
+    : [{ date: "2026-02-01", value: 75, is_forecast: true }];
+  window.bootstrap = {
+    Modal: { getOrCreateInstance: function () { return { show: function () {} }; } },
+  };
+  window.acestaHistoryUrl = "/history";
+  window.fetch = async function () {
+    return {
+      ok: true,
+      json: async function () {
+        return {
+          subtitle: "Test",
+          reverse_axis: true,
+          series: [{
+            id: "place", name: "Место", unit: "", axis: "y",
+            points: points,
+            forecast: forecast,
+          }],
+        };
+      },
+    };
+  };
+</script>
+<script src="/js/dashboard.history.js"></script>
+<script>
+  window.AcestaHistory.open({ domain: "test", entity_type: "test", entity_id: "1" });
+</script>

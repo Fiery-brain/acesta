@@ -341,3 +341,7 @@ acesta/media/
 *.sln
 *.sw*
 .*
+/backup/
+/django-ipgeobase/
+/acesta-updater/
+/data/

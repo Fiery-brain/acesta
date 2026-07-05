@@ -1,0 +1,17 @@
+{% load static %}
+{% block history_header %}
+  <div class="history-modal-heading">
+    <div class="history-modal-heading-icon" aria-hidden="true">
+      <svg><use href="{% static 'img/sprite.svg' %}#history"></use></svg>
+    </div>
+    <div class="history-modal-heading-content">
+      {% block history_title %}
+        <h5 class="modal-title fw-bolder" id="historyModalTitle">История и тренды</h5>
+      {% endblock %}
+      <div class="history-modal-header-blocks">
+        {% block history_blocks %}{% endblock %}
+      </div>
+    </div>
+  </div>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+{% endblock %}

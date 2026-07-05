@@ -33,10 +33,23 @@ from acesta.stats.helpers.sights import get_strong_tourism_types
 from acesta.stats.helpers.sights import get_weak_tourism_types
 from acesta.stats.helpers.update_dates import get_rating_update_date
 from acesta.stats.helpers.update_dates import get_sights_update_date
+from acesta.stats.history import build_history_payload
 from acesta.user.utils import get_support_form
 
 
 REGION_SIGHTS_INITIAL_LIMIT = 20
+
+
+@require_GET
+def history_view(request: HttpRequest) -> JsonResponse:
+    """Return normalized history and forecast for the shared dashboard modal."""
+    payload = build_history_payload(
+        request.user,
+        request.GET.get("domain"),
+        request.GET.get("entity_type"),
+        request.GET.get("entity_id"),
+    )
+    return JsonResponse(payload)
 
 
 def region_view(request) -> HttpResponse:

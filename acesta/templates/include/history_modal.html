@@ -1,0 +1,28 @@
+{% load text %}
+<div class="modal fade history-modal" id="historyModal" tabindex="-1" aria-labelledby="historyModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered history-modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header history-modal-header" data-history-header></div>
+      <div class="modal-body history-modal-body">
+        <div class="history-modal-loading" data-history-loading role="status" aria-live="polite">
+          <span class="history-modal-loader" aria-hidden="true"></span>
+          <span>Загружаем историю…</span>
+        </div>
+        <div class="history-modal-message" data-history-message hidden></div>
+        <div class="history-modal-layout" data-history-content hidden>
+          <div class="history-modal-chart-column">
+            <div class="history-modal-chart" data-history-chart aria-label="График истории и прогноза"></div>
+          </div>
+          <aside class="history-forecast-note">
+            <h6>Как строится прогноз</h6>
+            <p>{{ "Прогноз учитывает сезонность прошлых лет и динамику последних месяцев. Более свежие данные имеют больший вес. Случайные скачки сглаживаются, а прогноз ограничивается допустимым диапазоном. Расчёт выполняется отдельно для каждого показателя."|nobreak_spaces }}</p>
+            <div class="history-forecast-legend" aria-label="Обозначения графика">
+              <span><i class="history-forecast-legend-line"></i>Фактические данные</span>
+              <span><i class="history-forecast-legend-line history-forecast-legend-line--forecast"></i>Прогноз</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+{% load static %}
+{% load l10n %}
+{% if instance.pk %}
+<button type="button" class="history-action" title="Показать историю" data-bs-toggle="tooltip" aria-label="Показать историю"
+        data-history-domain="rating_place" data-history-entity-type="{{ entity_type }}"
+        data-history-entity-id="{{ instance.pk|unlocalize }}">
+  <svg aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#history"></use></svg>
+</button>
+{% endif %}

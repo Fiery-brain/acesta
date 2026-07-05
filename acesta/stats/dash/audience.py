@@ -9,7 +9,9 @@ from acesta.stats.apps import dash_args
 from acesta.stats.dash.helpers.audience import get_object_title
 from acesta.stats.helpers.audience import get_audience
 from acesta.stats.helpers.audience import get_audience_key_data
+from acesta.stats.helpers.audience import get_audience_quantity
 from acesta.stats.helpers.audience import get_indicator_data
+from acesta.stats.helpers.audience import prepare_audience_groups
 from acesta.stats.helpers.base import formatted_percentage
 from acesta.stats.helpers.base import round_up
 
@@ -17,6 +19,10 @@ from acesta.stats.helpers.base import round_up
 # Audience Application
 audience_app = DjangoDash(
     "audience",
+    external_scripts=[
+        "/static/js/bootstrap.bundle.min.js",
+        "/static/js/dashboard.audience.tooltips.js",
+    ],
     external_stylesheets=[
         "/static/css/bootstrap.min.css",
         "/static/css/base.css",
@@ -30,7 +36,14 @@ audience_app.layout = html.Div(
         children=[
             dcc.Store(data="", id="audience-key", storage_type="session"),
             html.Div(
-                html.H3("", id="audience-title", className="fs-6 fw-bolder ms-1"),
+                html.Div(
+                    html.H3(
+                        "",
+                        id="audience-title",
+                        className="fs-6 fw-bolder ms-1 text-nowrap",
+                    ),
+                    className="audience-title-bar",
+                ),
                 id="audience-title-container",
                 className="bg-white",
             ),
@@ -52,7 +65,7 @@ audience_app.layout = html.Div(
 def update_audience_title(key, *args, **kwargs):
     pk, _, area = get_audience_key_data(key)
 
-    pattern = "Целевые группы {}"
+    pattern = "Целевые группы по видам туризма {}"
 
     if pk:
         if area == settings.AREA_REGIONS:
@@ -71,7 +84,7 @@ def update_audience_title(key, *args, **kwargs):
 def update_audience_title_style(key, *args, **kwargs):
     pk, _, _ = get_audience_key_data(key)
     if pk:
-        return "bg-white d-block pt-3 pb-1"
+        return "bg-white d-block"
     else:
         return "d-none"
 
@@ -86,7 +99,9 @@ def update_audience(key, *args, **kwargs):
         area == settings.AREA_REGIONS
         or (area == settings.AREA_CITIES and kwargs.get("user").is_extended)
     ):
-        audience = get_audience(area, tourism_type, pk)
+        audience, priority_percentile = prepare_audience_groups(
+            get_audience(area, tourism_type, pk)
+        )
         avg_salary = get_indicator_data(settings.AVERAGE_SALARY, area, pk)
         avg_bill = get_indicator_data(settings.AVERAGE_BILL, area, pk)
         return [
@@ -95,37 +110,39 @@ def update_audience(key, *args, **kwargs):
                     html.Div(
                         children=[
                             html.Div(
-                                intcomma(
-                                    int(round_up(rec.v_type_sex_age * rec.coeff, -3))
-                                ),
-                                className="audience-qty",
-                            ),
-                            html.Div(
-                                title=f"{dict(settings.TOURISM_TYPES_OUTSIDE).get(rec.tourism_type)}",
-                                className=f"audience-tourism-type bg-{rec.tourism_type}",
-                                **{"data-bs-toggle": "tooltip"},
-                            ),
-                        ],
-                        className="d-flex justify-content-between",
-                    ),
-                    html.Div(
-                        children=[
-                            html.Div(
                                 children=[
                                     html.Div(
-                                        title=f"{'мужчины' if rec.sex == 'm' else 'женщины'}",
-                                        className=f"audience-sex bg-{'man' if rec.sex == 'm' else 'woman'} me-1",
-                                        **{"data-bs-toggle": "tooltip"},
+                                        intcomma(
+                                            int(
+                                                round_up(
+                                                    rec.v_type_sex_age * rec.coeff, -3
+                                                )
+                                            )
+                                        ),
+                                        className="audience-qty",
                                     ),
-                                    html.Span(
-                                        f"{rec.age} {'года' if rec.age.endswith('4') else 'лет'}",
-                                        className="audience-age",
+                                    html.P(
+                                        f"{'мужчин' if rec.sex == 'm' else 'женщин'}",
+                                        className=f"audience-sex mb-0 {'men' if rec.sex == 'm' else 'women'}",
                                     ),
-                                ],
-                                className="d-flex",
+                                    html.P(
+                                        f"{rec.age} лет",
+                                        className="audience-age mb-0",
+                                    ),
+                                ]
+                            ),
+                            html.Div(
+                                className=f"audience-tourism-type bg-{rec.tourism_type}",
+                                **{
+                                    "data-bs-toggle": "tooltip",
+                                    "data-bs-title": dict(
+                                        settings.TOURISM_TYPES_OUTSIDE
+                                    ).get(rec.tourism_type),
+                                    "data-bs-placement": "bottom",
+                                },
                             ),
                         ],
-                        className="mt-2",
+                        className="d-flex justify-content-between px-3 audience-main-container",
                     ),
                     html.Div(
                         children=[
@@ -244,11 +261,22 @@ def update_audience(key, *args, **kwargs):
                                 else None
                             ),
                         ],
-                        className="mt-2 audience-more",
+                        className="my-2 audience-more px-3",
                         style={"fontSize": "13px"},
                     ),
+                    (
+                        html.Div(
+                            "☆ Приоритетная группа",
+                            className="px-3 metric metric-interest rank-4 audience-priority-group",
+                        )
+                        if get_audience_quantity(rec) > priority_percentile
+                        else None
+                    ),
                 ],
-                className=f"audience-group me-3 border rounded-2 p-3 border-{rec.tourism_type}",
+                className=(
+                    "audience-group me-3 border rounded-2 p-0 "
+                    f"border-{rec.tourism_type}"
+                ),
             )
             for rec in audience
         ]

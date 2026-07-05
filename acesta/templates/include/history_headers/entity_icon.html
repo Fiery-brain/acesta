@@ -1,0 +1,12 @@
+{% load static %}
+<span class="history-modal-block-icon" aria-hidden="true">
+  {% if entity_type == 'sight' and sight_group %}
+    <svg viewBox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#{{ sight_group.name }}"></use></svg>
+  {% elif entity_type == "region" %}
+    <img src="{% static 'img/blazon/'|add:entity.code|add:'.svg' %}" alt="">
+  {% elif entity_type == "city" %}
+    <svg viewBox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#city"></use></svg>
+  {% elif not sight_group %}
+    <svg viewBox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#location"></use></svg>
+  {% endif %}
+</span>

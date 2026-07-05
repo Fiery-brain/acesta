@@ -101,18 +101,6 @@ def update_stats_graph(*args, **kwargs) -> dcc.Graph:
             hovertemplate="<br>".join(["%{customdata[0]}", "<extra></extra>"]),
         )
 
-        fig.add_layout_image(
-            dict(
-                source="/static/img/acesta-ru.png",
-                xref="paper",
-                yref="paper",
-                x=0.86,
-                y=-0.05,
-                sizex=0.14,
-                sizey=0.14,
-                opacity=0.9,
-            )
-        )
         return fig
 
     return dcc.Graph(

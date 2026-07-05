@@ -1,65 +1,116 @@
 from dash import dcc
 from dash import dependencies
 from dash import html
+from dash.exceptions import PreventUpdate
 from django.conf import settings
 
-from acesta.stats.dash.helpers.common import get_height_base
+from acesta.geo.models import City
+from acesta.geo.models import Sight
 from acesta.stats.dash.interest.app import interest_app
+from acesta.stats.dash.interest.interest import resolve_target_key
+from acesta.stats.dash.interest.map_connections import parse_entity_key
+
+
+def get_interest_table_columns(interesant_area: str) -> list[dict]:
+    """Return table columns with a source-specific entity heading."""
+    entity_heading = "Город" if interesant_area == settings.AREA_CITIES else "Регион"
+    return [
+        {
+            "id": "history_action",
+            "name": "",
+            "type": "text",
+            "presentation": "markdown",
+        },
+        {"id": "code__title", "name": entity_heading, "type": "str"},
+        {
+            "id": "qty_display",
+            "name": "Запросы",
+            "type": "text",
+            "presentation": "markdown",
+        },
+        {
+            "id": "ppt_display",
+            "name": "Популярность",
+            "type": "text",
+            "presentation": "markdown",
+        },
+    ]
+
+
+@interest_app.callback(
+    dependencies.Output("table-interesants", "columns"),
+    dependencies.Input("tabs-interesants", "value"),
+)
+def update_interest_table_columns(interesant_area: str) -> list[dict]:
+    return get_interest_table_columns(interesant_area)
 
 
 @interest_app.callback(
     dependencies.Output("title", "children"),
     dependencies.Input("home-area", "value"),
-    dependencies.Input("map", "clickData"),
-    dependencies.State("title", "children"),
+    dependencies.Input("home-area-key", "data"),
+    dependencies.Input("tourism-type", "value"),
 )
 def update_title(
-    home_area: str, map_data: dict, title_current_state: str, *args, **kwargs
+    home_area: str,
+    target_key: str,
+    tourism_type: str,
+    *args,
+    **kwargs,
 ) -> str:
-    """
-    Updates the app title
-    :param home_area: str
-    :param map_data: dict
-    :param title_current_state: str
-    :param args: list
-    :param kwargs: dict
-    :return: str
-    """
-    pattern = "Интерес к {}"
-    if map_data and "id" not in map_data.get("points")[0].keys():
-        return title_current_state
+    """Build the title from the persistent, server-validated target key."""
+    user = kwargs.get("user")
+    if not user.is_extended or home_area == settings.AREA_REGIONS:
+        return "Интерес к региону"
 
-    title = pattern.format("региону")
-    if (
-        home_area != settings.AREA_REGIONS
-        and map_data
-        and "id" in map_data.get("points")[0].keys()
-        and kwargs.get("user").is_extended
-    ):
-        if map_data.get("points")[0].get("id").split("_")[0] == settings.AREA_CITIES:
-            title = pattern.format(f"городу {map_data.get('points')[0].get('text')}")
-        elif map_data.get("points")[0].get("id").split("_")[0] == settings.AREA_SIGHTS:
-            title = pattern.format(f"объекту {map_data.get('points')[0].get('text')}")
-    return title
+    target_key = resolve_target_key(user, home_area, tourism_type, target_key)
+    target_kind, target_identifier = parse_entity_key(target_key)
+    if target_kind != home_area or target_identifier in (None, "0"):
+        return "Интерес к региону"
+
+    if home_area == settings.AREA_CITIES:
+        target = City.objects.filter(
+            pk=target_identifier,
+            code_id=user.current_region.code,
+        ).first()
+        return f"Интерес к городу {target.title}" if target else "Интерес к региону"
+
+    filters = {
+        "pk": target_identifier,
+        "code_id": user.current_region.code,
+        "is_pub": True,
+    }
+    if tourism_type:
+        filters["group__tourism_type"] = tourism_type
+    target = Sight.objects.filter(**filters).first()
+    return f"Интерес к объекту {target.title}" if target else "Интерес к региону"
 
 
 @interest_app.callback(
     dependencies.Output("tabs-interesants", "children"),
-    dependencies.Input("helper-interesant", "interval"),
+    dependencies.Output("tabs-interesants", "value"),
+    dependencies.Input("interest-initial-state", "data"),
 )
-def update_tabs(*args, **kwargs):
+def update_tabs(initial_state, *args, **kwargs):
     """
     Returns interesants area tabs
     :param kwargs:
     :return:
     """
+    if not initial_state:
+        raise PreventUpdate
     if kwargs.get("user").is_extended:
-        return [
-            dcc.Tab(label="из регионов", value=settings.AREA_REGIONS),
-            dcc.Tab(label="из городов", value=settings.AREA_CITIES),
-        ]
+        values = {settings.AREA_REGIONS, settings.AREA_CITIES}
+        restored_value = initial_state.get("interesantArea")
+        return (
+            [
+                dcc.Tab(label="из регионов", value=settings.AREA_REGIONS),
+                dcc.Tab(label="из городов", value=settings.AREA_CITIES),
+            ],
+            restored_value if restored_value in values else settings.AREA_REGIONS,
+        )
     else:
-        return []
+        return [], settings.AREA_REGIONS
 
 
 @interest_app.callback(
@@ -87,6 +138,7 @@ def update_interesants_dummy(*args, **kwargs):
                             )
                         ],
                         title="Управлять доступом",
+                        **{"data-bs-toggle": "tooltip"},
                     )
                 ],
             )
@@ -96,16 +148,35 @@ def update_interesants_dummy(*args, **kwargs):
 @interest_app.callback(
     dependencies.Output("tourism-type", "value"),
     dependencies.Input("home-area", "value"),
+    dependencies.Input("interest-initial-state", "data"),
+    dependencies.State("tourism-type", "value"),
+    dependencies.State("interest-session-hydrated", "data"),
 )
-def update_tourism_type(home_area: str, **kwargs):
-    if (
-        kwargs.get("request").user.is_extended
-        and home_area != settings.AREA_REGIONS
-        and kwargs.get("request").user.is_set_tourism_types
-    ):
-        return kwargs.get("request").user.get_current_tourism_type()
-    else:
+def update_tourism_type(
+    home_area: str,
+    initial_state: dict,
+    current_tourism_type: str,
+    hydrated: bool = False,
+    **kwargs,
+):
+    user = kwargs.get("request").user
+    if not user.is_extended:
         return ""
+
+    restoring_initial_state = all(
+        (
+            not hydrated,
+            initial_state,
+            initial_state and initial_state.get("homeArea") == home_area,
+        )
+    )
+    if restoring_initial_state:
+        current_tourism_type = initial_state.get("tourismType") or ""
+    else:
+        current_tourism_type = current_tourism_type or ""
+    if home_area != settings.AREA_REGIONS and user.is_set_tourism_types:
+        return user.get_current_tourism_type(current_tourism_type)
+    return current_tourism_type
 
 
 @interest_app.callback(
@@ -159,9 +230,12 @@ def update_tourism_types(home_area: str, **kwargs):
 
 @interest_app.callback(
     dependencies.Output("home-area", "options"),
-    dependencies.Input("helper-interesant", "interval"),
+    dependencies.Output("home-area", "value"),
+    dependencies.Input("interest-initial-state", "data"),
 )
-def update_options(*args, **kwargs):
+def update_options(initial_state, *args, **kwargs):
+    if not initial_state:
+        raise PreventUpdate
     if kwargs.get("request").user.is_extended:
         options = [
             {
@@ -196,9 +270,16 @@ def update_options(*args, **kwargs):
                 ),
             }
         )
-        return options
+        allowed_values = {option["value"] for option in options}
+        restored_value = initial_state.get("homeArea")
+        return (
+            options,
+            restored_value
+            if restored_value in allowed_values
+            else settings.AREA_REGIONS,
+        )
     else:
-        return []
+        return [], settings.AREA_REGIONS
 
 
 @interest_app.callback(
@@ -219,33 +300,6 @@ def update_home_area_dummy(*args, **kwargs):
                 href="/price/",
                 children=[html.Img(src="/static/img/dummy-home-area.svg", height=36)],
                 title="Управлять доступом",
+                **{"data-bs-toggle": "tooltip"},
             )
         ]
-
-
-@interest_app.callback(
-    dependencies.Output("interest-table-container", "style"),
-    dependencies.Input("helper-interesant", "interval"),
-)
-def update_table_style(*args, **kwargs):
-    tabsHeight = 54 if kwargs.get("user").is_extended else 0
-    return {
-        "maxHeight": f"{get_height_base(kwargs.get('request').COOKIES.get('innerHeight')) - tabsHeight - 8 - 66}px"
-    }
-
-
-@interest_app.callback(
-    dependencies.Output("table-interesants", "selected_cells"),
-    dependencies.Output("table-interesants", "active_cell"),
-    dependencies.Input("tabs-interesants", "value"),
-    dependencies.Input("tourism-type", "value"),
-    dependencies.Input("map", "clickData"),
-)
-def clear(*args, **kwargs) -> tuple:
-    """
-    Resets selected data in interesants table
-    :param args: list
-    :param kwargs: dict
-    :return: tuple
-    """
-    return [], None

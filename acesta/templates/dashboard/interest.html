@@ -6,7 +6,6 @@
 
 {% block css_external %}
   <link rel="stylesheet" href="{% static 'css/jquery.splitter.css' %}">
-  {% plotly_header %}
   {{ block.super }}
 {% endblock %}
 
@@ -25,15 +24,20 @@
     <div id="interest-container" class="overflow-hidden">
       {% plotly_direct name="interest" %}
     </div>
-    <div id="audience-container" class="d-flex mt-3 mt-lg-0 pt-lg-0">
-      {% plotly_app_bootstrap name="audience" %}
+    <div id="audience-panel">
+      <div id="interest-splitter-hint" class="interest-splitter-hint" aria-hidden="true">
+        <span class="interest-splitter-hint__arrow" aria-hidden="true"></span>
+        <span>Потяните вверх, чтобы посмотреть подробности</span>
+      </div>
+      <div id="audience-container" class="d-flex mt-3 mt-lg-0 pt-lg-0">
+        {% plotly_app_bootstrap name="audience" %}
+      </div>
     </div>
   </div>
 {% endblock %}
 
 {% block js %}
   {{ block.super }}
-  <script src="{% static 'js/plotly-locale-ru-latest.js' %}"></script>
   <script src="{% static 'js/jquery.splitter.js' %}"></script>
   {% plotly_footer %}
   <script src="{% static 'js/dashboard.loader.js' %}"></script>

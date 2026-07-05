@@ -1,3 +1,4 @@
+import numpy as np
 from django.conf import settings
 from django.db import models
 
@@ -7,6 +8,22 @@ from acesta.stats.helpers.update_dates import get_last_update_indicator_date
 from acesta.stats.models import AudienceCities
 from acesta.stats.models import AudienceRegions
 from acesta.stats.models import Indicator
+
+
+def get_audience_quantity(record):
+    """Return the restored audience quantity shown in a group card."""
+    return record.v_type_sex_age * record.coeff
+
+
+def prepare_audience_groups(audience):
+    """Remove empty groups and return them with the 95th percentile threshold."""
+    groups = [record for record in audience if get_audience_quantity(record) > 0]
+    percentile = (
+        float(np.quantile([get_audience_quantity(record) for record in groups], 0.95))
+        if groups
+        else None
+    )
+    return groups, percentile
 
 
 def get_audience_key_data(key) -> tuple:

@@ -83,7 +83,8 @@
           <table class="table table-hover table-responsive">
             <thead>
               <tr>
-                <th scope="col" class="text-center w-25">Место</th>
+                <th scope="col" class="rating-history-heading" aria-label="История"></th>
+                <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col" colspan="2" class="ps-1">Точка притяжения</th>
                 <th scope="col" class="text-nowrap text-end pe-4">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов по&nbsp;топ-3 семантического ядра за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
@@ -91,6 +92,7 @@
             <tbody>
               {% for place in interest_sight_places %}
               <tr>
+                <td class="rating-history-cell">{% include "include/history_action.html" with instance=place entity_type="sight" %}</td>
                 <td class="text-center rating-place">
                   <div class="d-inline-flex align-items-center gap-1">
                     {% if place.value == 0 and interest_sight_zero_count > 1 %}
@@ -132,6 +134,7 @@
               {% endfor %}
               {% for sight in outside_rating_sight %}
               <tr>
+                <td class="rating-history-cell"></td>
                 <td class="text-center rating-place"><div>-</div></td>
                 <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ sight.group.all.0.title }}"><svg fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ sight.group.all.0.name }}"></use></svg></a></td>
                 <td class="ps-1">
@@ -151,7 +154,7 @@
               {% endfor %}
               {% if not interest_sight_places|length and not outside_rating_sight|length %}
                 <tr>
-                  <td colspan="3" class="ps-5">Пока нет значимых точек притяжения</td>
+                  <td colspan="5" class="ps-5">Пока нет значимых точек притяжения</td>
                 </tr>
               {% endif %}
             </tbody>
@@ -164,7 +167,8 @@
           <table class="table table-hover table-responsive">
             <thead>
               <tr>
-                <th scope="col" class="text-center w-25">Место</th>
+                <th scope="col" class="rating-history-heading" aria-label="История"></th>
+                <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col" colspan="2" class="ps-1">Точка притяжения</th>
                 <th scope="col" class="text-nowrap text-end pe-4">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов по&nbsp;топ-3 семантического ядра за месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
@@ -172,6 +176,7 @@
             <tbody>
               {% for place in top_sights %}
               <tr>
+                <td class="rating-history-cell">{% include "include/history_action.html" with instance=place entity_type="sight" %}</td>
                 <td class="text-center rating-place">
                   <div class="d-inline-flex align-items-center gap-1">
                     <div{% if place.place <= 3 %} class="{{ place.place|get_medal_class }}"{% endif %}>{{ place.place }}</div>
@@ -205,7 +210,7 @@
               </tr>
               {% empty %}
               <tr>
-                <td colspan="3" class="ps-5">Данных пока нет</td>
+                <td colspan="5" class="ps-5">Данных пока нет</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -219,7 +224,7 @@
           <table class="table table-hover table-responsive">
             <thead>
               <tr>
-                <th scope="col" class="text-center w-25">Место</th>
+                <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col">Город</th>
                 <th scope="col" class="text-nowrap text-end pe-2">Количество <a href="#" data-bs-toggle="tooltip" title="Количество значимых точек притяжения в&nbsp;выбранном виде туризма"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
@@ -251,7 +256,8 @@
           <table class="table table-hover table-responsive">
             <thead>
               <tr>
-                <th scope="col" class="text-center w-25">Место</th>
+                <th scope="col" class="rating-history-heading" aria-label="История"></th>
+                <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col">Город</th>
                 <th scope="col" class="text-nowrap text-end pe-2">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения города за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
@@ -259,6 +265,7 @@
             <tbody>
               {% for place in interest_city_places %}
               <tr>
+                <td class="rating-history-cell">{% include "include/history_action.html" with instance=place entity_type="city" %}</td>
                 <td class="text-center rating-place">
                   <div class="d-inline-flex align-items-center gap-1">
                     {% if place.value == 0 and interest_city_zero_count > 1 %}
@@ -274,7 +281,7 @@
               </tr>
               {% empty %}
               <tr>
-                <td colspan="3" class="ps-5">Данных пока нет</td>
+                <td colspan="4" class="ps-5">Данных пока нет</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -292,7 +299,7 @@
             <thead>
               <tr>
                 <th scope="col" class="rating-region-league-heading"></th>
-                <th scope="col" class="text-center rating-region-place-heading">Место</th>
+                <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col">Регион</th>
                 <th scope="col" class="text-nowrap text-end pe-2 rating-region-value-heading">Количество <a href="#" data-bs-toggle="tooltip" title="Количество значимых точек притяжения в&nbsp;выбранном виде туризма"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
@@ -355,7 +362,8 @@
             <thead>
               <tr>
                 <th scope="col" class="rating-region-league-heading"></th>
-                <th scope="col" class="text-center rating-region-place-heading">Место</th>
+                <th scope="col" class="rating-history-heading" aria-label="История"></th>
+                <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col">Регион</th>
                 <th scope="col" class="text-nowrap text-end pe-2 rating-region-value-heading">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения региона за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
@@ -365,6 +373,7 @@
               {% if row.type == "gap" %}
               <tr class="rating-region-gap" title="Показать скрытые регионы">
                 <td class="rating-region-gap-league-cell"></td>
+                <td class="rating-history-cell"></td>
                 <td colspan="3" class="text-center">
                   <button type="button" class="rating-region-gap-link">...</button>
                 </td>
@@ -382,6 +391,7 @@
                   <span class="rating-region-league-point rating-region-league-point-start"></span>
                   <span class="rating-region-league-point rating-region-league-point-end"></span>
                 </td>
+                <td class="rating-history-cell">{% include "include/history_action.html" with instance=row.item entity_type="region" %}</td>
                 <td class="text-center rating-place">
                   <div class="d-inline-flex align-items-center gap-1">
                     {% if row.item.value == 0 and interest_zero_count > 1 %}
