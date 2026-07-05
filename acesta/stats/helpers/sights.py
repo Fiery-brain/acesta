@@ -113,11 +113,9 @@ def get_sight_groups(code=None) -> models.QuerySet:
     """
     if code is not None:
         sight_groups = SightGroup.pub.filter(
-            name__in=[
-                group.get("group")
-                for group in Sight.pub.filter(code=code).values("group").distinct()
-            ]
-        )
+            group_sights__code=code,
+            group_sights__is_pub=True,
+        ).distinct()
     else:
         sight_groups = SightGroup.pub.all()
     return sight_groups
@@ -130,6 +128,22 @@ def get_sights_by_group(code, group_filter):
             **group_filter,
         )
         .select_related("code", "city")
-        .prefetch_related("group")
+        .prefetch_related(
+            models.Prefetch(
+                "group",
+                queryset=SightGroup.objects.only("name", "title"),
+            )
+        )
+        .only(
+            "id",
+            "title",
+            "code_id",
+            "city_id",
+            "code__code",
+            "code__title",
+            "code__region_type",
+            "city__id",
+            "city__title",
+        )
         .order_by("title", "id")
     )

@@ -5,8 +5,10 @@ from types import SimpleNamespace
 from dateutil.relativedelta import relativedelta
 from django import test
 from django.contrib.auth import get_user
+from django.db import connection
 from django.template import Context
 from django.template import Template
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from django.utils import timezone
 
@@ -21,12 +23,16 @@ from acesta.stats.helpers.rating import get_amount_rating_state
 from acesta.stats.helpers.rating import get_amount_region_rating_state
 from acesta.stats.helpers.rating import get_compact_region_rating_rows
 from acesta.stats.helpers.rating import get_interest_rating_place
+from acesta.stats.helpers.rating import get_interest_sight_rating
+from acesta.stats.helpers.rating import get_outside_rating_sight
 from acesta.stats.helpers.rating import get_rating_place_change
 from acesta.stats.helpers.rating import get_synced_region_rating_places
+from acesta.stats.helpers.rating import get_top_sights
 from acesta.stats.helpers.sights import get_sight_group_counts
 from acesta.stats.helpers.sights import get_strong_tourism_types
 from acesta.stats.helpers.sights import get_weak_tourism_types
 from acesta.stats.models import RegionRating
+from acesta.stats.models import SightRating
 from acesta.user.helpers import CredentialsMixin
 
 
@@ -432,6 +438,20 @@ class AmountRatingPlaceTest(test.TestCase):
         )
         self.assertEqual(rating_state[1]["change"], -1)
 
+    def test_amount_region_rating_counts_sight_once_for_same_tourism_type(self):
+        beach = self.create_group("beach_group", "beach")
+        another_beach = self.create_group("another_beach_group", "beach")
+        target = self.create_region("01", 1)
+        sight = self.create_sights(target, 1, group=beach)[0]
+        sight.group.add(another_beach)
+
+        rating_state = get_amount_region_rating_state(
+            tourism_type="beach",
+            force_refresh=True,
+        )
+
+        self.assertEqual(rating_state[0]["qty"], 1)
+
     def test_amount_region_rating_state_change_zero(self):
         beach = self.create_group("beach_group", "beach")
         target = self.create_region("01", 1)
@@ -516,6 +536,140 @@ class AmountRatingPlaceTest(test.TestCase):
         self.assertEqual(rating_state[1]["city"], new_city.id)
         self.assertIsNone(rating_state[1]["previous_place"])
         self.assertIsNone(rating_state[1]["change"])
+
+
+class RatingQueryOptimizationTest(test.TestCase):
+    def setUp(self):
+        self.region = Region.objects.create(
+            code="01",
+            _id=1,
+            federal_district="cf",
+            region="Region 01",
+            title="Region 01",
+            region_type="область",
+            is_pub=True,
+        )
+        self.city = City.objects.create(
+            code=self.region,
+            _id=1,
+            title="City",
+            foundation="1900",
+            is_pub=True,
+        )
+        self.group = SightGroup.objects.create(
+            name="beach_group",
+            title="Beach",
+            title_gen="Beach",
+            tourism_type="beach",
+            is_pub=True,
+        )
+        self.sight = Sight.objects.create(
+            code=self.region,
+            city=self.city,
+            title="Sight",
+            is_pub=True,
+        )
+        self.sight.group.add(self.group)
+        SightRating.objects.create(
+            sight=self.sight,
+            region_code=self.region,
+            sight_group=self.group,
+            place=1,
+            value=100,
+        )
+
+    def _assert_sight_relations_are_loaded(self, rows):
+        for row in rows:
+            sight = row.sight if hasattr(row, "sight") else row
+            str(sight)
+            str(sight.code)
+            str(sight.city)
+            list(sight.group.all())
+
+    def test_interest_sights_have_no_relation_n_plus_one(self):
+        queryset = get_interest_sight_rating.__wrapped__(
+            {"sight_group": self.group},
+            code=self.region.code,
+            sight_group=self.group.name,
+        )
+
+        with CaptureQueriesContext(connection) as queries:
+            rows = list(queryset)
+            self._assert_sight_relations_are_loaded(rows)
+
+        self.assertEqual(len(queries), 2)
+
+    def test_top_sights_have_no_relation_n_plus_one(self):
+        SightRating.objects.create(
+            sight=self.sight,
+            sight_group=self.group,
+            place=1,
+            value=100,
+        )
+
+        with CaptureQueriesContext(connection) as queries:
+            rows = list(get_top_sights({"sight_group": self.group}))
+            self._assert_sight_relations_are_loaded(rows)
+
+        self.assertEqual(len(queries), 2)
+
+    def test_outside_sights_have_no_relation_n_plus_one(self):
+        outside = Sight.objects.create(
+            code=self.region,
+            city=self.city,
+            title="Outside",
+            is_pub=True,
+        )
+        outside.group.add(self.group)
+
+        with CaptureQueriesContext(connection) as queries:
+            rows = list(
+                get_outside_rating_sight(
+                    self.region,
+                    {"group": self.group},
+                )
+            )
+            self._assert_sight_relations_are_loaded(rows)
+
+        self.assertEqual(rows, [outside])
+        self.assertEqual(len(queries), 2)
+
+
+class RatingViewsTest(CredentialsMixin, test.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.login(**self.credentials)
+        user = get_user(self.client)
+        user.regions.add(user.current_region)
+        SightGroup.objects.create(
+            name="beach_group",
+            title="Beach",
+            title_gen="Beach",
+            tourism_type="beach",
+            is_pub=True,
+        )
+
+    def test_rating_tabs_with_default_and_selected_filters(self):
+        cases = (
+            ("rating", {}, None),
+            ("rating", {}, {"tourism_type": "beach"}),
+            ("rating-cities", {"area": "cities"}, None),
+            (
+                "rating-cities",
+                {"area": "cities"},
+                {"tourism_type": "beach"},
+            ),
+            ("rating-sights", {"area": "sights"}, None),
+            ("rating-sights", {"area": "sights"}, {"group": "beach_group"}),
+        )
+
+        for url_name, kwargs, query in cases:
+            with self.subTest(url_name=url_name, query=query):
+                response = self.client.get(
+                    reverse(url_name, kwargs=kwargs),
+                    query or {},
+                )
+                self.assertEqual(response.status_code, 200)
 
 
 class HistoryMixinTest(test.SimpleTestCase):

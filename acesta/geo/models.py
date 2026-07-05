@@ -258,6 +258,11 @@ class Sight(TimeStampedModel):
                 name="geo_sight_pub_code_id_idx",
                 condition=models.Q(is_pub=True),
             ),
+            models.Index(
+                fields=["code", "title", "id"],
+                name="geo_sight_pub_code_title_idx",
+                condition=models.Q(is_pub=True),
+            ),
         ]
         unique_together = (
             [

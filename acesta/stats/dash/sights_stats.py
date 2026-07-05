@@ -1,5 +1,3 @@
-import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 from dash import dcc
 from dash import dependencies
@@ -34,19 +32,7 @@ def update_stats_graph(*args, **kwargs) -> dcc.Graph:
     :return: dcc.Graph
     """
 
-    def get_df_sight_stats() -> pd.DataFrame:
-        """
-        Returns sight stats dataframe
-        :return: dcc.Graph
-        """
-        sights_stats = get_sight_stats(
-            code=kwargs.get("request").user.current_region.code
-        )
-        return pd.DataFrame(sights_stats)
-
-    df_sights = get_df_sight_stats()
-
-    color_sequence = [settings.TOURISM_TYPE_PALETTE[name] for name in df_sights.name]
+    sights_stats = get_sight_stats(code=kwargs.get("request").user.current_region.code)
 
     def get_stats_figure() -> go.Figure:
         """
@@ -56,29 +42,35 @@ def update_stats_graph(*args, **kwargs) -> dcc.Graph:
         height = get_height_base(kwargs.get("request").COOKIES.get("innerHeight")) - 120
         if height < 580:
             height = 580
-        fig = px.bar(
-            df_sights,
-            x="cnt",
-            y="title",
-            orientation="h",
-            color="title",
-            color_discrete_sequence=color_sequence,
-            text_auto="i",
-            text="title",
-            labels={"title": "", "cnt": "Количество"},
-            height=height,
-            custom_data=[
-                "groups",
-            ],
+        fig = go.Figure(
+            data=[
+                go.Bar(
+                    x=[stat["cnt"] for stat in sights_stats],
+                    y=[stat["title"] for stat in sights_stats],
+                    orientation="h",
+                    marker_color=[
+                        settings.TOURISM_TYPE_PALETTE[stat["name"]]
+                        for stat in sights_stats
+                    ],
+                    text=[stat["title"] for stat in sights_stats],
+                    texttemplate="%{x:i}",
+                    customdata=[[stat["groups"]] for stat in sights_stats],
+                    width=0.5,
+                    hovertemplate="%{customdata[0]}<extra></extra>",
+                )
+            ]
         )
 
         fig.update_layout(
+            height=height,
+            margin={"t": 60},
             paper_bgcolor="white",
             plot_bgcolor="white",
             font_family="Golos",
             font_color="#727070",
             showlegend=False,
             hoverlabel={"bordercolor": "#FFF"},
+            xaxis_title="Количество",
             xaxis=dict(
                 showgrid=True,
                 gridwidth=1,
@@ -89,16 +81,17 @@ def update_stats_graph(*args, **kwargs) -> dcc.Graph:
                 linecolor="#dedede",
                 fixedrange=True,
             ),
-            yaxis=dict(ticksuffix="  ", fixedrange=True),
+            yaxis=dict(
+                ticksuffix="  ",
+                fixedrange=True,
+                categoryorder="array",
+                categoryarray=[stat["title"] for stat in reversed(sights_stats)],
+            ),
         )
-
-        for d in fig["data"]:
-            d.width = 0.5
 
         fig.update_traces(
             textposition="inside",
             textfont_color="#fff",
-            hovertemplate="<br>".join(["%{customdata[0]}", "<extra></extra>"]),
         )
 
         return fig
