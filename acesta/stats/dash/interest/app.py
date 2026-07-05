@@ -61,7 +61,16 @@ interest_app.layout = html.Div(
                                 ),
                                 dcc.Dropdown(
                                     id="tourism-type",
-                                    options=[],
+                                    options=[
+                                        {
+                                            "value": "",
+                                            "label": html.Span(
+                                                className="option",
+                                                children=["все виды туризма"],
+                                            ),
+                                        }
+                                    ],
+                                    value="",
                                     clearable=False,
                                     className="w-100",
                                 ),

@@ -668,6 +668,7 @@ class SelectedInterestRowTest(TestCase):
         user = SimpleNamespace(
             is_extended=True,
             is_set_tourism_types=True,
+            tourism_types={"museum", "spa"},
             get_current_tourism_type=lambda value=None: (
                 value if value in {"museum", "spa"} else "museum"
             ),
@@ -680,32 +681,39 @@ class SelectedInterestRowTest(TestCase):
             settings.AREA_SIGHTS,
         ):
             with self.subTest(home_area=home_area):
-                self.assertEqual(
-                    update_tourism_type(home_area, None, "spa", True, request=request),
+                options, value = update_tourism_type(
+                    home_area,
+                    {"homeArea": home_area, "tourismType": "spa"},
                     "spa",
+                    True,
+                    request=request,
                 )
+                self.assertEqual(value, "spa")
+                self.assertIn("spa", {option["value"] for option in options})
 
-    def test_unavailable_tourism_type_uses_existing_access_fallback(self):
+    def test_area_change_applies_existing_access_policy(self):
         from acesta.stats.dash.interest.ui import update_tourism_type
 
         user = SimpleNamespace(
             is_extended=True,
             is_set_tourism_types=True,
+            tourism_types={"museum"},
             get_current_tourism_type=lambda value=None: "museum",
         )
 
-        self.assertEqual(
-            update_tourism_type(
-                settings.AREA_CITIES,
-                None,
-                "beach",
-                True,
-                request=SimpleNamespace(user=user),
-            ),
-            "museum",
+        options, value = update_tourism_type(
+            settings.AREA_CITIES,
+            {"homeArea": settings.AREA_CITIES, "tourismType": "museum"},
+            "beach",
+            True,
+            request=SimpleNamespace(user=user),
         )
+        self.assertEqual(value, "museum")
+        self.assertIn(value, {option["value"] for option in options})
 
     def test_tourism_type_keeps_existing_initial_and_free_defaults(self):
+        from dash.exceptions import PreventUpdate
+
         from acesta.stats.dash.interest.ui import update_tourism_type
 
         extended_user = SimpleNamespace(
@@ -714,26 +722,57 @@ class SelectedInterestRowTest(TestCase):
         )
         basic_user = SimpleNamespace(is_extended=False)
 
-        self.assertEqual(
+        with self.assertRaises(PreventUpdate):
             update_tourism_type(
                 settings.AREA_REGIONS,
                 None,
                 None,
                 False,
                 request=SimpleNamespace(user=extended_user),
-            ),
-            "",
+            )
+
+        options, value = update_tourism_type(
+            settings.AREA_REGIONS,
+            {"homeArea": settings.AREA_REGIONS, "tourismType": ""},
+            "museum",
+            False,
+            request=SimpleNamespace(user=basic_user),
         )
-        self.assertEqual(
+        self.assertEqual(value, "")
+        self.assertEqual(options[0]["value"], "")
+
+    def test_transient_home_area_cannot_clear_restored_tourism_type(self):
+        from dash.exceptions import PreventUpdate
+
+        from acesta.stats.dash.interest.ui import update_tourism_type
+
+        user = SimpleNamespace(
+            is_extended=True,
+            is_set_tourism_types=False,
+        )
+        initial_state = {
+            "homeArea": settings.AREA_CITIES,
+            "tourismType": "museum",
+        }
+
+        with self.assertRaises(PreventUpdate):
             update_tourism_type(
                 settings.AREA_REGIONS,
-                None,
-                "museum",
+                initial_state,
+                "",
                 False,
-                request=SimpleNamespace(user=basic_user),
-            ),
+                request=SimpleNamespace(user=user),
+            )
+
+        options, value = update_tourism_type(
+            settings.AREA_CITIES,
+            initial_state,
             "",
+            False,
+            request=SimpleNamespace(user=user),
         )
+        self.assertEqual(value, "museum")
+        self.assertIn(value, {option["value"] for option in options})
 
     def test_callback_triggered_id_uses_django_plotly_dash_context(self):
         from acesta.stats.dash.helpers.interest import get_callback_triggered_id

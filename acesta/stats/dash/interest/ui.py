@@ -145,7 +145,53 @@ def update_interesants_dummy(*args, **kwargs):
         ]
 
 
+def get_tourism_type_options(user, home_area: str) -> list[dict]:
+    """Return the complete tourism dictionary with access flags applied."""
+    if (
+        user.is_extended
+        and home_area != settings.AREA_REGIONS
+        and user.is_set_tourism_types
+    ):
+        return [
+            {
+                "value": name,
+                "search": title,
+                "label": html.Span(
+                    className=(
+                        f"option bg-{name}"
+                        f"{' disabled' if name not in user.tourism_types else ''}"
+                    ),
+                    children=[title],
+                ),
+                "disabled": name not in user.tourism_types,
+            }
+            for name, title in settings.TOURISM_TYPES_OUTSIDE
+        ]
+
+    return [
+        {
+            "value": "",
+            "label": html.Span(
+                className="option",
+                children=["все виды туризма"],
+            ),
+        },
+        *[
+            {
+                "value": name,
+                "search": title,
+                "label": html.Span(
+                    className=f"option bg-{name}",
+                    children=[title],
+                ),
+            }
+            for name, title in settings.TOURISM_TYPES_OUTSIDE
+        ],
+    ]
+
+
 @interest_app.callback(
+    dependencies.Output("tourism-type", "options"),
     dependencies.Output("tourism-type", "value"),
     dependencies.Input("home-area", "value"),
     dependencies.Input("interest-initial-state", "data"),
@@ -158,74 +204,26 @@ def update_tourism_type(
     current_tourism_type: str,
     hydrated: bool = False,
     **kwargs,
-):
+) -> tuple[list[dict], str]:
+    """Set tourism options and value atomically after the area has settled."""
+    if not initial_state:
+        raise PreventUpdate
+
     user = kwargs.get("request").user
+    options = get_tourism_type_options(user, home_area)
     if not user.is_extended:
-        return ""
+        return options, ""
 
-    restoring_initial_state = all(
-        (
-            not hydrated,
-            initial_state,
-            initial_state and initial_state.get("homeArea") == home_area,
-        )
-    )
-    if restoring_initial_state:
-        current_tourism_type = initial_state.get("tourismType") or ""
+    if not hydrated:
+        if initial_state.get("homeArea") != home_area:
+            raise PreventUpdate
+        tourism_type = initial_state.get("tourismType") or ""
     else:
-        current_tourism_type = current_tourism_type or ""
-    if home_area != settings.AREA_REGIONS and user.is_set_tourism_types:
-        return user.get_current_tourism_type(current_tourism_type)
-    return current_tourism_type
+        tourism_type = current_tourism_type or ""
+        if home_area != settings.AREA_REGIONS and user.is_set_tourism_types:
+            tourism_type = user.get_current_tourism_type(tourism_type)
 
-
-@interest_app.callback(
-    dependencies.Output("tourism-type", "options"),
-    dependencies.Input("home-area", "value"),
-)
-def update_tourism_types(home_area: str, **kwargs):
-    if (
-        kwargs.get("request").user.is_extended
-        and home_area != settings.AREA_REGIONS
-        and kwargs.get("request").user.is_set_tourism_types
-    ):
-        return [
-            {
-                "value": name,
-                "search": title,
-                "label": html.Span(
-                    className=(
-                        f"option bg-{name}{' disabled' if name not in kwargs.get('request').user.tourism_types else ''}"
-                    ),
-                    children=[title],
-                ),
-                "disabled": True
-                if name not in kwargs.get("request").user.tourism_types
-                else False,
-            }
-            for name, title in settings.TOURISM_TYPES_OUTSIDE
-        ]
-    else:
-        return [
-            {
-                "value": "",
-                "label": html.Span(
-                    className="option",
-                    children=["все виды туризма"],
-                ),
-            },
-            *[
-                {
-                    "value": name,
-                    "search": title,
-                    "label": html.Span(
-                        className=f"option bg-{name}",
-                        children=[title],
-                    ),
-                }
-                for name, title in settings.TOURISM_TYPES_OUTSIDE
-            ],
-        ]
+    return options, tourism_type
 
 
 @interest_app.callback(
@@ -274,9 +272,11 @@ def update_options(initial_state, *args, **kwargs):
         restored_value = initial_state.get("homeArea")
         return (
             options,
-            restored_value
-            if restored_value in allowed_values
-            else settings.AREA_REGIONS,
+            (
+                restored_value
+                if restored_value in allowed_values
+                else settings.AREA_REGIONS
+            ),
         )
     else:
         return [], settings.AREA_REGIONS
