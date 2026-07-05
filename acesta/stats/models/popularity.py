@@ -78,6 +78,13 @@ class AllRegionPopularity(RegionPopularity, StorageMixin, SightGroupMixin):
 
     class Meta:
         ordering = ("-qty",)
+        indexes = [
+            models.Index(
+                fields=["sight"],
+                include=["qty"],
+                name="stats_ar_sight_qty_cover",
+            ),
+        ]
         verbose_name = "Вся популярность в регионах"
         verbose_name_plural = "Вся популярность в регионах"
         unique_together = ("sight", "home_code", "code", "source_city", "sight_group")

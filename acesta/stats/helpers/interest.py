@@ -11,6 +11,17 @@ from acesta.stats.models import RegionCityPopularity
 from acesta.stats.models import RegionRegionPopularity
 
 
+INTEREST_TABLE_COLUMNS = (
+    "pk",
+    "code__title",
+    "code",
+    "qty",
+    "ppt",
+    "modified",
+    "history",
+)
+
+
 def get_interest(
     region: str, home_area: str, interesant_area: str, tourism_type: str, id: int = 0
 ) -> models.QuerySet:
@@ -24,88 +35,96 @@ def get_interest(
     :return: code
     """
 
-    @to_cache(
-        "interest_{region}_{home_area}_{interesant_area}_{tourism_type}_{id}",
-        60 * 60 * 24 * 7,
-    )
-    def _get_interest(**kwargs):
-
-        if home_area == settings.AREA_REGIONS or id == 0:
-            ppt_model = (
-                RegionRegionPopularity
-                if interesant_area == settings.AREA_REGIONS
-                else RegionCityPopularity
+    if home_area == settings.AREA_REGIONS or id == 0:
+        ppt_model = (
+            RegionRegionPopularity
+            if interesant_area == settings.AREA_REGIONS
+            else RegionCityPopularity
+        )
+        return (
+            ppt_model.objects.filter(
+                home_code=region,
+                qty__gt=0,
+                **(
+                    dict(tourism_type=tourism_type)
+                    if tourism_type
+                    else dict(tourism_type__isnull=True)
+                )
             )
-            return (
-                ppt_model.objects.filter(
-                    home_code=region,
-                    qty__gt=0,
-                    **(
-                        dict(tourism_type=tourism_type)
-                        if tourism_type
-                        else dict(tourism_type__isnull=True)
-                    )
+            .annotate(
+                ppt=models.functions.Round(
+                    "popularity_mean", output_field=models.IntegerField()
                 )
-                .annotate(
-                    ppt=models.functions.Round(
-                        "popularity_mean", output_field=models.IntegerField()
-                    )
-                )
-                .distinct()
             )
-        else:
-            if home_area == settings.AREA_CITIES:
-                ppt_model = (
-                    CityRegionPopularity
-                    if interesant_area == settings.AREA_REGIONS
-                    else CityCityPopularity
-                )
-                empty_cities_filter = (
-                    dict(code__in=get_empty_cities())
-                    if interesant_area == settings.AREA_CITIES
-                    else {}
-                )
-                return (
-                    ppt_model.objects.filter(
-                        home_code=id,
-                        qty__gt=0,
-                        **(
-                            dict(tourism_type=tourism_type)
-                            if tourism_type
-                            else dict(tourism_type__isnull=True)
-                        )
-                    )
-                    .exclude(**empty_cities_filter)
-                    .annotate(
-                        ppt=models.functions.Round(
-                            "popularity_mean", output_field=models.IntegerField()
-                        )
-                    )
-                    .distinct()
-                )
-            elif home_area == settings.AREA_SIGHTS:
-                ppt_model = (
-                    AllRegionPopularity
-                    if interesant_area == settings.AREA_REGIONS
-                    else AllCityPopularity
-                )
-                return (
-                    ppt_model.objects.filter(
-                        sight__id=id,
-                        qty__gt=0,
-                    )
-                    .annotate(
-                        ppt=models.functions.Round(
-                            "popularity_mean", output_field=models.IntegerField()
-                        )
-                    )
-                    .distinct()
-                )
+            .distinct()
+        )
 
-    return _get_interest(
-        region=region,
-        home_area=home_area,
-        interesant_area=interesant_area,
-        tourism_type=tourism_type,
-        id=id,
-    )
+    if home_area == settings.AREA_CITIES:
+        ppt_model = (
+            CityRegionPopularity
+            if interesant_area == settings.AREA_REGIONS
+            else CityCityPopularity
+        )
+        empty_cities_filter = (
+            dict(code__in=get_empty_cities())
+            if interesant_area == settings.AREA_CITIES
+            else {}
+        )
+        return (
+            ppt_model.objects.filter(
+                home_code=id,
+                qty__gt=0,
+                **(
+                    dict(tourism_type=tourism_type)
+                    if tourism_type
+                    else dict(tourism_type__isnull=True)
+                )
+            )
+            .exclude(**empty_cities_filter)
+            .annotate(
+                ppt=models.functions.Round(
+                    "popularity_mean", output_field=models.IntegerField()
+                )
+            )
+            .distinct()
+        )
+
+    if home_area == settings.AREA_SIGHTS:
+        ppt_model = (
+            AllRegionPopularity
+            if interesant_area == settings.AREA_REGIONS
+            else AllCityPopularity
+        )
+        return (
+            ppt_model.objects.filter(
+                sight__id=id,
+                qty__gt=0,
+            )
+            .annotate(
+                ppt=models.functions.Round(
+                    "popularity_mean", output_field=models.IntegerField()
+                )
+            )
+            .distinct()
+        )
+
+    return RegionRegionPopularity.objects.none()
+
+
+@to_cache(
+    "interest_table_v3_{region}_{home_area}_{interesant_area}_{tourism_type}_{id}",
+    60 * 60 * 24 * 7,
+)
+def get_interest_table_rows(
+    region: str,
+    home_area: str,
+    interesant_area: str,
+    tourism_type: str,
+    id: int = 0,
+) -> dict:
+    """Return materialized rows so cache hits do not clone and rerun a QuerySet."""
+    queryset = get_interest(region, home_area, interesant_area, tourism_type, id)
+    return {
+        "model_label": queryset.model._meta.label,
+        "rows": list(queryset.values(*INTEREST_TABLE_COLUMNS)),
+    }

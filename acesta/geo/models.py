@@ -252,6 +252,13 @@ class Sight(TimeStampedModel):
     class Meta:
         verbose_name = "Достопримечательность"
         verbose_name_plural = "Достопримечательности"
+        indexes = [
+            models.Index(
+                fields=["code", "id"],
+                name="geo_sight_pub_code_id_idx",
+                condition=models.Q(is_pub=True),
+            ),
+        ]
         unique_together = (
             [
                 "name",

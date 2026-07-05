@@ -1,5 +1,8 @@
+from functools import lru_cache
+
 import geopandas as gpd
 import pandas as pd
+from django.apps import apps
 from django.conf import settings
 from django.db import models
 from django.utils.timesince import timesince
@@ -12,7 +15,6 @@ from acesta.stats.helpers.update_dates import get_auditory_update_date
 from acesta.stats.helpers.update_dates import get_avg_bill_update_date
 from acesta.stats.helpers.update_dates import get_avg_salary_update_date
 from acesta.stats.helpers.update_dates import get_rating_update_date
-from acesta.stats.models import RegionRegionPopularity
 
 
 HISTORY_ENTITY_TYPES = {
@@ -84,6 +86,26 @@ def normalize_interest_sort(sort_by: list) -> list:
     if column_id not in INTEREST_SORT_COLUMNS or direction not in {"asc", "desc"}:
         return [DEFAULT_INTEREST_SORT.copy()]
     return [{"column_id": column_id, "direction": direction}]
+
+
+def get_interest_map_context_key(
+    region_code,
+    home_area: str,
+    interesant_area: str,
+    tourism_type: str,
+    target_key: str,
+) -> str:
+    """Identify the table-backed static map context used by a full figure."""
+    return "|".join(
+        str(value or "")
+        for value in (
+            region_code,
+            home_area,
+            interesant_area,
+            tourism_type,
+            target_key,
+        )
+    )
 
 
 def migrate_interest_sort(sort_by: list, session_version: int) -> list:
@@ -184,14 +206,18 @@ def generate_update_tooltip_content():
     """
 
 
+@lru_cache(maxsize=1)
+def _get_geojson_cached() -> gpd.GeoDataFrame:
+    geojson = gpd.read_file(settings.GEOJSON)
+    return geojson.set_index("code")
+
+
 def get_geojson() -> gpd.GeoDataFrame:
     """
     Returns Russia regions geodata
     :return: gpd.GeoDataFrame
     """
-    geojson = gpd.read_file(settings.GEOJSON)
-    geojson = geojson.set_index("code")
-    return geojson
+    return _get_geojson_cached().copy()
 
 
 def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
@@ -210,7 +236,13 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
         "modified",
         "history",
     )
-    df = pd.DataFrame(list(ppt_data.values(*columns)))
+    if isinstance(ppt_data, dict) and "rows" in ppt_data:
+        model = apps.get_model(ppt_data["model_label"])
+        rows = ppt_data["rows"]
+    else:
+        model = ppt_data.model
+        rows = list(ppt_data.values(*columns))
+    df = pd.DataFrame(rows, columns=columns)
     if not len(df):
         df = pd.DataFrame(
             [[None, "Запрашивают редко", "", "", "", None, []]], columns=columns
@@ -218,9 +250,7 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
     else:
 
         def get_previous_item(row):
-            popularity = ppt_data.model(
-                modified=row["modified"], history=row["history"]
-            )
+            popularity = model(modified=row["modified"], history=row["history"])
             return popularity.previous_history_item
 
         def get_trend(current, previous):
@@ -250,7 +280,7 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
         ]
         df["ppt"] = df["ppt"] / 100
 
-        entity_type = HISTORY_ENTITY_TYPES.get(ppt_data.model.__name__, "")
+        entity_type = HISTORY_ENTITY_TYPES.get(model.__name__, "")
         sprite_url = f"{settings.STATIC_URL}img/sprite.svg#history"
         df["history_action"] = [
             (
@@ -302,25 +332,12 @@ def get_map_df(tourism_type: str, home_code: str) -> pd.DataFrame:
     :param home_code: str
     :return: pd.DataFrame
     """
+    # Metrics are already present in the table callback payload. Keeping only
+    # the static region frame here avoids a duplicate popularity query for
+    # every map redraw.
     df_map = get_geojson()
-    ppt_data = (
-        RegionRegionPopularity.objects.filter(
-            home_code_id=home_code,
-            **(
-                dict(tourism_type=tourism_type)
-                if tourism_type
-                else dict(tourism_type__isnull=True)
-            ),
-        )
-        .values("code")
-        .annotate(qty=models.Sum("qty"), ppt=models.Avg("popularity_mean"))
-    )
-    try:
-        df_map = df_map.join(pd.DataFrame(list(ppt_data)).set_index("code"))
-        df_map["qty"] = df_map["qty"].fillna(0)
-    except KeyError:
-        df_map["qty"] = 0
-        df_map["ppt"] = float("nan")
+    df_map["qty"] = 0
+    df_map["ppt"] = float("nan")
     return df_map
 
 

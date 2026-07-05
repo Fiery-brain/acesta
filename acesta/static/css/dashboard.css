@@ -235,7 +235,7 @@ box-shadow:0px 5px 8px -10px rgba(34, 60, 80, 0.8)}
 #interest .cell-table th{position:sticky; top:0; z-index:1; border:none!important;padding:.6rem .6rem!important;font-weight:700;background-color:#f7f7f7}
 #interest .cell-table td{opacity:.8;border:none!important;padding:.4rem .4rem!important;background-color:var(--bs-table-bg);border:none;border-bottom:var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important}
 #interest .cell-table td:hover{cursor:pointer;opacity:1}
-#interest .cell-table tr:has(td.cell--selected){opacity:1;background-color: #eefcfb}
+#interest .cell-table tr:has(td.cell--selected){opacity:1;background-color: #f0faf9}
 #interest .cell-table td.cell--selected{background-color:inherit!important}
 #interest .cell-table:not(:has(td)) {filter:blur(4px)}
 #interest .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th:hover [class^='column-header--']:not(.disabled){color:var(--acesta-primary)}

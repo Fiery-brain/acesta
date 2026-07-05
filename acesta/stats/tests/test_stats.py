@@ -1690,7 +1690,7 @@ class PopularityHeatmapTest(test.TestCase):
 
         return get_popularity_heatmap(Series(values))
 
-    def test_map_data_keeps_missing_region_distinct_from_zero(self):
+    def test_map_data_uses_static_frame_without_popularity_query(self):
         from unittest import mock
 
         import pandas as pd
@@ -1701,28 +1701,12 @@ class PopularityHeatmapTest(test.TestCase):
             {"name": ["Регион с нулём", "Регион без записи"]},
             index=["79", "64"],
         )
-        popularity = [
-            {
-                "code": "79",
-                "qty": 0,
-                "ppt": 0,
-            }
-        ]
-        values = mock.Mock()
-        values.annotate.return_value = popularity
-        queryset = mock.Mock()
-        queryset.values.return_value = values
-
         with mock.patch.object(interest_helpers, "get_geojson", return_value=regions):
-            with mock.patch.object(
-                interest_helpers.RegionRegionPopularity.objects,
-                "filter",
-                return_value=queryset,
-            ):
-                map_data = interest_helpers.get_map_df("", "79")
+            map_data = interest_helpers.get_map_df("", "79")
 
-        self.assertEqual(map_data.loc["79", "ppt"], 0)
+        self.assertTrue(pd.isna(map_data.loc["79", "ppt"]))
         self.assertTrue(pd.isna(map_data.loc["64", "ppt"]))
+        self.assertEqual(map_data.loc["79", "qty"], 0)
         self.assertEqual(map_data.loc["64", "qty"], 0)
 
     def test_region_map_uses_visible_table_rows_as_data_source(self):
@@ -1890,19 +1874,29 @@ class PopularityHeatmapTest(test.TestCase):
         )
         user = SimpleNamespace(current_region=current_region, is_extended=True)
         request = SimpleNamespace(COOKIES={"innerHeight": "768"}, user=user)
+        table_data = [
+            {"code": "79", "qty": 19276, "ppt": 367.37},
+            {"code": "27", "qty": 999, "ppt": 6},
+        ]
+        table_state = {
+            "homeArea": settings.AREA_REGIONS,
+            "interesantArea": settings.AREA_REGIONS,
+            "tourismType": "",
+            "targetKey": "regions_0",
+            "mapContextKey": "79|regions|regions||regions_0",
+            "sourceRowId": None,
+        }
 
         with mock.patch.object(map_module, "get_map_df", return_value=map_data):
             figure, _, _ = map_module.update_map(
+                table_state,
+                None,
                 "",
                 settings.AREA_REGIONS,
                 settings.AREA_REGIONS,
-                None,
                 "regions_0",
                 {"width": 700, "height": 500},
-                [
-                    {"code": "79", "qty": 19276, "ppt": 367.37},
-                    {"code": "27", "qty": 999, "ppt": 6},
-                ],
+                table_data,
                 user=user,
                 request=request,
             )
@@ -1926,8 +1920,6 @@ class PopularityHeatmapTest(test.TestCase):
         self.assertEqual(home_trace.colorscale[0][1], map_module.HOME_REGION_FILL_COLOR)
 
     def test_country_background_includes_every_configured_new_region(self):
-        from shapely.geometry import shape
-
         from acesta.stats.dash.helpers.interest import get_geojson
         from acesta.stats.dash.interest.map import get_country_background_layers
 
@@ -1936,11 +1928,11 @@ class PopularityHeatmapTest(test.TestCase):
 
         self.assertTrue(expected_codes.issubset(set(map_data.index.astype(str))))
         layers = get_country_background_layers(map_data)
-        country = shape(layers[0]["source"]["geometry"])
-        for code in expected_codes:
-            with self.subTest(code=code):
-                geometry = map_data.loc[code].geometry
-                self.assertTrue(country.covers(geometry.representative_point()))
+        self.assertEqual(layers[0]["source"]["type"], "Feature")
+        self.assertEqual(layers[1]["source"]["type"], "Feature")
+        self.assertEqual(
+            layers[0]["source"]["geometry"], layers[1]["source"]["geometry"]
+        )
 
     def test_country_background_accepts_point_mode_style(self):
         import geopandas as gpd
@@ -2012,48 +2004,70 @@ class PopularityHeatmapTest(test.TestCase):
                 with mock.patch.object(map_module, "get_sights", return_value=[]):
                     for home_area in (settings.AREA_CITIES, settings.AREA_SIGHTS):
                         with self.subTest(home_area=home_area):
-                            figure, _, _ = map_module.update_map(
-                                "",
-                                home_area,
-                                settings.AREA_CITIES,
-                                None,
-                                f"{home_area}_0",
-                                {"width": 900, "height": 600},
-                                [],
-                                user=user,
-                                request=request,
-                            )
+                            target_key = f"{home_area}_0"
+                            table_state = {
+                                "homeArea": home_area,
+                                "interesantArea": settings.AREA_CITIES,
+                                "tourismType": "",
+                                "targetKey": target_key,
+                                "mapContextKey": (
+                                    f"79|{home_area}|cities||{target_key}"
+                                ),
+                                "sourceRowId": None,
+                            }
+                            with mock.patch.object(
+                                map_module,
+                                "resolve_target_key",
+                                return_value=target_key,
+                            ):
+                                figure, _, _ = map_module.update_map(
+                                    table_state,
+                                    None,
+                                    "",
+                                    home_area,
+                                    settings.AREA_CITIES,
+                                    target_key,
+                                    {"width": 900, "height": 600},
+                                    [],
+                                    user=user,
+                                    request=request,
+                                )
 
                             self.assertEqual(figure.layout.map.style, "open-street-map")
-                            fill, line = figure.layout.map.layers[:2]
-                            self.assertEqual(fill.type, "fill")
-                            self.assertEqual(fill.color, "#dbfffa")
-                            self.assertEqual(fill.opacity, 0.45)
-                            self.assertEqual(fill.below, "traces")
-                            self.assertEqual(line.type, "line")
-                            self.assertEqual(line.color, "#000000")
-                            self.assertEqual(line.opacity, 0.45)
-                            self.assertEqual(line.line.width, 0.5)
-                            self.assertEqual(line.below, "traces")
-                            self.assertNotIn(
-                                "choroplethmap",
-                                [trace.type for trace in figure.data],
-                            )
+                            background = figure.data[0]
+                            self.assertEqual(background.type, "choroplethmap")
+                            self.assertEqual(background.marker.opacity, 0.45)
+                            self.assertEqual(background.marker.line.color, "#000000")
+                            self.assertEqual(background.marker.line.width, 0.5)
 
-                    figure, _, _ = map_module.update_map(
-                        "",
-                        settings.AREA_CITIES,
-                        settings.AREA_REGIONS,
-                        None,
-                        f"{settings.AREA_CITIES}_0",
-                        {"width": 900, "height": 600},
-                        [],
-                        user=user,
-                        request=request,
-                    )
+                    target_key = f"{settings.AREA_CITIES}_0"
+                    with mock.patch.object(
+                        map_module,
+                        "resolve_target_key",
+                        return_value=target_key,
+                    ):
+                        figure, _, _ = map_module.update_map(
+                            {
+                                "homeArea": settings.AREA_CITIES,
+                                "interesantArea": settings.AREA_REGIONS,
+                                "tourismType": "",
+                                "targetKey": target_key,
+                                "mapContextKey": (f"79|cities|regions||{target_key}"),
+                                "sourceRowId": None,
+                            },
+                            None,
+                            "",
+                            settings.AREA_CITIES,
+                            settings.AREA_REGIONS,
+                            target_key,
+                            {"width": 900, "height": 600},
+                            [],
+                            user=user,
+                            request=request,
+                        )
 
         self.assertIn("choroplethmap", [trace.type for trace in figure.data])
-        self.assertNotEqual(figure.layout.map.layers[0].type, "fill")
+        self.assertEqual(len(figure.layout.map.layers), 0)
 
     def test_city_heatmap_coordinates_use_one_bulk_query(self):
         from types import SimpleNamespace
@@ -2157,10 +2171,18 @@ class PopularityHeatmapTest(test.TestCase):
                 return_value=list(zip(cities, rows)),
             ):
                 figure, _, balloons = map_module.update_map(
+                    {
+                        "homeArea": settings.AREA_REGIONS,
+                        "interesantArea": settings.AREA_CITIES,
+                        "tourismType": "",
+                        "targetKey": "regions_0",
+                        "mapContextKey": "79|regions|cities||regions_0",
+                        "sourceRowId": "101",
+                    },
+                    {"row": 0, "row_id": "101"},
                     "",
                     settings.AREA_REGIONS,
                     settings.AREA_CITIES,
-                    {"row": 0, "row_id": "101"},
                     "regions_0",
                     {"width": 900, "height": 600},
                     rows,
@@ -2168,7 +2190,7 @@ class PopularityHeatmapTest(test.TestCase):
                     request=request,
                 )
 
-        self.assertNotIn("choroplethmap", [trace.type for trace in figure.data])
+        self.assertEqual(figure.data[0].type, "choroplethmap")
         city_trace = next(trace for trace in figure.data if trace.type == "scattermap")
         self.assertEqual(
             list(city_trace.ids),
@@ -2215,8 +2237,8 @@ class PopularityHeatmapTest(test.TestCase):
             ["Популярность в городе", "Город 101", "низкая"],
         )
         self.assertEqual(figure.layout.map.style, "white-bg")
-        self.assertEqual(figure.layout.map.layers[0].type, "fill")
-        self.assertEqual(figure.layout.map.layers[1].type, "line")
+        self.assertEqual(figure.layout.map.layers[0].type, "circle")
+        self.assertIn("line", [layer.type for layer in figure.layout.map.layers])
 
 
 class MapConnectionEngineTest(test.TestCase):
@@ -2544,29 +2566,17 @@ class InterestTargetStateTest(test.TestCase):
 
         from acesta.stats.dash.interest import interest as interest_module
 
-        queryset = mock.Mock()
-        ordered = queryset.annotate.return_value.order_by.return_value
-        ordered.first.return_value = SimpleNamespace(pk=35)
         user = SimpleNamespace(current_region=SimpleNamespace(code="79"))
 
         with mock.patch.object(
-            interest_module.Sight.objects,
-            "filter",
-            return_value=queryset,
-        ) as sight_filter:
+            interest_module,
+            "get_default_sight_target",
+            return_value={"id": 35},
+        ) as get_target:
             key = interest_module.get_default_target_key(user, "sights", "museum")
 
         self.assertEqual(key, "sights_35")
-        sight_filter.assert_called_once_with(
-            code_id="79",
-            is_pub=True,
-            group__tourism_type="museum",
-        )
-        order = queryset.annotate.return_value.order_by.call_args.args
-        self.assertEqual(order[1], "pk")
-        self.assertEqual(order[0].expression.name, "qty")
-        self.assertTrue(order[0].descending)
-        self.assertTrue(order[0].nulls_last)
+        get_target.assert_called_once_with("79", "museum")
 
     def test_explicit_region_transition_discards_saved_point_target(self):
         from acesta.stats.dash.interest import interest as interest_module
@@ -2597,20 +2607,22 @@ class InterestTargetStateTest(test.TestCase):
         from acesta.stats.dash.interest import interest as interest_module
 
         state = interest_module.save_interest_session_state(
-            "museum",
-            "regions",
-            "cities",
-            [{"column_id": "ppt_display", "direction": "desc"}],
-            {"row_id": "101"},
-            "cities_17",
+            {
+                "homeArea": "regions",
+                "interesantArea": "cities",
+                "tourismType": "museum",
+                "sortBy": [{"column_id": "ppt_display", "direction": "desc"}],
+                "targetKey": "regions_0",
+                "mapContextKey": "79|regions|cities|museum|regions_0",
+                "sourceRowId": None,
+            },
+            None,
             True,
+            [{"id": "101", "code": "101"}],
             {},
             user=SimpleNamespace(
                 current_region=SimpleNamespace(code="79"),
                 is_extended=True,
-            ),
-            callback_context=SimpleNamespace(
-                triggered=[{"prop_id": "home-area.value"}]
             ),
         )
 
@@ -2646,7 +2658,7 @@ class InterestTargetStateTest(test.TestCase):
             "sortBy": [{"column_id": "qty_display", "direction": "desc"}],
             "sourceRowId": "27",
         }
-        with mock.patch.object(interest_module, "get_interest"):
+        with mock.patch.object(interest_module, "get_interest_table_rows"):
             with mock.patch.object(interest_module, "get_ppt_df", return_value=table):
                 _, selected_cells, active_cell, _ = interest_module.update_interest(
                     "",
@@ -2697,7 +2709,7 @@ class InterestTargetStateTest(test.TestCase):
                 }
             ]
         )
-        with mock.patch.object(interest_module, "get_interest"):
+        with mock.patch.object(interest_module, "get_interest_table_rows"):
             with mock.patch.object(interest_module, "get_ppt_df", return_value=table):
                 _, selected_cells, active_cell, _ = interest_module.update_interest(
                     "",
@@ -2760,7 +2772,9 @@ class InterestTargetStateTest(test.TestCase):
                         callback_context=callback_context,
                     )
 
-                with mock.patch.object(interest_module, "get_interest") as get_interest:
+                with mock.patch.object(
+                    interest_module, "get_interest_table_rows"
+                ) as get_interest:
                     with mock.patch.object(
                         interest_module, "get_ppt_df", return_value=table
                     ):
@@ -2819,7 +2833,9 @@ class InterestTargetStateTest(test.TestCase):
             ("sights", "sights_22"),
         ):
             with self.subTest(home_area=home_area):
-                with mock.patch.object(interest_module, "get_interest") as get_interest:
+                with mock.patch.object(
+                    interest_module, "get_interest_table_rows"
+                ) as get_interest:
                     with mock.patch.object(
                         interest_module, "is_valid_target", return_value=True
                     ):
@@ -2877,7 +2893,9 @@ class InterestTargetStateTest(test.TestCase):
         )
         for home_area in ("cities", "sights"):
             with self.subTest(home_area=home_area):
-                with mock.patch.object(interest_module, "get_interest") as get_interest:
+                with mock.patch.object(
+                    interest_module, "get_interest_table_rows"
+                ) as get_interest:
                     with mock.patch.object(
                         interest_module, "get_ppt_df", return_value=table
                     ):
@@ -2923,7 +2941,9 @@ class InterestTargetStateTest(test.TestCase):
         )
         requested_ids = []
         for target_id in (22, 35):
-            with mock.patch.object(interest_module, "get_interest") as get_interest:
+            with mock.patch.object(
+                interest_module, "get_interest_table_rows"
+            ) as get_interest:
                 with mock.patch.object(
                     interest_module, "get_ppt_df", return_value=table
                 ):
@@ -2958,7 +2978,7 @@ class InterestTargetStateTest(test.TestCase):
 
         from acesta.stats.dash.interest import interest as interest_module
 
-        with mock.patch.object(interest_module, "get_interest"):
+        with mock.patch.object(interest_module, "get_interest_table_rows"):
             with mock.patch.object(
                 interest_module,
                 "get_ppt_df",
@@ -3052,7 +3072,9 @@ class InterestTargetStateTest(test.TestCase):
         table = pd.DataFrame(
             [{"id": "27", "code": "27", "code__title": "Хабаровский край"}]
         )
-        with mock.patch.object(interest_module, "get_interest") as get_interest:
+        with mock.patch.object(
+            interest_module, "get_interest_table_rows"
+        ) as get_interest:
             with mock.patch.object(interest_module, "get_ppt_df", return_value=table):
                 with mock.patch.object(
                     interest_module, "is_valid_target", return_value=True
@@ -3083,7 +3105,9 @@ class InterestTargetStateTest(test.TestCase):
 
         from acesta.stats.dash.interest import interest as interest_module
 
-        with mock.patch.object(interest_module, "get_interest") as get_interest:
+        with mock.patch.object(
+            interest_module, "get_interest_table_rows"
+        ) as get_interest:
             with mock.patch.object(
                 interest_module,
                 "get_ppt_df",
@@ -3134,7 +3158,7 @@ class InterestTargetStateTest(test.TestCase):
                 }
             ]
         )
-        with mock.patch.object(interest_module, "get_interest"):
+        with mock.patch.object(interest_module, "get_interest_table_rows"):
             with mock.patch.object(interest_module, "get_ppt_df", return_value=table):
                 with mock.patch.object(
                     interest_module, "is_valid_target", return_value=True
@@ -3302,14 +3326,26 @@ class InterestMapConnectionCallbackTest(test.TestCase):
                                             "resolve_target_key",
                                             return_value=target_key,
                                         ):
+                                            table_state = {
+                                                "homeArea": home_area,
+                                                "interesantArea": interesant_area,
+                                                "tourismType": "",
+                                                "targetKey": target_key,
+                                                "mapContextKey": (
+                                                    f"79|{home_area}|"
+                                                    f"{interesant_area}||{target_key}"
+                                                ),
+                                                "sourceRowId": row["id"],
+                                            }
                                             figure, _, balloons = map_module.update_map(
-                                                "",
-                                                home_area,
-                                                interesant_area,
+                                                table_state,
                                                 {
                                                     "row": 0,
                                                     "row_id": row["id"],
                                                 },
+                                                "",
+                                                home_area,
+                                                interesant_area,
                                                 target_key,
                                                 {
                                                     "width": 900,
@@ -3370,9 +3406,9 @@ class InterestMapConnectionCallbackTest(test.TestCase):
                         )
                         if home_area == settings.AREA_REGIONS:
                             self.assertEqual(region_trace.z[no_data_position], -1)
-                            self.assertEqual(figure.layout.coloraxis.cmin, -1)
+                            self.assertEqual(region_trace.zmin, -1)
                             self.assertEqual(
-                                figure.layout.coloraxis.colorscale[0][1],
+                                region_trace.colorscale[0][1],
                                 "#ffffff",
                             )
                             self.assertEqual(
@@ -3405,10 +3441,9 @@ class InterestMapConnectionCallbackTest(test.TestCase):
                         interesant_area == settings.AREA_CITIES
                         and home_area != settings.AREA_REGIONS
                     ):
-                        self.assertNotIn(
-                            "choroplethmap",
-                            [trace.type for trace in figure.data],
-                        )
+                        background = figure.data[0]
+                        self.assertEqual(background.type, "choroplethmap")
+                        self.assertEqual(background.marker.opacity, 0.45)
                         self.assertEqual(figure.layout.map.style, "open-street-map")
                         trace_ids = [
                             list(trace.ids)

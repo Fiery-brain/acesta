@@ -89,6 +89,7 @@ interest_app.layout = html.Div(
                 dcc.Store(data=None, id="interest-initial-state"),
                 dcc.Store(data=None, id="interest-table-state"),
                 dcc.Store(data=False, id="interest-session-hydrated"),
+                dcc.Store(data={}, id="interest-map-state"),
                 dcc.Store(data={}, id="interest-map-viewport"),
                 dcc.Store(data={}, id="interest-map-camera"),
                 html.Div(

@@ -32,7 +32,7 @@ def get_audience_key_data(key) -> tuple:
     :param key: str
     :return: tuple
     """
-    return key.split("_") if key else ("01", "", "regions")
+    return key.split("_") if key else ("", "", settings.AREA_REGIONS)
 
 
 @to_cache("audience_empty_cities", 60 * 60 * 24 * 7)

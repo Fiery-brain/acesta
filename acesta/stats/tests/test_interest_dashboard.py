@@ -6,10 +6,175 @@ from unittest import mock
 
 import geopandas as gpd
 from django.conf import settings
+from django.test import override_settings
 from django.test import TestCase
 from shapely.geometry import Polygon
 
 from acesta.geo.models import Region
+
+
+class InterestPerformanceContractTest(unittest.TestCase):
+    def test_geojson_is_read_once_and_callers_receive_copies(self):
+        import pandas as pd
+
+        from acesta.stats.dash.helpers import interest as helpers
+
+        source = pd.DataFrame({"code": ["01"], "name": ["Регион"]})
+        helpers._get_geojson_cached.cache_clear()
+        with mock.patch.object(helpers.gpd, "read_file", return_value=source) as read:
+            first = helpers.get_geojson()
+            second = helpers.get_geojson()
+
+        self.assertEqual(read.call_count, 1)
+        self.assertIsNot(first, second)
+        self.assertEqual(first.index.tolist(), ["01"])
+
+    def test_viewport_is_not_a_server_map_trigger(self):
+        from acesta.stats.dash.interest import map as map_module
+
+        callback_source = Path(map_module.__file__).read_text()
+        decorator = callback_source.split("def update_map", 1)[0].rsplit(
+            "@interest_app.callback", 1
+        )[1]
+
+        self.assertNotIn(
+            'dependencies.Input("interest-map-viewport", "data")', decorator
+        )
+        self.assertIn('dependencies.State("interest-map-viewport", "data")', decorator)
+
+    def test_source_selection_patch_does_not_resend_trace_geojson(self):
+        import plotly.graph_objects as go
+
+        from acesta.stats.dash.interest.map import get_interest_map_patch
+
+        figure = go.Figure(go.Choroplethmap(geojson="/static/geojson/Russia.geojson"))
+        figure.update_layout(
+            height=500,
+            meta={"acestaInterestCamera": {"key": "regions|37"}},
+            map={
+                "center": {"lat": 55, "lon": 37},
+                "zoom": 4,
+                "layers": [],
+            },
+        )
+
+        operations = get_interest_map_patch(figure).to_plotly_json()["operations"]
+        locations = [operation["location"] for operation in operations]
+
+        self.assertNotIn(["data"], locations)
+        self.assertFalse(any("geojson" in location for location in locations))
+        self.assertIn(["layout", "map", "center"], locations)
+
+    def test_map_is_updated_directly_without_clientside_geojson_hydration(self):
+        project_root = Path(__file__).resolve().parents[3]
+        app_source = (project_root / "acesta/stats/dash/interest/app.py").read_text()
+        map_source = (project_root / "acesta/stats/dash/interest/map.py").read_text()
+        script_source = (
+            project_root / "acesta/static/js/dashboard.interest.js"
+        ).read_text()
+
+        self.assertNotIn('id="interest-map-figure"', app_source)
+        self.assertIn('dependencies.Output("map", "figure")', map_source)
+        self.assertIn("geojson=df_map.geometry.__geo_interface__", map_source)
+        self.assertNotIn("hydrateInterestMapFigure", script_source)
+
+
+class NamedCacheKeyTest(unittest.TestCase):
+    @override_settings(
+        CACHES={
+            "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
+            "db": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
+        }
+    )
+    def test_named_key_fields_are_bound_from_positional_arguments(self):
+        from acesta.base.decorators import to_cache
+
+        calls = []
+
+        @to_cache("binding_{region}_{tourism_type}", 60)
+        def cached_value(region, tourism_type=""):
+            calls.append((region, tourism_type))
+            return f"{region}:{tourism_type}"
+
+        self.assertEqual(cached_value("01", "museum"), "01:museum")
+        self.assertEqual(cached_value("01", "spa"), "01:spa")
+        self.assertEqual(cached_value(region="01", tourism_type="museum"), "01:museum")
+        self.assertEqual(calls, [("01", "museum"), ("01", "spa")])
+
+
+class InterestTableCacheTest(unittest.TestCase):
+    @override_settings(
+        CACHES={
+            "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
+            "db": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
+        }
+    )
+    def test_materialized_table_rows_are_reused_on_cache_hit(self):
+        from acesta.stats.helpers import interest as helper
+        from acesta.stats.models import RegionRegionPopularity
+
+        queryset = mock.Mock(model=RegionRegionPopularity)
+        queryset.values.return_value = [{"pk": 1, "code": "01"}]
+        if hasattr(helper.get_interest_table_rows, "_cache"):
+            del helper.get_interest_table_rows._cache
+        self.addCleanup(
+            lambda: (
+                delattr(helper.get_interest_table_rows, "_cache")
+                if hasattr(helper.get_interest_table_rows, "_cache")
+                else None
+            )
+        )
+
+        with mock.patch.object(helper, "get_interest", return_value=queryset) as get:
+            first = helper.get_interest_table_rows(
+                "cache-test", "regions", "regions", "", 0
+            )
+            second = helper.get_interest_table_rows(
+                "cache-test", "regions", "regions", "", 0
+            )
+
+        self.assertEqual(first, second)
+        get.assert_called_once()
+        queryset.values.assert_called_once()
+
+    @override_settings(
+        CACHES={
+            "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
+            "db": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
+        }
+    )
+    def test_table_cache_is_isolated_by_context_and_tourism_type(self):
+        from django.core.cache import caches
+
+        from acesta.stats.helpers import interest as helper
+        from acesta.stats.models import RegionCityPopularity
+        from acesta.stats.models import RegionRegionPopularity
+
+        caches["db"].clear()
+        if hasattr(helper.get_interest_table_rows, "_cache"):
+            del helper.get_interest_table_rows._cache
+
+        region_queryset = mock.Mock(model=RegionRegionPopularity)
+        region_queryset.values.return_value = [{"code": "01"}]
+        city_queryset = mock.Mock(model=RegionCityPopularity)
+        city_queryset.values.return_value = [{"code": 101}]
+
+        with mock.patch.object(
+            helper,
+            "get_interest",
+            side_effect=[region_queryset, city_queryset],
+        ) as get:
+            regions = helper.get_interest_table_rows(
+                "40", "regions", "regions", "museum", 0
+            )
+            cities = helper.get_interest_table_rows("40", "regions", "cities", "spa", 0)
+            regions_again = helper.get_interest_table_rows(
+                "40", "regions", "regions", "museum", 0
+            )
+
+        self.assertEqual(regions, regions_again)
+        self.assertNotEqual(regions["model_label"], cities["model_label"])
+        self.assertEqual(get.call_count, 2)
 
 
 class PopularityTableTrendTest(TestCase):
@@ -220,13 +385,10 @@ class SelectedInterestRowTest(TestCase):
 
         with self.assertRaises(PreventUpdate):
             save_interest_session_state(
-                "",
-                settings.AREA_REGIONS,
-                settings.AREA_REGIONS,
-                [{"column_id": "qty", "direction": "asc"}],
+                {},
                 None,
-                "regions_0",
                 False,
+                [],
                 {},
             )
 
@@ -242,7 +404,17 @@ class SelectedInterestRowTest(TestCase):
             "sortBy": [{"column_id": "ppt_display", "direction": "desc"}],
             "targetKey": "cities_22",
         }
-        table_state = {key: value for key, value in state.items() if key != "targetKey"}
+        map_context_key = "40|cities|cities|museum|cities_22"
+        table_state = {
+            **state,
+            "sourceRowId": None,
+            "mapContextKey": map_context_key,
+        }
+        map_state = {
+            "ready": True,
+            "mapContextKey": map_context_key,
+            "sourceRowId": None,
+        }
         user = SimpleNamespace(current_region=SimpleNamespace(code="40"))
 
         with mock.patch.object(
@@ -258,6 +430,7 @@ class SelectedInterestRowTest(TestCase):
                     state["sortBy"],
                     "regions_0",
                     table_state,
+                    map_state,
                     state,
                     user=user,
                 )
@@ -269,6 +442,7 @@ class SelectedInterestRowTest(TestCase):
                     state["sortBy"],
                     "cities_22",
                     table_state,
+                    map_state,
                     state,
                     user=user,
                 )
@@ -470,7 +644,7 @@ class SelectedInterestRowTest(TestCase):
             [{"id": "37", "code": "37", "code__title": "Ивановская область"}]
         )
 
-        with mock.patch.object(interest_module, "get_interest"):
+        with mock.patch.object(interest_module, "get_interest_table_rows"):
             with mock.patch.object(interest_module, "get_ppt_df", return_value=table):
                 _, selected_cells, active_cell, _ = interest_module.update_interest(
                     "",
@@ -661,11 +835,21 @@ class RegionMapCallbackTest(TestCase):
         with mock.patch.object(
             map_module, "get_map_df", return_value=self.regions.copy()
         ):
+            map_context_key = "40|regions|regions||regions_0"
+            table_state = {
+                "homeArea": settings.AREA_REGIONS,
+                "interesantArea": settings.AREA_REGIONS,
+                "tourismType": "",
+                "targetKey": "regions_0",
+                "mapContextKey": map_context_key,
+                "sourceRowId": "37",
+            }
             figure, card, balloons = map_module.update_map(
+                table_state,
+                {"row": 0, "row_id": "37"},
                 "",
                 settings.AREA_REGIONS,
                 settings.AREA_REGIONS,
-                {"row": 0, "row_id": "37"},
                 "regions_0",
                 {"width": 700, "height": 500},
                 table_data,
@@ -692,6 +876,34 @@ class RegionMapCallbackTest(TestCase):
         self.assertIn("regions_40", camera["key"])
         self.assertEqual(camera["center"], figure.layout.map.center.to_plotly_json())
         self.assertEqual(camera["zoom"], figure.layout.map.zoom)
+        map_state = figure.layout.meta["acestaInterestState"]
+        self.assertTrue(map_state["ready"])
+        self.assertEqual(map_state["mapContextKey"], map_context_key)
+
+        with mock.patch.object(
+            map_module, "get_map_df", return_value=self.regions.copy()
+        ):
+            patch, card, _ = map_module.update_map(
+                table_state,
+                {"row": 0, "row_id": "37"},
+                "",
+                settings.AREA_REGIONS,
+                settings.AREA_REGIONS,
+                "regions_0",
+                {"width": 700, "height": 500},
+                table_data,
+                None,
+                True,
+                map_state,
+                user=user,
+                request=request,
+                callback_context=SimpleNamespace(
+                    triggered=[{"prop_id": "table-interesants.active_cell"}]
+                ),
+            )
+
+        self.assertEqual(patch.__class__.__name__, "Patch")
+        self.assertIs(card, map_module.no_update)
 
     def test_sight_target_without_source_preserves_client_camera(self):
         from acesta.stats.dash.interest import map as map_module
@@ -734,11 +946,21 @@ class RegionMapCallbackTest(TestCase):
                 "resolve_target_key",
                 return_value="sights_301",
             ), mock.patch.object(map_module, "get_sights", return_value=[sight]):
+                map_context_key = "40|sights|regions||sights_301"
+                table_state = {
+                    "homeArea": settings.AREA_SIGHTS,
+                    "interesantArea": settings.AREA_REGIONS,
+                    "tourismType": "",
+                    "targetKey": "sights_301",
+                    "mapContextKey": map_context_key,
+                    "sourceRowId": None,
+                }
                 figure, _, _ = map_module.update_map(
+                    table_state,
+                    None,
                     "",
                     settings.AREA_SIGHTS,
                     settings.AREA_REGIONS,
-                    None,
                     "sights_301",
                     {"width": 700, "height": 500},
                     [],
@@ -801,12 +1023,26 @@ class RegionMapCallbackTest(TestCase):
         with mock.patch.object(
             map_module, "get_map_df", return_value=self.regions.copy()
         ):
-            with mock.patch.object(map_module, "get_sights", return_value=[sight]):
+            with mock.patch.object(
+                map_module,
+                "resolve_target_key",
+                return_value="sights_301",
+            ), mock.patch.object(map_module, "get_sights", return_value=[sight]):
+                map_context_key = "40|sights|regions||sights_301"
+                table_state = {
+                    "homeArea": settings.AREA_SIGHTS,
+                    "interesantArea": settings.AREA_REGIONS,
+                    "tourismType": "",
+                    "targetKey": "sights_301",
+                    "mapContextKey": map_context_key,
+                    "sourceRowId": "37",
+                }
                 figure, _, _ = map_module.update_map(
+                    table_state,
+                    {"row": 0, "row_id": "37"},
                     "",
                     settings.AREA_SIGHTS,
                     settings.AREA_REGIONS,
-                    {"row": 0, "row_id": "37"},
                     "sights_301",
                     {"width": 700, "height": 500},
                     table_data,
@@ -858,6 +1094,15 @@ class InterestMapCameraUnitTest(unittest.TestCase):
             camera_sync,
         )
         self.assertNotIn('map.on("move"', camera_sync)
+
+    def test_client_marks_map_ready_only_after_plotly_render(self):
+        script = (
+            Path(__file__).resolve().parents[2] / "static/js/dashboard.interest.js"
+        ).read_text()
+
+        self.assertIn("function updateInterestMapState(graph)", script)
+        self.assertIn('graph.on("plotly_afterplot"', script)
+        self.assertIn('set_props("interest-map-state", {data: state})', script)
 
     def test_client_saves_camera_after_map_movement(self):
         script = (

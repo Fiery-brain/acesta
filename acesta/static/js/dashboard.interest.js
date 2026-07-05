@@ -485,6 +485,7 @@ $(function () {
   var observedRegionCard = null;
   var lastInterestMapViewport = "";
   var lastInterestMapCamera = "";
+  var lastInterestMapState = "";
   var interestMapViewportTimer = null;
   var interestMapLibre = null;
   var interestMapGraph = null;
@@ -701,6 +702,29 @@ $(function () {
     };
   }
 
+  function updateInterestMapState(graph) {
+    if (
+      !graph ||
+      !window.dash_clientside ||
+      typeof window.dash_clientside.set_props !== "function"
+    ) {
+      return;
+    }
+    var meta =
+      (graph.layout && graph.layout.meta) ||
+      (graph._fullLayout && graph._fullLayout.meta);
+    var state = meta && meta.acestaInterestState;
+    if (!state || state.ready !== true) {
+      return;
+    }
+    var stateKey = JSON.stringify(state);
+    if (stateKey === lastInterestMapState) {
+      return;
+    }
+    lastInterestMapState = stateKey;
+    window.dash_clientside.set_props("interest-map-state", {data: state});
+  }
+
   function getInterestMapCameraIntentSignature(intent) {
     if (!intent) {
       return "";
@@ -822,9 +846,11 @@ $(function () {
       }
       interestMapGraph = graph;
       interestMapAfterplotHandler = function () {
+        updateInterestMapState(graph);
         scheduleInterestMapCamera(graph);
       };
       graph.on("plotly_afterplot", interestMapAfterplotHandler);
+      updateInterestMapState(graph);
       scheduleInterestMapCamera(graph);
     }
   }

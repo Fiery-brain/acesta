@@ -1,3 +1,4 @@
+import inspect
 import time
 from functools import wraps
 from typing import Callable
@@ -71,14 +72,24 @@ def to_cache(cache_key_template: str, timeout: int = None, cache_alias: str = "d
     """
 
     def decorator(func):
+        signature = inspect.signature(func)
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             if not hasattr(wrapper, "_cache"):
                 wrapper._cache = caches[cache_alias]
 
             try:
-                cache_key = cache_key_template.format(*args, **kwargs)
-            except (IndexError, KeyError):
+                bound_arguments = signature.bind_partial(*args, **kwargs)
+                bound_arguments.apply_defaults()
+                format_arguments = dict(bound_arguments.arguments)
+                for parameter_name, parameter in signature.parameters.items():
+                    if parameter.kind == inspect.Parameter.VAR_KEYWORD:
+                        format_arguments.update(
+                            format_arguments.pop(parameter_name, {})
+                        )
+                cache_key = cache_key_template.format(*args, **format_arguments)
+            except (IndexError, KeyError, TypeError):
                 cache_key = cache_key_template
 
             if not kwargs.get("force_refresh"):

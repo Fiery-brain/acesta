@@ -2,15 +2,18 @@ import math
 from dataclasses import dataclass
 from textwrap import wrap
 
-import plotly.express as px
 import plotly.graph_objects as go
 from dash import dependencies
 from dash import html
+from dash import no_update
+from dash import Patch
+from dash.exceptions import PreventUpdate
 from django.conf import settings
 from django.contrib.humanize.templatetags.humanize import intcomma
 
 from acesta.geo.models import City
 from acesta.stats.dash.helpers.interest import get_cities
+from acesta.stats.dash.helpers.interest import get_interest_map_context_key
 from acesta.stats.dash.helpers.interest import get_map_df
 from acesta.stats.dash.helpers.interest import get_sights
 from acesta.stats.dash.helpers.interest import get_sizes
@@ -86,6 +89,19 @@ def get_interest_map_camera(map_camera: dict):
         return None
 
     return {"lat": latitude, "lon": longitude}, zoom
+
+
+def get_interest_map_patch(figure: go.Figure) -> Patch:
+    """Return only camera and overlay changes for a source selection."""
+    figure_patch = Patch()
+    figure_patch["layout"]["height"] = figure.layout.height
+    figure_patch["layout"]["meta"] = figure.layout.meta
+    figure_patch["layout"]["map"]["center"] = figure.layout.map.center.to_plotly_json()
+    figure_patch["layout"]["map"]["zoom"] = figure.layout.map.zoom
+    figure_patch["layout"]["map"]["layers"] = [
+        layer.to_plotly_json() for layer in figure.layout.map.layers
+    ]
+    return figure_patch
 
 
 @dataclass(frozen=True)
@@ -175,6 +191,54 @@ def add_home_region_layer(fig: go.Figure, home_region) -> None:
             },
             hovertemplate=get_region_hovertemplate(),
             hoverlabel=hoverlabel,
+            showscale=False,
+            showlegend=False,
+        )
+    )
+
+
+def add_country_background_trace(
+    fig: go.Figure,
+    df_map,
+    fill_color: str = COUNTRY_FILL_COLOR,
+    opacity: float = 1,
+    line_color: str = COUNTRY_LINE_COLOR,
+    line_width: float = 1,
+) -> None:
+    """Keep the static country geometry in figure data, outside later patches."""
+    fig.add_trace(
+        go.Choroplethmap(
+            geojson=df_map.geometry.__geo_interface__,
+            locations=df_map.index.tolist(),
+            z=[0] * len(df_map),
+            zmin=0,
+            zmax=1,
+            colorscale=[[0, fill_color], [1, fill_color]],
+            marker={
+                "line": {"color": line_color, "width": line_width},
+                "opacity": opacity,
+            },
+            hoverinfo="skip",
+            showscale=False,
+            showlegend=False,
+        )
+    )
+
+
+def add_home_region_outline_trace(fig: go.Figure, home_region) -> None:
+    """Draw the static home boundary without adding it to dynamic map layers."""
+    if home_region.empty:
+        return
+    fig.add_trace(
+        go.Choroplethmap(
+            geojson=home_region.geometry.__geo_interface__,
+            locations=home_region.index,
+            z=[0] * len(home_region),
+            zmin=0,
+            zmax=1,
+            colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]],
+            marker={"line": {"color": HOME_REGION_FILL_COLOR, "width": 2}},
+            hoverinfo="skip",
             showscale=False,
             showlegend=False,
         )
@@ -680,24 +744,30 @@ def get_empty_sights_balloon():
     dependencies.Output("map", "figure"),
     dependencies.Output("region-current-card-content", "children"),
     dependencies.Output("interest-map-balloons", "children"),
-    dependencies.Input("tourism-type", "value"),
-    dependencies.Input("home-area", "value"),
-    dependencies.Input("tabs-interesants", "value"),
+    dependencies.Input("interest-table-state", "data"),
     dependencies.Input("table-interesants", "active_cell"),
-    dependencies.Input("home-area-key", "data"),
-    dependencies.Input("interest-map-viewport", "data"),
+    dependencies.State("tourism-type", "value"),
+    dependencies.State("home-area", "value"),
+    dependencies.State("tabs-interesants", "value"),
+    dependencies.State("home-area-key", "data"),
+    dependencies.State("interest-map-viewport", "data"),
     dependencies.State("table-interesants", "data"),
     dependencies.State("interest-map-camera", "data"),
+    dependencies.State("interest-session-hydrated", "data"),
+    dependencies.State("interest-map-state", "data"),
 )
 def update_map(
+    table_state: dict,
+    active_cell: dict,
     tourism_type: str,
     home_area: str,
     interesant_area: str,
-    active_cell: dict,
     target_key: str,
     map_viewport: dict,
     table_data: list,
     map_camera: dict = None,
+    hydrated: bool = False,
+    current_map_state: dict = None,
     *args,
     **kwargs,
 ) -> tuple:
@@ -715,10 +785,38 @@ def update_map(
     :return: dcc.Graph
     """
     user = kwargs.get("user")
+    if not table_state:
+        raise PreventUpdate
+
     home_area, interesant_area, tourism_type = normalize_interest_context(
         user, home_area, interesant_area, tourism_type
     )
     current_region = user.current_region
+    target_key = resolve_target_key(
+        user,
+        home_area,
+        tourism_type,
+        target_key,
+    )
+    map_context_key = get_interest_map_context_key(
+        current_region.code,
+        home_area,
+        interesant_area,
+        tourism_type,
+        target_key,
+    )
+    expected_table_context = {
+        "homeArea": home_area,
+        "interesantArea": interesant_area,
+        "tourismType": tourism_type,
+        "targetKey": target_key,
+        "mapContextKey": map_context_key,
+    }
+    if any(
+        table_state.get(key) != value for key, value in expected_table_context.items()
+    ):
+        raise PreventUpdate
+
     city_source_mode = interesant_area == settings.AREA_CITIES
     city_source_region_mode = home_area == settings.AREA_REGIONS and city_source_mode
     city_source_point_mode = (
@@ -760,12 +858,6 @@ def update_map(
     if city_source_mode and user.is_extended:
         city_heatmap_items = get_city_heatmap_items(table_data)
 
-    target_key = resolve_target_key(
-        user,
-        home_area,
-        tourism_type,
-        target_key,
-    )
     target_kind, target_identifier = parse_entity_key(target_key)
     home_region_entity, home_region = get_home_region_entity(df_map, current_region)
     target = get_target_entity(
@@ -849,14 +941,23 @@ def update_map(
         "center": overlay.center,
         "zoom": overlay.zoom,
     }
+    source_row_id = active_cell.get("row_id") if active_cell else None
+    next_map_state = {
+        "ready": True,
+        "mapContextKey": map_context_key,
+        "sourceRowId": source_row_id,
+        "targetKey": target_key,
+    }
 
     def get_map_figure():
+        map_layers = []
         if city_source_region_mode:
             fig = go.Figure()
-            map_layers = get_country_background_layers(df_map)
+            add_country_background_trace(fig, df_map)
         elif city_source_point_mode:
             fig = go.Figure()
-            map_layers = get_country_background_layers(
+            add_country_background_trace(
+                fig,
                 df_map,
                 fill_color="#dbfffa",
                 opacity=0.45,
@@ -865,45 +966,46 @@ def update_map(
             )
         else:
             region_customdata, region_hoverlabel = get_region_hover_data(df_map)
-            fig = px.choropleth_map(
-                df_map,
-                geojson=df_map.geometry,
-                locations=df_map.index,
-                color=base_color,
-                color_continuous_scale=(
-                    popularity_scale if home_area == settings.AREA_REGIONS else None
-                ),
-                color_discrete_sequence=(
-                    None
-                    if home_area == settings.AREA_REGIONS
-                    else [
-                        "#dbfffa",
-                    ]
-                ),
-                range_color=(
-                    popularity_range
-                    if home_area == settings.AREA_REGIONS
-                    else (20, getattr(df_map, "qty").max())
-                ),
-                map_style=(
-                    "white-bg"
-                    if home_area == settings.AREA_REGIONS
-                    else "open-street-map"
-                ),
-                zoom=overlay.zoom,
-                center=overlay.center,
-                opacity=1 if home_area == settings.AREA_REGIONS else 0.45,
+            region_mode = home_area == settings.AREA_REGIONS
+            z_values = df_map[base_color].tolist() if region_mode else [0] * len(df_map)
+            colorscale = (
+                popularity_scale if region_mode else [[0, "#dbfffa"], [1, "#dbfffa"]]
+            )
+            zmin, zmax = popularity_range if region_mode else (0, 1)
+            fig = go.Figure(
+                go.Choroplethmap(
+                    geojson=df_map.geometry.__geo_interface__,
+                    locations=df_map.index.tolist(),
+                    z=z_values,
+                    zmin=zmin,
+                    zmax=zmax,
+                    colorscale=colorscale,
+                    customdata=region_customdata,
+                    marker={
+                        "line": {
+                            "color": "#d3dde0" if region_mode else "#000000",
+                            "width": 0.5,
+                        },
+                        "opacity": 1 if region_mode else 0.45,
+                    },
+                    hovertemplate=get_region_hovertemplate(),
+                    hoverlabel=region_hoverlabel,
+                    showscale=False,
+                    showlegend=False,
+                )
+            )
+            fig.update_layout(
+                map={
+                    "style": "white-bg" if region_mode else "open-street-map",
+                    "zoom": overlay.zoom,
+                    "center": overlay.center,
+                },
                 height=map_height,
-                custom_data=["name", "qty_str", "ppt_str"],
             )
             fig.update_traces(
                 marker=dict(
                     line=dict(
-                        color=(
-                            "#d3dde0"
-                            if home_area == settings.AREA_REGIONS
-                            else "#000000"
-                        ),
+                        color="#d3dde0" if region_mode else "#000000",
                         width=0.5,
                     ),
                 ),
@@ -911,28 +1013,14 @@ def update_map(
                 customdata=region_customdata,
                 hoverlabel=region_hoverlabel,
             )
-            fig.update_coloraxes(showscale=False)
-            if home_area == settings.AREA_REGIONS:
+            if region_mode:
                 add_home_region_layer(fig, home_region)
-            map_layers = []
 
-        home_region_source = None
         if not home_region.empty:
-            home_region_source = home_region.geometry.__geo_interface__
             if city_source_region_mode:
-                map_layers.append(
-                    {
-                        "source": home_region_source,
-                        "sourcetype": "geojson",
-                        "type": "fill",
-                        "color": HOME_REGION_FILL_COLOR,
-                        "opacity": 0.82,
-                        "below": "traces",
-                    }
-                )
-            map_layers.extend(
-                get_home_region_outline_layers(home_region_source, home_area)
-            )
+                add_home_region_layer(fig, home_region)
+            if city_source_region_mode or home_area != settings.AREA_REGIONS:
+                add_home_region_outline_trace(fig, home_region)
 
         map_layers.extend(overlay.layers)
 
@@ -1028,7 +1116,11 @@ def update_map(
             )
         fig.update_layout(
             height=map_height,
-            meta={"acestaInterestCamera": camera_intent},
+            meta={
+                "acestaInterestCamera": camera_intent,
+                "acestaInterestContext": map_context_key,
+                "acestaInterestState": next_map_state,
+            },
             hoverlabel={
                 "font": {"color": "#FFFFFF"},
                 "bordercolor": "#FFFFFF",
@@ -1043,8 +1135,13 @@ def update_map(
     if home_area == settings.AREA_SIGHTS and not sights:
         balloons.append(get_empty_sights_balloon())
 
-    return (
-        get_map_figure(),
-        get_home_region_card(current_region),
-        balloons,
+    figure = get_map_figure()
+    baseline_matches = bool(
+        current_map_state
+        and current_map_state.get("ready") is True
+        and current_map_state.get("mapContextKey") == map_context_key
     )
+    if hydrated and baseline_matches:
+        return get_interest_map_patch(figure), no_update, balloons
+
+    return figure, get_home_region_card(current_region), balloons
