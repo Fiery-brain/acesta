@@ -166,6 +166,31 @@ def initialize_interest_session(interval, persisted_state: dict, **kwargs) -> di
     return get_restorable_interest_state(persisted_state, kwargs.get("user"))
 
 
+@interest_app.callback(
+    dependencies.Output("table-interesants", "sort_by"),
+    dependencies.Input("interest-initial-state", "data"),
+)
+def restore_interest_sort(initial_state: dict) -> list:
+    if not initial_state:
+        raise PreventUpdate
+    return normalize_interest_sort(initial_state.get("sortBy"))
+
+
+@interest_app.callback(
+    dependencies.Output("table-interesants", "data"),
+    dependencies.Output("table-interesants", "selected_cells"),
+    dependencies.Output("table-interesants", "active_cell"),
+    dependencies.Output("interest-table-state", "data"),
+    dependencies.Input("tourism-type", "value"),
+    dependencies.Input("home-area", "value"),
+    dependencies.Input("tabs-interesants", "value"),
+    dependencies.Input("map", "clickData"),
+    dependencies.Input("home-area-key", "data"),
+    dependencies.Input("table-interesants", "sort_by"),
+    dependencies.State("table-interesants", "active_cell"),
+    dependencies.State("interest-initial-state", "data"),
+    dependencies.State("interest-session-hydrated", "data"),
+)
 def update_interest(
     tourism_type: str,
     home_area: str,
@@ -198,8 +223,6 @@ def update_interest(
     selected_source_id = None
     clicked_target_key = None
     trigger = get_callback_triggered_id(kwargs.get("callback_context"))
-    if trigger == "interest-initial-state" and initial_state:
-        sort_by = initial_state.get("sortBy")
     sort_by = normalize_interest_sort(sort_by)
     clicked_key = get_click_entity_key(map_data) if trigger == "map" else None
     clicked_kind, clicked_identifier = parse_entity_key(clicked_key)
@@ -280,49 +303,6 @@ def update_interest(
         ),
     }
     return table_data, selected_cells, active_cell, table_state
-
-
-@interest_app.callback(
-    dependencies.Output("table-interesants", "data"),
-    dependencies.Output("table-interesants", "selected_cells"),
-    dependencies.Output("table-interesants", "active_cell"),
-    dependencies.Output("interest-table-state", "data"),
-    dependencies.Output("table-interesants", "sort_by"),
-    dependencies.Input("tourism-type", "value"),
-    dependencies.Input("home-area", "value"),
-    dependencies.Input("tabs-interesants", "value"),
-    dependencies.Input("map", "clickData"),
-    dependencies.Input("home-area-key", "data"),
-    dependencies.Input("table-interesants", "sort_by"),
-    dependencies.Input("interest-initial-state", "data"),
-    dependencies.State("table-interesants", "active_cell"),
-    dependencies.State("interest-session-hydrated", "data"),
-)
-def update_interest_callback(
-    tourism_type: str,
-    home_area: str,
-    interesant_area: str,
-    map_data: dict,
-    target_key: str,
-    sort_by: list,
-    initial_state: dict,
-    current_active_cell: dict,
-    hydrated: bool = False,
-    **kwargs,
-):
-    result = update_interest(
-        tourism_type,
-        home_area,
-        interesant_area,
-        map_data,
-        target_key,
-        sort_by,
-        current_active_cell,
-        initial_state,
-        hydrated,
-        **kwargs,
-    )
-    return (*result, result[3]["sortBy"])
 
 
 @interest_app.callback(

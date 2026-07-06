@@ -2863,27 +2863,45 @@ class InterestTargetStateTest(test.TestCase):
                 }
             ]
         )
-        with mock.patch.object(interest_module, "get_interest_table_rows"):
-            with mock.patch.object(interest_module, "get_ppt_df", return_value=table):
-                _, selected_cells, active_cell, _ = interest_module.update_interest(
-                    "",
-                    "regions",
-                    "cities",
-                    {"points": [{"id": "source-cities_101"}]},
-                    "regions_0",
-                    [],
-                    None,
-                    user=SimpleNamespace(
-                        current_region=SimpleNamespace(code="79"),
-                        is_extended=True,
-                    ),
-                    callback_context=SimpleNamespace(
-                        triggered=[{"prop_id": "map.clickData"}]
-                    ),
-                )
+        sort_states = (
+            [],
+            [{"column_id": "qty_display", "direction": "desc"}],
+            [
+                {"column_id": "qty_display", "direction": "desc"},
+                {"column_id": "ppt_display", "direction": "asc"},
+            ],
+        )
+        for sort_by in sort_states:
+            with self.subTest(sort_by=sort_by):
+                with mock.patch.object(interest_module, "get_interest_table_rows"):
+                    with mock.patch.object(
+                        interest_module, "get_ppt_df", return_value=table
+                    ):
+                        (
+                            _,
+                            selected_cells,
+                            active_cell,
+                            table_state,
+                        ) = interest_module.update_interest(
+                            "",
+                            "regions",
+                            "cities",
+                            {"points": [{"id": "source-cities_101"}]},
+                            "regions_0",
+                            sort_by,
+                            None,
+                            user=SimpleNamespace(
+                                current_region=SimpleNamespace(code="79"),
+                                is_extended=True,
+                            ),
+                            callback_context=SimpleNamespace(
+                                triggered=[{"prop_id": "map.clickData"}]
+                            ),
+                        )
 
-        self.assertEqual(active_cell["row_id"], "101")
-        self.assertEqual(len(selected_cells), 3)
+                self.assertEqual(active_cell["row_id"], "101")
+                self.assertEqual(len(selected_cells), 3)
+                self.assertEqual(table_state["sortBy"], sort_by)
 
     def test_region_click_selects_source_without_replacing_point_target(self):
         from unittest import mock

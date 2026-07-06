@@ -15,6 +15,28 @@ from acesta.geo.models import Region
 
 
 class InterestPerformanceContractTest(unittest.TestCase):
+    def test_map_table_callback_does_not_write_sort_state(self):
+        from acesta.stats.dash.interest.app import interest_app
+
+        callback_set = next(
+            callback
+            for callback, function in interest_app._callback_sets
+            if function.__name__ == "update_interest"
+        )
+        outputs = callback_set["output"]
+        output_properties = {
+            (output.component_id, output.component_property) for output in outputs
+        }
+
+        self.assertNotIn(("table-interesants", "sort_by"), output_properties)
+        self.assertIn(
+            ("map", "clickData"),
+            {
+                (input_.component_id, input_.component_property)
+                for input_ in callback_set["inputs"]
+            },
+        )
+
     def test_geojson_is_read_once_and_callers_receive_copies(self):
         import pandas as pd
 
@@ -440,6 +462,17 @@ class PopularityTableTrendTest(TestCase):
 
 
 class InterestTableColumnsTest(unittest.TestCase):
+    def test_sort_restoration_keeps_multi_and_empty_states(self):
+        from acesta.stats.dash.interest.interest import restore_interest_sort
+
+        multi_sort = [
+            {"column_id": "qty_display", "direction": "desc"},
+            {"column_id": "ppt_display", "direction": "asc"},
+        ]
+
+        self.assertEqual(restore_interest_sort({"sortBy": multi_sort}), multi_sort)
+        self.assertEqual(restore_interest_sort({"sortBy": []}), [])
+
     def test_empty_sort_stays_visually_unsorted(self):
         from acesta.stats.dash.helpers.interest import normalize_interest_sort
 
