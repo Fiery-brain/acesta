@@ -1,3 +1,4 @@
+import json
 import unittest
 from datetime import date
 from pathlib import Path
@@ -1040,7 +1041,25 @@ class RegionMapCallbackTest(TestCase):
         self.assertEqual(map_state["mapContextKey"], map_context_key)
 
         with mock.patch.object(
-            map_module, "get_map_df", return_value=self.regions.copy()
+            map_module,
+            "get_geojson_regions",
+            return_value=self.regions.copy(),
+        ), mock.patch.object(
+            map_module,
+            "get_map_df",
+            side_effect=AssertionError("Patch must not build the full map frame"),
+        ), mock.patch.object(
+            map_module,
+            "get_cities",
+            side_effect=AssertionError("Patch must not load every city"),
+        ), mock.patch.object(
+            map_module,
+            "get_sights",
+            side_effect=AssertionError("Patch must not load every sight"),
+        ), mock.patch.object(
+            map_module.go,
+            "Figure",
+            side_effect=AssertionError("Patch must not create a Plotly figure"),
         ):
             patch, card, _ = map_module.update_map(
                 table_state,
@@ -1063,6 +1082,10 @@ class RegionMapCallbackTest(TestCase):
 
         self.assertEqual(patch.__class__.__name__, "Patch")
         self.assertIs(card, map_module.no_update)
+        patch_size = len(
+            json.dumps(patch.to_plotly_json(), ensure_ascii=False).encode("utf-8")
+        )
+        self.assertLess(patch_size, 50_000)
 
     def test_sight_target_without_source_preserves_client_camera(self):
         from acesta.stats.dash.interest import map as map_module
@@ -1140,6 +1163,73 @@ class RegionMapCallbackTest(TestCase):
             figure.layout.meta["acestaInterestCamera"]["zoom"],
             client_camera["zoom"],
         )
+
+    def test_city_patch_loads_only_selected_target_and_source(self):
+        from acesta.stats.dash.interest import map as map_module
+
+        region = SimpleNamespace(
+            code="40",
+            title="Калужская область",
+            center_lat=54,
+            center_lon=36,
+            zoom_regions=3.5,
+            zoom_cities=5,
+        )
+        target_city = SimpleNamespace(
+            pk=10,
+            title="Калуга",
+            lon=36.26,
+            lat=54.51,
+        )
+        source_city = SimpleNamespace(
+            pk=20,
+            title="Москва",
+            lon=37.62,
+            lat=55.75,
+        )
+        table_data = [
+            {
+                "id": "20",
+                "code": "20",
+                "code__title": "Москва",
+                "qty": 2000,
+                "ppt": 2.5,
+            }
+        ]
+        map_context_key = "40|cities|cities||cities_10"
+
+        with mock.patch.object(
+            map_module,
+            "get_geojson_regions",
+            return_value=self.regions.loc[["40"]].copy(),
+        ), mock.patch.object(
+            map_module,
+            "get_city",
+            side_effect=[target_city, source_city],
+        ) as get_city, mock.patch.object(
+            map_module,
+            "get_cities",
+            side_effect=AssertionError("Patch must not load every city"),
+        ):
+            patch, balloons = map_module.get_fast_interest_map_patch(
+                region,
+                settings.AREA_CITIES,
+                settings.AREA_CITIES,
+                "",
+                "cities_10",
+                map_context_key,
+                {"width": 700, "height": 500},
+                None,
+                table_data,
+                {"row": 0, "row_id": "20"},
+            )
+
+        self.assertEqual(
+            get_city.call_args_list,
+            [mock.call("10", "40"), mock.call("20")],
+        )
+        self.assertEqual(patch.__class__.__name__, "Patch")
+        self.assertEqual(len(balloons), 1)
 
     def test_sight_connection_keeps_automatic_camera(self):
         from acesta.stats.dash.interest import map as map_module

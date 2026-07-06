@@ -1,4 +1,6 @@
+import logging
 import math
+import time
 from dataclasses import dataclass
 from textwrap import wrap
 
@@ -13,8 +15,11 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 
 from acesta.geo.models import City
 from acesta.stats.dash.helpers.interest import get_cities
+from acesta.stats.dash.helpers.interest import get_city
+from acesta.stats.dash.helpers.interest import get_geojson_regions
 from acesta.stats.dash.helpers.interest import get_interest_map_context_key
 from acesta.stats.dash.helpers.interest import get_map_df
+from acesta.stats.dash.helpers.interest import get_sight
 from acesta.stats.dash.helpers.interest import get_sights
 from acesta.stats.dash.helpers.interest import get_sizes
 from acesta.stats.dash.helpers.interest import normalize_interest_context
@@ -46,6 +51,7 @@ POPULARITY_HOVER_COLORS = {
 DEFAULT_INTEREST_MAP_HEIGHT = 450
 MIN_INTEREST_MAP_HEIGHT = 120
 MAX_INTEREST_MAP_HEIGHT = 2000
+logger = logging.getLogger(__name__)
 
 
 def get_interest_map_height(map_viewport: dict) -> int:
@@ -101,6 +107,26 @@ def get_interest_map_patch(figure: go.Figure) -> Patch:
     figure_patch["layout"]["map"]["layers"] = [
         layer.to_plotly_json() for layer in figure.layout.map.layers
     ]
+    return figure_patch
+
+
+def get_interest_overlay_patch(
+    map_height: int,
+    camera_intent: dict,
+    map_state: dict,
+    overlay,
+) -> Patch:
+    """Build a selection patch directly, without creating a Plotly figure."""
+    figure_patch = Patch()
+    figure_patch["layout"]["height"] = map_height
+    figure_patch["layout"]["meta"] = {
+        "acestaInterestCamera": camera_intent,
+        "acestaInterestContext": map_state["mapContextKey"],
+        "acestaInterestState": map_state,
+    }
+    figure_patch["layout"]["map"]["center"] = overlay.center
+    figure_patch["layout"]["map"]["zoom"] = overlay.zoom
+    figure_patch["layout"]["map"]["layers"] = list(overlay.layers)
     return figure_patch
 
 
@@ -740,6 +766,168 @@ def get_empty_sights_balloon():
     )
 
 
+def get_fast_interest_map_patch(
+    current_region,
+    home_area: str,
+    interesant_area: str,
+    tourism_type: str,
+    target_key: str,
+    map_context_key: str,
+    map_viewport: dict,
+    map_camera: dict,
+    table_data: list,
+    active_cell: dict,
+):
+    """Build only selection-dependent layers for an existing map baseline."""
+    selected_row = get_selected_interest_row(active_cell, table_data)
+    selected_code = selected_row.get("code") if selected_row else None
+    region_codes = {current_region.code}
+    if interesant_area == settings.AREA_REGIONS and selected_code not in (None, ""):
+        region_codes.add(selected_code)
+
+    region_frame = get_geojson_regions(region_codes)
+    region_frame["qty"] = 0
+    region_frame["ppt"] = float("nan")
+    home_region_entity, _ = get_home_region_entity(region_frame, current_region)
+
+    target_kind, target_identifier = parse_entity_key(target_key)
+    cities = []
+    sights = []
+    if (
+        home_area == settings.AREA_CITIES
+        and target_kind == settings.AREA_CITIES
+        and target_identifier not in (None, "0")
+    ):
+        target_city = get_city(target_identifier, current_region.code)
+        if target_city is not None:
+            cities.append(target_city)
+    elif (
+        home_area == settings.AREA_SIGHTS
+        and target_kind == settings.AREA_SIGHTS
+        and target_identifier not in (None, "0")
+    ):
+        target_sight = get_sight(
+            current_region.code,
+            target_identifier,
+            tourism_type,
+        )
+        if target_sight is not None:
+            sights.append(target_sight)
+
+    if interesant_area == settings.AREA_CITIES and selected_code not in (None, ""):
+        if not any(str(city.pk) == str(selected_code) for city in cities):
+            source_city = get_city(selected_code)
+            if source_city is not None:
+                cities.append(source_city)
+
+    target = get_target_entity(
+        target_key,
+        home_area,
+        home_region_entity,
+        cities,
+        sights,
+    )
+    if (
+        home_area in (settings.AREA_CITIES, settings.AREA_SIGHTS)
+        and target_kind == home_area
+        and target_identifier == "0"
+    ):
+        target = None
+    if target is not None and home_area in (
+        settings.AREA_CITIES,
+        settings.AREA_SIGHTS,
+    ):
+        target = target.with_balloon(None)
+
+    source = get_source_entity(
+        active_cell,
+        table_data,
+        interesant_area,
+        region_frame,
+        cities,
+    )
+    connections = []
+    if source is not None and target is not None:
+        if source.key == target.key and target.kind == settings.AREA_REGIONS:
+            content = source.balloon
+            source = source.with_balloon(
+                BalloonContent(
+                    title="среди жителей",
+                    eyebrow="Популярность домашнего региона",
+                    details=content.details,
+                    tone=content.tone,
+                )
+            )
+        connections.append(MapConnection(source=source, target=target))
+
+    default_center = {
+        "lat": current_region.center_lat,
+        "lon": current_region.center_lon,
+    }
+    default_zoom = (
+        current_region.zoom_regions
+        if home_area == settings.AREA_REGIONS
+        else current_region.zoom_cities
+    )
+    persistent_entities = []
+    if target is not None and target.kind != settings.AREA_REGIONS:
+        persistent_entities.append(target)
+        saved_camera = get_interest_map_camera(map_camera)
+        preserve_camera = (
+            home_area == settings.AREA_SIGHTS
+            and source is None
+            and target.kind == settings.AREA_SIGHTS
+            and saved_camera is not None
+        )
+        if preserve_camera:
+            default_center, default_zoom = saved_camera
+        else:
+            default_center = {"lat": target.anchor[1], "lon": target.anchor[0]}
+
+    map_height = get_interest_map_height(map_viewport)
+    overlay = build_connection_overlay(
+        connections,
+        map_viewport,
+        map_height,
+        default_center,
+        default_zoom,
+        persistent_entities,
+    )
+    camera_key = "|".join(
+        str(value or "")
+        for value in (
+            home_area,
+            interesant_area,
+            tourism_type,
+            source.key if source is not None else "",
+            target.key if target is not None else "",
+            (map_viewport or {}).get("width"),
+            (map_viewport or {}).get("height"),
+            (map_viewport or {}).get("topInset"),
+        )
+    )
+    camera_intent = {
+        "key": camera_key,
+        "center": overlay.center,
+        "zoom": overlay.zoom,
+    }
+    map_state = {
+        "ready": True,
+        "mapContextKey": map_context_key,
+        "sourceRowId": active_cell.get("row_id") if active_cell else None,
+        "targetKey": target_key,
+    }
+    return (
+        get_interest_overlay_patch(
+            map_height,
+            camera_intent,
+            map_state,
+            overlay,
+        ),
+        list(overlay.balloons),
+    )
+
+
 @interest_app.callback(
     dependencies.Output("map", "figure"),
     dependencies.Output("region-current-card-content", "children"),
@@ -784,6 +972,7 @@ def update_map(
     :param kwargs: dict
     :return: dcc.Graph
     """
+    started_at = time.perf_counter()
     user = kwargs.get("user")
     if not table_state:
         raise PreventUpdate
@@ -816,6 +1005,31 @@ def update_map(
         table_state.get(key) != value for key, value in expected_table_context.items()
     ):
         raise PreventUpdate
+
+    baseline_matches = bool(
+        current_map_state
+        and current_map_state.get("ready") is True
+        and current_map_state.get("mapContextKey") == map_context_key
+    )
+    if hydrated and baseline_matches:
+        patch, balloons = get_fast_interest_map_patch(
+            current_region,
+            home_area,
+            interesant_area,
+            tourism_type,
+            target_key,
+            map_context_key,
+            map_viewport,
+            map_camera,
+            table_data,
+            active_cell,
+        )
+        logger.info(
+            "interest_map branch=patch context=%s elapsed_ms=%.1f",
+            map_context_key,
+            (time.perf_counter() - started_at) * 1000,
+        )
+        return patch, no_update, balloons
 
     city_source_mode = interesant_area == settings.AREA_CITIES
     city_source_region_mode = home_area == settings.AREA_REGIONS and city_source_mode
@@ -1136,12 +1350,16 @@ def update_map(
         balloons.append(get_empty_sights_balloon())
 
     figure = get_map_figure()
-    baseline_matches = bool(
-        current_map_state
-        and current_map_state.get("ready") is True
-        and current_map_state.get("mapContextKey") == map_context_key
+    if not hydrated:
+        full_reason = "hydrating"
+    elif not current_map_state or current_map_state.get("ready") is not True:
+        full_reason = "baseline_not_ready"
+    else:
+        full_reason = "context_changed"
+    logger.info(
+        "interest_map branch=full reason=%s context=%s elapsed_ms=%.1f",
+        full_reason,
+        map_context_key,
+        (time.perf_counter() - started_at) * 1000,
     )
-    if hydrated and baseline_matches:
-        return get_interest_map_patch(figure), no_update, balloons
-
     return figure, get_home_region_card(current_region), balloons

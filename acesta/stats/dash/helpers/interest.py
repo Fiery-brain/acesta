@@ -221,6 +221,14 @@ def get_geojson() -> gpd.GeoDataFrame:
     return _get_geojson_cached().copy()
 
 
+def get_geojson_regions(codes) -> gpd.GeoDataFrame:
+    """Return only requested regions without copying the full country frame."""
+    normalized_codes = {str(code) for code in codes if code not in (None, "")}
+    geojson = _get_geojson_cached()
+    mask = geojson.index.astype(str).isin(normalized_codes)
+    return geojson.loc[mask].copy()
+
+
 def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
     """
     Returns popularity as a DataFrame
@@ -368,6 +376,31 @@ def get_cities(code: str) -> models.QuerySet:
     :return: models.QuerySet
     """
     return City.objects.filter(code=code)
+
+
+def get_city(city_id, code: str = None):
+    """Return one city, optionally constrained to the current region."""
+    filters = {"pk": city_id}
+    if code is not None:
+        filters["code"] = code
+    return City.objects.only("id", "title", "lat", "lon").filter(**filters).first()
+
+
+def get_sight(region: str, sight_id, tourism_type: str):
+    """Return one published sight valid for the current map context."""
+    filters = {
+        "code": region,
+        "pk": sight_id,
+        "is_pub": True,
+    }
+    if tourism_type:
+        filters["group__tourism_type"] = tourism_type
+    return (
+        Sight.objects.only("id", "address", "group", "title", "lon", "lat")
+        .filter(**filters)
+        .prefetch_related("group")
+        .first()
+    )
 
 
 def get_sizes(values: list, min_size: int = 10, max_size: int = 30) -> list:

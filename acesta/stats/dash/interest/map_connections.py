@@ -129,20 +129,6 @@ def _normalize_longitude(longitude: float, reference: float) -> float:
     return reference + ((longitude - reference + 180) % 360) - 180
 
 
-def _iter_geometry_coordinates(coordinates):
-    if (
-        isinstance(coordinates, (list, tuple))
-        and len(coordinates) >= 2
-        and isinstance(coordinates[0], (int, float))
-        and isinstance(coordinates[1], (int, float))
-    ):
-        yield float(coordinates[0]), float(coordinates[1])
-        return
-
-    for coordinate in coordinates:
-        yield from _iter_geometry_coordinates(coordinate)
-
-
 def _project_point(longitude: float, latitude: float) -> Coordinate:
     latitude = max(-MAX_MERCATOR_LATITUDE, min(MAX_MERCATOR_LATITUDE, latitude))
     latitude_radians = math.radians(latitude)
@@ -166,15 +152,19 @@ def create_region_entity(
 ) -> MapEntity:
     """Create an entity whose anchor is guaranteed to lie inside its polygon."""
     anchor = geometry.representative_point()
-    coordinates = tuple(
-        _iter_geometry_coordinates(geometry.__geo_interface__.get("coordinates", []))
+    min_x, min_y, max_x, max_y = geometry.bounds
+    bounds = (
+        (float(min_x), float(min_y)),
+        (float(min_x), float(max_y)),
+        (float(max_x), float(max_y)),
+        (float(max_x), float(min_y)),
     )
     return MapEntity(
         kind="regions",
         identifier=str(identifier),
         title=title,
         anchor=(float(anchor.x), float(anchor.y)),
-        extent=coordinates,
+        extent=bounds,
         geometry=geometry,
         balloon=balloon,
     )
