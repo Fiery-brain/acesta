@@ -238,7 +238,14 @@ class PopularityTableTrendTest(TestCase):
             },
         ]
 
-        growth, decline, equal, missing = self.build_table(RegionRegionPopularity, rows)
+        table = {
+            row["code__title"]: row
+            for row in self.build_table(RegionRegionPopularity, rows)
+        }
+        growth = table["Рост"]
+        decline = table["Снижение"]
+        equal = table["Без изменений"]
+        missing = table["Без истории"]
 
         self.assertIn("120", growth["qty_display"])
         self.assertIn("150%", growth["ppt_display"])
@@ -310,6 +317,47 @@ class PopularityTableTrendTest(TestCase):
         self.assertEqual([row["qty"] for row in ascending], [9, 100])
         self.assertEqual([row["qty"] for row in descending], [100, 9])
 
+    def test_multiple_columns_sort_in_click_order(self):
+        from acesta.stats.models import RegionRegionPopularity
+
+        rows = [
+            {
+                "code__title": "Первый",
+                "code": "01",
+                "qty": 100,
+                "ppt": 90,
+                "modified": date(2026, 6, 28),
+                "history": [],
+            },
+            {
+                "code__title": "Второй",
+                "code": "02",
+                "qty": 200,
+                "ppt": 80,
+                "modified": date(2026, 6, 28),
+                "history": [],
+            },
+            {
+                "code__title": "Третий",
+                "code": "03",
+                "qty": 200,
+                "ppt": 120,
+                "modified": date(2026, 6, 28),
+                "history": [],
+            },
+        ]
+
+        sorted_rows = self.build_table(
+            RegionRegionPopularity,
+            rows,
+            [
+                {"column_id": "qty_display", "direction": "desc"},
+                {"column_id": "ppt_display", "direction": "desc"},
+            ],
+        )
+
+        self.assertEqual([row["code"] for row in sorted_rows], ["03", "02", "01"])
+
     def test_name_column_sorts_alphabetically_in_both_directions(self):
         from acesta.stats.models import RegionRegionPopularity
 
@@ -364,8 +412,57 @@ class PopularityTableTrendTest(TestCase):
             ["Ярославская область", "Алтайский край", "Алтайский край"],
         )
 
+    def test_empty_sort_uses_unmarked_alphabetical_fallback(self):
+        from acesta.stats.models import RegionRegionPopularity
+
+        rows = [
+            {
+                "code__title": title,
+                "code": code,
+                "qty": 100,
+                "ppt": 100,
+                "modified": date(2026, 6, 28),
+                "history": [],
+            }
+            for title, code in [
+                ("Ярославль", "76"),
+                ("Абакан", "19"),
+                ("Абакан", "01"),
+            ]
+        ]
+
+        table = self.build_table(RegionRegionPopularity, rows, [])
+
+        self.assertEqual(
+            [(row["code__title"], row["code"]) for row in table],
+            [("Абакан", "01"), ("Абакан", "19"), ("Ярославль", "76")],
+        )
+
 
 class InterestTableColumnsTest(unittest.TestCase):
+    def test_empty_sort_stays_visually_unsorted(self):
+        from acesta.stats.dash.helpers.interest import normalize_interest_sort
+
+        self.assertEqual(normalize_interest_sort([]), [])
+
+    def test_sort_normalization_keeps_valid_unique_columns(self):
+        from acesta.stats.dash.helpers.interest import normalize_interest_sort
+
+        self.assertEqual(
+            normalize_interest_sort(
+                [
+                    {"column_id": "qty", "direction": "desc"},
+                    {"column_id": "ppt_display", "direction": "asc"},
+                    {"column_id": "qty_display", "direction": "asc"},
+                    {"column_id": "unknown", "direction": "desc"},
+                ]
+            ),
+            [
+                {"column_id": "qty_display", "direction": "desc"},
+                {"column_id": "ppt_display", "direction": "asc"},
+            ],
+        )
+
     def test_column_heading_matches_selected_source_area(self):
         from acesta.stats.dash.interest.ui import update_interest_table_columns
 

@@ -1398,6 +1398,24 @@ $(function () {
     });
   }
 
+  function initializeInterestSortTooltips() {
+    var tooltipText =
+      "Сортировка переключается по кругу: по возрастанию → по убыванию → без сортировки.";
+    var sortButtons = interest.querySelectorAll(
+      '#table-interesants th:not([data-dash-column="history_action"]) .column-header--sort'
+    );
+
+    sortButtons.forEach(function (sortButton) {
+      if (sortButton.dataset.interestSortTooltip === "true") {
+        return;
+      }
+
+      sortButton.setAttribute("data-bs-toggle", "tooltip");
+      sortButton.setAttribute("title", tooltipText);
+      sortButton.dataset.interestSortTooltip = "true";
+    });
+  }
+
   function initializeUpdatedLink() {
     var updatedLink = interest.querySelector("#updated-link");
 
@@ -1526,6 +1544,7 @@ $(function () {
       }
     });
 
+    initializeInterestSortTooltips();
     initializeInterestTooltips(interest);
     initializeUpdatedLink();
     initializeRegionPotentialIcons();
@@ -1546,6 +1565,8 @@ $(function () {
 
   initializeUpdatedLink();
   initializeRegionPotentialIcons();
+  initializeInterestSortTooltips();
+  initializeInterestTooltips(interest);
   scrollInterestTableToSelectedRow();
   initializeRegionCard();
   initializeInterestMapViewport();
@@ -1556,6 +1577,7 @@ $(function () {
   $(window).on("load", function() {
     initializeUpdatedLink();
     initializeRegionPotentialIcons();
+    initializeInterestSortTooltips();
     initializeInterestTooltips(interest);
     scrollInterestTableToSelectedRow();
     initializeRegionCard();

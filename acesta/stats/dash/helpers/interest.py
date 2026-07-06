@@ -77,16 +77,29 @@ def normalize_interest_context(
 
 def normalize_interest_sort(sort_by: list) -> list:
     """Return a safe DataTable sort definition restored from the browser."""
-    if not isinstance(sort_by, list) or not sort_by:
+    if sort_by == []:
+        return []
+    if not isinstance(sort_by, list):
         return [DEFAULT_INTEREST_SORT.copy()]
-    item = sort_by[0]
-    if not isinstance(item, dict):
-        return [DEFAULT_INTEREST_SORT.copy()]
-    column_id = INTEREST_SORT_ALIASES.get(item.get("column_id"), item.get("column_id"))
-    direction = item.get("direction")
-    if column_id not in INTEREST_SORT_COLUMNS or direction not in {"asc", "desc"}:
-        return [DEFAULT_INTEREST_SORT.copy()]
-    return [{"column_id": column_id, "direction": direction}]
+
+    normalized = []
+    seen_columns = set()
+    for item in sort_by:
+        if not isinstance(item, dict):
+            continue
+        column_id = INTEREST_SORT_ALIASES.get(
+            item.get("column_id"), item.get("column_id")
+        )
+        direction = item.get("direction")
+        if (
+            column_id not in INTEREST_SORT_COLUMNS
+            or direction not in {"asc", "desc"}
+            or column_id in seen_columns
+        ):
+            continue
+        normalized.append({"column_id": column_id, "direction": direction})
+        seen_columns.add(column_id)
+    return normalized or [DEFAULT_INTEREST_SORT.copy()]
 
 
 def get_interest_map_context_key(
@@ -321,16 +334,22 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
     # keeps the selected region attached to its code when the table is sorted.
     df["id"] = df["code"]
 
-    if len(sort_by) and sort_by[0].get("column_id") != "history_action":
-        sort_column = {
-            "qty_display": "qty",
-            "ppt_display": "ppt",
-        }.get(sort_by[0]["column_id"], sort_by[0]["column_id"])
-        ascending = sort_by[0]["direction"] == "asc"
-        df = df.sort_values(
-            [sort_column, "code"],
-            ascending=[ascending, True],
-        )
+    if sort_by:
+        normalized_sort = normalize_interest_sort(sort_by)
+        sort_columns = [
+            {
+                "qty_display": "qty",
+                "ppt_display": "ppt",
+            }.get(item["column_id"], item["column_id"])
+            for item in normalized_sort
+        ]
+        ascending = [item["direction"] == "asc" for item in normalized_sort]
+        if "code" not in sort_columns:
+            sort_columns.append("code")
+            ascending.append(True)
+        df = df.sort_values(sort_columns, ascending=ascending)
+    else:
+        df = df.sort_values(["code__title", "code"], ascending=[True, True])
     return df
 
 

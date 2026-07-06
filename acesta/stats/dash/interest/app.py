@@ -145,7 +145,7 @@ interest_app.layout = html.Div(
                                     page_size=20000,
                                     page_action="native",
                                     sort_action="custom",
-                                    sort_mode="single",
+                                    sort_mode="multi",
                                     sort_by=[
                                         {
                                             "column_id": "qty_display",

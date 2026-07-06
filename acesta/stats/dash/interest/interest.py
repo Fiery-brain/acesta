@@ -166,31 +166,6 @@ def initialize_interest_session(interval, persisted_state: dict, **kwargs) -> di
     return get_restorable_interest_state(persisted_state, kwargs.get("user"))
 
 
-@interest_app.callback(
-    dependencies.Output("table-interesants", "sort_by"),
-    dependencies.Input("interest-initial-state", "data"),
-)
-def restore_interest_sort(initial_state: dict) -> list:
-    if not initial_state:
-        raise PreventUpdate
-    return initial_state["sortBy"]
-
-
-@interest_app.callback(
-    dependencies.Output("table-interesants", "data"),
-    dependencies.Output("table-interesants", "selected_cells"),
-    dependencies.Output("table-interesants", "active_cell"),
-    dependencies.Output("interest-table-state", "data"),
-    dependencies.Input("tourism-type", "value"),
-    dependencies.Input("home-area", "value"),
-    dependencies.Input("tabs-interesants", "value"),
-    dependencies.Input("map", "clickData"),
-    dependencies.Input("home-area-key", "data"),
-    dependencies.Input("table-interesants", "sort_by"),
-    dependencies.State("table-interesants", "active_cell"),
-    dependencies.State("interest-initial-state", "data"),
-    dependencies.State("interest-session-hydrated", "data"),
-)
 def update_interest(
     tourism_type: str,
     home_area: str,
@@ -217,14 +192,15 @@ def update_interest(
     home_area, interesant_area, tourism_type = normalize_interest_context(
         user, home_area, interesant_area, tourism_type
     )
-    sort_by = normalize_interest_sort(sort_by)
-
     # TODO processing of an empty table
     selected_cells = []
     active_cell = None
     selected_source_id = None
     clicked_target_key = None
     trigger = get_callback_triggered_id(kwargs.get("callback_context"))
+    if trigger == "interest-initial-state" and initial_state:
+        sort_by = initial_state.get("sortBy")
+    sort_by = normalize_interest_sort(sort_by)
     clicked_key = get_click_entity_key(map_data) if trigger == "map" else None
     clicked_kind, clicked_identifier = parse_entity_key(clicked_key)
     if trigger == "map":
@@ -304,6 +280,49 @@ def update_interest(
         ),
     }
     return table_data, selected_cells, active_cell, table_state
+
+
+@interest_app.callback(
+    dependencies.Output("table-interesants", "data"),
+    dependencies.Output("table-interesants", "selected_cells"),
+    dependencies.Output("table-interesants", "active_cell"),
+    dependencies.Output("interest-table-state", "data"),
+    dependencies.Output("table-interesants", "sort_by"),
+    dependencies.Input("tourism-type", "value"),
+    dependencies.Input("home-area", "value"),
+    dependencies.Input("tabs-interesants", "value"),
+    dependencies.Input("map", "clickData"),
+    dependencies.Input("home-area-key", "data"),
+    dependencies.Input("table-interesants", "sort_by"),
+    dependencies.Input("interest-initial-state", "data"),
+    dependencies.State("table-interesants", "active_cell"),
+    dependencies.State("interest-session-hydrated", "data"),
+)
+def update_interest_callback(
+    tourism_type: str,
+    home_area: str,
+    interesant_area: str,
+    map_data: dict,
+    target_key: str,
+    sort_by: list,
+    initial_state: dict,
+    current_active_cell: dict,
+    hydrated: bool = False,
+    **kwargs,
+):
+    result = update_interest(
+        tourism_type,
+        home_area,
+        interesant_area,
+        map_data,
+        target_key,
+        sort_by,
+        current_active_cell,
+        initial_state,
+        hydrated,
+        **kwargs,
+    )
+    return (*result, result[3]["sortBy"])
 
 
 @interest_app.callback(
@@ -560,13 +579,20 @@ def update_audience_key(
         return f"{pk}_{tourism_type}_{interesant_area}"
 
     try:
-        sort_column = {
-            "qty_display": "qty",
-            "ppt_display": "ppt",
-        }.get(sort_by[0].get("column_id"), sort_by[0].get("column_id"))
+        sort_columns = [
+            {
+                "qty_display": "qty",
+                "ppt_display": "ppt",
+            }.get(item["column_id"], item["column_id"])
+            for item in sort_by
+        ]
+        ascending = [item["direction"] == "asc" for item in sort_by]
+        if "code" not in sort_columns:
+            sort_columns.append("code")
+            ascending.append(True)
         actual_data = actual_data.sort_values(
-            [sort_column, "code"],
-            ascending=[sort_by[0].get("direction") == "asc", True],
+            sort_columns,
+            ascending=ascending,
         )
     except (IndexError, KeyError):
         pass
