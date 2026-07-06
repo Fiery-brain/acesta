@@ -211,8 +211,6 @@ def update_tourism_type(
 
     user = kwargs.get("request").user
     options = get_tourism_type_options(user, home_area)
-    if not user.is_extended:
-        return options, ""
 
     if not hydrated:
         if initial_state.get("homeArea") != home_area:

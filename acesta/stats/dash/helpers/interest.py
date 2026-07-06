@@ -47,8 +47,13 @@ def normalize_interest_context(
     tourism_type: str,
 ) -> tuple[str, str, str]:
     """Validate client-restored filters against the user's current access."""
+    tourism_type = tourism_type or ""
+    known_tourism_types = dict(settings.TOURISM_TYPES_OUTSIDE)
+    if tourism_type not in known_tourism_types:
+        tourism_type = ""
+
     if not user.is_extended:
-        return settings.AREA_REGIONS, settings.AREA_REGIONS, ""
+        return settings.AREA_REGIONS, settings.AREA_REGIONS, tourism_type
 
     allowed_home_areas = {settings.AREA_REGIONS, settings.AREA_SIGHTS}
     if (
@@ -62,10 +67,6 @@ def normalize_interest_context(
     if interesant_area not in {settings.AREA_REGIONS, settings.AREA_CITIES}:
         interesant_area = settings.AREA_REGIONS
 
-    tourism_type = tourism_type or ""
-    known_tourism_types = dict(settings.TOURISM_TYPES_OUTSIDE)
-    if tourism_type not in known_tourism_types:
-        tourism_type = ""
     if home_area != settings.AREA_REGIONS and getattr(
         user, "is_set_tourism_types", False
     ):

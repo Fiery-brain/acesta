@@ -507,7 +507,7 @@ class SelectedInterestRowTest(TestCase):
 
         self.assertEqual(restored["homeArea"], settings.AREA_REGIONS)
         self.assertEqual(restored["interesantArea"], settings.AREA_REGIONS)
-        self.assertEqual(restored["tourismType"], "")
+        self.assertEqual(restored["tourismType"], "museum")
         self.assertIsNone(restored["sourceRowId"])
         self.assertEqual(restored["targetKey"], "regions_0")
 
@@ -740,6 +740,126 @@ class SelectedInterestRowTest(TestCase):
         )
         self.assertEqual(value, "")
         self.assertEqual(options[0]["value"], "")
+
+    def test_tourism_type_survives_navigation_for_basic_user(self):
+        from acesta.stats.dash.interest.ui import update_tourism_type
+
+        user = SimpleNamespace(is_extended=False)
+        request = SimpleNamespace(user=user)
+        initial_state = {
+            "homeArea": settings.AREA_REGIONS,
+            "tourismType": "museum",
+        }
+
+        options, restored_value = update_tourism_type(
+            settings.AREA_REGIONS,
+            initial_state,
+            "",
+            False,
+            request=request,
+        )
+        _, selected_value = update_tourism_type(
+            settings.AREA_REGIONS,
+            initial_state,
+            "spa",
+            True,
+            request=request,
+        )
+
+        option_values = {option["value"] for option in options}
+        self.assertEqual(restored_value, "museum")
+        self.assertEqual(selected_value, "spa")
+        self.assertIn(restored_value, option_values)
+        self.assertIn(selected_value, option_values)
+
+    def test_basic_user_keeps_valid_tourism_but_not_locked_areas(self):
+        from acesta.stats.dash.helpers.interest import normalize_interest_context
+
+        user = SimpleNamespace(is_extended=False)
+
+        self.assertEqual(
+            normalize_interest_context(
+                user,
+                settings.AREA_SIGHTS,
+                settings.AREA_CITIES,
+                "museum",
+            ),
+            (settings.AREA_REGIONS, settings.AREA_REGIONS, "museum"),
+        )
+        self.assertEqual(
+            normalize_interest_context(
+                user,
+                settings.AREA_SIGHTS,
+                settings.AREA_CITIES,
+                "unknown-tourism",
+            ),
+            (settings.AREA_REGIONS, settings.AREA_REGIONS, ""),
+        )
+
+    def test_basic_user_tourism_reaches_table_and_map_context(self):
+        import pandas as pd
+
+        from acesta.stats.dash.interest import interest as interest_module
+
+        user = SimpleNamespace(
+            is_extended=False,
+            current_region=SimpleNamespace(code="10"),
+        )
+        rows = pd.DataFrame(
+            [
+                {
+                    "id": "77",
+                    "code": "77",
+                    "code__title": "Москва",
+                    "qty_display": 10,
+                    "ppt_display": 20,
+                }
+            ]
+        )
+
+        with mock.patch.object(
+            interest_module,
+            "get_interest_table_rows",
+            return_value={"rows": []},
+        ) as get_rows:
+            with mock.patch.object(
+                interest_module,
+                "get_ppt_df",
+                return_value=rows,
+            ):
+                table_data, _, _, table_state = interest_module.update_interest(
+                    "museum",
+                    settings.AREA_SIGHTS,
+                    settings.AREA_CITIES,
+                    None,
+                    "sights_99",
+                    [{"column_id": "qty_display", "direction": "desc"}],
+                    None,
+                    {
+                        "homeArea": settings.AREA_REGIONS,
+                        "interesantArea": settings.AREA_REGIONS,
+                        "tourismType": "museum",
+                    },
+                    True,
+                    user=user,
+                    callback_context=SimpleNamespace(
+                        triggered=[{"prop_id": "tourism-type.value"}]
+                    ),
+                )
+
+        get_rows.assert_called_once_with(
+            "10",
+            settings.AREA_REGIONS,
+            settings.AREA_REGIONS,
+            "museum",
+            0,
+        )
+        self.assertEqual(table_data[0]["code"], "77")
+        self.assertEqual(table_state["tourismType"], "museum")
+        self.assertEqual(
+            table_state["mapContextKey"],
+            "10|regions|regions|museum|regions_0",
+        )
 
     def test_transient_home_area_cannot_clear_restored_tourism_type(self):
         from dash.exceptions import PreventUpdate
