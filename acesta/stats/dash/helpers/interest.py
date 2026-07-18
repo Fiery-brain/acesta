@@ -7,8 +7,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.timesince import timesince
 
-from acesta.base.utils import timesince_accusatifier as accusatifier
-from acesta.base.utils import timesince_cutter as cutter
+from acesta.front.utils import timesince_accusatifier as accusatifier
+from acesta.front.utils import timesince_cutter as cutter
 from acesta.geo.models import City
 from acesta.geo.models import Sight
 from acesta.stats.helpers.update_dates import get_auditory_update_date

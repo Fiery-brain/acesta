@@ -4,9 +4,8 @@ from dash import dependencies
 from dash import html
 from django.conf import settings
 from django.contrib.humanize.templatetags.humanize import intcomma
-from django_plotly_dash import DjangoDash
 
-from acesta.stats.apps import dash_args
+from acesta.stats.apps import AcestaDjangoDash
 from acesta.stats.dash.helpers.audience import get_object_title
 from acesta.stats.helpers.audience import get_audience
 from acesta.stats.helpers.audience import get_audience_key_data
@@ -18,7 +17,7 @@ from acesta.stats.helpers.base import round_up
 
 
 # Audience Application
-audience_app = DjangoDash(
+audience_app = AcestaDjangoDash(
     "audience",
     external_scripts=[
         "/static/js/bootstrap.bundle.min.js",
@@ -29,7 +28,6 @@ audience_app = DjangoDash(
         "/static/css/base.css",
         "/static/css/dashboard.css",
     ],
-    **dash_args,
 )
 audience_app.layout = html.Div(
     html.Div(

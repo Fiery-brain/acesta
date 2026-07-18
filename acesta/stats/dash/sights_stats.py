@@ -3,15 +3,14 @@ from dash import dcc
 from dash import dependencies
 from dash import html
 from django.conf import settings
-from django_plotly_dash import DjangoDash
 
-from acesta.stats.apps import dash_args
+from acesta.stats.apps import AcestaDjangoDash
 from acesta.stats.dash.helpers.common import get_height_base
 from acesta.stats.helpers.sights import get_sight_stats
 
 
 # Sights Statistics Application
-sights_stats_app = DjangoDash("sightStats", **dash_args)
+sights_stats_app = AcestaDjangoDash("sightStats")
 sights_stats_app.layout = html.Div(
     [
         html.Div(id="sight-stats", children=[]),

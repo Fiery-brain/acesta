@@ -5,13 +5,12 @@ from dash import dash_table
 from dash import dcc
 from dash import html
 from django.conf import settings
-from django_plotly_dash import DjangoDash
 
-from acesta.stats.apps import dash_args
+from acesta.stats.apps import AcestaDjangoDash
 
 
 # Interest Application
-interest_app = DjangoDash("interest", **dash_args)
+interest_app = AcestaDjangoDash("interest")
 interest_app.layout = html.Div(
     className="container",
     children=[

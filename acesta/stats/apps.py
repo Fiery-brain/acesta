@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django_plotly_dash import DjangoDash
 
 
 class StatsConfig(AppConfig):
@@ -7,4 +8,7 @@ class StatsConfig(AppConfig):
     verbose_name = "Статистика"
 
 
-dash_args = dict(update_title="Загрузка...")
+class AcestaDjangoDash(DjangoDash):
+    def __init__(self, *args, update_title="Загрузка...", **kwargs):
+        super().__init__(*args, **kwargs)
+        self._kwargs["update_title"] = update_title
