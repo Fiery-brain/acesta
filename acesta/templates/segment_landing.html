@@ -230,7 +230,7 @@
               <header class="segment-workflow-header landing-section-header">
                 <p>Как это работает</p>
                 <h2>От&nbsp;интереса к&nbsp;решению</h2>
-                <div>{{ WORKFLOW.description|default:''|safe }}</div>
+                <div>{{ WORKFLOW.description|default:''|safe|nobreak_spaces }}</div>
               </header>
 
               <div class="segment-workflow-grid">
@@ -293,8 +293,8 @@
                       </svg>
                     </span>
                     <div>
-                      <h3>{{ WORKFLOW.decision.title|default:''|safe }}</h3>
-                      <p>{{ WORKFLOW.decision.text|default:''|safe }}</p>
+                      <h3>{{ WORKFLOW.decision.title|default:''|safe|nobreak_spaces }}</h3>
+                      <p>{{ WORKFLOW.decision.text|default:''|safe|nobreak_spaces }}</p>
                     </div>
                   </div>
                   <div class="segment-workflow-visual">
