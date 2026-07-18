@@ -1,11 +1,30 @@
-{% extends request.user.is_authenticated|yesno:'dashboard/base.html,outside.html' %}
-
-{% block title %}Ошибка 500 {% endblock %}
-
-{% block page_title %}Внутренняя ошибка сервера{% endblock %}
-
-{% block part_title %}<h1 class="mt-5 text-muted">Внутренняя ошибка сервера</h1>{% endblock %}
-
-{% block content %}
-  <p>Мы уже получили сведения об этой ошибке. Попробуйте загрузить страницу через некоторое время. Если ошибка повторяется, напишите нам.</p>
-{% endblock content %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Внутренняя ошибка сервера | ацеста</title>
+    <style>
+      :root {color-scheme:light}
+      * {box-sizing:border-box}
+      body {margin:0;background:#f7f8f8;color:#314f5d;font-family:Arial,sans-serif}
+      main {min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
+      section {width:min(100%,680px);padding:48px;background:#fff;border:1px solid #d5e0e3;border-radius:16px;box-shadow:0 12px 32px rgba(49,79,93,.08)}
+      p {font-size:18px;line-height:1.55}
+      .code {margin:0;color:#429388;font-size:18px;font-weight:700}
+      h1 {margin:8px 0 24px;font-size:36px;line-height:1.15}
+      a {display:inline-block;margin-top:16px;color:#34766a;font-size:18px;font-weight:700;text-decoration-thickness:1px;text-underline-offset:4px}
+      @media (max-width:576px) {section{padding:32px 24px}h1{font-size:30px}}
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <p class="code">Ошибка 500</p>
+        <h1>Внутренняя ошибка сервера</h1>
+        <p>Мы уже получили сведения об этой ошибке. Попробуйте загрузить страницу через некоторое время. Если ошибка повторяется, напишите нам.</p>
+        <a href="/">Вернуться на главную</a>
+      </section>
+    </main>
+  </body>
+</html>
