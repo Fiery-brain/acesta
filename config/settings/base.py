@@ -535,3 +535,5 @@ LLM_MODELS = env.list("ACESTA_LLM_MODELS", default=[])
 LLM_PROVIDERS = env.list("ACESTA_LLM_PROVIDERS", default=[])
 LLM_MAX_RETRIES = env.int("ACESTA_LLM_MAX_RETRIES", default=3)
 LLM_BASE_DELAY = env.float("ACESTA_LLM_BASE_DELAY", default=1.0)
+
+PROCESS_CYCLES = {}
