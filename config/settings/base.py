@@ -233,7 +233,6 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "acesta.base.context_processors.host",
                 "acesta.front.context_processors.settings",
                 "acesta.geo.context_processors.settings",
                 "acesta.geo.context_processors.regions",
@@ -301,6 +300,7 @@ DADATA_TOKEN = env("API_DADATA_TOKEN", default="")
 DADATA_SECRET = env("API_DADATA_SECRET", default="")
 
 # Application
+PUBLIC_DOMAIN = env("PUBLIC_DOMAIN", default="acesta.ru")
 TITLE = "ацеста"
 HASH_TAGS = "#туризм #ии #данные #аналитика"
 
@@ -316,6 +316,24 @@ SEGMENT_MARKETING_AGENCY = "marketing-agency"
 SEGMENT_HOSPITALITY = "hospitality"
 SEGMENT_TOURISM_EVENT = "tourism-event"
 SEGMENT_TRANSPORTATION = "transportation"
+
+MARKET_B2B = "b2b"
+MARKET_B2G = "b2g"
+
+SEGMENT_MARKETS = {
+    DEFAULT_SEGMENT: MARKET_B2B,
+    SEGMENT_GOVERNMENT: MARKET_B2G,
+    SEGMENT_TIC: MARKET_B2G,
+    SEGMENT_TOUR_OPERATOR: MARKET_B2B,
+    SEGMENT_TOUR_AGENT: MARKET_B2B,
+    SEGMENT_TOURISM_PRODUCT_OWNER: MARKET_B2B,
+    SEGMENT_INVESTORS: MARKET_B2B,
+    SEGMENT_GUIDE: MARKET_B2B,
+    SEGMENT_MARKETING_AGENCY: MARKET_B2B,
+    SEGMENT_HOSPITALITY: MARKET_B2B,
+    SEGMENT_TOURISM_EVENT: MARKET_B2B,
+    SEGMENT_TRANSPORTATION: MARKET_B2B,
+}
 
 SEGMENTS = tuple((k, v) for k, v in env.dict("ACESTA_SEGMENTS", default={}).items())
 

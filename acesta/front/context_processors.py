@@ -12,6 +12,9 @@ def settings(request: HttpRequest) -> dict:
     :return: dict
     """
     return dict(
+        HOST=f"{request.scheme}://{request.META.get('HTTP_HOST')}",
+        PUBLIC_DOMAIN=django_settings.PUBLIC_DOMAIN,
+        PUBLIC_URL=f"https://{django_settings.PUBLIC_DOMAIN}",
         TITLE=django_settings.TITLE,
         HASH_TAGS=django_settings.HASH_TAGS,
         SEGMENTS=dict(django_settings.SEGMENTS),

@@ -17,24 +17,6 @@ from openai import RateLimitError
 from acesta.base.decorators import fallback_chain
 
 
-def timesince_accusatifier(timesince_str):
-    """
-    Returns timesince in the accusative case
-    :param timesince_str: str
-    :return: str
-    """
-    return timesince_str.replace("неделя", "неделю").replace("минута", "минуту")
-
-
-def timesince_cutter(timesince_str):
-    """
-    Returns timesince in cut down format
-    :param timesince_str: str
-    :return: str
-    """
-    return timesince_str.split(",")[0]
-
-
 def request_gpt(question, is_g4f: bool = False):
     """
     Returns response from GPT

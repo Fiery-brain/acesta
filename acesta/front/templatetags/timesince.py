@@ -1,7 +1,7 @@
 from django import template
 
-from acesta.base.utils import timesince_accusatifier
-from acesta.base.utils import timesince_cutter
+from acesta.front.utils import timesince_accusatifier
+from acesta.front.utils import timesince_cutter
 
 register = template.Library()
 

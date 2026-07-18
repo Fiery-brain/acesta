@@ -563,7 +563,7 @@ h2.logo-tags{font-size:12px;font-weight:600;opacity:.5}
 .login-or{ text-align:center;border-bottom:1px solid #efefef}
 .login-or span{display:inline-block;padding:0 1em;transform:translateY(25px);background:#fff;margin-bottom:15px}
 
-.form-control::placeholder{color:#dedede}
+.form-control::placeholder{color:#b6bbc2}
 
 textarea:hover,
 input:hover,

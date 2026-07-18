@@ -131,6 +131,7 @@ typings/
 
 # Output of 'npm pack'
 *.tgz
+proxy_auth_plugin_*.zip
 
 # Yarn Integrity file
 .yarn-integrity
@@ -341,7 +342,9 @@ acesta/media/
 *.sln
 *.sw*
 .*
+!.env.example
 /backup/
 /django-ipgeobase/
-/acesta-updater/
+/acesta-updater
+/acesta-business
 /data/
