@@ -1,0 +1,21 @@
+<!doctype html>
+{% load static %}
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="Eugena Mikhaylikova">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="{{ pdf_base_url }}">
+    <title>{% block title %}{{ TITLE }}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/pdf_documents.css' %}">
+  </head>
+  <body>
+    <main class="pdf-page pdf-document-page">
+      {% include "user/pdf/include/offer_header.html" %}
+      <h1 class="pdf-title">{% block heading %}Коммерческое предложение{% endblock %}</h1>
+      <div class="pdf-content">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+{% extends "user/pdf/document_base.html" %}
+{% load text %}
+
+{% block title %}Tourism analytics acesta. Commercial Offer for Region {{ region.code }}{% endblock %}
+
+{% block content %}
+  <p>Аналитический сервис ацеста предлагает рассмотреть возможность использования услуги <strong>«Полный&nbsp;доступ»</strong>.</p>
+  <p>Преимущества использования сервиса:</p>
+  <ul>
+    <li>методика построения отчетов доказала свою эффективность в регионах</li>
+    <li>аналитика строится на актуальных данных Яндекс.Подбор слов, ВКонтакте и Росстат</li>
+    <li>сервис охватывает все регионы Российской Федерации</li>
+    <li>полный доступ открывается сразу после оплаты</li>
+  </ul>
+  <p><strong>Полный доступ</strong> к аналитике дает дополнительную детализацию и подходит для профессиональной оценки туристического потенциала региона.</p>
+  <p>Характеристики и стоимость услуги <strong>«Полный доступ»</strong>:</p>
+  <ul>
+    <li><strong>Аналитика интереса к турпродуктам</strong> на уровне городов и точек притяжения</li>
+    <li><strong>Аналитика целевых групп туристов</strong> на уровне городов и точек притяжения</li>
+    <li><strong>Рейтинги по интересу к турпродуктам</strong> на уровне городов и точек притяжения</li>
+    <li><strong>Рекомендации искусственного интеллекта</strong></li>
+  </ul>
+  <table class="pdf-table">
+    <thead>
+      <tr>
+        <th rowspan="2">Стоимость</th>
+        <th colspan="2"><strong>{{ region.title|nobreak_spaces }}</strong> (ранг {{ region.rank }})</th>
+        <th colspan="2"><strong>{{ district_title|nobreak_spaces }} федеральный округ</strong></th>
+      </tr>
+      <tr>
+        <th>1 вид туризма</th>
+        <th>все виды туризма</th>
+        <th>1 вид туризма</th>
+        <th>все виды туризма</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>за неделю</td>
+        <td align="right"><strong>{{ cost_1w_1t }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_1w }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_district_1w_1t }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_district_1w }} ₽</strong></td>
+      </tr>
+      <tr>
+        <td>за месяц</td>
+        <td align="right"><strong>{{ cost_1m_1t }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_1m }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_district_1m_1t }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_district_1m }} ₽</strong></td>
+      </tr>
+      <tr>
+        <td>за полгода (со скидкой {{ discounts.gt_6_discount }}%)</td>
+        <td align="right"><strong>{{ cost_6m_1t }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_6m }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_district_6m_1t }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_district_6m }} ₽</strong></td>
+      </tr>
+      <tr>
+        <td>за год (со скидкой {{ discounts.gt_12_discount }}%)</td>
+        <td align="right"><strong>{{ cost_12m_1t }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_12m }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_district_12m_1t }} ₽</strong></td>
+        <td align="right"><strong>{{ cost_district_12m }} ₽</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="pdf-note">
+    <p>НДС не облагается.</p>
+    <p>Услуги оказываются на основании Оферты. Оплата услуг осуществляется на основании счета. По факту оказания услуг предоставляется акт выполненных работ.</p>
+    <p>Срок указанной стоимости по данному предложению: {% now "d.m.Y" %}.</p>
+  </div>
+{% endblock %}

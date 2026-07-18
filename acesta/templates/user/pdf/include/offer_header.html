@@ -1,0 +1,13 @@
+{% load static %}
+{% load text %}
+<header class="pdf-header">
+  <img class="pdf-header__logo" src="{% static 'img/acesta-ru-full.png' %}" alt="ацеста">
+  <div class="pdf-header__details">
+    <p><strong>{{ TITLE|nobreak_spaces }}</strong></p>
+    <p>ИП Михайликова Евгения Александровна</p>
+    <p>ИНН 666001308820</p>
+    <p>Расчетный счет 40802810900004782663 в АО «ТБанк», БИК банка 044525974</p>
+    <p>Веб-сайт <a href="{{ PUBLIC_URL }}">{{ PUBLIC_URL }}</a></p>
+    <p>Email <a href="mailto:info@{{ PUBLIC_DOMAIN }}">info@{{ PUBLIC_DOMAIN }}</a></p>
+  </div>
+</header>

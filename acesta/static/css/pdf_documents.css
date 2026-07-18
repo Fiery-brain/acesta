@@ -1,0 +1,198 @@
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../font/GolosText-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../font/GolosText-Bold.ttf") format("truetype");
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: #202124;
+  font-family: "Golos Text", sans-serif;
+  font-size: 10pt;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+a {
+  color: #34766a;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.pdf-document-page {
+  background: #fff;
+  break-after: page;
+  height: 297mm;
+  width: 210mm;
+}
+
+.pdf-document-page:last-child {
+  break-after: auto;
+}
+
+.pdf-page {
+  min-height: 297mm;
+  padding: 14mm 16mm;
+}
+
+.pdf-header {
+  align-items: flex-start;
+  display: grid;
+  gap: 8mm;
+  grid-template-columns: 34mm minmax(0, 1fr);
+}
+
+.pdf-header__logo {
+  display: block;
+  height: auto;
+  width: 31mm;
+}
+
+.pdf-header__details p {
+  margin: 0 0 1.5mm;
+}
+
+.pdf-title {
+  font-size: 21pt;
+  line-height: 1.15;
+  margin: 9mm 0 6mm;
+  text-align: center;
+}
+
+.pdf-content p {
+  margin: 0 0 2mm;
+}
+
+.pdf-content ul {
+  margin: 1.5mm 0 3mm;
+  padding-left: 7mm;
+}
+
+.pdf-content li {
+  margin-bottom: 1mm;
+  padding-left: 1mm;
+}
+
+.pdf-table {
+  border-collapse: collapse;
+  margin: 3mm 0 2mm;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.pdf-table th,
+.pdf-table td {
+  border: 0.3mm solid #c8cdcb;
+  overflow-wrap: anywhere;
+  padding: 2mm;
+  text-align: left;
+  vertical-align: top;
+}
+
+.pdf-table th,
+.pdf-table td[align="center"] {
+  text-align: center;
+}
+
+.pdf-table td[align="right"] {
+  text-align: right;
+}
+
+.pdf-note {
+  font-size: 9pt;
+}
+
+/* Document: public offer */
+
+.pdf-legal-document {
+  font-size: 11pt;
+  line-height: 1.2;
+}
+
+.pdf-legal-document .pdf-document-page {
+  padding: 20mm;
+}
+
+.pdf-legal-document h1 {
+  font-size: 18pt;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+}
+
+.pdf-legal-document h2 {
+  break-after: avoid;
+  font-size: 13.5pt;
+  line-height: 1;
+  margin: 9px 0 7px;
+  text-align: center;
+}
+
+.pdf-legal-document h4 {
+  margin: 0;
+  padding: 4px 0;
+  text-align: center;
+}
+
+.pdf-legal-document p {
+  margin: 6px 0;
+  padding: 0;
+}
+
+.pdf-legal-document .b1 {
+  margin-bottom: 6px;
+}
+
+.pdf-legal-document i {
+  font-style: italic;
+}
+
+@media screen {
+  body {
+    background: #e5e7e6;
+    padding: 12mm 0;
+  }
+
+  .pdf-document-pages {
+    display: flex;
+    flex-direction: column;
+    gap: 10mm;
+  }
+
+  .pdf-document-page {
+    box-shadow: 0 2mm 8mm rgb(18 40 35 / 18%);
+    margin: 0 auto;
+  }
+}
+
+@media print {
+  .pdf-document-page {
+    box-shadow: none;
+    margin: 0;
+  }
+}
