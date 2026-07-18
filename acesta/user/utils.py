@@ -1,5 +1,3 @@
-import os
-
 from django.conf import settings
 from django.core.mail import mail_admins
 
@@ -60,26 +58,12 @@ def get_order_form(user: User) -> OrderForm:
     return order_form
 
 
-def fetch_pdf_resources(uri: str, rel: str) -> str:
-    """
-    Adds the additional paths for pdf rendering
-    :param uri: str
-    :param rel: str
-    :return: str
-    """
-    if uri.find(settings.MEDIA_URL) != -1:
-        path = os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
-    elif uri.find(settings.STATIC_URL) != -1:
-        path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ""))
-    else:
-        path = None
-    return path
-
-
-def send_message(message) -> None:
+def send_message(message, body=None) -> None:
     """
     Captures a message
+    :param message: email subject
+    :param body: optional email body
     :return: None
     """
     if not settings.TESTING:
-        return mail_admins(message.replace("\n", " "), message)
+        return mail_admins(message.replace("\n", " "), body or message)

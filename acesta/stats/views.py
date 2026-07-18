@@ -2,8 +2,10 @@ from django.conf import settings
 from django.http import HttpRequest
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET
 
 from acesta.geo.models import Region
@@ -31,6 +33,7 @@ from acesta.stats.helpers.sights import get_sight_stats
 from acesta.stats.helpers.sights import get_sights_by_group
 from acesta.stats.helpers.sights import get_strong_tourism_types
 from acesta.stats.helpers.sights import get_weak_tourism_types
+from acesta.stats.helpers.sights import prepare_sights_for_template
 from acesta.stats.helpers.update_dates import get_rating_update_date
 from acesta.stats.helpers.update_dates import get_sights_update_date
 from acesta.stats.history import build_history_payload
@@ -84,10 +87,12 @@ def region_view(request) -> HttpResponse:
         group_filter = (
             dict(group=request.GET.get("group")) if request.GET.get("group") else {}
         )
-        region_sights = list(
-            get_sights_by_group(request.user.current_region, group_filter)[
-                : REGION_SIGHTS_INITIAL_LIMIT + 1
-            ]
+        region_sights = prepare_sights_for_template(
+            list(
+                get_sights_by_group(request.user.current_region, group_filter)[
+                    : REGION_SIGHTS_INITIAL_LIMIT + 1
+                ]
+            )
         )
         context.update(
             {
@@ -110,13 +115,37 @@ def region_sights_remaining_view(request) -> HttpResponse:
 
     group = request.GET.get("group")
     group_filter = {"group": group} if group else {}
-    region_sights = get_sights_by_group(request.user.current_region, group_filter)[
-        REGION_SIGHTS_INITIAL_LIMIT:
-    ]
+    region_sights = prepare_sights_for_template(
+        list(
+            get_sights_by_group(request.user.current_region, group_filter)[
+                REGION_SIGHTS_INITIAL_LIMIT:
+            ]
+        )
+    )
     return render(
         request,
         "include/region_sight_rows.html",
         {"region_sights": region_sights},
+    )
+
+
+@require_GET
+def region_sight_change_view(request, sight_id: int) -> JsonResponse:
+    """Return the current data for a sight in the user's selected region."""
+    sight = get_object_or_404(
+        get_sights_by_group(request.user.current_region, {}),
+        pk=sight_id,
+    )
+    prepare_sights_for_template([sight])
+    return JsonResponse(
+        {
+            "sight_id": sight.pk,
+            "details_html": render_to_string(
+                "include/region_sight_change_details.html",
+                {"sight": sight},
+                request=request,
+            ),
+        }
     )
 
 

@@ -1,7 +1,14 @@
 {% load static %}
+{% load l10n %}
+
 {% for sight in region_sights %}
   <tr data-sight-row data-sight-name="{{ sight }}">
-    <td width="22" class="pe-1"><a href="#" data-bs-toggle="tooltip" title="{{ sight.group.all.0.title }}"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ sight.group.all.0.name }}"></use></svg></a></td>
+    <td width="28" class="pe-1 ps-0">
+      <button type="button" class="sight-edit-action" aria-label="Предложить изменение точки «{{ sight }}»" title="Предложить изменение" data-bs-toggle="tooltip" data-sight-edit-id="{{ sight.pk|unlocalize }}">
+        <svg width="20" height="20" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#edit"></use></svg>
+      </button>
+    </td>
+    <td width="22" class="pe-1" data-bs-toggle="tooltip" title="{{ sight.primary_group.title }}"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ sight.primary_group.name }}"></use></svg></td>
     <td class="ps-1">
       <small class="sight-title" data-sight-label>{{ sight }}</small>
     </td>

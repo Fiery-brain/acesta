@@ -246,6 +246,16 @@ class Sight(TimeStampedModel):
     objects = models.Manager()
     pub = PubManager()
 
+    @property
+    def queries(self):
+        queries = [self.query.strip()] if self.query and self.query.strip() else []
+        queries.extend(
+            query.strip()
+            for query in (self.query_additional or "").split(";")
+            if query.strip()
+        )
+        return queries
+
     def __str__(self):
         return f"{ self.title or ''}"
 

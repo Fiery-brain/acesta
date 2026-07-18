@@ -37,6 +37,22 @@ from acesta.user.helpers import CredentialsMixin
 
 
 class StatsTest(CredentialsMixin, test.TestCase):
+    def test_sight_queries_include_clean_non_empty_additional_queries(self):
+        sight = Sight(
+            query=" основной запрос ",
+            query_additional=" первый; ; второй ; третий;",
+        )
+
+        self.assertEqual(
+            sight.queries,
+            ["основной запрос", "первый", "второй", "третий"],
+        )
+
+        sight.query = ""
+        sight.query_additional = None
+
+        self.assertEqual(sight.queries, [])
+
     def test_responses(self):
         """
         Testing of the stats app
@@ -157,6 +173,40 @@ class RegionSightsLoadingTest(CredentialsMixin, test.TestCase):
         self.assertContains(response, "все разделы&nbsp;(25)")
         self.assertContains(response, "Test sights&nbsp;(25)")
 
+    def test_region_renders_unlocalized_large_sight_id_in_first_cell(self):
+        sight = Sight.objects.create(
+            id=12345,
+            code=self.region,
+            title="Big ID sight",
+            is_pub=True,
+        )
+        sight.group.add(self.group)
+        self.client.login(**self.credentials)
+
+        response = self.client.get(f'{reverse("region")}?group=')
+
+        self.assertEqual(response.status_code, 200)
+        html = response.content.decode()
+        self.assertRegex(
+            html,
+            (
+                r'<tr data-sight-row data-sight-name="Big ID sight">\s*'
+                r'<td[^>]*>\s*<button[^>]*data-sight-edit-id="12345"'
+            ),
+        )
+        self.assertNotIn('data-sight-edit-id="12 345"', html)
+        self.assertNotIn('data-sight-edit-id="12 345"', html)
+        self.assertContains(response, "js/region.sight.edit.js")
+        self.assertContains(response, "data-sight-add-message-input")
+        self.assertContains(response, "disabled data-sight-add-submit")
+        self.assertContains(response, "data-sight-edit-url=")
+        self.assertContains(response, "data-sight-edit-input")
+        self.assertContains(response, "data-sight-edit-message-input")
+        self.assertContains(response, "disabled data-sight-edit-submit")
+        self.assertContains(response, "data-sight-edit-loading")
+        self.assertContains(response, "data-sight-edit-message")
+        self.assertContains(response, "data-sight-edit-retry")
+
     def test_sight_group_counts_include_only_published_data(self):
         other_group = SightGroup.objects.create(
             name="other_sights",
@@ -212,6 +262,24 @@ class RegionSightsLoadingTest(CredentialsMixin, test.TestCase):
         for index in range(20, 25):
             self.assertContains(response, f"Sight {index:02d}")
 
+    def test_remaining_sights_render_unlocalized_large_sight_id(self):
+        self.create_sights(20, prefix="A sight")
+        sight = Sight.objects.create(
+            id=12345,
+            code=self.region,
+            title="Z big ID sight",
+            is_pub=True,
+        )
+        sight.group.add(self.group)
+        self.client.login(**self.credentials)
+
+        response = self.client.get(reverse("region_sights_remaining"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'data-sight-edit-id="12345"')
+        self.assertNotContains(response, 'data-sight-edit-id="12 345"')
+        self.assertNotContains(response, 'data-sight-edit-id="12 345"')
+
     def test_remaining_sights_endpoint_respects_group_filter(self):
         other_group = SightGroup.objects.create(
             name="other_sights",
@@ -248,6 +316,110 @@ class RegionSightsLoadingTest(CredentialsMixin, test.TestCase):
 
     def test_remaining_sights_endpoint_requires_authentication(self):
         response = self.client.get(reverse("region_sights_remaining"))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/login/?next=", response.url)
+
+    def test_sight_change_endpoint_renders_sight_details(self):
+        second_museum_group = SightGroup.objects.create(
+            name="second_museum",
+            title="Second museum group",
+            title_gen="Second museum group",
+            tourism_type="museum",
+            is_pub=True,
+        )
+        spa_group = SightGroup.objects.create(
+            name="spa_sights",
+            title="Spa sights",
+            title_gen="Spa sights",
+            tourism_type="spa",
+            is_pub=True,
+        )
+        sight = Sight.objects.create(
+            id=12345,
+            code=self.region,
+            title="Detailed sight",
+            query="detailed query",
+            query_additional=" first additional; ; second additional ;",
+            lat=55.75,
+            lon=37.61,
+            address="Detailed address",
+            is_pub=True,
+        )
+        sight.group.add(self.group, second_museum_group, spa_group)
+        self.client.login(**self.credentials)
+
+        response = self.client.get(
+            reverse("region_sight_change", kwargs={"sight_id": sight.pk})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["sight_id"], 12345)
+        self.assertIn("Detailed sight", payload["details_html"])
+        self.assertIn("detailed query", payload["details_html"])
+        self.assertIn("first additional", payload["details_html"])
+        self.assertIn("second additional", payload["details_html"])
+        self.assertLess(
+            payload["details_html"].index("detailed query"),
+            payload["details_html"].index("first additional"),
+        )
+        self.assertLess(
+            payload["details_html"].index("first additional"),
+            payload["details_html"].index("second additional"),
+        )
+        self.assertIn('class="sight-edit-query-block"', payload["details_html"])
+        self.assertIn('class="sight-edit-query-list"', payload["details_html"])
+        self.assertIn("Detailed address", payload["details_html"])
+        self.assertIn('data-bs-toggle="tooltip"', payload["details_html"])
+        self.assertIn("<strong>Исходный запрос</strong>", payload["details_html"])
+        self.assertIn("#museum", payload["details_html"])
+        self.assertEqual(payload["details_html"].count("музейный туризм"), 1)
+
+    def test_sight_change_endpoint_rejects_sight_from_another_region(self):
+        other_region = Region.pub.exclude(pk=self.region.pk).first()
+        sight = Sight.objects.create(
+            code=other_region,
+            title="Other region sight",
+            is_pub=True,
+        )
+        self.client.login(**self.credentials)
+
+        response = self.client.get(
+            reverse("region_sight_change", kwargs={"sight_id": sight.pk})
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_sight_change_endpoint_rejects_unpublished_sight(self):
+        sight = Sight.objects.create(
+            code=self.region,
+            title="Unpublished sight",
+            is_pub=False,
+        )
+        self.client.login(**self.credentials)
+
+        response = self.client.get(
+            reverse("region_sight_change", kwargs={"sight_id": sight.pk})
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_sight_change_endpoint_rejects_missing_sight(self):
+        self.client.login(**self.credentials)
+
+        response = self.client.get(
+            reverse("region_sight_change", kwargs={"sight_id": 999999})
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_sight_change_endpoint_requires_authentication(self):
+        sight = self.create_sights(1)[0]
+
+        response = self.client.get(
+            reverse("region_sight_change", kwargs={"sight_id": sight.pk})
+        )
 
         self.assertEqual(response.status_code, 302)
         self.assertIn("/login/?next=", response.url)

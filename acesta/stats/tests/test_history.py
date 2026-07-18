@@ -1,3 +1,4 @@
+from datetime import date
 from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
@@ -9,6 +10,10 @@ from acesta.stats.history import _impute
 from acesta.stats.history import _normalized_place_values
 from acesta.stats.history import _render_history_header
 from acesta.stats.history import _series
+from acesta.stats.models.abstract import AudienceHistoryMixin
+from acesta.stats.models.abstract import HistoryMixin
+from acesta.stats.models.abstract import PopularityHistoryMixin
+from acesta.stats.models.abstract import RatingHistoryMixin
 
 
 class HistoryChartStyleTest(SimpleTestCase):
@@ -367,6 +372,223 @@ class HistoryCalculationTest(SimpleTestCase):
 
         self.assertEqual(record.history, original)
         self.assertEqual(result[0]["points"][-1]["value"], 140)
+
+
+class HistorySnapshotTest(SimpleTestCase):
+    class BaseRecord:
+        history_fields = None
+        history = []
+        date = datetime(2026, 7, 14)
+        modified = datetime(2026, 7, 15)
+
+        _normalize_history_date = staticmethod(HistoryMixin._normalize_history_date)
+        _get_history_snapshot_date = HistoryMixin._get_history_snapshot_date
+        _history_without_snapshot_month = HistoryMixin._history_without_snapshot_month
+        _add_history_snapshot = HistoryMixin._add_history_snapshot
+        add_history = HistoryMixin.add_history
+        rollback_previous_month = HistoryMixin.rollback_previous_month
+
+    class PopularityRecord(BaseRecord):
+        history_fields = PopularityHistoryMixin.history_fields
+        qty = 10
+        popularity_mean_all = 21.5
+        popularity_mean = 20.5
+        popularity_max = 99.0
+
+    class RatingRecord(BaseRecord):
+        history_fields = RatingHistoryMixin.history_fields
+        value = 30
+        place = 2
+
+    class AudienceRecord(BaseRecord):
+        history_fields = AudienceHistoryMixin.history_fields
+        v_all = 100
+        v_types = 90
+        v_type_sex_age = 80
+        v_sex_age = 70
+        v_sex_age_child_6 = 60
+        v_sex_age_child_7_12 = 50
+        v_sex_age_parents = 40
+        v_type_in_pair = 30
+        coeff = 1.25
+
+    def get_record(self, record_class):
+        record = record_class()
+        record.history = []
+        return record
+
+    def test_snapshot_uses_current_values_before_update(self):
+        record = self.get_record(self.BaseRecord)
+        record.qty = 10
+        record.popularity_mean = 20.5
+
+        record._add_history_snapshot({"qty": "qty", "mean": "popularity_mean"})
+        record.qty = 99
+        record.popularity_mean = 199.5
+
+        self.assertEqual(
+            record.history[0],
+            {"date": "2026-07-14", "qty": 10, "mean": 20.5},
+        )
+
+    def test_snapshot_replaces_existing_item_in_same_month(self):
+        record = self.get_record(self.BaseRecord)
+        record.qty = 10
+        record.history = [
+            {"date": "2026-07-01", "qty": 1},
+            {"date": "2026-06-30", "qty": 2},
+        ]
+
+        record._add_history_snapshot(["qty"])
+
+        self.assertEqual(
+            record.history,
+            [
+                {"date": "2026-07-14", "qty": 10},
+                {"date": "2026-06-30", "qty": 2},
+            ],
+        )
+
+    def test_history_without_snapshot_month_preserves_other_and_invalid_dates(self):
+        record = self.get_record(self.BaseRecord)
+        history = [
+            {"date": "2026-07-01", "qty": 1},
+            {"date": "2026-07-31", "qty": 2},
+            {"date": "2026-06-30", "qty": 3},
+            {"date": "broken", "qty": 4},
+            {"qty": 5},
+        ]
+
+        filtered = record._history_without_snapshot_month(
+            history,
+            datetime(2026, 7, 14).date(),
+        )
+
+        self.assertEqual(
+            filtered,
+            [
+                {"date": "2026-06-30", "qty": 3},
+                {"date": "broken", "qty": 4},
+                {"qty": 5},
+            ],
+        )
+
+    def test_popularity_history_uses_popularity_payload(self):
+        record = self.get_record(self.PopularityRecord)
+
+        record.add_history()
+
+        self.assertEqual(
+            record.history[0],
+            {
+                "date": "2026-07-14",
+                "qty": 10,
+                "mean_all": 21.5,
+                "mean": 20.5,
+                "max": 99.0,
+            },
+        )
+
+    def test_rating_history_uses_rating_payload(self):
+        record = self.get_record(self.RatingRecord)
+
+        record.add_history()
+
+        self.assertEqual(
+            record.history[0],
+            {"date": "2026-07-14", "value": 30, "place": 2},
+        )
+
+    def test_audience_history_uses_audience_payload(self):
+        record = self.get_record(self.AudienceRecord)
+
+        record.add_history()
+
+        self.assertEqual(
+            record.history[0],
+            {
+                "date": "2026-07-14",
+                "v_all": 100,
+                "v_types": 90,
+                "v_type_sex_age": 80,
+                "v_sex_age": 70,
+                "v_sex_age_child_6": 60,
+                "v_sex_age_child_7_12": 50,
+                "v_sex_age_parents": 40,
+                "v_type_in_pair": 30,
+                "coeff": 1.25,
+            },
+        )
+
+    def test_base_history_requires_history_fields(self):
+        record = self.get_record(self.BaseRecord)
+
+        with self.assertRaisesMessage(
+            NotImplementedError,
+            "BaseRecord must define history_fields.",
+        ):
+            record.add_history()
+
+    def test_rollback_previous_month_restores_dict_fields_and_consumes_snapshot(self):
+        record = self.get_record(self.PopularityRecord)
+        record.qty = 99
+        record.popularity_mean_all = 98
+        record.popularity_mean = 97
+        record.popularity_max = 96
+        record.history = [
+            {
+                "date": "2026-06-18",
+                "qty": 10,
+                "mean_all": 20,
+                "mean": 30,
+                "max": 40,
+            },
+            {"date": "2026-05-18", "qty": 1},
+        ]
+
+        restored = record.rollback_previous_month(date(2026, 7, 15))
+
+        self.assertTrue(restored)
+        self.assertEqual(record.qty, 10)
+        self.assertEqual(record.popularity_mean_all, 20)
+        self.assertEqual(record.popularity_mean, 30)
+        self.assertEqual(record.popularity_max, 40)
+        self.assertEqual(record.date.date(), date(2026, 6, 18))
+        self.assertEqual(record.modified.date(), date(2026, 6, 18))
+        self.assertEqual(record.history, [{"date": "2026-05-18", "qty": 1}])
+
+    def test_rollback_previous_month_supports_list_fields(self):
+        record = self.get_record(self.RatingRecord)
+        record.value = 99
+        record.place = 9
+        record.history = [{"date": "2026-06-30", "value": 30, "place": 2}]
+
+        self.assertTrue(record.rollback_previous_month(date(2026, 7, 1)))
+        self.assertEqual((record.value, record.place), (30, 2))
+        self.assertEqual(record.history, [])
+
+    def test_rollback_previous_month_does_not_use_older_or_partial_snapshot(self):
+        record = self.get_record(self.RatingRecord)
+        original = [
+            {"date": "broken", "value": 10, "place": 1},
+            {"date": "2026-06-10", "value": 20},
+            {"date": "2026-05-10", "value": 30, "place": 3},
+        ]
+        record.history = list(original)
+
+        self.assertFalse(record.rollback_previous_month(date(2026, 7, 15)))
+        self.assertEqual(record.history, original)
+
+    def test_rollback_previous_month_is_idempotent_for_same_fill_date(self):
+        record = self.get_record(self.RatingRecord)
+        record.history = [
+            {"date": "2026-06-10", "value": 20, "place": 2},
+            {"date": "2026-05-10", "value": 10, "place": 1},
+        ]
+
+        self.assertTrue(record.rollback_previous_month(date(2026, 7, 15)))
+        self.assertFalse(record.rollback_previous_month(date(2026, 7, 15)))
+        self.assertEqual((record.value, record.place), (20, 2))
 
 
 class NamedEntity:

@@ -8,6 +8,7 @@ import acesta.stats.dash  # noqa: F401
 from acesta.stats.views import get_recommendations_view
 from acesta.stats.views import history_view
 from acesta.stats.views import rating_view
+from acesta.stats.views import region_sight_change_view
 from acesta.stats.views import region_sights_remaining_view
 from acesta.stats.views import region_view
 from acesta.stats.views import set_regions_view
@@ -18,6 +19,11 @@ urlpatterns = [
         "dashboard/sights/remaining/",
         login_required(region_sights_remaining_view),
         name="region_sights_remaining",
+    ),
+    path(
+        "dashboard/sights/<int:sight_id>/change/",
+        login_required(region_sight_change_view),
+        name="region_sight_change",
     ),
     path("dashboard/", include("django_plotly_dash.urls")),
     path("dashboard/", login_required(region_view), name="region"),

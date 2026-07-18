@@ -1,0 +1,48 @@
+{% load static %}
+{% load text %}
+{% comment %} <h6>Текущая информация</h6> {% endcomment %}
+<dl class="sight-edit-details mb-0">
+  {% if sight.title %}
+    <div class="sight-edit-detail">
+      <dt>
+        {% if sight.primary_group %}
+          <svg aria-hidden="true" viewBox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#{{ sight.primary_group.name }}"></use></svg>
+        {% endif %}
+      </dt>
+      <dd>
+        <strong>{{ sight.title|nobreak_spaces }}</strong>
+        {% if sight.primary_group %}<span class="sight-edit-primary-group text-light">{{ sight.primary_group.title|nobreak_spaces }}</span>{% endif %}
+      </dd>
+    </div>
+  {% endif %}
+  {% if sight.tourism_types %}
+    <div class="sight-edit-detail">
+      <dt class="text-{{ sight.tourism_types.0.name }}"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#{{ sight.tourism_types.0.name }}"></use></svg></dt>
+      <dd class="sight-edit-tourism-types">
+        {{ sight.tourism_types.0.title|nobreak_spaces }}
+      </dd>
+    </div>
+  {% endif %}
+  {% if sight.address %}
+    <div class="sight-edit-detail">
+      <dt><svg aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#location"></use></svg></dt>
+      <dd>{{ sight.address }}
+        <small class="text-light d-block mt-2">{{ sight.lat|floatformat:5 }}, {{ sight.lon|floatformat:5 }}</small></dd>
+    </div>
+  {% endif %}
+  {% if sight.queries %}
+    <div class="sight-edit-detail">
+      <dt>
+          <svg  aria-hidden="true" width="24"><use href="{% static 'img/sprite.svg' %}#search"></use></svg>
+      </dt>
+      <dd>
+        <span class="sight-edit-query-block" title="<strong>Исходный запрос</strong><br>для&nbsp;формирования сезонного семантического ядра точки притяжения" data-bs-toggle="tooltip" data-bs-html="true">
+          <span class="sight-edit-query-list">
+            {% for query in sight.queries %}<span class="text-decoration-underline">{{ query }}</span>{% endfor %}
+          </span>
+          <svg fill="#939699" width="22" height="22" class="sight-edit-query-help" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>
+        </span>
+      </dd>
+    </div>
+  {% endif %}
+</dl>

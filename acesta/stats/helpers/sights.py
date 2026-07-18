@@ -131,12 +131,16 @@ def get_sights_by_group(code, group_filter):
         .prefetch_related(
             models.Prefetch(
                 "group",
-                queryset=SightGroup.objects.only("name", "title"),
+                queryset=SightGroup.objects.only("name", "title", "tourism_type"),
             )
         )
         .only(
             "id",
             "title",
+            "query",
+            "lat",
+            "lon",
+            "address",
             "code_id",
             "city_id",
             "code__code",
@@ -147,3 +151,23 @@ def get_sights_by_group(code, group_filter):
         )
         .order_by("title", "id")
     )
+
+
+def prepare_sights_for_template(sights):
+    """Attach display-only group data used by the region sight templates."""
+    tourism_type_titles = dict(settings.TOURISM_TYPES)
+
+    for sight in sights:
+        groups = list(sight.group.all())
+        sight.primary_group = groups[0] if groups else None
+        sight.tourism_types = [
+            {
+                "name": tourism_type,
+                "title": tourism_type_titles.get(tourism_type, tourism_type),
+            }
+            for tourism_type in dict.fromkeys(
+                group.tourism_type for group in groups if group.tourism_type
+            )
+        ]
+
+    return sights

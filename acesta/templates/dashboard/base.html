@@ -69,10 +69,7 @@
             <input type="search" class="form-control region-search-input" id="regionSearchInput" placeholder="Найти регион" autocomplete="off" tabindex="-1" data-region-search-input>
             <button type="button" class="region-search-clear btn-close" aria-label="Очистить поиск" tabindex="-1" hidden data-region-search-clear></button>
             <button type="button" class="region-search-toggle" title="Найти регион" aria-label="Открыть поиск по регионам" aria-controls="regionSearchInput" aria-expanded="false" data-region-search-toggle>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle cx="10.5" cy="10.5" r="6.5"></circle>
-                <path d="M15.5 15.5L21 21"></path>
-              </svg>
+              <svg aria-hidden="true" width="24"><use href="{% static 'img/sprite.svg' %}#search"></use></svg>
             </button>
           </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

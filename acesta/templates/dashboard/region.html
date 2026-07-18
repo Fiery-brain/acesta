@@ -35,14 +35,61 @@
             <div class="modal-body">
                 {% csrf_token %}
                 <div>
-                  <textarea required class="form-control" name="message" id="textMessage" rows="10" autocomplete="off"></textarea>
-                  <div id="messageHelp" class="form-text text-muted ms-2">Опишите подробно точки притяжения, которые хотите добавить в&nbsp;анализ</div>
+                  <textarea required class="form-control" name="message" id="textMessage" rows="10" autocomplete="off" placeholder="Опишите точку притяжения. Название, краткое описание, адрес или координаты" data-sight-add-message-input></textarea>
+                  <div id="messageHelp" class="form-text text-muted ms-2">Мы проверим ваше предложение перед&nbsp;обновлением данных сервиса</div>
                 </div>
                 {{ support_form.user }}
                 {{ support_form.subject }}
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Отправить</button>
+              <button type="submit" class="btn btn-lg btn-outline-primary" disabled data-sight-add-submit><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Отправить</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade sight-edit-modal" id="editSight" tabindex="-1" aria-labelledby="editSightLabel" aria-hidden="true" data-sight-edit-url="{% url 'region_sight_change' sight_id=0 %}">
+      <div class="modal-dialog modal-dialog-centered sight-edit-modal-dialog">
+        <div class="modal-content">
+          <form action="{% url 'support' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="subject" value="sights">
+            <input type="hidden" name="sight_id" value="" data-sight-edit-input>
+
+            <div class="modal-header bg-light">
+              <h5 class="modal-title" id="editSightLabel">
+                <svg fill="#429388" class="me-2" width="24" height="24" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#tourism"></use></svg>
+                Изменение точки притяжения
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+
+            <div class="modal-body sight-edit-modal-body">
+              <section class="sight-edit-panel" aria-live="polite">
+                <div class="sight-edit-loading" data-sight-edit-loading role="status">
+                  <span class="sight-edit-loader" aria-hidden="true"></span>
+                  <span>Загружаем информацию…</span>
+                </div>
+                <div class="sight-edit-message" data-sight-edit-message hidden>
+                  <span data-sight-edit-message-text></span>
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-sight-edit-retry>Повторить</button>
+                </div>
+                <div data-sight-edit-details hidden></div>
+              </section>
+
+              <section class="sight-edit-panel sight-edit-suggestion" aria-labelledby="sightSuggestionTitle">
+                <h6 id="sightSuggestionTitle">Что нужно изменить?</h6>
+                <label class="visually-hidden" for="sightSuggestion">Предлагаемые изменения</label>
+                <textarea required class="form-control" name="message" id="sightSuggestion" rows="10" autocomplete="off" placeholder="Опишите, что стоит изменить или уточнить" data-sight-edit-message-input></textarea>
+                <div class="form-text text-muted">Мы проверим ваше предложение перед&nbsp;обновлением данных сервиса</div>
+              </section>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-lg btn-outline-primary" disabled data-sight-edit-submit>
+                <svg fill="#429388" class="me-1" width="22" height="22" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>
+                Отправить
+              </button>
             </div>
           </form>
         </div>
@@ -79,12 +126,12 @@
       <div class="d-flex sight-stat-app-title">
         <h3 class="mb-0">Точки притяжения</h3>
         {% if request.GET.group == '' or request.GET.group %}
-          <a href="{% url 'region' %}" class="btn btn-sm ms-2 d-flex flex-wrap align-content-center" role="button">
-            <svg data-bs-toggle="tooltip" title="Показать график" fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#graph"></use></svg>
+          <a href="{% url 'region' %}" class="btn btn-sm ms-2 d-flex flex-wrap align-content-center sight-action" role="button" data-bs-toggle="tooltip" title="Показать график" >
+            <svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#graph"></use></svg>
           </a>
         {% else %}
-          <a href="{% url 'region' %}?group=" class="btn btn-sm ms-2 d-flex flex-wrap align-content-center" role="button">
-            <svg data-bs-toggle="tooltip" title="Показать список точек притяжения" fill="#939699" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#list"></use></svg>
+          <a href="{% url 'region' %}?group=" class="btn btn-sm ms-2 d-flex flex-wrap align-content-center sight-action" role="button" data-bs-toggle="tooltip" title="Редактировать точки притяжения" >
+            <svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#edit"></use></svg>
           </a>
         {% endif %}
       </div>
@@ -100,10 +147,7 @@
                   <input type="text" class="form-control sight-search-input" id="sightSearchInput" placeholder="Найти точки" autocomplete="off" tabindex="-1" data-sight-search-input>
                   <button type="button" class="sight-search-clear btn-close" aria-label="Очистить поиск" tabindex="-1" hidden data-sight-search-clear></button>
                   <button type="button" class="sight-search-toggle" title="{% if region_sights_has_more %}Список точек загружается{% else %}Найти точку притяжения{% endif %}" aria-label="{% if region_sights_has_more %}Список точек загружается{% else %}Открыть поиск точек притяжения{% endif %}" aria-controls="sightSearchInput" aria-expanded="false"{% if region_sights_has_more %} aria-disabled="true" disabled{% endif %} data-sight-search-toggle>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <circle cx="10.5" cy="10.5" r="6.5"></circle>
-                      <path d="M15.5 15.5L21 21"></path>
-                    </svg>
+                    <svg aria-hidden="true" width="24"><use href="{% static 'img/sprite.svg' %}#search"></use></svg>
                   </button>
                 </div>
               </div>
@@ -152,6 +196,7 @@
   <script src="{% static 'js/select2.min.js' %}"></script>
   <script src="{% static 'js/sight.group.selector.js' %}"></script>
   <script src="{% static 'js/region.sights.search.js' %}"></script>
+  <script src="{% static 'js/region.sight.edit.js' %}"></script>
   {% plotly_footer %}
   <script src="{% static 'js/dashboard.loader.js' %}"></script>
   {% include "include/recommendation_data_region.html" %}

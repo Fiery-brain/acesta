@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils import timezone
 
+from acesta.geo.models import Sight
 from acesta.user.forms import RequestForm
 from acesta.user.forms import SupportForm
 from acesta.user.utils import send_message
@@ -84,17 +85,44 @@ def support(request: HttpRequest) -> HttpResponse:
     :param request: django.http.HttpRequest
     :return: django.http.HttpResponse
     """
-    support_form = SupportForm(data=request.POST)
-
     if request.POST:
+        data = request.POST.copy()
+        data["user"] = request.user.pk
+        sight_id = data.get("sight_id")
+        sight = None
+
+        if sight_id and data.get("subject") == settings.SUPPORT_SIGHTS:
+            sight = Sight.pub.filter(
+                pk=sight_id,
+                code=request.user.current_region,
+            ).first()
+            suggestion = data.get("message", "").strip()
+            if sight and suggestion:
+                data["message"] = (
+                    f"ID точки притяжения: {sight.pk}\n"
+                    f"Название: {sight}\n"
+                    f"Предлагаемые изменения:\n{suggestion}"
+                )
+            else:
+                data["message"] = ""
+        elif data.get("subject") == settings.SUPPORT_SIGHTS:
+            data["message"] = data.get("message", "").strip()
+
+        support_form = SupportForm(data=data)
         if support_form.is_valid():
-            support_form.save()
+            support_message = support_form.save()
             messages.add_message(
                 request,
                 messages.SUCCESS,
                 "Спасибо! Мы получили сообщение и&nbsp;обработаем его в&nbsp;ближайшее время",
             )
-            send_message("Новое сообщение в техподдержку")
+            if support_message.subject == settings.SUPPORT_SIGHTS:
+                send_message(
+                    "Редактирование точек притяжения",
+                    support_message.message,
+                )
+            else:
+                send_message("Новое сообщение в техподдержку")
 
         else:
             messages.add_message(
