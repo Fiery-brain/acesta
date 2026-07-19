@@ -37,7 +37,7 @@ class CommercialOfferPDFTest(CredentialsMixin, test.TestCase):
         self.assertEqual(response["Content-Type"], "application/pdf")
         self.assert_pdf_filename(
             response,
-            f"Коммерческое предложение — {self.user.current_region.title} — "
+            "Коммерческое предложение — ацеста — "
             f"{timezone.localdate().strftime('%d.%m.%Y')}.pdf",
         )
         render.assert_called_once()
@@ -82,8 +82,7 @@ class CommercialOfferPDFTest(CredentialsMixin, test.TestCase):
         self.assertEqual(response["Content-Type"], "application/pdf")
         self.assert_pdf_filename(
             response,
-            "Коммерческое предложение на аналитический отчёт — "
-            f"{self.user.current_region.title} — "
+            "Коммерческое предложение на аналитический отчёт — ацеста — "
             f"{timezone.localdate().strftime('%d.%m.%Y')}.pdf",
         )
         render.assert_called_once()
@@ -100,8 +99,7 @@ class CommercialOfferPDFTest(CredentialsMixin, test.TestCase):
         self.assertIn(self.user.current_region.title, html)
         self.assertIn(
             "<title>Аналитический сервис ацеста. Коммерческое предложение "
-            "на аналитический отчёт для региона "
-            f"{self.user.current_region.title}</title>",
+            "на аналитический отчёт</title>",
             html,
         )
         self.assertFalse(response.has_header("Content-Disposition"))
