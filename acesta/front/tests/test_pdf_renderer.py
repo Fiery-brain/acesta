@@ -2,10 +2,12 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
+from django.test import RequestFactory
 from django.test import SimpleTestCase
 
 from acesta.front.pdf.renderer import render_pdf
 from acesta.front.pdf.resources import resolve_local_resource
+from acesta.front.pdf.response import document_response
 
 
 class PDFRendererTest(SimpleTestCase):
@@ -46,6 +48,25 @@ class PDFRendererTest(SimpleTestCase):
 
         self.assertTrue(path.is_file())
         self.assertEqual(path.name, "pdf_documents.css")
+
+    def test_static_finder_takes_priority_over_collected_copy(self):
+        with tempfile.TemporaryDirectory() as static_root:
+            collected_asset = Path(static_root) / "img" / "logo.png"
+            collected_asset.parent.mkdir()
+            collected_asset.write_bytes(b"old")
+            source_asset = Path(static_root) / "source" / "logo.png"
+            source_asset.parent.mkdir()
+            source_asset.write_bytes(b"current")
+
+            with self.settings(STATIC_ROOT=static_root), mock.patch(
+                "acesta.front.pdf.resources.finders.find",
+                return_value=str(source_asset),
+            ):
+                resolved = resolve_local_resource(
+                    "https://example.test/static/img/logo.png"
+                )
+
+        self.assertEqual(resolved, source_asset)
 
     def test_collected_static_resource_is_resolved_from_static_root(self):
         with tempfile.TemporaryDirectory() as static_root:
@@ -89,3 +110,18 @@ class PDFRendererTest(SimpleTestCase):
                     resolve_local_resource(
                         "https://example.test/media/%2e%2e/private.txt"
                     )
+
+
+class DocumentResponseTest(SimpleTestCase):
+    @mock.patch("acesta.front.pdf.response.render_pdf", return_value=b"%PDF-test")
+    def test_document_without_filename_does_not_set_disposition(self, render):
+        request = RequestFactory().get("/presentation/")
+
+        response = document_response(
+            request,
+            "<html><head><title>Presentation</title></head></html>",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.has_header("Content-Disposition"))
+        render.assert_called_once()

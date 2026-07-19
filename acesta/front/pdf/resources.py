@@ -15,6 +15,10 @@ def resolve_local_resource(url: str) -> Path | None:
         if not _is_safe_relative_path(relative_path):
             raise ValueError(f"Unsafe static resource path: {path}")
 
+        resolved_path = finders.find(relative_path)
+        if resolved_path:
+            return Path(resolved_path)
+
         static_root = Path(settings.STATIC_ROOT).resolve()
         collected_path = (static_root / relative_path).resolve()
         if not collected_path.is_relative_to(static_root):
@@ -22,10 +26,7 @@ def resolve_local_resource(url: str) -> Path | None:
         if collected_path.is_file():
             return collected_path
 
-        resolved_path = finders.find(relative_path)
-        if not resolved_path:
-            raise FileNotFoundError(f"Static resource not found: {path}")
-        return Path(resolved_path)
+        raise FileNotFoundError(f"Static resource not found: {path}")
 
     if path.startswith(settings.MEDIA_URL):
         relative_path = path.removeprefix(settings.MEDIA_URL).lstrip("/")

@@ -1,7 +1,8 @@
 {% extends "user/pdf/document_base.html" %}
 {% load text %}
 
-{% block title %}Tourism analytics acesta. Commercial Offer for Region {{ region.code }}{% endblock %}
+{% block title %}Аналитический сервис ацеста. Коммерческое предложение для региона {{ region.title }}{% endblock %}
+{% block filename %}Коммерческое предложение — ацеста — {% now "d.m.Y" %}.pdf{% endblock %}
 
 {% block content %}
   <p>Аналитический сервис ацеста предлагает рассмотреть возможность использования услуги <strong>«Полный&nbsp;доступ»</strong>.</p>

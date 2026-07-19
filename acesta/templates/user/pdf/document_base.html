@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="{{ pdf_base_url }}">
     <title>{% block title %}{{ TITLE }}{% endblock %}</title>
+    <meta name="pdf-filename" content="{% block filename %}{% endblock %}">
     <link rel="stylesheet" href="{% static 'css/pdf_documents.css' %}">
   </head>
   <body>

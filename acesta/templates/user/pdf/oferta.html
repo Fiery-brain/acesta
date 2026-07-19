@@ -1,10 +1,11 @@
 {% load static %}
 <html lang="ru">
 <head>
-  <title>Tourism analytics acesta. Public offer</title>
+  <title>Аналитический сервис ацеста. Оферта на оказание услуг</title>
   <meta charset="utf-8">
   <meta name="author" content="Eugena Mikhaylikova">
   <meta name="subject" content="Tourism analytics service - acesta. Public offer">
+  <meta name="pdf-filename" content="{% block filename %}Оферта на оказание услуг — ацеста — {% now "d.m.Y" %}.pdf{% endblock %}">
   <base href="{{ pdf_base_url }}">
   <link rel="stylesheet" href="{% static 'css/pdf_documents.css' %}">
   </head>
