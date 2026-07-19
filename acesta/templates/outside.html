@@ -10,16 +10,22 @@
 {% block body %}
   <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white navbar-outside">
     <div class="container">
-      <a class="navbar-brand mt-3" href="{% url 'index' %}" title="{{ TITLE }}">
-        <svg width="200" class="logo" viewBox="0 0 281 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <a class="navbar-brand" href="{% url 'index' %}" title="{{ TITLE }}">
+        <svg width="200" class="logo d-none d-sm-inline" viewBox="0 0 300 61" fill="none" xmlns="http://www.w3.org/2000/svg">
           <use href="{% static 'img/sprite.svg' %}#logo-2"></use>
         </svg>
-        <h2 class="logo-tags mt-1">{{ HASH_TAGS }}</h2>
+        <svg width="44" height="44" class="logo logo-a d-sm-none" viewBox="0 0 46.3 46.3" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <use href="{% static 'img/sprite.svg' %}#logo-a"></use>
+        </svg>
+        <h2 class="logo-tags mt-1 mb-0">{{ HASH_TAGS }}</h2>
       </a>
       {% with url=request.resolver_match.url_name %}
-        <ul class="navbar-nav align-items-end mt-3">
+        <ul class="navbar-nav flex-row align-items-center">
+          <li class="nav-item d-flex align-items-center">
+            {% include "include/contact_block.html" %}
+          </li>
           <li class="nav-item">
-            <a class="btn btn-lg btn-outline-accent px-4" href="{% if url == 'account_login' %}{% url 'account_signup' %}{% elif url == 'account_signup' %}{% url 'account_login' %}{% else %}{% url 'region' %}{% endif %}" title="{% if url == 'account_login' %}Зарегистрироваться{% else %}Войти{% endif %}">
+            <a class="btn btn-lg btn-outline-accent px-4 ms-4" href="{% if url == 'account_login' %}{% url 'account_signup' %}{% elif url == 'account_signup' %}{% url 'account_login' %}{% else %}{% url 'region' %}{% endif %}" title="{% if url == 'account_login' %}Зарегистрироваться{% else %}Войти{% endif %}">
               <svg fill="#b7072a" width="22" height="22" class="me-md-2"><use href="{% static 'img/sprite.svg' %}#{% if url == 'account_login' %}sign-up{% else %}sign-in{% endif %}"></use></svg><span class="d-none d-md-inline">{% if url == 'account_login' %}Зарегистрироваться{% else %}Войти{% endif %}</span>
             </a>
           </li>

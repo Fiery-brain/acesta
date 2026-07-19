@@ -13,6 +13,8 @@ from acesta.stats.admin import MonitorSightsAdmin
 admin.site.site_header = settings.ADMIN_TITLE
 admin.site.site_title = settings.ADMIN_TITLE
 
+handler500 = "acesta.front.server_errors.server_error"
+
 
 urlpatterns = [
     path(
@@ -79,9 +81,23 @@ urlpatterns = [
 
 
 if settings.DEBUG:
-    # # This allows the error pages to be debugged during development, just visit
-    # # these url in browser to see how these error pages look like.
+    from acesta.front.server_errors import error_page_preview
+
+    debug_urlpatterns = [
+        path(
+            "__debug__/500/",
+            error_page_preview,
+            name="error_500_preview_public",
+        ),
+        path(
+            "__debug__/dashboard-500/",
+            error_page_preview,
+            {"dashboard": True},
+            name="error_500_preview_dashboard",
+        ),
+    ]
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
-        urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+        debug_urlpatterns.append(path("__debug__/", include(debug_toolbar.urls)))
+    urlpatterns = debug_urlpatterns + urlpatterns

@@ -11,10 +11,15 @@
         <div class="col-12 col-sm-5 col-xl-3 logo_col d-flex flex-column justify-content-between">
           <div>
             {% if segment_name != DEFAULT_SEGMENT %}
+            <a href="/">
+            {% endif %}
+              <svg width="150" class="logo_img my-0"><use href="{% static 'img/sprite.svg' %}#logo-2-dark"></use></svg>
+            {% if segment_name != DEFAULT_SEGMENT %}
+            </a>
+            {% endif %}
+            {% if segment_name != DEFAULT_SEGMENT %}
             <a href="/" class="text-white">
             {% endif %}
-
-              <svg width="150" class="logo_img my-0"><use href="{% static 'img/sprite.svg' %}#logo-2-dark"></use></svg>
               <h5 class="w-75">{{ SEGMENT_HASH_TAGS|default:HASH_TAGS }}</h5>
             {% if segment_name != DEFAULT_SEGMENT %}
             </a>

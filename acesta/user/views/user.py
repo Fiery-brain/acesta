@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.utils import timezone
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 
@@ -48,10 +47,6 @@ def oferta(request: HttpRequest) -> HttpResponse:
     response = document_response(request, html)
     if response.status_code != 200 or request.GET.get("format", "pdf") == "html":
         return response
-
-    response[
-        "Content-Disposition"
-    ] = f"attachment; filename=acesta-offer-{timezone.now().strftime('%d.%m.%Y')}.pdf"
 
     region = getattr(request.user, "current_region", "")
     send_message(f"""Загрузка оферты {region} {request.user}""")
@@ -116,11 +111,6 @@ def offer(request: HttpRequest) -> HttpResponse:
     if response.status_code != 200 or request.GET.get("format", "pdf") == "html":
         return response
 
-    response["Content-Disposition"] = (
-        f"attachment; filename=acesta-offer-{request.user.current_region.code}"
-        f"-{timezone.now().strftime('%d.%m.%Y')}.pdf"
-    )
-
     send_message(
         f"""Загрузка коммерческого предложения на полный доступ
     {request.user.current_region} {request.user}"""
@@ -139,11 +129,6 @@ def offer_report(request: HttpRequest) -> HttpResponse:
     response = document_response(request, html)
     if response.status_code != 200 or request.GET.get("format", "pdf") == "html":
         return response
-
-    response["Content-Disposition"] = (
-        f"attachment; filename=acesta-offer-report-{request.user.current_region.code}"
-        f"-{timezone.now().strftime('%d.%m.%Y')}.pdf"
-    )
 
     send_message(
         f"""Загрузка коммерческого предложения на отчет

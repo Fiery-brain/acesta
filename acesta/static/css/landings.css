@@ -4,7 +4,6 @@
 
 .landing-hub-page,.segment-landing-page{--landing-nav-safe:118px;--landing-screen-cap:820px;background:#fff}
 .segment-landing-page{--segment-section-join:#F8FCFB}
-.logo{position:relative; top:2px}
 
 @media (min-width:992px) {
   .screen-block{height:100vh;max-height:950px;min-height:650px}

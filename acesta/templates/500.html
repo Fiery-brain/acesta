@@ -1,30 +1,200 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Внутренняя ошибка сервера | ацеста</title>
-    <style>
-      :root {color-scheme:light}
-      * {box-sizing:border-box}
-      body {margin:0;background:#f7f8f8;color:#314f5d;font-family:Arial,sans-serif}
-      main {min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
-      section {width:min(100%,680px);padding:48px;background:#fff;border:1px solid #d5e0e3;border-radius:16px;box-shadow:0 12px 32px rgba(49,79,93,.08)}
-      p {font-size:18px;line-height:1.55}
-      .code {margin:0;color:#429388;font-size:18px;font-weight:700}
-      h1 {margin:8px 0 24px;font-size:36px;line-height:1.15}
-      a {display:inline-block;margin-top:16px;color:#34766a;font-size:18px;font-weight:700;text-decoration-thickness:1px;text-underline-offset:4px}
-      @media (max-width:576px) {section{padding:32px 24px}h1{font-size:30px}}
-    </style>
-  </head>
-  <body>
-    <main>
-      <section>
-        <p class="code">Ошибка 500</p>
-        <h1>Внутренняя ошибка сервера</h1>
-        <p>Мы уже получили сведения об этой ошибке. Попробуйте загрузить страницу через некоторое время. Если ошибка повторяется, напишите нам.</p>
-        <a href="/">Вернуться на главную</a>
-      </section>
-    </main>
-  </body>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ошибка 500  | ацеста</title>
+<meta content="Аналитический сервис для оценки туристического потенциала, нахождения точек роста и разработки эффективных стратегий развития туризма" name="description"/>
+<meta content="website" property="og:type"/>
+<meta content="ru_RU" property="og:locale"/>
+<meta content="ацеста" property="og:title"/>
+<meta content="Аналитический сервис для оценки туристического потенциала, нахождения точек роста и разработки эффективных стратегий развития на уровне точки притяжения, города, региона" property="og:description"/>
+<meta content="https://acesta.ru/" property="og:url"/>
+<meta content="/static/img/og/acesta.cover.png" property="og:image"/>
+<meta content="/static/img/og/acesta.cover.png" property="og:image:secure_url"/>
+<meta content="image/png" property="og:image:type"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="/static/img/og/acesta.logo.600.600.png" property="og:image"/>
+<meta content="/static/img/og/acesta.logo.600.600.png" property="og:image:secure_url"/>
+<meta content="image/png" property="og:image:type"/>
+<meta content="600" property="og:image:width"/>
+<meta content="600" property="og:image:height"/>
+<meta content="/static/img/og/acesta.cover.vk.png" property="vk:image"/>
+<meta content="/static/img/og/acesta.cover.vk.png" property="vk:image:secure_url"/>
+<meta content="image/png" property="vk:image:type"/>
+<meta content="537" property="vk:image:width"/>
+<meta content="240" property="vk:image:height"/>
+<link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="/static/css/toast.css" rel="stylesheet"/>
+<link href="/static/css/select2.min.css" rel="stylesheet"/>
+<link href="/static/css/base.css" rel="stylesheet"/>
+<link href="/static/img/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="/static/img/favicon.svg" rel="shortcut icon" type="image/svg+xml"/>
+</head>
+<body>
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white navbar-outside">
+<div class="container">
+<a class="navbar-brand" href="/" title="ацеста">
+<svg class="logo d-none d-sm-inline" fill="none" viewbox="0 0 300 61" width="200" xmlns="http://www.w3.org/2000/svg">
+<use href="/static/img/sprite.svg#logo-2"></use>
+</svg>
+<svg class="logo logo-a d-sm-none" fill="none" height="44" viewbox="0 0 46.3 46.3" width="44" xmlns="http://www.w3.org/2000/svg">
+<use href="/static/img/sprite.svg#logo-a"></use>
+</svg>
+<h2 class="logo-tags mt-1 mb-0">#туризм #ии #данные #аналитика</h2>
+</a>
+<ul class="navbar-nav flex-row align-items-center">
+<li class="nav-item d-flex align-items-center">
+<div class="contact-block d-flex align-content-center me-4">
+<span class="d-none d-md-inline-flex align-items-center text-muted">Свяжитесь с нами</span>
+<ul class="list-unstyled d-flex align-items-center mb-0 ms-1">
+<li class="d-inline-block ms-2"><a href="https://max.ru/u/f9LHodD0cOKxYiTuAPxhRcoMCPqI_HoMUxH3eSQinF2Mhjb65BFs765bXpw" rel="external nofollow" target="_blank" title="Спросить в Max"><svg><use href="/static/img/sprite.svg#max_colored"></use></svg></a></li>
+<li class="d-inline-block ms-1"><a href="https://t.me/eugena" rel="external nofollow" target="_blank" title="Спросить в Telegram"><svg fill="#95f0e8"><use href="/static/img/sprite.svg#telegram_colored"></use></svg></a></li>
+</ul>
+</div>
+</li>
+<li class="nav-item">
+<a class="btn btn-lg btn-outline-accent px-4 ms-4" href="/dashboard/" title="Войти">
+<svg class="me-md-2" fill="#b7072a" height="22" width="22"><use href="/static/img/sprite.svg#sign-in"></use></svg><span class="d-none d-md-inline">Войти</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<div class="wrapper bg-white d-flex flex-column justify-content-between">
+<div class="container pb-5 container-outside">
+<div class="row">
+<div class="col pt-5">
+<h1>Внутренняя ошибка сервера</h1>
+</div>
+</div>
+<p>Мы уже получили сведения об этой ошибке. Попробуйте загрузить страницу через некоторое время. Если ошибка повторяется, напишите нам.</p>
+</div>
+<footer class="footer">
+<div class="container-fluid px-0 bg-white pt-5 footer-wave footer-wave-undefined">
+<svg viewbox="0 0 1439 191" xmlns="http://www.w3.org/2000/svg"><path d="m0 34.775 48.027 4.082c62.992 5.206 125.84 12.713 187.753 26.626 74.702 16.776 145.519 48.123 219.915 65.906 71.932 17.202 138.216 10.778 206.227-19.311C729.609 82.143 792.691 39.38 863.4 17.553c95.873-29.606 187.46-18.408 287.97 12.243 95.58 29.148 189.18 42.398 287.63 0v160.586H0V34.774Z" fill="currentColor"></path><path d="m0 87.315 48.027 19.97c47.846 19.969 143.9 59.907 239.773 50 95.873-9.733 191.927-69.447 287.8-100.89 162.679-53.62 330.282-37.275 497.12 1.16 126.45 29.13 248.69 77.065 366.28 40.17V191H0z" fill="#0c4940"></path></svg>
+</div>
+<div class="main">
+<div class="container">
+<div class="row">
+<div class="col-12 col-sm-5 col-xl-3 logo_col d-flex flex-column justify-content-between">
+<div>
+<a href="/">
+<svg class="logo_img my-0" width="150"><use href="/static/img/sprite.svg#logo-2-dark"></use></svg>
+</a>
+<a class="text-white" href="/">
+<h5 class="w-75">#туризм #ии #данные #аналитика</h5>
+</a>
+</div>
+<div class="d-none d-sm-block d-xl-none">
+<div>
+<h5 class="text-uppercase d-block d-sm-none d-xl-block">Сервис</h5>
+<ul class="list-unstyled">
+<li class="mt-2"><a class="py-2 text-nowrap" href="/help/" title="Открыть подробное описание"><svg class="me-2" fill="#95f0e8" height="26" width="26"><use href="/static/img/sprite.svg#help"></use></svg>Как это работает</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-12 col-sm-7 col-xl-6 mt-3 mt-sm-0 ps-sm-5">
+<div class="container px-0">
+<div class="row">
+<h5 class="text-uppercase">Аналитика</h5>
+<div class="col-12 col-lg-6 col-xl-5">
+<ul class="list-unstyled mb-0">
+<li>
+<a class="py-2" href="/tourist-investor/">для инвесторов</a>
+</li>
+<li>
+<a class="py-2" href="/tourism-product-owner/">для предпринимателей</a>
+</li>
+<li>
+<a class="py-2" href="/tour-operator/">для туроператоров</a>
+</li>
+<li>
+<a class="py-2" href="/tour-agent/">для турагентов</a>
+</li>
+<li>
+<a class="py-2" href="/government/">для госслужащих</a>
+</li>
+<li>
+<a class="py-2" href="/tic/">для сотрудников ТИЦ</a>
+</li>
+</ul>
+</div>
+<div class="col-12 col-lg-6 col-xl-5">
+<ul class="list-unstyled">
+<li>
+<a class="py-2" href="/hospitality/">для отельеров</a>
+</li>
+<li>
+<a class="py-2" href="/tourist-guide/">для экскурсоводов</a>
+</li>
+<li>
+<a class="py-2" href="/marketing-agency/">для маркетологов</a>
+</li>
+<li>
+<a class="py-2" href="/tourism-event/">для организаторов событий</a>
+</li>
+<li>
+<a class="py-2" href="/transportation/">для перевозчиков</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="d-block d-sm-none d-xl-block col-xl-3 mt-2 mt-lg-0">
+<div>
+<h5 class="text-uppercase d-block d-sm-none d-xl-block">Сервис</h5>
+<ul class="list-unstyled">
+<li class="mt-2"><a class="py-2 text-nowrap" href="/help/" title="Открыть подробное описание"><svg class="me-2" fill="#95f0e8" height="26" width="26"><use href="/static/img/sprite.svg#help"></use></svg>Как это работает</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="row footer-border mt-5 mt-sm-4">
+<div class="col-12 col-lg-6 mt-4 d-flex">
+<div class="logo_legacy d-flex align-items-center">
+<ul class="list-unstyled mb-0">
+<li class="d-sm-inline-block"><a class="py-2" href="/terms/"><small>Условия использования</small></a></li>
+<li class="d-sm-inline-block ms-sm-3"><a class="py-2" href="/privacy/"><small>Политика конфиденциальности</small></a></li>
+</ul>
+</div>
+</div>
+<div class="col-12 col-lg-6 mt-4 d-flex justify-content-lg-end">
+<div class="d-flex align-items-center">
+<ul class="list-unstyled mb-0 we-are-in-network">
+<li class="d-none d-sm-inline-block ms-1">Мы в сети</li>
+<li class="d-inline-block ms-1"><a href="https://max.ru/join/1bQ-_YEjUDtkRo-_vmFk_ST4mvWhAA0GspHd79IWfE4" rel="external nofollow" target="_blank" title="Мы в Max"><svg><use href="/static/img/sprite.svg#max_nocolor"></use></svg></a></li>
+<li class="d-inline-block ms-1"><a href="https://www.vk.com/acesta_ru" rel="external nofollow" target="_blank" title="Мы ВКонтакте"><svg><use href="/static/img/sprite.svg#vk_nocolor"></use></svg></a></li>
+<li class="d-inline-block ms-1"><a href="https://t.me/acesta_ru" rel="external nofollow" target="_blank" title="Мы в Телеграм"><svg><use href="/static/img/sprite.svg#telegram_nocolor"></use></svg></a></li>
+<li class="d-inline-block ms-1"><a href="https://github.com/Fiery-brain/acesta" rel="external nofollow" target="_blank" title="Мы на github"><svg><use href="/static/img/sprite.svg#github_nocolor"></use></svg></a></li>
+<li class="d-inline-block ms-1"><a href="https://smarteka.com/practices/analiz-cifrovogo-sleda-turista-2" rel="external nofollow" target="_blank" title="Мы на Смартеке"><svg><use href="/static/img/sprite.svg#smarteka_nocolor"></use></svg></a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div aria-label="Уведомление об использовании cookie" class="cookie-banner" id="cookieBanner" role="region">
+<div class="container">
+<div class="cookie-banner-inner">
+<div aria-hidden="true" class="cookie-banner-icon">
+<svg focusable="false">
+<use href="/static/img/sprite.svg#cookie"></use>
+</svg>
+</div>
+<div class="cookie-banner-copy">
+<h2>Мы используем файлы cookie</h2>
+<p>Они помогают нам улучшать работу сайта, анализировать трафик и показывать вам более подходящий контент</p>
+</div>
+<a class="cookie-banner-link" href="/privacy/">Политика конфиденциальности</a>
+<button class="btn btn-primary cookie-banner-button" id="cookieBannerButton" type="button">Понятно</button>
+</div>
+</div>
+</div>
+</body>
 </html>
