@@ -278,13 +278,13 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
         def get_trend(current, previous):
             if previous is None or current == previous:
                 return (
-                    '<span class="interest-trend-slot place_change '
+                    '<span class="trend-slot place_change '
                     'place_change_neural">-</span>'
                 )
             if current > previous:
-                return '<span class="interest-trend-slot place_change">' "&uarr;</span>"
+                return '<span class="trend-slot place_change">' "&uarr;</span>"
             return (
-                '<span class="interest-trend-slot place_change '
+                '<span class="trend-slot place_change '
                 'place_change_negative">&darr;</span>'
             )
 
@@ -323,7 +323,7 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
         ]
 
     if not df.iloc[0].get("qty_display"):
-        empty_slot = '<span class="interest-trend-slot">&nbsp;</span>'
+        empty_slot = '<span class="trend-slot">&nbsp;</span>'
         df["qty_display"] = empty_slot
         df["ppt_display"] = empty_slot
         df["history_action"] = ""

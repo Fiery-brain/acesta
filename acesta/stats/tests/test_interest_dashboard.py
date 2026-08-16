@@ -271,6 +271,7 @@ class PopularityTableTrendTest(TestCase):
 
         self.assertIn("120", growth["qty_display"])
         self.assertIn("150%", growth["ppt_display"])
+        self.assertIn("trend-slot", growth["qty_display"])
         self.assertIn("place_change", growth["qty_display"])
         self.assertIn("&uarr;", growth["ppt_display"])
         self.assertIn("place_change_negative", decline["qty_display"])
@@ -300,6 +301,7 @@ class PopularityTableTrendTest(TestCase):
 
         row = self.build_table(RegionCityPopularity, rows)[0]
 
+        self.assertIn("trend-slot", row["qty_display"])
         self.assertIn("&uarr;", row["qty_display"])
         self.assertIn("&uarr;", row["ppt_display"])
 

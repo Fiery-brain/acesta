@@ -151,3 +151,38 @@ def place_change(value):
         "change_text": f"+{change}",
         "change_class": "",
     }
+
+
+def _get_value_change(value):
+    if isinstance(value, dict):
+        current_value = value.get("value")
+        previous_value = value.get("previous_value")
+    else:
+        current_value = getattr(value, "value", None)
+        previous_value = getattr(value, "previous_value", None)
+        if previous_value is None and hasattr(value, "get_previous_history_value"):
+            previous_value = value.get_previous_history_value("value")
+    current_value = _normalize_int(current_value)
+    previous_value = _normalize_int(previous_value)
+    if current_value is None or previous_value is None:
+        return None
+    return current_value - previous_value
+
+
+@register.inclusion_tag("include/rating_value_change.html")
+def rating_value_change(value):
+    change = _get_value_change(value)
+    if change is None or change == 0:
+        return {
+            "change_text": "-",
+            "change_class": "trend-slot place_change place_change_neural",
+        }
+    if change < 0:
+        return {
+            "change_text": "↓",
+            "change_class": "trend-slot place_change place_change_negative",
+        }
+    return {
+        "change_text": "↑",
+        "change_class": "trend-slot place_change",
+    }

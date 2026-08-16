@@ -1,9 +1,9 @@
-@font-face {font-family:'Golos';font-style:normal;font-weight:400;src:url('../font/GolosText-Regular.ttf');format('truetype')}
-@font-face {font-family:'Golos';font-style:normal;font-weight:500;src:url('../font/GolosText-Medium.ttf');format('truetype')}
-@font-face {font-family:'Golos';font-style:normal;font-weight:600;src:url('../font/GolosText-SemiBold.ttf');format('truetype')}
-@font-face {font-family:'Golos';font-style:normal;font-weight:700;src:url('../font/GolosText-Bold.ttf');format('truetype')}
-@font-face {font-family:'Golos';font-style:normal;font-weight:800;src:url('../font/GolosText-ExtraBold.ttf');format('truetype')}
-@font-face {font-family:'Golos';font-style:normal;font-weight:900;src:url('../font/GolosText-Black.ttf');format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:400;src:url('../font/GolosText-Regular.ttf') format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:500;src:url('../font/GolosText-Medium.ttf') format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:600;src:url('../font/GolosText-SemiBold.ttf') format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:700;src:url('../font/GolosText-Bold.ttf') format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:800;src:url('../font/GolosText-ExtraBold.ttf') format('truetype')}
+@font-face {font-family:'Golos';font-style:normal;font-weight:900;src:url('../font/GolosText-Black.ttf') format('truetype')}
 
 :root{
     --acesta-text-primary:#2f4d5a;
@@ -13,6 +13,7 @@
     --acesta-dark-primary:#34766A;
     --acesta-very-dark-primary:#244F47;
     --acesta-light-primary:#B2DFDB;
+    --acesta-bright-primary:#5FE6D3;
     --acesta-accent-secondary:#fab222;
     --acesta-light-accent-secondary:#f8d691;
     --acesta-accent-primary:#C44D63;
@@ -20,6 +21,9 @@
     --acesta-accent-primary-dark:#ad223c;
     --acesta-divider:#DCDCDC;
     --acesta-bg:#f8f9fc;
+
+    --acesta-border-light-color: 211, 222, 225;
+    --acesta-border-light: rgb(var(--acesta-border-light-color));
 
     --acesta-rank-color: 52, 118, 106;        /* #34766A */
     --acesta-sights-color: 233, 155, 0;   /* #e99b00 */
@@ -45,8 +49,8 @@
     --acesta-museum:#D57465;
     --acesta-theatre:#D1615A;
     --acesta-extreme:#C65264;
-
     --acesta-manufactures:#479095;
+
     --acesta-lakes:#499587;
     --acesta-mount:#549985;
     --acesta-nationalparks:#609C83;
@@ -135,8 +139,8 @@
     --acesta-segment-transportation-bg:rgba(216,96,96,.06);
     --acesta-segment-transportation-dark:color-mix(in srgb, var(--acesta-segment-transportation) 70%, var(--acesta-very-dark-primary));
 
-    --acesta-border-light-color: 211, 222, 225;
-    --acesta-border-light: rgb(var(--acesta-border-light-color))
+    --acesta-history:#9E81BE;
+    --acesta-ai:#EA7D63;
 }
 .acesta-segment-theme-tourist-investor{--acesta-current-segment-color:var(--acesta-segment-tourist-investor);--acesta-current-segment-color-dark:var(--acesta-segment-tourist-investor-dark)}
 .acesta-segment-theme-tourism-product-owner{--acesta-current-segment-color:var(--acesta-segment-tourism-product-owner);--acesta-current-segment-color-dark:var(--acesta-segment-tourism-product-owner-dark)}
@@ -291,9 +295,12 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .rounded-top-left{border-top-left-radius:var(--bs-border-radius)!important}
 .rounded-top-right{border-top-right-radius:var(--bs-border-radius)!important}
 
+.bg-grey{--bs-table-bg: var(--acesta-bg);background-color:var(--acesta-bg)}
 .bg-green{background-color:var(--acesta-dark-primary)}
 .bg-yellow{background-color:var(--acesta-accent-secondary)}
 .bg-red{background-color:#c73b55}
+.bg-coral{--bs-table-bg: #D97A6A;background-color:#D97A6A}
+.bg-yellow-green{--bs-table-bg: #9AAE55;background-color:#9AAE55}
 
 .bg-museum{background-image:url('../img/sprite.svg#museum')!important}
 .bg-spa{background-image:url('../img/sprite.svg#spa')!important}
@@ -372,7 +379,7 @@ body{min-width:320px;width:auto !important;width:320px; color:var(--acesta-text-
 .dropdown-toggle::after{vertical-align:.12em}
 .dropdown-item{padding-right:2em}
 th{background-color:var(--acesta-bg)!important}
-.table-fixed-head thead th{ position:sticky; top:0; z-index:1; }
+.table-fixed-head thead th{ position:sticky; top:0; z-index:1}
 
 .modal-header svg,
 .btn svg{transform:translateY(-2px)}
@@ -607,7 +614,7 @@ summary:focus, */
 .btn.active,
 .btn-close:focus,
 .btn-close:active
-{outline:0px !important;-webkit-appearance:none;box-shadow:none !important}
+{outline:0px !important;--webkit-appearance:none;box-shadow:none !important}
 textarea.form-control{min-height: 100px;}
 
 .form-control:focus,.form-select:focus{border:1px solid var(--acesta-primary)}
@@ -630,7 +637,8 @@ textarea.form-control{min-height: 100px;}
 .bg-viber{background-image:url('../img/sprite.svg#viber')!important }
 .bg-max{background-image:url('../img/sprite.svg#max')!important }
 
-.dot {height:8px;width:8px;background-color:var(--acesta-dark-primary);border-radius:50%;display:inline-block;transform:translateY(-2px)}
+.dot {height:8px;width:8px;background-color:var(--acesta-positive-value);border-radius:50%;display:inline-block;transform:translateY(-2px)}
+
 .request-button{position:fixed;bottom:20px;right:20px;z-index: 99;font-size: 18px;border:none;outline:none;color:white;cursor:pointer;border-radius:4px}
 
 .cookie-banner{display:none;position:fixed;left:0;right:0;bottom:24px;z-index:1035;width:100%}

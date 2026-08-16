@@ -479,3 +479,8 @@ def build_history_payload(user, domain, entity_type, entity_id):
         "reverse_axis": reverse_axis,
         "series": _series(instance, specs),
     }
+
+
+def build_numeric_series(instance, specs):
+    """Return dashboard-compatible observed and forecast numeric series."""
+    return _series(instance, specs)

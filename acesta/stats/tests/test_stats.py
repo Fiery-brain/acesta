@@ -1409,6 +1409,22 @@ class PlaceChangeTemplateTagTest(test.SimpleTestCase):
         self.assertIn('metric="rank" rank=row.rank group=True', rating_template)
         self.assertIn('metric="interest" rank=row.rank group=True', rating_template)
 
+    def test_rating_template_renames_interest_request_headings(self):
+        rating_template = (
+            Path(__file__).resolve().parents[2] / "templates/dashboard/rating.html"
+        ).read_text()
+
+        self.assertEqual(rating_template.count("Запросы (Интерес)"), 4)
+
+    def test_outside_rating_sights_have_no_history_or_value_change(self):
+        outside_block = self.get_rating_template_loop_block(
+            "{% for sight in outside_rating_sight %}"
+        )
+
+        self.assertIn('<td class="rating-history-cell"></td>', outside_block)
+        self.assertNotIn("history_action.html", outside_block)
+        self.assertNotIn("rating_value_change", outside_block)
+
     def test_region_rating_row_renders_league_marker(self):
         rendered = Template(
             "{% load stats %}"
@@ -1712,6 +1728,48 @@ class PlaceChangeTemplateTagTest(test.SimpleTestCase):
         return Template("{% load stats %}{% place_change value %}").render(
             Context({"value": value})
         )
+
+    def render_rating_value_change(self, value):
+        return Template("{% load stats %}{% rating_value_change value %}").render(
+            Context({"value": value})
+        )
+
+    def test_rating_value_change_renders_growth(self):
+        rendered = self.render_rating_value_change(
+            {"value": 10500, "previous_value": 10000}
+        )
+
+        self.assertIn("↑", rendered)
+        self.assertNotIn("+500", rendered)
+        self.assertIn("trend-slot place_change", rendered)
+        self.assertNotIn("place_change_negative", rendered)
+
+    def test_rating_value_change_renders_decline(self):
+        rendered = self.render_rating_value_change(
+            {"value": 10000, "previous_value": 10500}
+        )
+
+        self.assertIn("↓", rendered)
+        self.assertNotIn("-500", rendered)
+        self.assertIn("trend-slot place_change", rendered)
+        self.assertIn("place_change_negative", rendered)
+
+    def test_rating_value_change_renders_zero(self):
+        rendered = self.render_rating_value_change(
+            {"value": 10000, "previous_value": 10000}
+        )
+
+        self.assertIn(">-</span>", rendered)
+        self.assertNotIn("+0", rendered)
+        self.assertIn("trend-slot place_change", rendered)
+        self.assertIn("place_change_neural", rendered)
+
+    def test_rating_value_change_renders_dash_without_previous_value(self):
+        rendered = self.render_rating_value_change({"value": 10000})
+
+        self.assertIn(">-</span>", rendered)
+        self.assertIn("trend-slot place_change", rendered)
+        self.assertIn("place_change_neural", rendered)
 
     def test_place_change_positive(self):
         rendered = self.render_place_change(2)

@@ -86,7 +86,7 @@
                 <th scope="col" class="rating-history-heading" aria-label="История"></th>
                 <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col" colspan="2" class="ps-1">Точка притяжения</th>
-                <th scope="col" class="text-nowrap text-end pe-4">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов по&nbsp;топ-3 семантического ядра за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
+                <th scope="col" class="text-nowrap text-end pe-2">Запросы (Интерес) <a href="#" data-bs-toggle="tooltip" title="Количество запросов по&nbsp;топ-3 семантического ядра за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
             </thead>
             <tbody>
@@ -129,7 +129,7 @@
                     </small>
                   </div>
                 </td>
-                <td class="text-end pe-4">{{ place.value }}</td>
+                <td class="text-end pe-2">{{ place.value }}{% rating_value_change place %}</td>
               </tr>
               {% endfor %}
               {% for sight in outside_rating_sight %}
@@ -149,7 +149,7 @@
                     </small>
                   </div>
                 </td>
-                <td class="text-end pe-4">0</td>
+                <td class="text-end pe-2">0</td>
               </tr>
               {% endfor %}
               {% if not interest_sight_places|length and not outside_rating_sight|length %}
@@ -170,7 +170,7 @@
                 <th scope="col" class="rating-history-heading" aria-label="История"></th>
                 <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col" colspan="2" class="ps-1">Точка притяжения</th>
-                <th scope="col" class="text-nowrap text-end pe-4">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов по&nbsp;топ-3 семантического ядра за месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
+                <th scope="col" class="text-nowrap text-end pe-2">Запросы (Интерес) <a href="#" data-bs-toggle="tooltip" title="Количество запросов по&nbsp;топ-3 семантического ядра за месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
             </thead>
             <tbody>
@@ -206,7 +206,7 @@
                     </small>
                   </div>
                 </td>
-                <td class="text-end pe-4">{{ place.value }}</td>
+                <td class="text-end pe-2">{{ place.value }}{% rating_value_change place %}</td>
               </tr>
               {% empty %}
               <tr>
@@ -259,7 +259,7 @@
                 <th scope="col" class="rating-history-heading" aria-label="История"></th>
                 <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col">Город</th>
-                <th scope="col" class="text-nowrap text-end pe-2">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения города за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
+                <th scope="col" class="text-nowrap text-end pe-2">Запросы (Интерес) <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения города за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
             </thead>
             <tbody>
@@ -277,7 +277,7 @@
                   </div>
                 </td>
                 <td><svg width="22" height="22" class="me-2"><use href="{% static 'img/sprite.svg' %}#city"></use></svg>{{ place.home_code }}</td>
-                <td class="text-end pe-4">{{ place.value }}</td>
+                <td class="text-end pe-2">{{ place.value }}{% rating_value_change place %}</td>
               </tr>
               {% empty %}
               <tr>
@@ -365,7 +365,7 @@
                 <th scope="col" class="rating-history-heading" aria-label="История"></th>
                 <th scope="col" class="text-center rating-place-heading">Место</th>
                 <th scope="col">Регион</th>
-                <th scope="col" class="text-nowrap text-end pe-2 rating-region-value-heading">Запросы <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения региона за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
+                <th scope="col" class="text-nowrap text-end pe-2 rating-region-value-heading rating-region-interest-value-heading">Запросы (Интерес) <a href="#" data-bs-toggle="tooltip" title="Количество запросов значимых точек притяжения региона за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></th>
               </tr>
             </thead>
             <tbody>
@@ -410,7 +410,7 @@
                     <span class="rating-region-name-text">{{ row.item.home_code }}</span>
                   </span>
                 </td>
-                <td class="text-end pe-4">{{ row.item.value }}</td>
+                <td class="text-end pe-2">{{ row.item.value }}{% rating_value_change row.item %}</td>
               </tr>
               {% endif %}
               {% endfor %}
