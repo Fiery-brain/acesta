@@ -169,20 +169,15 @@ def _get_value_change(value):
     return current_value - previous_value
 
 
-@register.inclusion_tag("include/rating_value_change.html")
+@register.simple_tag
 def rating_value_change(value):
     change = _get_value_change(value)
     if change is None or change == 0:
-        return {
-            "change_text": "-",
-            "change_class": "trend-slot place_change place_change_neural",
-        }
+        return mark_safe(
+            '<span class="trend-slot place_change place_change_neural">-</span>'
+        )
     if change < 0:
-        return {
-            "change_text": "↓",
-            "change_class": "trend-slot place_change place_change_negative",
-        }
-    return {
-        "change_text": "↑",
-        "change_class": "trend-slot place_change",
-    }
+        return mark_safe(
+            '<span class="trend-slot place_change place_change_negative">↓</span>'
+        )
+    return mark_safe('<span class="trend-slot place_change">↑</span>')
