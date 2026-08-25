@@ -5,12 +5,25 @@ from unittest import mock
 from django.test import RequestFactory
 from django.test import SimpleTestCase
 
+from acesta.front.pdf.renderer import PDF_PROFILES
 from acesta.front.pdf.renderer import render_pdf
 from acesta.front.pdf.resources import resolve_local_resource
 from acesta.front.pdf.response import document_response
 
 
 class PDFRendererTest(SimpleTestCase):
+    def test_a4_document_styles_use_points_only(self):
+        self.assertEqual(PDF_PROFILES["a4"].width, "595pt")
+        self.assertEqual(PDF_PROFILES["a4"].height, "842pt")
+
+        static_root = Path(__file__).resolve().parents[2] / "static" / "css"
+        length_pattern = r"(?<![-\w])(?:\d+(?:\.\d+)?|\.\d+)(?:mm|px)\b"
+
+        for filename in ("pdf_documents.css", "commercial_offer.css"):
+            with self.subTest(filename=filename):
+                css = (static_root / filename).read_text()
+                self.assertNotRegex(css, length_pattern)
+
     @mock.patch("acesta.front.pdf.renderer.sync_playwright")
     def test_renderer_waits_for_assets_and_closes_browser(self, sync_playwright):
         manager = sync_playwright.return_value
@@ -33,8 +46,8 @@ class PDFRendererTest(SimpleTestCase):
         page.route.assert_called_once()
         page.emulate_media.assert_called_once_with(media="print")
         page.evaluate.assert_called_once()
-        self.assertEqual(page.pdf.call_args.kwargs["width"], "210mm")
-        self.assertEqual(page.pdf.call_args.kwargs["height"], "297mm")
+        self.assertEqual(page.pdf.call_args.kwargs["width"], "8.263888889in")
+        self.assertEqual(page.pdf.call_args.kwargs["height"], "11.694444444in")
         browser.close.assert_called_once()
 
     def test_renderer_rejects_unknown_profile(self):
@@ -113,6 +126,20 @@ class PDFRendererTest(SimpleTestCase):
 
 
 class DocumentResponseTest(SimpleTestCase):
+    def test_document_can_return_html_preview(self):
+        request = RequestFactory().get("/presentation/")
+        html = "<html><head><title>Presentation</title></head></html>"
+
+        response = document_response(
+            request,
+            html,
+            output_format="html",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "text/html; charset=utf-8")
+        self.assertEqual(response.content.decode(), html)
+
     @mock.patch("acesta.front.pdf.response.render_pdf", return_value=b"%PDF-test")
     def test_document_without_filename_does_not_set_disposition(self, render):
         request = RequestFactory().get("/presentation/")
@@ -125,3 +152,19 @@ class DocumentResponseTest(SimpleTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.has_header("Content-Disposition"))
         render.assert_called_once()
+
+
+class PDFArchitectureTest(SimpleTestCase):
+    def test_contains_only_low_level_runtime_modules(self):
+        front_root = Path(__file__).resolve().parents[1]
+        runtime_modules = {
+            path.name
+            for path in (front_root / "pdf").glob("*.py")
+            if path.name != "__init__.py"
+        }
+
+        self.assertEqual(
+            runtime_modules,
+            {"renderer.py", "resources.py", "response.py"},
+        )
+        self.assertFalse((front_root / "templatetags" / "pdf.py").exists())

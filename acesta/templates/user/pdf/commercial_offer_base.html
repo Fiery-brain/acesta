@@ -1,0 +1,35 @@
+{% extends "user/pdf/document_base.html" %}
+{% load static %}
+
+{% block design_system_styles %}<link rel="stylesheet" href="{% static 'css/base.css' %}">{% endblock %}
+{% block document_styles %}<link rel="stylesheet" href="{% static 'css/commercial_offer.css' %}">{% endblock %}
+{% block body_class %}commercial-offer-document{% endblock %}
+
+{% block document %}
+  <main class="commercial-offer pdf-document-pages acesta-segment-theme-{{ segment }}" data-commercial-offer data-commercial-offer-segment="{{ segment }}">
+    <section class="pdf-document-page commercial-offer-page commercial-offer-page--1" data-commercial-offer-page="1">
+      {% block page_1_background %}{% endblock %}
+      <div class="commercial-offer-page__field">
+        {% include "user/pdf/include/commercial_offer_header.html" %}
+        <div class="commercial-offer-page__content">{% block page_1 %}{% endblock %}</div>
+      </div>
+      {% include "user/pdf/include/commercial_offer_footer.html" with application_footer_url=application_footer_url_page_1 %}
+    </section>
+    <section class="pdf-document-page commercial-offer-page commercial-offer-page--2" data-commercial-offer-page="2">
+      {% block page_2_background %}{% endblock %}
+      <div class="commercial-offer-page__field">
+        {% include "user/pdf/include/commercial_offer_header.html" %}
+        <div class="commercial-offer-page__content">{% block page_2 %}{% endblock %}</div>
+      </div>
+      {% include "user/pdf/include/commercial_offer_footer.html" with application_footer_url=application_footer_url_page_2 %}
+    </section>
+    <section class="pdf-document-page commercial-offer-page commercial-offer-page--3" data-commercial-offer-page="3">
+      {% block page_3_background %}{% endblock %}
+      <div class="commercial-offer-page__field">
+        {% include "user/pdf/include/commercial_offer_header.html" %}
+        <div class="commercial-offer-page__content">{% block page_3 %}{% endblock %}</div>
+      </div>
+      {% include "user/pdf/include/commercial_offer_footer.html" with application_footer_url=application_footer_url_page_3 %}
+    </section>
+  </main>
+{% endblock %}
