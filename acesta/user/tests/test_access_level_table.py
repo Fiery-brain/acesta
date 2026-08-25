@@ -602,11 +602,11 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
         self.assertContains(response, "Нужен индивидуальный подход?")
         self.assertContains(
             response,
-            nobreak_spaces("Расскажите о ваших задачах —"),
+            nobreak_spaces("Расскажите о ваших задачах,"),
         )
         self.assertContains(
             response,
-            nobreak_spaces("подготовим предложение под ваш регион и цели."),
+            nobreak_spaces("а мы подготовим предложение под ваш регион и цели"),
         )
         self.assertContains(response, "Обсудить условия")
         self.assertContains(response, "sprite.svg#consultation")
@@ -617,10 +617,10 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
         )
         self.assertLess(
             html.index("Нужен индивидуальный подход?"),
-            html.index(str(nobreak_spaces("Расскажите о ваших задачах —"))),
+            html.index(str(nobreak_spaces("Расскажите о ваших задачах,"))),
         )
         self.assertLess(
-            html.index(str(nobreak_spaces("Расскажите о ваших задачах —"))),
+            html.index(str(nobreak_spaces("Расскажите о ваших задачах,"))),
             html.index("Обсудить условия"),
         )
 
@@ -632,12 +632,14 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
         self.assertContains(response, 'id="individualConditions"')
         self.assertContains(response, "Индивидуальные условия")
         self.assertContains(response, "Задачи и цели")
-        self.assertContains(response, 'placeholder="Расскажите о ваших задачах"')
+        self.assertContains(
+            response,
+            'placeholder="Расскажите, какие задачи сейчас решаете"',
+        )
         self.assertContains(
             response,
             nobreak_spaces(
-                "Укажите регион, цели и желаемый формат сотрудничества — "
-                "так мы быстрее подготовим предложение."
+                "Подберём условия и формат сотрудничества с учётом ваших задач и целей"
             ),
         )
         self.assertContains(response, "Отправить запрос")
@@ -796,7 +798,7 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
         self.assertNotContains(response, "data-access-level-promotion")
         self.assertIn(
             ".price-table.price-heading:not(:has(.tariff-promo)){"
-            "margin-bottom:1rem!important;padding-top:3rem}",
+            "margin-bottom:1rem!important;padding-top:1.2rem}",
             dashboard_css,
         )
         self.assertIn(
