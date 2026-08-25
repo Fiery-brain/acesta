@@ -7,6 +7,17 @@ if DEBUG:  # noqa
 SITE_ID = 1
 TESTING = True
 
+SEGMENTS = ((DEFAULT_SEGMENT, "Без сегмента"),)  # noqa: F405
+PRICES = {
+    "rank_1": 29900,
+    "rank_2": 49900,
+    "rank_3": 79900,
+    "rank_4": 99900,
+    "district": 139900,
+    "gt_6_discount": 10,
+    "gt_12_discount": 20,
+}
+
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
