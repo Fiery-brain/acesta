@@ -230,9 +230,10 @@ class AccessLevelTableTest(test.TestCase):
         project_root = Path(__file__).resolve().parents[3]
         css = (project_root / "acesta/static/css/dashboard.css").read_text()
         base_css = (project_root / "acesta/static/css/base.css").read_text()
-        presentation_css = (
-            project_root / "acesta/static/css/presentation.css"
-        ).read_text()
+        # Presentation styles are not included in the current release.
+        # presentation_css = (
+        #     project_root / "acesta/static/css/presentation.css"
+        # ).read_text()
         offer_css = (
             project_root / "acesta/static/css/commercial_offer.css"
         ).read_text()
@@ -243,8 +244,8 @@ class AccessLevelTableTest(test.TestCase):
         self.assertNotIn(".offer-tariff", base_css)
         self.assertNotIn(".tariff-slide", css)
         self.assertNotIn(".offer-tariff", css)
-        self.assertNotIn(".price-table", presentation_css)
-        self.assertNotIn(".offer-tariff", presentation_css)
+        # self.assertNotIn(".price-table", presentation_css)
+        # self.assertNotIn(".offer-tariff", presentation_css)
         self.assertNotIn(".price-table", offer_css)
         self.assertNotIn(".tariff-slide", offer_css)
         html = self.render_table(["full"])
@@ -261,8 +262,8 @@ class AccessLevelTableTest(test.TestCase):
         self.assertNotIn("bg-grey", html)
         self.assertIn(".price-table .overview{", css)
         self.assertIn(".price-table .detail{", css)
-        self.assertIn(".tariff-slide .overview", presentation_css)
-        self.assertIn(".tariff-slide .detail", presentation_css)
+        # self.assertIn(".tariff-slide .overview", presentation_css)
+        # self.assertIn(".tariff-slide .detail", presentation_css)
         self.assertIn(".offer-tariff .pdf-table", offer_css)
         self.assertIn(
             ".price-table .purpose-row td{background:transparent;border:0", css
@@ -648,9 +649,10 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
     def test_consultation_banner_uses_dashboard_only_styles(self):
         project_root = Path(__file__).resolve().parents[3]
         dashboard_css = (project_root / "acesta/static/css/dashboard.css").read_text()
-        presentation_css = (
-            project_root / "acesta/static/css/presentation.css"
-        ).read_text()
+        # Presentation styles are not included in the current release.
+        # presentation_css = (
+        #     project_root / "acesta/static/css/presentation.css"
+        # ).read_text()
         offer_css = (
             project_root / "acesta/static/css/commercial_offer.css"
         ).read_text()
@@ -662,7 +664,7 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
         self.assertIn("min-height:50px;padding:6px 12px", dashboard_css)
         self.assertNotIn(".consultation-banner .btn{", dashboard_css)
         self.assertNotIn(".consultation-banner .btn:hover{", dashboard_css)
-        self.assertNotIn("consultation-banner", presentation_css)
+        # self.assertNotIn("consultation-banner", presentation_css)
         self.assertNotIn("consultation-banner", offer_css)
 
     def test_price_page_uses_bootstrap_responsive_table(self):
@@ -673,10 +675,11 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
             / "acesta/templates/user/include/access_level_table_comparison.html"
         ).read_text()
         price_template = (project_root / "acesta/templates/user/price.html").read_text()
-        presentation_template = (
-            project_root
-            / "acesta/templates/front/presentation/include/presentation_access_level_table.html"
-        ).read_text()
+        # Presentation template is not included in the current release.
+        # presentation_template = (
+        #     project_root
+        #     / "acesta/templates/front/presentation/include/presentation_access_level_table.html"
+        # ).read_text()
         offer_template = (
             project_root / "acesta/templates/user/pdf/offer.html"
         ).read_text()
@@ -691,7 +694,7 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
             price_template.index('<div class="table-responsive">'),
             price_template.index("{% access_level_table"),
         )
-        self.assertNotIn("table-responsive", presentation_template)
+        # self.assertNotIn("table-responsive", presentation_template)
         self.assertNotIn("table-responsive", offer_template)
         self.assertNotIn('class="row pb-3 overflow-auto tariff"', component_template)
         self.assertNotIn('class="col pe-0"', component_template)
@@ -806,9 +809,10 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
         project_root = Path(__file__).resolve().parents[3]
         base_css = (project_root / "acesta/static/css/base.css").read_text()
         dashboard_css = (project_root / "acesta/static/css/dashboard.css").read_text()
-        presentation_css = (
-            project_root / "acesta/static/css/presentation.css"
-        ).read_text()
+        # Presentation styles are not included in the current release.
+        # presentation_css = (
+        #     project_root / "acesta/static/css/presentation.css"
+        # ).read_text()
         offer_css = (
             project_root / "acesta/static/css/commercial_offer.css"
         ).read_text()
@@ -819,7 +823,7 @@ class PriceAccessLevelTableTest(CredentialsMixin, test.TestCase):
             "height:38px;justify-content:center;width:38px",
             dashboard_css,
         )
-        for css in (dashboard_css, presentation_css, offer_css):
+        for css in (dashboard_css, offer_css):
             self.assertRegex(
                 css,
                 r"\.tariff-promo \.discount\s*\{[^}]*"
