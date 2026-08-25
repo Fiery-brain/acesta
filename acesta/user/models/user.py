@@ -129,6 +129,7 @@ class User(AbstractUser):
         null=True,
     )
     is_show_start = models.BooleanField("Показывать приветствие", default=True)
+    is_api_enabled = models.BooleanField("Доступ к API", default=True)
 
     objects = UserManager()
 

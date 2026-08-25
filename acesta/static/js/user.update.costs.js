@@ -53,8 +53,14 @@ $(function () {
       },
     }).done(function (data) {
       $("#cost").text($.number(data.cost, 0, ".", " "));
-      $("#discount").text(data.discount);
-      $("#total").text($.number(data.cost - data.discount_sum, 0, ".", " "));
+      const discounts = [data.discount, data.promotion_discount]
+        .filter((discount) => discount)
+        .map((discount) => `${discount}%`);
+      $("#discount").text(discounts.join(" + ") || "0%");
+      $("#total").text($.number(data.total, 0, ".", " "));
+      if (!$("#inputPromo").val() && data.promo_code) {
+        $("#inputPromo").val(data.promo_code);
+      }
     });
   }
 

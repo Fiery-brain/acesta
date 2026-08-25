@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 from django.conf import settings
 from django.contrib import messages
 from django.http import FileResponse
@@ -6,14 +8,15 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 
 from acesta.front.pdf import document_response
+from acesta.front.tracking import build_tracking_url
 from acesta.user.apps import DISCOUNTS
 from acesta.user.apps import PRICES
 from acesta.user.forms import UserForm
-from acesta.user.models import Order
 from acesta.user.utils import get_order_form
 from acesta.user.utils import send_message
 
@@ -43,9 +46,16 @@ def oferta(request: HttpRequest) -> HttpResponse:
     :param request: HttpRequest
     :return: django.http.HttpResponse
     """
-    html = _render_pdf_template(request, "user/pdf/oferta.html", {})
-    response = document_response(request, html)
-    if response.status_code != 200 or request.GET.get("format", "pdf") == "html":
+    return document_response(
+        request, _render_oferta_html(request), output_format="html"
+    )
+
+
+def oferta_pdf(request: HttpRequest) -> HttpResponse:
+    response = document_response(
+        request, _render_oferta_html(request), output_format="pdf"
+    )
+    if response.status_code != 200:
         return response
 
     region = getattr(request.user, "current_region", "")
@@ -55,60 +65,14 @@ def oferta(request: HttpRequest) -> HttpResponse:
 
 
 def offer(request: HttpRequest) -> HttpResponse:
-    district = request.user.current_region.federal_district
-    district_title = dict(settings.FEDERAL_DISTRICTS).get(district)
-    regions = [request.user.current_region.code]
-    context = {
-        "TITLE": settings.TITLE,
-        "discounts": DISCOUNTS,
-        "region": request.user.current_region,
-        "cost_1w_1t": Order.get_cost(0.25, regions, [settings.TOURISM_TYPE_DEFAULT]),
-        "cost_1w": Order.get_cost(0.25, regions),
-        "cost_1m_1t": Order.get_cost(1, regions, [settings.TOURISM_TYPE_DEFAULT]),
-        "cost_1m": Order.get_cost(1, regions),
-        "cost_6m_1t": int(
-            Order.get_cost(6, regions, [settings.TOURISM_TYPE_DEFAULT])
-            - Order.get_discount_sum(6, regions, [settings.TOURISM_TYPE_DEFAULT])
-        ),
-        "cost_6m": int(Order.get_cost(6, regions) - Order.get_discount_sum(6, regions)),
-        "cost_12m_1t": int(
-            Order.get_cost(12, regions, [settings.TOURISM_TYPE_DEFAULT])
-            - Order.get_discount_sum(12, regions, [settings.TOURISM_TYPE_DEFAULT])
-        ),
-        "cost_12m": int(
-            Order.get_cost(12, regions) - Order.get_discount_sum(12, regions)
-        ),
-        "district_title": district_title,
-        "cost_district_1w_1t": Order.get_cost(
-            0.25, None, [settings.TOURISM_TYPE_DEFAULT], district
-        ),
-        "cost_district_1w": Order.get_cost(0.25, None, None, district),
-        "cost_district_1m_1t": Order.get_cost(
-            1, None, [settings.TOURISM_TYPE_DEFAULT], district
-        ),
-        "cost_district_1m": Order.get_cost(1, None, None, district),
-        "cost_district_6m_1t": int(
-            Order.get_cost(6, None, [settings.TOURISM_TYPE_DEFAULT], district)
-            - Order.get_discount_sum(6, None, [settings.TOURISM_TYPE_DEFAULT], district)
-        ),
-        "cost_district_6m": int(
-            Order.get_cost(6, None, None, district)
-            - Order.get_discount_sum(6, None, None, district)
-        ),
-        "cost_district_12m_1t": int(
-            Order.get_cost(12, None, [settings.TOURISM_TYPE_DEFAULT], district)
-            - Order.get_discount_sum(
-                12, None, [settings.TOURISM_TYPE_DEFAULT], district
-            )
-        ),
-        "cost_district_12m": int(
-            Order.get_cost(12, None, None, district)
-            - Order.get_discount_sum(12, None, None, district)
-        ),
-    }
-    html = _render_pdf_template(request, "user/pdf/offer.html", context)
-    response = document_response(request, html)
-    if response.status_code != 200 or request.GET.get("format", "pdf") == "html":
+    return document_response(request, _render_offer_html(request), output_format="html")
+
+
+def offer_pdf(request: HttpRequest) -> HttpResponse:
+    response = document_response(
+        request, _render_offer_html(request), output_format="pdf"
+    )
+    if response.status_code != 200:
         return response
 
     send_message(
@@ -119,15 +83,60 @@ def offer(request: HttpRequest) -> HttpResponse:
     return response
 
 
-def offer_report(request: HttpRequest) -> HttpResponse:
+def _render_oferta_html(request: HttpRequest) -> str:
+    return _render_pdf_template(request, "user/pdf/oferta.html", {})
+
+
+def _render_offer_html(request: HttpRequest) -> str:
     region = request.user.current_region
-    html = _render_pdf_template(
-        request,
-        "user/pdf/offer_report.html",
-        {"TITLE": settings.TITLE, "region": region},
+    segment = request.user.segment
+    tracking_medium = (
+        segment if segment and segment != settings.DEFAULT_SEGMENT else "general"
     )
-    response = document_response(request, html)
-    if response.status_code != 200 or request.GET.get("format", "pdf") == "html":
+    application_path = reverse("user_order_region", kwargs={"code": region.code})
+    application_url = urljoin(
+        f"https://{settings.PUBLIC_DOMAIN}/",
+        application_path.lstrip("/"),
+    )
+
+    def tracked_application_url(content: str) -> str:
+        return build_tracking_url(
+            application_url,
+            source="commercial-offer",
+            medium=tracking_medium,
+            campaign="full-access",
+            content=content,
+        )
+
+    context = {
+        "TITLE": settings.TITLE,
+        "region": region,
+        "segment": segment,
+        "access_level_columns": ("full",),
+        "application_header_url": tracked_application_url("header-logo"),
+        "application_qr_url": tracked_application_url("qr"),
+        "application_footer_url_page_1": tracked_application_url("page_1"),
+        "application_footer_url_page_2": tracked_application_url("page_2"),
+        "application_footer_url_page_3": tracked_application_url("page_3"),
+    }
+    return _render_pdf_template(request, "user/pdf/offer.html", context)
+
+
+def offer_report(request: HttpRequest) -> HttpResponse:
+    return document_response(
+        request,
+        _render_offer_report_html(request),
+        output_format="html",
+    )
+
+
+def offer_report_pdf(request: HttpRequest) -> HttpResponse:
+    response = document_response(
+        request,
+        _render_offer_report_html(request),
+        output_format="pdf",
+    )
+    if response.status_code != 200:
         return response
 
     send_message(
@@ -136,6 +145,19 @@ def offer_report(request: HttpRequest) -> HttpResponse:
     )
 
     return response
+
+
+def _render_offer_report_html(request: HttpRequest) -> str:
+    region = request.user.current_region
+    return _render_pdf_template(
+        request,
+        "user/pdf/offer_report.html",
+        {
+            "TITLE": settings.TITLE,
+            "region": region,
+            "access_level_columns": ("report",),
+        },
+    )
 
 
 def _render_pdf_template(

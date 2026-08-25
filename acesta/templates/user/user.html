@@ -18,8 +18,8 @@
       <div class="modal-content">
         <form action="{% url 'order' %}" method="post">
           <div class="modal-header bg-accent">
-            <h5 class="modal-title" id="newOrderLabel"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg> Заявка на&nbsp;полный доступ</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="newOrderLabel"><svg fill="#464646" class="svg-weight-m me-1" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#price"></use></svg> Заявка на&nbsp;полный доступ</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
           <div class="modal-body">
               {% csrf_token %}
@@ -62,7 +62,7 @@
                 <label for="inputInn" class="form-label">ИНН организации (обязательно для организаций)</label>
               </div>
               <div class="form-floating mb-2">
-                <input type="text" class="form-control" minlength="5" maxlength="10" name="promo" id="inputPromo" placeholder="Промокод" title="Промокод (код из 10 символов, который вы получили в ходе проведения акции)">
+                <input type="text" class="form-control" minlength="5" maxlength="10" name="promo" id="inputPromo" value="{{ order_form.promo.value|default_if_none:'' }}" placeholder="Промокод" title="Промокод (код из 10 символов, который вы получили в ходе проведения акции)">
                 <label for="inputPromo" class="form-label">Промокод (необязательно)</label>
               </div>
               {{ order_form.user }}
@@ -74,13 +74,13 @@
                       <p class='mb-1 text-nowrap'><small>Регион 4 ранга: <b>{{ prices.rank_4 }} ₽</b>/мес</small></p>
                       <p class='mb-1 text-nowrap'><small>Регион 3 ранга: <b>{{ prices.rank_3 }} ₽</b>/мес</small></p>
                       <p class='mb-1 text-nowrap'><small>Регион 2 ранга: <b>{{ prices.rank_2 }} ₽</b>/мес</small></p>
-                      <p class='mb-0 text-nowrap'><small>Регион 1 ранга: <b>{{ prices.rank_1 }} ₽</b>/мес</small></p>"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
+                      <p class='mb-0 text-nowrap'><small>Регион 1 ранга: <b>{{ prices.rank_1 }} ₽</b>/мес</small></p>"><svg fill="var(--acesta-text-light)" color="var(--acesta-text-light)" width="22" height="22" class="svg-weight-l"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
                 </div>
                 <div class="text-nowrap text-end text-muted mt-2 fs-6">
                   Скидка: <span id="discount" class="fw-bold"></span>%
                       <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
                       <p class='mb-1 text-nowrap'><small><b>{{ discounts.gt_6_discount}}%</b> при заказе от&nbsp;&nbsp;6&nbsp;месяцев</small></p>
-                      <p class='mb-0 text-nowrap'><small><b>{{ discounts.gt_12_discount}}%</b> при заказе от&nbsp;12&nbsp;месяцев</small></p>"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
+                      <p class='mb-0 text-nowrap'><small><b>{{ discounts.gt_12_discount}}%</b> при заказе от&nbsp;12&nbsp;месяцев</small></p>"><svg fill="var(--acesta-text-light)" color="var(--acesta-text-light)" width="22" height="22" class="svg-weight-l"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
                 </div>
                 <div class="text-nowrap text-end mt-2 fs-5">
                   Итого: <span id="total" class="fw-bold"></span> ₽
@@ -88,7 +88,7 @@
               </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary btn-lg px-4"><svg fill="#ffffff" class="me-2" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg>Создать</button>
+            <button type="submit" class="btn btn-primary btn-lg px-4"><svg fill="var(--bs-white)" class="me-2" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg>Создать</button>
           </div>
         </form>
       </div>
@@ -99,8 +99,8 @@
       <div class="modal-content">
         <form action="{% if request.user.has_usable_password %}{% url 'account_change_password'%}{% else %}{% url 'account_set_password'%}{% endif %}" method="post">
           <div class="modal-header bg-light">
-            <h5 class="modal-title" id="changePasswordLabel"><svg fill="#429388" class="me-2" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#password"></use></svg>{% if request.user.has_usable_password %}Изменение{% else %}Установка{% endif%} пароля</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="changePasswordLabel"><svg fill="var(--acesta-dark-primary)" class="me-2" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#password"></use></svg>{% if request.user.has_usable_password %}Изменение{% else %}Установка{% endif%} пароля</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
           <div class="modal-body">
               {% csrf_token %}
@@ -120,7 +120,7 @@
               </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-primary px-4"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg>Сохранить</button>
+            <button type="submit" class="btn btn-outline-primary px-4"><svg fill="var(--acesta-primary)" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg>Сохранить</button>
           </div>
         </form>
       </div>
@@ -131,8 +131,8 @@
       <div class="modal-content">
         <form action="{% url 'account_change_email'%}" method="post" autocomplete="off">
           <div class="modal-header bg-light">
-            <h5 class="modal-title" id="changeEmailLabel"><svg fill="#429388" class="me-2" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#email"></use></svg>Изменение email</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="changeEmailLabel"><svg fill="var(--acesta-dark-primary)" class="me-2" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#email"></use></svg>Изменение email</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
           <div class="modal-body">
             {% csrf_token %}
@@ -147,7 +147,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-primary px-4"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg>Сохранить</button>
+            <button type="submit" class="btn btn-outline-primary px-4"><svg fill="var(--acesta-primary)" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg>Сохранить</button>
           </div>
         </form>
       </div>
@@ -157,8 +157,8 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
           <div class="modal-header bg-light">
-            <h5 class="modal-title" id="changeSocialLabel"><svg fill="#429388" class="me-2" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#social"></use></svg>Редактирование доступов</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="changeSocialLabel"><svg fill="var(--acesta-dark-primary)" class="me-2" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#social"></use></svg>Редактирование доступов</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
           <div class="modal-body">
               {% get_social_accounts request.user as accounts %}
@@ -172,7 +172,7 @@
                       {% if provider.name|lower in accounts %}
                         <button type="button" title="Добавить доступ" class="btn btn-outline-primary rounded-50" disabled><svg fill="#9dc3bf" width="14" height="16"><use href="/static/img/sprite.svg#add"></use></svg></button>
                       {% else %}
-                        <a type="button" title="Добавить доступ" class="btn btn-outline-primary rounded-50" href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"><svg fill="#429388" width="14" height="16"><use href="/static/img/sprite.svg#add"></use></svg></a>
+                        <a type="button" title="Добавить доступ" class="btn btn-outline-primary rounded-50" href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"><svg fill="var(--acesta-primary)" width="14" height="16"><use href="/static/img/sprite.svg#add"></use></svg></a>
                       {% endif %}
                     </td>
                       {% if request.user.has_usable_password %}
@@ -182,7 +182,7 @@
                               {% csrf_token %}
                               {% with base_account=accounts|get_prop:provider.name %}
                               <input class="d-none" id="id_account_{{ base_account.0.id }}" type="text" name="account" value="{{ base_account.0.id }}"/>
-                              <button type="submit" title="Удалить доступ" class="btn btn-outline-primary rounded-50"><svg fill="#429388" width="14" height="16"><use href="/static/img/sprite.svg#delete"></use></svg></button>
+                              <button type="submit" title="Удалить доступ" class="btn btn-outline-primary rounded-50"><svg fill="var(--acesta-primary)" width="14" height="16"><use href="/static/img/sprite.svg#delete"></use></svg></button>
                               {% endwith %}
                             </form>
                           {% else %}
@@ -206,15 +206,15 @@
         <h3 class="fs-4 display-inline-block">Профиль</h3>
         <div class="mb-2">
           <span data-bs-toggle="modal" data-bs-target="#changePassword">
-            <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Изменить пароль" class="btn btn-outline-primary rounded-50"><svg fill="#429388" width="14" height="14"><use href="{% static 'img/sprite.svg' %}#password"></use></svg></button>
+            <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Изменить пароль" class="btn btn-outline-primary rounded-50"><svg fill="var(--acesta-primary)" width="14" height="14"><use href="{% static 'img/sprite.svg' %}#password"></use></svg></button>
           </span>
           {% if request.user.has_usable_password %}
             <span data-bs-toggle="modal" data-bs-target="#changeEmail">
-              <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Изменить email" class="btn btn-outline-primary rounded-50"><svg fill="#429388" width="14" height="14"><use href="{% static 'img/sprite.svg' %}#email"></use></svg></button>
+              <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Изменить email" class="btn btn-outline-primary rounded-50"><svg fill="var(--acesta-primary)" width="14" height="14"><use href="{% static 'img/sprite.svg' %}#email"></use></svg></button>
             </span>
           {% endif %}
           <span data-bs-toggle="modal" data-bs-target="#changeSocial">
-            <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Редактировать доступы через социальные сети" class="btn btn-outline-primary rounded-50"><svg fill="#429388" width="14" height="16"><use href="{% static 'img/sprite.svg' %}#social"></use></svg></button>
+            <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Редактировать доступы через социальные сети" class="btn btn-outline-primary rounded-50"><svg fill="var(--acesta-primary)" width="14" height="16"><use href="{% static 'img/sprite.svg' %}#social"></use></svg></button>
           </span>
         </div>
       </div>
@@ -265,15 +265,18 @@
           <label for="inputCity">Сегмент {% if not user_form.city.value %}{% endif %}</label>
         </div>
         <div class="mt-3">
-          <button type="submit" class="btn btn-lg btn-outline-primary px-4"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg> Сохранить</button>
+          <button type="submit" class="btn btn-lg btn-outline-primary px-4"><svg fill="var(--acesta-primary)" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#save"></use></svg> Сохранить</button>
         </div>
       </form>
     </div>
     <div class="col-12 ps-2 ps-lg-4 pt-5 pt-lg-0 col-lg-7">
       <div class="d-md-flex justify-content-between align-items-end">
         <h3 class="fs-4">Управление доступом</h3>
-        <button type="button" class="btn btn-lg btn-accent mb-1 d-none d-lg-inline position-relative btn-expand px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg>Управлять</button>
+        <button type="button" class="btn btn-lg btn-accent mb-1 d-none d-lg-inline position-relative btn-expand px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="svg-weight-m me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#price"></use></svg>Управлять</button>
       </div>
+      {% comment %} {% if request.user.is_api_enabled %}
+        <p><a href="{% url 'api_clients' %}" class="btn btn-outline-primary">API</a> <a href="{% url 'widgets:list' %}" class="btn btn-outline-primary">Виджеты</a></p>
+      {% endif %} {% endcomment %}
       <div class="overflow-auto mt-1 table-fixed-head allowed-regions">
         <table class="table table-hover table-responsive">
           <thead>
@@ -324,7 +327,7 @@
           </tbody>
         </table>
       </div>
-      <button class="btn btn-lg btn-accent d-lg-none mt-1 px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#expand"></use></svg> Управлять</button>
+      <button class="btn btn-lg btn-accent d-lg-none mt-1 px-4" data-bs-toggle="modal" data-bs-target="#newOrder"><svg fill="#464646" class="svg-weight-m me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#price"></use></svg> Управлять</button>
       <h3 class="fs-4 pt-5">Заявки</h3>
       <div class="overflow-auto mt-2 table-fixed-head orders">
         {% if request.user.user_orders.all %}

@@ -25,7 +25,7 @@
   {% endif %}
   {% if sight.address %}
     <div class="sight-edit-detail">
-      <dt><svg aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#location"></use></svg></dt>
+      <dt><svg aria-hidden="true" class="svg-weight-m"><use href="{% static 'img/sprite.svg' %}#location"></use></svg></dt>
       <dd>{{ sight.address }}
         <small class="text-light d-block mt-2">{{ sight.lat|floatformat:5 }}, {{ sight.lon|floatformat:5 }}</small></dd>
     </div>
@@ -33,14 +33,14 @@
   {% if sight.queries %}
     <div class="sight-edit-detail">
       <dt>
-          <svg  aria-hidden="true" width="24"><use href="{% static 'img/sprite.svg' %}#search"></use></svg>
+          <svg aria-hidden="true" width="24" class="svg-weight-m"><use href="{% static 'img/sprite.svg' %}#search"></use></svg>
       </dt>
       <dd>
         <span class="sight-edit-query-block" title="<strong>Исходный запрос</strong><br>для&nbsp;формирования сезонного семантического ядра точки притяжения" data-bs-toggle="tooltip" data-bs-html="true">
           <span class="sight-edit-query-list">
             {% for query in sight.queries %}<span class="text-decoration-underline">{{ query }}</span>{% endfor %}
           </span>
-          <svg fill="#939699" width="22" height="22" class="sight-edit-query-help" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>
+          <svg fill="var(--acesta-text-light)" color="var(--acesta-text-light)" width="22" height="22" class="sight-edit-query-help svg-weight-l" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>
         </span>
       </dd>
     </div>

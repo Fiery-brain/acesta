@@ -25,7 +25,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title text-nowrap fw-bolder" id="termsLabel">Условия использования</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
             <div class="modal-body pt-0 pb-4">
               {% include 'include/terms_content.html' %}
@@ -40,7 +40,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title text-nowrap fw-bolder" id="privacyLabel">Политика конфиденциальности</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
             <div class="modal-body pt-0 pb-4">
               {% include 'include/privacy_content.html' %}
@@ -58,7 +58,7 @@
     <div class="modal-dialog modal-dialog-centered modal-95 region-modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-nowrap" id="selectRegionLabel">Выберите регион <a href="#regionSelectionExplanation" class="region-help-toggle" data-bs-toggle="collapse"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></h5>
+          <h5 class="modal-title text-nowrap" id="selectRegionLabel">Выберите регион <a href="#regionSelectionExplanation" class="region-help-toggle" data-bs-toggle="collapse"><svg fill="#939699" width="22" height="22" class="svg-weight-m""><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></h5>
           <div class="collapse position-relative help border p-3 rounded-2 bg-white" id="regionSelectionExplanation">
             <p class="m-0"><svg width="19" height="19" class="me-1 text-white"><use fill="#5dbaad" href="{% static 'img/sprite.svg' %}#selected"></use></svg> <strong>Выбранный регион</strong></p>
             <p class="mt-1 m-0"><svg width="18" height="18" class="me-1 text-white opacity-75"><use fill="#22786C" href="{% static 'img/sprite.svg' %}#go"></use></svg> Регион с полным доступом</p>
@@ -72,7 +72,7 @@
               <svg aria-hidden="true" width="24"><use href="{% static 'img/sprite.svg' %}#search"></use></svg>
             </button>
           </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
         </div>
         <div class="modal-body">
           <div class="container-fluid">
@@ -131,46 +131,57 @@
           <use href="{% static 'img/sprite.svg' %}#logo-2"></use>
         </svg>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Показать или скрыть меню">
         <span class="navbar-toggler-icon"></span>
       </button>
       <form method="post" action="{% url 'account_logout'%}" id="LogoutForm" class="d-none">{% csrf_token %}</form>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav d-flex d-lg-none align-items-end mt-3">
-          <li class="nav-item border-bottom"><a class="nav-link dashboard-start-link" href="#" data-bs-toggle="modal" data-bs-target="#dashboardStartModal">Быстрый старт<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#rocket"></use></svg></a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'region' %}">Регион<svg fill="#fab222" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#region"></use></svg></a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'interest' %}">Интерес<svg fill="#fab222" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#interest"></use></svg></a></li>
-          <li class="nav-item"><a class="nav-link pb-1" href="{% url 'rating' %}">Рейтинг<svg fill="#fab222" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#rating"></use></svg></a></li>
+          <li class="nav-item border-bottom"><a class="nav-link dashboard-start-link" href="#" data-bs-toggle="modal" data-bs-target="#dashboardStartModal">Быстрый старт<svg fill="var(--acesta-primary)" color="var(--acesta-primary)" class="svg-weight-s ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#rocket"></use></svg></a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'region' %}">Регион<svg fill="var(--acesta-accent-secondary)" color="var(--acesta-accent-secondary)" class="svg-weight-s ms-1" width="16" height="16"><use href="{% static 'img/sprite.svg' %}#region"></use></svg></a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'interest' %}">Интерес<svg fill="var(--acesta-accent-secondary)" color="var(--acesta-accent-secondary)" class="svg-weight-s ms-1" width="16" height="16"><use href="{% static 'img/sprite.svg' %}#interest"></use></svg></a></li>
+          <li class="nav-item"><a class="nav-link pb-1" href="{% url 'rating' %}">Рейтинг<svg fill="var(--acesta-accent-secondary)" color="var(--acesta-accent-secondary)" class="svg-weight-s ms-1" width="16" height="16"><use href="{% static 'img/sprite.svg' %}#rating"></use></svg></a></li>
           <li class="nav-item"><a class="nav-link py-1" href="{% url 'rating' %}"><small>регионов</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
           {% if request.user.current_region.region_type != REGION_TYPE_FEDERAL_CITY %}
             <li class="nav-item"><a class="nav-link py-1" href="{% if request.user.is_extended %}{% url 'rating-cities' area='cities' %}{% else %}{% url 'price' %}{% endif %}">{% if not request.user.is_extended %}<svg width="14" height="14" class="me-1 mt-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>{% endif %}<small>городов</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
           {% endif %}
           <li class="nav-item"><a class="nav-link pt-1 pb-3" href="{% if request.user.is_extended %}{% url 'rating-sights' area='sights' %}{% else %}{% url 'price' %}{% endif %}">{% if not request.user.is_extended %}<svg width="14" height="14" class="me-1 mt-1"><use href="{% static 'img/sprite.svg' %}#lock"></use></svg>{% endif %}<small>точек притяжения</small><svg fill="#dadada" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#lines"></use></svg></a></li>
-
-          <li class="nav-item border-top"><a class="nav-link" href="{% url 'user' %}">Мой профиль<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#{% if request.user.is_extended %}crown{% else %}restricted{% endif %}"></use></svg></a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'price' %}">Уровни доступа<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#price"></use></svg></a></li>
-          <li class="nav-item border-bottom"><a class="nav-link" href="{% url 'help' %}">Как это работает<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></li>
-          <li class="nav-item pb-2"><a class="nav-link logout-link" href="#"> Выход<svg fill="#429388" class="ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#sign-out"></use></svg></a></li>
+          <li class="nav-item border-top">
+            <a class="nav-link" href="{% url 'user' %}">Мой профиль
+              {% if request.user.is_extended %}
+                <svg width="24" height="24" fill="var(--acesta-accent-secondary)" color="var(--acesta-accent-secondary)" class="svg-weight-xl"><use href="{% static 'img/sprite.svg' %}#crown"></use></svg>
+              {% else %}
+                <svg width="24" height="24"><use fill="var(--acesta-primary)" color="var(--acesta-primary)" class="svg-weight-m" href="{% static 'img/sprite.svg' %}#user"></use><use href="{% static 'img/sprite.svg' %}#restricted"></use></svg>
+              {% endif %}
+            </a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'price' %}">Уровни доступа<svg fill="var(--acesta-primary)" color="var(--acesta-primary)" class="svg-weight-s ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#price"></use></svg></a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'help' %}">Как это работает<svg fill="var(--acesta-primary)" color="var(--acesta-primary)" class="svg-weight-s ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a></li>
+          {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'widgets:list' %}">Виджеты<svg fill="var(--acesta-primary)" color="var(--acesta-primary)" class="svg-weight-s ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#widget"></use></svg></a></li>
+          <li class="nav-item border-bottom"><a class="nav-link" href="{% url 'api:documentation' %}">API<svg fill="var(--acesta-primary)" color="var(--acesta-primary)" class="svg-weight-m ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#api"></use></svg></a></li> {% endcomment %}
+          <li class="nav-item pb-2"><a class="nav-link logout-link" href="#"> Выход<svg fill="var(--acesta-primary)" color="var(--acesta-primary)" class="svg-weight-s ms-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#sign-out"></use></svg></a></li>
         </ul>
       </div>
       <ul class="navbar-nav d-none d-lg-flex align-items-center">
         <li>{% include "include/contact_block.html" %}</li>
         <li>
           {% if request.user.is_extended %}
-            <a href="{% url 'user' %}" title="Расширенный доступ. Посмотреть подробности"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#crown"></use></svg></a>
+            <a class="nav-link pe-0" href="{% url 'user' %}" title="Расширенный доступ. Посмотреть подробности"><svg width="24" height="24" fill="var(--acesta-accent-secondary)" color="var(--acesta-accent-secondary)" class="svg-weight-xl"><use href="{% static 'img/sprite.svg' %}#crown"></use></svg></a>
           {% else %}
-            <a href="{% url 'user_order_region' code=request.user.current_region.code %}" title="Ограниченный доступ. Расширить"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#restricted"></use></svg></a>
+            <a class="nav-link pe-0" href="{% url 'user_order_region' code=request.user.current_region.code %}" title="Ограниченный доступ. Расширить"><svg width="24" height="24"><use class="svg-weight-m" href="{% static 'img/sprite.svg' %}#user"></use><use href="{% static 'img/sprite.svg' %}#restricted"></use></svg></a>
           {% endif %}
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ request.user.first_name }} {{ request.user.middle_name|default:"" }}</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item dashboard-start-link" href="#" data-bs-toggle="modal" data-bs-target="#dashboardStartModal"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#rocket"></use></svg>Быстрый старт</a></li>
-            <li><a class="dropdown-item" href="{% url 'user' %}"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#user"></use></svg>Мой профиль</a></li>
-            <li><a class="dropdown-item" href="{% url 'price' %}"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#price"></use></svg>Уровни доступа</a></li>
-            <li><a class="dropdown-item" href="{% url 'help' %}"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>Как это работает</a></li>
+            <li><a class="dropdown-item dashboard-start-link" href="#" data-bs-toggle="modal" data-bs-target="#dashboardStartModal"><svg class="svg-weight-s me-1" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#rocket"></use></svg>Быстрый старт</a></li>
+            <li><a class="dropdown-item" href="{% url 'user' %}"><svg class="svg-weight-s me-1" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#user"></use></svg>Мой профиль</a></li>
+            <li><a class="dropdown-item" href="{% url 'price' %}"><svg class="svg-weight-s me-1" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#price"></use></svg>Уровни доступа</a></li>
+            <li><a class="dropdown-item" href="{% url 'help' %}"><svg class="svg-weight-s me-1" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>Как это работает</a></li>
+            {% comment %} <li><a class="dropdown-item" href="{% url 'widgets:list' %}"><svg class="svg-weight-s me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#widget"></use></svg>Виджеты</a></li>
+            <li><a class="dropdown-item" href="{% url 'api:documentation' %}"><svg class="svg-weight-s me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#api"></use></svg>API</a></li> {% endcomment %}
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item logout-link" href="#"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#sign-out"></use></svg>Выход</a></li>
+            <li><a class="dropdown-item logout-link" href="#"><svg class="svg-weight-s me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#sign-out"></use></svg>Выход</a></li>
           </ul>
         </li>
       </ul>
@@ -188,13 +199,13 @@
           <ul class="nav justify-content-end flex-nowrap">
             {% with url=request.resolver_match.url_name %}
               <li class="nav-item ">
-                <a class="nav-link{% if url == 'region' %} active{% endif %}" aria-current="page" href="{% url 'region' %}"><svg fill="#FFFFFF" class="me-xl-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#region"></use></svg><span class="d-none d-xl-inline">Регион</span></a>
+                <a class="nav-link{% if url == 'region' %} active{% endif %}" aria-current="page" href="{% url 'region' %}"><svg fill="var(--bs-white)" class="svg-weight-l me-xl-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#region"></use></svg><span class="d-none d-xl-inline">Регион</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link{% if url == 'interest' %} active{% endif %}" href="{% url 'interest' %}"><svg fill="#FFFFFF" class="me-xl-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#interest"></use></svg><span class="d-none d-xl-inline">Интерес</span></a>
+                <a class="nav-link{% if url == 'interest' %} active{% endif %}" href="{% url 'interest' %}"><svg fill="var(--bs-white)" class="svg-weight-l me-xl-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#interest"></use></svg><span class="d-none d-xl-inline">Интерес</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link{% if url == 'rating' or url == 'rating-sights' or url == 'rating-cities' %} active{% endif %}" href="{% url 'rating' %}"><svg fill="#FFFFFF" class="me-xl-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#rating"></use></svg><span class="d-none d-xl-inline">Рейтинг</span></a>
+                <a class="nav-link{% if url == 'rating' or url == 'rating-sights' or url == 'rating-cities' %} active{% endif %}" href="{% url 'rating' %}"><svg fill="var(--bs-white)" class="svg-weight-l me-xl-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#rating"></use></svg><span class="d-none d-xl-inline">Рейтинг</span></a>
               </li>
             {% endwith %}
           </ul>

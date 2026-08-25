@@ -13,9 +13,16 @@ class PDFProfile:
 
 
 PDF_PROFILES: Mapping[str, PDFProfile] = {
-    "a4": PDFProfile(width="210mm", height="297mm"),
+    "a4": PDFProfile(width="595pt", height="842pt"),
     "presentation_16_9": PDFProfile(width="13.333333in", height="7.5in"),
 }
+
+
+def _chromium_length(value: str) -> str:
+    """Convert CSS points to a unit accepted by Playwright's PDF API."""
+    if not value.endswith("pt"):
+        return value
+    return f"{float(value[:-2]) / 72:.9f}in"
 
 
 def render_pdf(
@@ -31,8 +38,8 @@ def render_pdf(
         raise ValueError(f"Unknown PDF profile: {profile}") from error
 
     options = {
-        "width": page_profile.width,
-        "height": page_profile.height,
+        "width": _chromium_length(page_profile.width),
+        "height": _chromium_length(page_profile.height),
         "print_background": True,
         "prefer_css_page_size": True,
         "margin": {

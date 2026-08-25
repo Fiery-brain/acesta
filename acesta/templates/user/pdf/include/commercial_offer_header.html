@@ -1,0 +1,5 @@
+{% load static %}
+<header class="commercial-offer-header">
+  <a class="commercial-offer-header__brand" href="{{ application_header_url }}" aria-label="Перейти к оформлению заявки"><img class="commercial-offer-header__logo" src="{% static 'img/pdf/acesta-logo.svg' %}" alt="ацеста"><span class="commercial-offer-header__caption">Интерес к туризму<br>в цифрах</span></a>
+  <time class="commercial-offer-header__date" datetime="{% now 'Y-m-d' %}">{% now "j E Y" %}</time>
+</header>

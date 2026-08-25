@@ -1,0 +1,51 @@
+{% load text %}
+
+{% if show_full %}
+  <table class="pdf-table" data-access-level-table data-access-level-section="pricing" data-access-level-columns="{{ columns|join:',' }}">
+    <thead>
+      <tr>
+        <th rowspan="2">Стоимость</th>
+        <th colspan="2"><strong>{{ region.title|nobreak_spaces }}</strong> (ранг {{ region.rank }})</th>
+        <th colspan="2"><strong>{{ district_label|nobreak_spaces }}</strong></th>
+      </tr>
+      <tr>
+        <th>1 вид туризма</th>
+        <th>все виды туризма</th>
+        <th>1 вид туризма</th>
+        <th>все виды туризма</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for price_row in full_access_price_rows %}
+        <tr>
+          <td>{{ price_row.label|nobreak_spaces }}{% if price_row.discount %} (со&nbsp;скидкой&nbsp;{{ price_row.discount }}%){% endif %}</td>
+          <td align="right">{% if promotion and show_original_prices %}<del>{{ price_row.region_one_tourism_type_original }} ₽</del>{% endif %}<strong{% if promotion %} class="sale"{% endif %}>{{ price_row.region_one_tourism_type }} ₽</strong></td>
+          <td align="right">{% if promotion and show_original_prices %}<del>{{ price_row.region_all_tourism_types_original }} ₽</del>{% endif %}<strong{% if promotion %} class="sale"{% endif %}>{{ price_row.region_all_tourism_types }} ₽</strong></td>
+          <td align="right">{% if promotion and show_original_prices %}<del>{{ price_row.district_one_tourism_type_original }} ₽</del>{% endif %}<strong{% if promotion %} class="sale"{% endif %}>{{ price_row.district_one_tourism_type }} ₽</strong></td>
+          <td align="right">{% if promotion and show_original_prices %}<del>{{ price_row.district_all_tourism_types_original }} ₽</del>{% endif %}<strong{% if promotion %} class="sale"{% endif %}>{{ price_row.district_all_tourism_types }} ₽</strong></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% elif show_report %}
+  <table class="pdf-table" data-access-level-table data-access-level-section="pricing" data-access-level-columns="{{ columns|join:',' }}">
+    <tbody>
+      <tr>
+        <td>Регион</td>
+        <td><strong>{{ region.title|nobreak_spaces }}</strong> (ранг {{ region.rank }})</td>
+      </tr>
+      <tr>
+        <td>Описание</td>
+        <td>Создание произвольного аналитического отчета о туристическом потенциале региона в табличном виде или в формате презентации</td>
+      </tr>
+      <tr>
+        <td>Срок выполнения</td>
+        <td>1 месяц</td>
+      </tr>
+      <tr>
+        <td>Стоимость</td>
+        <td><strong>от 100 000 ₽</strong></td>
+      </tr>
+    </tbody>
+  </table>
+{% endif %}

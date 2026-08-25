@@ -1,0 +1,9 @@
+{% if show_full and promotion and show_promotion_banner %}
+  {% include "user/include/access_level_table_promotion.html" %}
+{% endif %}
+{% if show_comparison %}
+  {% include "user/include/access_level_table_comparison.html" %}
+{% endif %}
+{% if show_pricing %}
+  {% include "user/include/access_level_table_pricing.html" %}
+{% endif %}

@@ -10,12 +10,47 @@ from django_json_widget.widgets import JSONEditorWidget
 
 from acesta.user.fieldsets import user_form_fieldset
 from acesta.user.forms import UserCreationForm
+from acesta.user.models import AccessPromotion
+from acesta.user.models import AccessPromotionCode
 from acesta.user.models import Order
 from acesta.user.models import Request
 from acesta.user.models import Support
 from acesta.user.models import User
 
 admin.site.unregister(SocialAccount)
+
+
+class AccessPromotionCodeForm(forms.ModelForm):
+    class Meta:
+        model = AccessPromotionCode
+        fields = "__all__"
+
+    def clean_code(self):
+        return self.cleaned_data["code"].strip().upper()
+
+
+class AccessPromotionCodeInline(admin.TabularInline):
+    model = AccessPromotionCode
+    form = AccessPromotionCodeForm
+    extra = 1
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        formset.form.base_fields["code"].widget.attrs.update(
+            {
+                "autocapitalize": "characters",
+                "style": "text-transform:uppercase",
+            }
+        )
+        return formset
+
+
+@admin.register(AccessPromotion)
+class AccessPromotionAdmin(admin.ModelAdmin):
+    list_display = ("title", "discount", "is_active", "ends_on", "modified")
+    list_filter = ("is_active",)
+    readonly_fields = ("ends_on",)
+    inlines = (AccessPromotionCodeInline,)
 
 
 class SocialAccountForm(ModelForm):
@@ -111,7 +146,11 @@ class OrderAdmin(admin.ModelAdmin):
 
     readonly_fields = (
         "cost",
+        "discount",
         "total",
+        "promotion",
+        "promotion_percent",
+        "promotion_discount",
     )
 
     list_display = [

@@ -22,8 +22,8 @@ def document_response(
     request: HttpRequest,
     html: str,
     profile: str = "a4",
+    output_format: str = "pdf",
 ) -> HttpResponse:
-    output_format = request.GET.get("format", "pdf")
     if output_format == "html":
         return HttpResponse(html, content_type="text/html; charset=utf-8")
     if output_format != "pdf":

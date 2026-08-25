@@ -1,0 +1,171 @@
+/* Commercial offer: base */
+.commercial-offer-document{--commercial-offer-page-width:595pt;--commercial-offer-page-height:842pt;--commercial-offer-field-x:25pt;--commercial-offer-field-y:20pt;--commercial-offer-field-width:550pt;--commercial-offer-field-height:802pt;--commercial-offer-content-width:551pt;--commercial-offer-header-height:63pt;--commercial-offer-footer-height:68pt;background:#eef1f0;color:var(--acesta-text-primary);font-family:Golos,"Golos Text",sans-serif;margin:0;min-width:0;padding:0;width:auto}
+.commercial-offer,.commercial-offer *{box-sizing:border-box;font-family:Golos,"Golos Text",sans-serif}
+.commercial-offer p,.commercial-offer h1,.commercial-offer h2,.commercial-offer h3{margin:0}
+
+/* Commercial offer: shared layout */
+.commercial-offer-page{background-color:#fff;background-image:url("../img/pdf/commercial-offer-waves.svg");background-position:-.34pt 32.71pt;background-repeat:no-repeat;background-size:598.28pt 236.1pt;height:var(--commercial-offer-page-height);overflow:hidden;padding:0;position:relative;width:var(--commercial-offer-page-width)}
+.commercial-offer-page__field{height:var(--commercial-offer-field-height);left:var(--commercial-offer-field-x);position:absolute;top:var(--commercial-offer-field-y);width:var(--commercial-offer-field-width);z-index:2}
+.commercial-offer-page__content{bottom:var(--commercial-offer-footer-height);left:0;position:absolute;right:0;top:var(--commercial-offer-header-height)}
+
+/* Commercial offer: shared components */
+.commercial-offer-eyebrow{align-self:flex-start;background:#f1f6f5;border-radius:4pt;color:var(--acesta-dark-primary);display:inline-flex;font-size:8pt;font-weight:600;line-height:normal;padding:4pt;text-transform:uppercase}
+.commercial-offer-title{color:#2d5261;font-size:26pt;font-weight:700;letter-spacing:0;line-height:normal;width:240pt}
+.commercial-offer-title-rule{display:block;height:16pt;position:relative;width:21pt}
+.commercial-offer-title-rule::after{background:var(--acesta-primary);content:"";height:2pt;left:0;position:absolute;top:7pt;width:20pt}
+.commercial-offer-section-title{color:#2d5261;font-size:16pt;font-weight:600;letter-spacing:0;line-height:normal}
+
+/* Commercial offer: header */
+.commercial-offer-header{border-bottom:1pt solid #f3f4f4;height:var(--commercial-offer-header-height);left:1pt;position:absolute;top:1pt;width:549pt;z-index:4}
+.commercial-offer a.commercial-offer-header__brand{align-items:center;color:inherit;display:flex;gap:12pt;left:0;opacity:1;position:absolute;text-decoration:none;top:50%;transform:translateY(-50%)}
+.commercial-offer-header__logo{display:block;height:36.8pt;width:181.65pt}
+.commercial-offer-header__caption{color:#a7aaac;font-size:12.747pt;font-weight:600;line-height:normal;white-space:nowrap}
+.commercial-offer-header__date{color:#2d5261;font-size:12pt;font-style:normal;font-weight:500;line-height:normal;position:absolute;right:0;top:50%;transform:translateY(-50%);white-space:nowrap}
+
+/* Commercial offer: footer */
+.commercial-offer-footer{align-items:center;background:#f1f7f6;border-top:1pt solid var(--acesta-dark-primary);bottom:0;display:grid;grid-template-columns:105.97pt minmax(0,1fr) auto;gap:30pt;height:var(--commercial-offer-footer-height);left:0;padding:0 26pt;position:absolute;width:596pt;z-index:4}
+.commercial-offer-footer__logo-link{display:block;height:21.468pt;opacity:1;width:105.97pt}
+.commercial-offer-footer__logo{background:var(--acesta-dark-primary);display:block;height:21.468pt;mask-image:url("../img/pdf/acesta-logo.svg");mask-position:center;mask-repeat:no-repeat;mask-size:contain;width:105.97pt;-webkit-mask-image:url("../img/pdf/acesta-logo.svg");-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;-webkit-mask-size:contain}
+.commercial-offer-footer__caption{color:var(--acesta-dark-primary);font-size:10pt;font-weight:600;line-height:normal;margin:0;text-align:center;white-space:nowrap}
+.commercial-offer-footer__site{color:var(--acesta-dark-primary);font-size:10pt;font-weight:600;line-height:normal;margin:0;opacity:1;text-decoration:none;white-space:nowrap}
+
+/* Commercial offer: heading */
+
+/* Commercial offer: cards */
+.commercial-offer-benefit{--commercial-offer-benefit-color:var(--acesta-primary);border:1pt solid var(--commercial-offer-benefit-color);border-radius:12pt;border-top-width:3pt;display:flex;flex-direction:column;gap:12pt;height:232pt;padding:13pt 16pt 16pt;position:relative;width:173pt}
+.commercial-offer-benefit--adaptation{--commercial-offer-benefit-color:var(--acesta-accent-primary)}
+.commercial-offer-benefit--position{--commercial-offer-benefit-color:var(--acesta-accent-secondary)}
+.commercial-offer-benefit__icon{align-items:center;background:color-mix(in srgb,var(--commercial-offer-benefit-color) 7%,#fff);border-radius:50%;display:flex;flex:0 0 48pt;height:48pt;justify-content:center;width:48pt}
+.commercial-offer-benefit__icon img{display:block;height:24pt;width:24pt}
+.commercial-offer-benefit h3{color:var(--commercial-offer-benefit-color);font-size:12pt;font-weight:600;letter-spacing:0;line-height:normal;width:141pt}
+.commercial-offer-benefit__rule,.commercial-offer-feature-card__rule,.commercial-offer-ai-card__rule,.commercial-offer-history-card__rule{display:block;flex:0 0 2pt;height:2pt;max-width:36pt;min-width:36pt;width:36pt}
+.commercial-offer-benefit__rule{background:var(--commercial-offer-benefit-color)}
+.commercial-offer-benefit p{color:#2d5261;font-size:10pt;font-weight:400;height:85.898pt;line-height:normal;width:141pt}
+.commercial-offer-page-heading{display:flex;flex-direction:column;gap:2pt;position:absolute;width:337.41pt}
+.commercial-offer-page-heading .commercial-offer-section-title{font-size:26pt;font-weight:700}
+.commercial-offer-feature-card{--commercial-offer-feature-color:var(--acesta-primary);background:#fff;border:1pt solid var(--commercial-offer-feature-color);border-left-width:3pt;border-radius:12pt;display:flex;gap:12pt;height:145pt;overflow:hidden;padding:15pt 13pt;position:relative;width:320pt}
+.commercial-offer-feature-card::after{background:var(--commercial-offer-feature-color);content:"";height:184pt;left:-59pt;mask-image:url("../img/pdf/commercial-offer-card-waves.svg");mask-position:left top;mask-repeat:no-repeat;mask-size:426pt 184pt;position:absolute;top:-12pt;width:426pt;-webkit-mask-image:url("../img/pdf/commercial-offer-card-waves.svg");-webkit-mask-position:left top;-webkit-mask-repeat:no-repeat;-webkit-mask-size:426pt 184pt}
+.commercial-offer-feature-card--accent-primary{--commercial-offer-feature-color:var(--acesta-accent-primary)}
+.commercial-offer-feature-card--accent-secondary{--commercial-offer-feature-color:var(--acesta-accent-secondary)}
+.commercial-offer-feature-card__icon,.commercial-offer-ai-card__icon,.commercial-offer-history-card__icon{align-items:center;background:color-mix(in srgb,var(--commercial-offer-feature-color) 7%,#fff);border-radius:50%;display:flex;flex:0 0 48pt;height:48pt;justify-content:center;position:relative;width:48pt;z-index:1}
+.commercial-offer-feature-card__icon span,.commercial-offer-ai-card__icon span,.commercial-offer-history-card__icon span{background:var(--commercial-offer-feature-color);display:block;height:24pt;mask-position:center;mask-repeat:no-repeat;mask-size:contain;width:24pt;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;-webkit-mask-size:contain}
+.commercial-offer-feature-card--region .commercial-offer-feature-card__icon span{mask-image:url("../img/pdf/icon-region.svg");-webkit-mask-image:url("../img/pdf/icon-region.svg")}
+.commercial-offer-feature-card--heart .commercial-offer-feature-card__icon span{mask-image:url("../img/pdf/icon-heart.svg");-webkit-mask-image:url("../img/pdf/icon-heart.svg")}
+.commercial-offer-feature-card--attract .commercial-offer-feature-card__icon span{mask-image:url("../img/pdf/icon-attract.svg");-webkit-mask-image:url("../img/pdf/icon-attract.svg")}
+.commercial-offer-feature-card__body{display:grid;grid-template-rows:minmax(28pt,auto) 27pt 1fr;height:103pt;position:relative;width:240pt;z-index:1}
+.commercial-offer-feature-card h3,.commercial-offer-ai-card h3,.commercial-offer-history-card h3{color:var(--commercial-offer-feature-color);font-size:12pt;font-weight:600;line-height:normal}
+.commercial-offer-feature-card h3{width:221.491pt}
+.commercial-offer-feature-card__rule,.commercial-offer-ai-card__rule,.commercial-offer-history-card__rule{align-self:center;background:var(--commercial-offer-feature-color);justify-self:start}
+.commercial-offer-feature-card p,.commercial-offer-ai-card p,.commercial-offer-ai-card li,.commercial-offer-history-card p{color:#2d5261;font-size:10pt;font-weight:400;line-height:normal}
+.commercial-offer-why-us{align-items:flex-start;background:color-mix(in srgb,var(--acesta-primary) 7%,#fff);border-radius:16pt;display:flex;gap:53pt;height:116.529pt;padding:19.546pt 19.254pt;position:absolute;width:var(--commercial-offer-content-width)}
+.commercial-offer-why-us__copy{display:flex;flex:0 0 110pt;flex-direction:column;gap:7pt;width:110pt}
+.commercial-offer-why-us__copy h3{color:var(--acesta-dark-primary);font-size:15pt;font-weight:700;line-height:normal}
+.commercial-offer-why-us__copy p{color:var(--acesta-text-secondary);font-size:10pt;font-weight:500;line-height:1.05;width:110pt}
+.commercial-offer-why-us img{display:block;object-fit:contain}
+.commercial-offer-why-us__award{height:86pt;margin-top:-4pt;width:90pt}
+.commercial-offer-why-us__regions{height:74pt;width:66pt}
+.commercial-offer-why-us__tourism-types{height:74pt;width:74pt}
+.commercial-offer-cta{background:var(--acesta-dark-primary);border-radius:9pt;color:#fff;height:130pt;overflow:hidden;position:absolute;width:var(--commercial-offer-content-width)}
+.commercial-offer-cta h3{color:#fff;font-size:20.284pt;font-weight:600;left:79.62pt;line-height:normal;position:absolute;text-transform:uppercase;top:18.85pt;white-space:nowrap}
+.commercial-offer-cta__lead{color:#fff;font-size:12pt;font-weight:500;height:35.176pt;left:80.16pt;line-height:normal;position:absolute;top:43.902pt;width:329.154pt}
+.commercial-offer-cta__arrow{display:block;height:7.36pt;left:258.5pt;position:absolute;top:62pt;width:19.148pt}
+.commercial-offer-cta__separator{background:color-mix(in srgb,var(--acesta-bright-primary) 55%,transparent);height:1pt;left:18.48pt;position:absolute;top:88pt;width:398.526pt}
+.commercial-offer-cta__note{color:#fff;font-size:10pt;font-weight:500;height:25.598pt;left:46.94pt;line-height:normal;position:absolute;top:95.32pt;width:362.37pt}
+.commercial-offer-cta__note strong{color:var(--acesta-bright-primary);font-weight:600}
+.commercial-offer-cta__consultation{display:block;height:24pt;left:18.08pt;position:absolute;top:96.92pt;width:24pt}
+.commercial-offer-cta__rocket{display:block;height:66.636pt;left:10.31pt;position:absolute;top:10.92pt;width:66.636pt}
+.commercial-offer-cta__rocket-ring{display:block;height:47.478pt;left:9.579pt;position:absolute;top:9.579pt;transform:rotate(127.95deg);width:47.478pt}
+.commercial-offer-cta__rocket-icon{display:block;height:19.255pt;left:23.69pt;position:absolute;top:23.69pt;width:19.276pt}
+.commercial-offer a.commercial-offer-cta__qr{background:#fff;display:block;height:109.055pt;left:430.67pt;opacity:1;position:absolute;top:10.47pt;width:98.733pt}
+.commercial-offer-cta__qr svg{display:block;height:100%;width:100%}
+
+/* Commercial offer: balloon */
+.commercial-offer-hero{inset:0;overflow:hidden;pointer-events:none;position:absolute;z-index:0}
+.commercial-offer-hero__landscape{display:block;height:336.482pt;left:304.36pt;position:absolute;top:66.37pt;width:297.194pt}
+.commercial-offer-hero__balloon{display:block;height:64.635pt;left:468.3pt;position:absolute;top:95.2pt;width:46.258pt}
+
+/* Commercial offer: page 1 */
+.commercial-offer-page-one{height:100%;position:relative}
+.commercial-offer-page-one__intro{display:flex;flex-direction:column;gap:8pt;left:1pt;position:absolute;top:35pt;width:240pt}
+.commercial-offer .commercial-offer-page-one__lead{color:var(--acesta-primary);font-size:13pt;font-weight:600;line-height:normal;width:240pt}
+.commercial-offer .commercial-offer-page-one__description{color:#2d5261;font-size:10pt;font-weight:400;line-height:1.4;padding:6pt 0;width:218.476pt}
+.commercial-offer-benefits{display:flex;flex-direction:column;gap:8pt;left:0;position:absolute;top:351pt;width:566.242pt}
+.commercial-offer-benefits .commercial-offer-section-title{width:340.16pt}
+.commercial-offer-benefits__grid{display:grid;gap:16pt;grid-template-columns:repeat(3,173pt);padding:8pt 0 18pt}
+
+/* Commercial offer: page 2 */
+.commercial-offer-page-two{height:100%;position:relative}
+.commercial-offer-page-two .commercial-offer-page-heading{left:0;top:9.645pt}
+.commercial-offer-page-two__left{display:grid;gap:13pt;grid-template-rows:repeat(3,145pt);left:0;position:absolute;top:72.665pt;width:320pt}
+.commercial-offer-ai-card{--commercial-offer-feature-color:var(--acesta-ai);background:color-mix(in srgb,var(--acesta-ai) 2%,#fff);border:1pt solid var(--commercial-offer-feature-color);border-left-width:3pt;border-radius:12pt;height:461pt;left:336pt;padding:16pt;position:absolute;top:72.665pt;width:215pt}
+.commercial-offer-ai-card__icon{background:color-mix(in srgb,var(--acesta-ai) 10%,#fff)}
+.commercial-offer-ai-card__icon span{height:24pt;mask-image:url("../img/pdf/icon-ai.svg");-webkit-mask-image:url("../img/pdf/icon-ai.svg")}
+.commercial-offer-ai-card__body{display:flex;flex-direction:column;height:371pt;margin-top:12pt;width:178pt}
+.commercial-offer-ai-card h3{height:33.566pt;width:164.225pt}
+.commercial-offer-ai-card__rule{align-self:flex-start;flex:0 0 2pt;margin:12.5pt 0}
+.commercial-offer-ai-card__body>p:not(.commercial-offer-ai-card__note){height:75.196pt;width:178pt}
+.commercial-offer-ai-card ul{color:#2d5261;display:flex;flex:0 0 162pt;flex-direction:column;font-size:10pt;font-weight:400;gap:11pt;justify-content:flex-start;line-height:normal;margin:0;padding:5pt 0 0 15pt;width:178pt}
+.commercial-offer-ai-card li{padding-left:0}
+.commercial-offer .commercial-offer-ai-card__note{align-items:center;background:color-mix(in srgb,var(--acesta-ai) 20%,#fff);border-radius:9pt;display:flex;height:74pt;padding:7pt 10pt;width:178pt}
+.commercial-offer-history-card{--commercial-offer-feature-color:var(--acesta-history);background:#fff;border:1pt solid var(--commercial-offer-feature-color);border-left-width:3pt;border-radius:12pt;display:flex;gap:12pt;height:115pt;left:0;overflow:hidden;padding:16pt;position:absolute;top:547.665pt;width:var(--commercial-offer-content-width)}
+.commercial-offer-history-card::after{background-image:url("../img/pdf/commercial-offer-history-waves.svg");background-position:left top;background-repeat:no-repeat;background-size:570pt 196pt;bottom:-23pt;content:"";height:196pt;left:0;position:absolute;width:570pt}
+.commercial-offer-history-card__icon span{height:24pt;mask-image:url("../img/pdf/icon-history.svg");-webkit-mask-image:url("../img/pdf/icon-history.svg")}
+.commercial-offer-history-card__body{display:grid;grid-template-rows:28pt 21pt 1fr;position:relative;width:453pt;z-index:1}
+.commercial-offer-history-card h3{width:334.453pt}
+.commercial-offer-history-card p{width:384.855pt}
+
+/* Commercial offer: page 3 */
+.commercial-offer-page-three{height:100%;position:relative}
+.commercial-offer-page-three .commercial-offer-page-heading{left:0;top:9.781pt}
+.offer-tariff{height:274.327pt;left:0;position:absolute;top:74.388pt;width:var(--commercial-offer-content-width)}
+.offer-tariff:not(:has(.tariff-promo)){top:82.388pt}
+.offer-tariff .pdf-table{color:var(--acesta-text-primary);font-size:9pt;font-weight:400;line-height:normal;margin:0;table-layout:fixed;width:var(--commercial-offer-content-width)}
+.offer-tariff .pdf-table th,.offer-tariff .pdf-table td{border:0;border-bottom:.85pt solid var(--acesta-border-light);border-top:.85pt solid var(--acesta-border-light);overflow-wrap:normal;vertical-align:middle}
+.offer-tariff .pdf-table th{color:var(--acesta-text-primary);font-weight:600;padding:8pt 5pt;text-align:center}
+.offer-tariff:not(:has(.tariff-promo)) .pdf-table th{padding:10pt 5pt}
+.offer-tariff .pdf-table thead th{border:0}
+.offer-tariff .pdf-table td{padding:6pt 5pt}
+.offer-tariff:not(:has(.tariff-promo)) .pdf-table td{padding:13pt 5pt}
+.offer-tariff .pdf-table thead tr:first-child th:first-child{border-top-left-radius:6pt}
+.offer-tariff .pdf-table thead tr:first-child th:last-child{border-top-right-radius:6pt}
+.offer-tariff .pdf-table tbody td{border-bottom-color:#fff;border-top-color:#fff}
+.offer-tariff .pdf-table tbody td:first-child{background-color:color-mix(in srgb,var(--acesta-bg) 50%,#fff);padding-left:16pt}
+.offer-tariff .pdf-table tbody td:nth-child(2){background-color:color-mix(in srgb,#9AAE55 3%,#fff)}
+.offer-tariff .pdf-table tbody td:nth-child(3){background-color:color-mix(in srgb,#9AAE55 9%,#fff)}
+.offer-tariff .pdf-table tbody td:nth-child(4){background-color:color-mix(in srgb,#D97A6A 3%,#fff)}
+.offer-tariff .pdf-table tbody td:nth-child(5){background-color:color-mix(in srgb,#D97A6A 9%,#fff)}
+.offer-tariff .pdf-table tbody tr:last-child{border-bottom:1pt solid #fff}
+.offer-tariff .pdf-table tbody strong{font-weight:700}
+.offer-tariff .pdf-table tbody td:nth-child(2) strong,.offer-tariff .pdf-table tbody td:nth-child(3) strong{color:#9AAE55}
+.offer-tariff .pdf-table tbody td:nth-child(4) strong,.offer-tariff .pdf-table tbody td:nth-child(5) strong{color:#D97A6A}
+.offer-tariff .pdf-table th:first-child,.offer-tariff .pdf-table td:first-child{width:110pt}
+.offer-tariff .pdf-table thead tr:first-child th:first-child{background-color:color-mix(in srgb,var(--acesta-bg) 95%,#fff)!important}
+.offer-tariff .pdf-table thead tr:first-child th:nth-child(2){background-color:#9AAE55!important;color:#fff}
+.offer-tariff .pdf-table thead tr:first-child th:nth-child(3){background-color:#D97A6A!important;color:#fff}
+.offer-tariff .pdf-table thead tr:nth-child(2) th:nth-child(1){background-color:color-mix(in srgb,#9AAE55 22%,#fff)!important}
+.offer-tariff .pdf-table thead tr:nth-child(2) th:nth-child(2){background-color:color-mix(in srgb,#9AAE55 22%,#fff)!important}
+.offer-tariff .pdf-table thead tr:nth-child(2) th:nth-child(3){background-color:color-mix(in srgb,#D97A6A 22%,#fff)!important}
+.offer-tariff .pdf-table thead tr:nth-child(2) th:nth-child(4){background-color:color-mix(in srgb,#D97A6A 22%,#fff)!important}
+.offer-tariff .tariff-promo{align-items:center;background:linear-gradient(90deg,#33927f,#67b7a3);border:1pt solid var(--acesta-border-light);border-radius:6pt;box-sizing:border-box;color:#fff;display:grid;gap:4pt;grid-template-columns:27pt minmax(0,1fr) max-content max-content;isolation:isolate;margin:0 0 20pt;min-height:33pt;overflow:hidden;padding:2pt 7pt;position:relative;width:100%}
+.offer-tariff .tariff-promo .waves{height:100%;inset:0;pointer-events:none;position:absolute;width:100%;z-index:0}
+.offer-tariff .tariff-promo > :not(.waves){position:relative;z-index:1}
+.offer-tariff .tariff-promo p{margin:0}
+.offer-tariff .tariff-promo .discount{align-items:center;color:var(--acesta-bright-primary);display:flex;height:25pt;justify-content:center;width:25pt}
+.offer-tariff .tariff-promo .discount svg{display:block;height:100%;width:100%}
+.offer-tariff .tariff-promo .title{font-size:10pt;font-weight:600;line-height:normal;min-width:0;white-space:nowrap}
+.offer-tariff .tariff-promo .title strong{color:var(--acesta-bright-primary);font-weight:700}
+.offer-tariff .tariff-promo .message{font-size:8pt;line-height:normal;min-width:0;white-space:nowrap}
+.offer-tariff .tariff-promo .message__arrow{background:#fff;display:inline-block;height:1pt;margin-left:5pt;position:relative;vertical-align:middle;width:11pt}
+.offer-tariff .tariff-promo .message__arrow::before{border:solid #fff;border-width:0 1pt 1pt 0;content:"";height:5pt;position:absolute;right:0;top:-2.5pt;width:5pt;transform:rotate(-45deg)}
+.offer-tariff .tariff-promo .deadline{background:var(--acesta-bright-primary);border-radius:4pt;color:var(--acesta-primary);font-size:6.5pt;line-height:normal;padding:3pt 5pt;text-align:center;white-space:nowrap}
+.offer-tariff .tariff-promo .deadline strong{color:var(--acesta-primary);font-size:8pt;margin-left:2pt}
+.offer-tariff .old-price{display:block;font-size:7.5pt;font-weight:500;line-height:normal;opacity:.75}
+.offer-tariff .sale{color:var(--acesta-dark-primary);display:block;font-size:9.5pt}
+.offer-tariff [data-access-level-section="pricing"] td del{font-size:7.5pt}
+.offer-tariff .notes{color:var(--acesta-text-primary);display:flex;flex-direction:column;font-size:9pt;font-weight:400;gap:3pt;line-height:normal;padding:4pt 16pt;width:var(--commercial-offer-content-width)}
+.offer-tariff .notes p{margin:0}
+.commercial-offer-page-three .commercial-offer-why-us{left:0;top:381.763pt}
+.commercial-offer-page-three .commercial-offer-cta{left:0;top:532.665pt}
+
+@media screen{.commercial-offer-document{padding:34.02pt 0}.commercial-offer{display:flex;flex-direction:column;gap:28.35pt}.commercial-offer-page{box-shadow:0 5.67pt 22.68pt rgb(18 40 35 / 18%);margin:0 auto}}
+@media print{.commercial-offer-page{box-shadow:none;margin:0}}

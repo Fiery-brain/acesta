@@ -27,6 +27,7 @@ def check_registered(get_response):
         if (
             request.user.is_authenticated
             and not request.user.registered
+            and request.resolver_match.namespace != "api"
             and request.resolver_match.view_name
             not in ("account_signupnext", "index", "account_confirm_email")
         ):

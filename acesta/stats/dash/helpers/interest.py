@@ -313,7 +313,7 @@ def get_ppt_df(ppt_data, sort_by: list) -> pd.DataFrame:
                     'data-history-domain="popularity" '
                     f'data-history-entity-type="{entity_type}" '
                     f'data-history-entity-id="{pk}">'
-                    f'<svg aria-hidden="true"><use href="{sprite_url}"></use></svg>'
+                    f'<svg aria-hidden="true" class="svg-weight-m"><use href="{sprite_url}"></use></svg>'
                     "</button>"
                 )
                 if pk and entity_type

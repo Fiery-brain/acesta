@@ -1,0 +1,26 @@
+{% load static %}
+{% load text %}
+
+<div class="modal fade" id="individualConditions" tabindex="-1" role="dialog" aria-labelledby="individualConditionsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form action="{% url 'support' %}" method="post">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title" id="individualConditionsLabel"><svg fill="var(--acesta-dark-primary)" class="me-1" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#consultation"></use></svg>Индивидуальные условия</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          {% csrf_token %}
+          <label for="individualConditionsMessage" class="d-none form-label">Задачи и цели</label>
+          <textarea required class="form-control" name="message" id="individualConditionsMessage" rows="6" autocomplete="off" placeholder="Расскажите, какие задачи сейчас решаете"></textarea>
+          <div id="individualConditionsHelp" class="form-text text-muted ms-2">{{ "Подберём условия и формат сотрудничества с учётом ваших задач и целей"|nobreak_spaces }}</div>
+          {{ conditions_form.user }}
+          {{ conditions_form.subject }}
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="var(--acesta-dark-primary)" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Отправить запрос</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

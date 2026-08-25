@@ -5,6 +5,7 @@ from acesta.user.forms import OrderForm
 from acesta.user.forms import RequestForm
 from acesta.user.forms import SupportForm
 from acesta.user.models import User
+from acesta.user.pricing import get_active_access_promotion
 
 
 def get_support_form(user: User, subject: str) -> SupportForm:
@@ -53,6 +54,9 @@ def get_order_form(user: User) -> OrderForm:
     order_form.initial["regions"] = [user.current_region.pk]
     order_form.initial["user"] = user
     order_form.initial["tourism_types"] = ["recreation"]
+    promotion = get_active_access_promotion(user.segment)
+    if promotion:
+        order_form.initial["promo"] = promotion.code
     user_field = order_form.fields["user"]
     user_field.widget = user_field.hidden_widget()
     return order_form

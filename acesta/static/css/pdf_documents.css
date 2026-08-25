@@ -13,7 +13,7 @@
 }
 
 @page {
-  size: A4;
+  size: 595pt 842pt;
   margin: 0;
 }
 
@@ -47,8 +47,8 @@ b {
 .pdf-document-page {
   background: #fff;
   break-after: page;
-  height: 297mm;
-  width: 210mm;
+  height: 842pt;
+  width: 595pt;
 }
 
 .pdf-document-page:last-child {
@@ -56,60 +56,60 @@ b {
 }
 
 .pdf-page {
-  min-height: 297mm;
-  padding: 14mm 16mm;
+  min-height: 842pt;
+  padding: 39.685pt 45.354pt;
 }
 
 .pdf-header {
   align-items: flex-start;
   display: grid;
-  gap: 8mm;
-  grid-template-columns: 34mm minmax(0, 1fr);
+  gap: 22.677pt;
+  grid-template-columns: 96.378pt minmax(0, 1fr);
 }
 
 .pdf-header__logo {
   display: block;
   height: auto;
-  width: 31mm;
+  width: 87.874pt;
 }
 
 .pdf-header__details p {
-  margin: 0 0 1.5mm;
+  margin: 0 0 4.252pt;
 }
 
 .pdf-title {
   font-size: 21pt;
   line-height: 1.15;
-  margin: 9mm 0 6mm;
+  margin: 25.512pt 0 17.008pt;
   text-align: center;
 }
 
 .pdf-content p {
-  margin: 0 0 2mm;
+  margin: 0 0 5.669pt;
 }
 
 .pdf-content ul {
-  margin: 1.5mm 0 3mm;
-  padding-left: 7mm;
+  margin: 4.252pt 0 8.504pt;
+  padding-left: 19.843pt;
 }
 
 .pdf-content li {
-  margin-bottom: 1mm;
-  padding-left: 1mm;
+  margin-bottom: 2.835pt;
+  padding-left: 2.835pt;
 }
 
 .pdf-table {
   border-collapse: collapse;
-  margin: 3mm 0 2mm;
+  margin: 8.504pt 0 5.669pt;
   table-layout: fixed;
   width: 100%;
 }
 
 .pdf-table th,
 .pdf-table td {
-  border: 0.3mm solid #c8cdcb;
+  border: 0.85pt solid #c8cdcb;
   overflow-wrap: anywhere;
-  padding: 2mm;
+  padding: 5.669pt;
   text-align: left;
   vertical-align: top;
 }
@@ -135,7 +135,7 @@ b {
 }
 
 .pdf-legal-document .pdf-document-page {
-  padding: 20mm;
+  padding: 56.693pt;
 }
 
 .pdf-legal-document h1 {
@@ -149,23 +149,23 @@ b {
   break-after: avoid;
   font-size: 13.5pt;
   line-height: 1;
-  margin: 9px 0 7px;
+  margin: 6.75pt 0 5.25pt;
   text-align: center;
 }
 
 .pdf-legal-document h4 {
   margin: 0;
-  padding: 4px 0;
+  padding: 3pt 0;
   text-align: center;
 }
 
 .pdf-legal-document p {
-  margin: 6px 0;
+  margin: 4.5pt 0;
   padding: 0;
 }
 
 .pdf-legal-document .b1 {
-  margin-bottom: 6px;
+  margin-bottom: 4.5pt;
 }
 
 .pdf-legal-document i {
@@ -175,17 +175,17 @@ b {
 @media screen {
   body {
     background: #e5e7e6;
-    padding: 12mm 0;
+    padding: 34.016pt 0;
   }
 
   .pdf-document-pages {
     display: flex;
     flex-direction: column;
-    gap: 10mm;
+    gap: 28.346pt;
   }
 
   .pdf-document-page {
-    box-shadow: 0 2mm 8mm rgb(18 40 35 / 18%);
+    box-shadow: 0 5.669pt 22.677pt rgb(18 40 35 / 18%);
     margin: 0 auto;
   }
 }

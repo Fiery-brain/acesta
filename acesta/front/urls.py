@@ -1,3 +1,4 @@
+from django.urls import include
 from django.urls import path
 from django.urls import re_path
 from django.views.generic import TemplateView
@@ -20,6 +21,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
         name="robots",
     ),
+    path("", include("acesta.front.qr.urls")),
     re_path(
         rf"^(?P<segment>{get_segment_pattern()})/",
         segment_landing,

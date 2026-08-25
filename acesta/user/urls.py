@@ -31,8 +31,11 @@ from acesta.user.views import get_costs
 from acesta.user.views import hide_start_modal
 from acesta.user.views import new_order
 from acesta.user.views import oferta
+from acesta.user.views import oferta_pdf
 from acesta.user.views import offer
+from acesta.user.views import offer_pdf
 from acesta.user.views import offer_report
+from acesta.user.views import offer_report_pdf
 from acesta.user.views import price
 from acesta.user.views import support
 from acesta.user.views import user_profile
@@ -121,8 +124,15 @@ urlpatterns += [
     path("request/", visitor_request, name="visitor_request"),
     path("support/", login_required(support), name="support"),
     path("oferta/", oferta, name="oferta"),
+    path("oferta.pdf", oferta_pdf, name="oferta_pdf"),
     path("offer/", login_required(offer), name="offer"),
-    path("offer_report/", login_required(offer_report), name="offer_report"),
+    path("offer.pdf", login_required(offer_pdf), name="offer_pdf"),
+    path("offer-report/", login_required(offer_report), name="offer_report"),
+    path(
+        "offer-report.pdf",
+        login_required(offer_report_pdf),
+        name="offer_report_pdf",
+    ),
     path(
         "start/hide/",
         login_required(hide_start_modal),

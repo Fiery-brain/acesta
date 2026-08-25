@@ -1,0 +1,3 @@
+{% load static %}
+{% load text %}
+{% if description %}<button type="button" class="help" data-access-level-help data-bs-toggle="tooltip" data-bs-placement="top" title="{{ description|nobreak_spaces }}" aria-label="Справка: {{ label|nobreak_spaces }}"><svg aria-hidden="true" class="svg-weight-l"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></button>{% endif %}

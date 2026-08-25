@@ -1,74 +1,99 @@
-{% extends "user/pdf/document_base.html" %}
-{% load text %}
+{% extends "user/pdf/commercial_offer_base.html" %}
+{% load access_levels qr static text %}
 
 {% block title %}Аналитический сервис ацеста. Коммерческое предложение для региона {{ region.title }}{% endblock %}
 {% block filename %}Коммерческое предложение — ацеста — {% now "d.m.Y" %}.pdf{% endblock %}
 
-{% block content %}
-  <p>Аналитический сервис ацеста предлагает рассмотреть возможность использования услуги <strong>«Полный&nbsp;доступ»</strong>.</p>
-  <p>Преимущества использования сервиса:</p>
-  <ul>
-    <li>методика построения отчетов доказала свою эффективность в регионах</li>
-    <li>аналитика строится на актуальных данных Яндекс.Подбор слов, ВКонтакте и Росстат</li>
-    <li>сервис охватывает все регионы Российской Федерации</li>
-    <li>полный доступ открывается сразу после оплаты</li>
-  </ul>
-  <p><strong>Полный доступ</strong> к аналитике дает дополнительную детализацию и подходит для профессиональной оценки туристического потенциала региона.</p>
-  <p>Характеристики и стоимость услуги <strong>«Полный доступ»</strong>:</p>
-  <ul>
-    <li><strong>Аналитика интереса к турпродуктам</strong> на уровне городов и точек притяжения</li>
-    <li><strong>Аналитика целевых групп туристов</strong> на уровне городов и точек притяжения</li>
-    <li><strong>Рейтинги по интересу к турпродуктам</strong> на уровне городов и точек притяжения</li>
-    <li><strong>Рекомендации искусственного интеллекта</strong></li>
-  </ul>
-  <table class="pdf-table">
-    <thead>
-      <tr>
-        <th rowspan="2">Стоимость</th>
-        <th colspan="2"><strong>{{ region.title|nobreak_spaces }}</strong> (ранг {{ region.rank }})</th>
-        <th colspan="2"><strong>{{ district_title|nobreak_spaces }} федеральный округ</strong></th>
-      </tr>
-      <tr>
-        <th>1 вид туризма</th>
-        <th>все виды туризма</th>
-        <th>1 вид туризма</th>
-        <th>все виды туризма</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>за неделю</td>
-        <td align="right"><strong>{{ cost_1w_1t }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_1w }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_district_1w_1t }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_district_1w }} ₽</strong></td>
-      </tr>
-      <tr>
-        <td>за месяц</td>
-        <td align="right"><strong>{{ cost_1m_1t }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_1m }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_district_1m_1t }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_district_1m }} ₽</strong></td>
-      </tr>
-      <tr>
-        <td>за полгода (со скидкой {{ discounts.gt_6_discount }}%)</td>
-        <td align="right"><strong>{{ cost_6m_1t }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_6m }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_district_6m_1t }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_district_6m }} ₽</strong></td>
-      </tr>
-      <tr>
-        <td>за год (со скидкой {{ discounts.gt_12_discount }}%)</td>
-        <td align="right"><strong>{{ cost_12m_1t }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_12m }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_district_12m_1t }} ₽</strong></td>
-        <td align="right"><strong>{{ cost_district_12m }} ₽</strong></td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="pdf-note">
-    <p>НДС не облагается.</p>
-    <p>Услуги оказываются на основании Оферты. Оплата услуг осуществляется на основании счета. По факту оказания услуг предоставляется акт выполненных работ.</p>
-    <p>Срок указанной стоимости по данному предложению: {% now "d.m.Y" %}.</p>
+{% block page_1_background %}
+  <div class="commercial-offer-hero" aria-hidden="true"><img class="commercial-offer-hero__landscape" src="{% static 'img/bg_welcome_to_acesta.svg' %}" alt=""><img class="commercial-offer-hero__balloon" src="{% static 'img/balloon.svg' %}" alt=""></div>
+{% endblock %}
+
+{% block page_1 %}
+  <div class="commercial-offer-page-one">
+    <div class="commercial-offer-page-one__intro">
+      <p class="commercial-offer-eyebrow">{{ "Предложение для профессионалов туризма"|nobreak_spaces }}</p>
+      <h1 class="commercial-offer-title">{{ "Актуальная картина интереса к туризму"|nobreak_spaces }}</h1>
+      <span class="commercial-offer-title-rule" aria-hidden="true"></span>
+      <p class="commercial-offer-page-one__lead">{{ "Помогаем увидеть оперативный интерес потенциальных туристов, его динамику и тренды"|nobreak_spaces }}</p>
+      <p class="commercial-offer-page-one__description">{{ "Снижаем риск ошибочных действий, помогаем своевременно реагировать на изменения интереса и не упускать новые возможности на быстро меняющемся туристическом рынке"|nobreak_spaces }}</p>
+    </div>
+    <section class="commercial-offer-benefits">
+      <p class="commercial-offer-eyebrow">{{ "Что вы получаете"|nobreak_spaces }}</p>
+      <h2 class="commercial-offer-section-title">{{ "Данные для своевременных действий при изменении спроса"|nobreak_spaces }}</h2>
+      <div class="commercial-offer-benefits__grid">
+        <article class="commercial-offer-benefit commercial-offer-benefit--control">
+          <span class="commercial-offer-benefit__icon"><img src="{% static 'img/pdf/icon-goal.svg' %}" alt=""></span>
+          <h3>{{ "Контроль<br>над изменениями<br>спроса"|nobreak_spaces }}</h3>
+          <span class="commercial-offer-benefit__rule" aria-hidden="true"></span>
+          <p>{{ "Без оперативной информации о спросе решения принимаются с опозданием и уже не учитывают происходящие изменения"|nobreak_spaces }}</p>
+        </article>
+        <article class="commercial-offer-benefit commercial-offer-benefit--adaptation">
+          <span class="commercial-offer-benefit__icon"><img src="{% static 'img/pdf/icon-path.svg' %}" alt=""></span>
+          <h3>{{ "Своевременная адаптация к настроениям рынка"|nobreak_spaces }}</h3>
+          <span class="commercial-offer-benefit__rule" aria-hidden="true"></span>
+          <p>{{ "Каждое промедление сокращает время для реакции и увеличивает вероятность того, что новые возможности первыми используют конкуренты"|nobreak_spaces }}</p>
+        </article>
+        <article class="commercial-offer-benefit commercial-offer-benefit--position">
+          <span class="commercial-offer-benefit__icon"><img src="{% static 'img/pdf/icon-trophy.svg' %}" alt=""></span>
+          <h3>{{ "Сохранение и укрепление конкурентных позиций"|nobreak_spaces }}</h3>
+          <span class="commercial-offer-benefit__rule" aria-hidden="true"></span>
+          <p>{{ "Не уделяя внимания изменениям настроений потенциальных туристов, легко уступить позиции конкурентам, которые их уже учли"|nobreak_spaces }}</p>
+        </article>
+      </div>
+    </section>
+  </div>
+{% endblock %}
+
+{% block page_2 %}
+  <div class="commercial-offer-page-two">
+    <header class="commercial-offer-page-heading">
+      <p class="commercial-offer-eyebrow">{{ "Ключевые разделы"|nobreak_spaces }}</p>
+      <h2 class="commercial-offer-section-title">{{ "Наши возможности"|nobreak_spaces }}</h2>
+    </header>
+    <div class="commercial-offer-page-two__left">
+      {% include "user/pdf/include/commercial_offer_feature_card.html" with tone="primary" icon="region" title="Оцениваем туристический потенциал территорий" text="Сравниваем потенциал территорий с реальным интересом туристов и показываем, где открываются новые возможности для развития" %}
+      {% include "user/pdf/include/commercial_offer_feature_card.html" with tone="accent-primary" icon="heart" title="Показываем географию и интересы потенциальных туристов" text="География интереса, целевые группы и их предпочтения помогают лучше понимать, кто заинтересован в территории и чем его можно привлечь" %}
+      {% include "user/pdf/include/commercial_offer_feature_card.html" with tone="accent-secondary" icon="attract" title="Сравниваем потенциал и привлекательность локаций" text="Сопоставление потенциала с реальным интересом помогает увидеть территории и локации, где открываются лучшие возможности для развития" %}
+    </div>
+    <article class="commercial-offer-ai-card">
+      <span class="commercial-offer-ai-card__icon" aria-hidden="true"><span></span></span>
+      <div class="commercial-offer-ai-card__body">
+        <h3>{{ "Даём рекомендации для вашей ситуации"|nobreak_spaces }}</h3>
+        <span class="commercial-offer-ai-card__rule" aria-hidden="true"></span>
+        <p>{{ "Искусственный интеллект анализирует данные сервиса, учитывает вашу ситуацию и предлагает рекомендации, которые помогают быстрее определить дальнейшие действия."|nobreak_spaces }}</p>
+        <ul>
+          <li>{{ "рекомендации основаны на данных ацесты;"|nobreak_spaces }}</li>
+          <li>{{ "учитывают специфику работы и профессиональные задачи;"|nobreak_spaces }}</li>
+          <li>{{ "предлагают конкретные действия и оценивают возможный результат"|nobreak_spaces }}</li>
+        </ul>
+        <p class="commercial-offer-ai-card__note">{{ "Готовые рекомендации дополняют аналитический дашборд, предлагая альтернативный способ работы с данными"|nobreak_spaces }}</p>
+      </div>
+    </article>
+    <article class="commercial-offer-history-card">
+      <span class="commercial-offer-history-card__icon" aria-hidden="true"><span></span></span>
+      <div class="commercial-offer-history-card__body">
+        <h3>{{ "Отслеживаем изменения интереса к направлениям и выявляем тренды"|nobreak_spaces }}</h3>
+        <span class="commercial-offer-history-card__rule" aria-hidden="true"></span>
+        <p>{{ "Помогает избежать запоздалых решений и вложений в направления с угасающим интересом"|nobreak_spaces }}</p>
+      </div>
+    </article>
+  </div>
+{% endblock %}
+
+{% block page_3 %}
+  <div class="commercial-offer-page-three">
+    <header class="commercial-offer-page-heading">
+      <p class="commercial-offer-eyebrow">{{ "Варианты подключения"|nobreak_spaces }}</p>
+      <h2 class="commercial-offer-section-title">{{ "Уровни доступа"|nobreak_spaces }}</h2>
+    </header>
+    <section class="offer-tariff" aria-label="Уровни доступа">
+      {% access_level_table region access_level_columns show_actions=False show_comparison=False show_pricing=True segment=segment show_animated_waves=True %}
+      <div class="notes">
+        <p>{{ "НДС не облагается."|nobreak_spaces }}</p>
+        <p>{{ "Услуги оказываются на основании Оферты. По факту оказания услуг предоставляется акт выполненных работ."|nobreak_spaces }}</p>
+      </div>
+    </section>
+    {% include "user/pdf/include/commercial_offer_why_us.html" %}
+    {% include "user/pdf/include/commercial_offer_cta.html" %}
   </div>
 {% endblock %}

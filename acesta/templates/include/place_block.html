@@ -21,7 +21,7 @@
       </div>
       {% if tooltip_text %}
         <div>
-          <a href="#" data-bs-toggle="tooltip" title="{{ tooltip_text }}"><svg fill="#939699" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
+          <a href="#" data-bs-toggle="tooltip" title="{{ tooltip_text }}"><svg fill="var(--acesta-text-light)" color="var(--acesta-text-light)" width="22" height="22" class="svg-weight-l"><use href="{% static 'img/sprite.svg' %}#help"></use></svg></a>
         </div>
       {% elif place_group %}
         <div class="{{ text_class_base }}{{ text_class }} opacity-75 pt-1">

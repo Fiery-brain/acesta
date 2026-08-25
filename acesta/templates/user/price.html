@@ -1,19 +1,22 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
-{% load prop %}
+{% load access_levels %}
 
 {% block title %}Уровни доступа к&nbsp;данным {% endblock %}
 
 {% block part_title %}
-  <div class="container pt-5 mb-3">
-    <div class="row">
+  <div class="price-heading price-table mb-2">
+    <div class="row promotion-row">
+      <div class="col pe-0">{% access_promotion_banner request.user.segment %}</div>
+    </div>
+    <div class="row align-items-center title-row">
       <div class="col-12 col-md-3">
-        <h1 class="fs-4 mb-2 text-muted text-nowrap">Уровни доступа к&nbsp;данным</h1>
+        <h1 class="fs-4 mb-0 text-muted text-nowrap">Уровни доступа к&nbsp;данным</h1>
       </div>
       <div class="col-12 col-md-9 pt-3 pt-md-0 d-flex align-items-center justify-content-md-end text-nowrap">
         {% if request.user.current_region.rank > 0%}
-          <a href="{% url 'oferta' %}" class="ms-md-3 text-secondary py-2" title="Скачать оферту"><svg fill="#34766a" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Оферта</a>
-          <a href="{% url 'offer' %}" class="ms-2 ms-md-3 text-secondary py-2 text-nowrap" title="Скачать коммерческое предложение"><svg fill="#fab222" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Коммерческое предложение</a>
+          <a href="{% url 'oferta_pdf' %}" class="ms-md-3 text-secondary py-2" title="Скачать оферту" target="_blank"><svg fill="#34766a" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Оферта</a>
+          <a href="{% url 'offer_pdf' %}" class="ms-2 ms-md-3 text-secondary py-2 text-nowrap" title="Скачать коммерческое предложение" target="_blank"><svg fill="#fab222" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#document"></use></svg>Коммерческое предложение</a>
         {% endif %}
       </div>
     </div>
@@ -27,8 +30,8 @@
       <div class="modal-content">
         <form action="{% url 'support' %}" method="post">
           <div class="modal-header bg-light">
-            <h5 class="modal-title" id="orderReportLabel"><svg fill="#ad223c" class="me-1" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#report"></use></svg>Заказ отчета</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="orderReportLabel"><svg fill="#ad223c" class="me-1" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#report"></use></svg>Заказ отчета</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
           <div class="modal-body">
               {% csrf_token %}
@@ -40,136 +43,20 @@
               {{ support_form.subject }}
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Отправить</button>
+            <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="var(--acesta-primary)" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Отправить</button>
           </div>
         </form>
       </div>
     </div>
   </div>
+  {% include "user/include/price_conditions_modal.html" %}
 {% endblock %}
 
 {% block content %}
-  <div class="row pb-3 overflow-auto price-container">
-    <div class="col pe-0">
-      <table class="w-100">
-        <tr>
-          <td colspan="2"></td>
-          <td class="text-center plan-container bg-green text-white px-3 pt-3 rounded-top-left">
-            <h2 class="text-white fs-6">Базовый<span class="d-none d-lg-inline"> доступ</span></h2>
-          </td>
-          <td class="text-center plan-container bg-red text-white px-3 pt-3" colspan="2">
-            <h2 class="text-white fs-6">Полный<span class="d-none d-lg-inline"> доступ</span></h2>
-          </td>
-          <td class="text-center plan-container bg-yellow  text-white px-3 pt-3 rounded-top-right">
-            <h2 class="text-white fs-6"><span class="d-inline d-xxl-none">Отчеты</span><span class="d-none d-xxl-inline"> Отчеты и данные</span></h2>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2"></td>
-          <td class="text-center plan-container bg-green text-white px-3"></td>
-          <td width="18%" class="text-center plan-container bg-red text-white px-3 pt-2 pb-1">
-            <div class="w-75 d-flex justify-content-center m-auto">
-              <small><b>{{ request.user.current_region.region_short }}</b></small>
-            </div>
-          </td>
-          <td width="18%" class="text-center plan-container bg-red text-white px-3 pt-2 pb-1">
-            <div class="w-75 d-flex m-auto">
-              <small><b>{{ FEDERAL_DISTRICTS|get_prop:request.user.current_region.federal_district }} федеральный округ</b></small>
-            </div>
-          </td>
-          <td class="text-center plan-container bg-yellow text-white px-3"></td>
-        </tr>
-        <tr>
-          <td colspan="2"></td>
-          <td class="text-center plan-container bg-green text-white px-3 pb-3">
-            <p class="fw-bold fs-5 mb-2">бесплатно</p>
-            <a href="{% url 'region' %}" class="btn btn-outline-light px-4">Начать</a>
-          </td>
-          <td class="text-center plan-container bg-red text-white px-3 pb-3">
-            <p class="fw-bold fs-5 mb-2 text-nowrap">{% if price_region %}от {{ price_region }} ₽/нед{% else %}0 ₽/мес{% endif %}
-              <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
-                <p class='mt-1 mb-1 text-nowrap'><small>Регион 0 ранга: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ prices.rank_0 }} ₽</b>/мес</small></p>
-                <p class='mb-1 text-nowrap'><small>Регион 1 ранга: <b>{{ prices.rank_1 }} ₽</b>/мес</small></p>
-                <p class='mb-1 text-nowrap'><small>Регион 2 ранга: <b>{{ prices.rank_2 }} ₽</b>/мес</small></p>
-                <p class='mb-1 text-nowrap'><small>Регион 3 ранга: <b>{{ prices.rank_3 }} ₽</b>/мес</small></p>
-                <p class='mb-1 text-nowrap'><small>Регион 4 ранга: <b>{{ prices.rank_4 }} ₽</b>/мес</small></p>
-                <hr>
-                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_6_discount}}%</b> при заказе от&nbsp;&nbsp;6&nbsp;мес</small></p>
-                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_12_discount}}%</b> при заказе от&nbsp;12&nbsp;мес</small></p>
-                ">
-                <svg fill="#ffffff" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg>
-              </a>
-            </p>
-            <a href="{% url 'user_order_region' code=request.user.current_region.code %}" class="btn btn-outline-light px-4{% if not request.user.current_region.rank %} opacity-0 disabled{% endif %}"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a>
-          </td>
-          <td class="text-center plan-container bg-red text-white px-3 pb-3">
-            <p class="fw-bold fs-5 mb-2 text-nowrap">от {{ price_district }} ₽/нед
-              <a href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
-                <p class='mb-1 text-nowrap'><small>Округ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ prices.district }} ₽</b>/мес</small></p>
-                <hr>
-                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_6_discount}}%</b> при заказе от&nbsp;&nbsp;6&nbsp;мес</small></p>
-                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_12_discount}}%</b> при заказе от&nbsp;12&nbsp;мес</small></p>
-                ">
-                <svg fill="#ffffff" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg>
-              </a>
-            </p>
-            <a href="{% url 'user_order_district' district=request.user.current_region.federal_district %}" class="btn btn-outline-light px-4"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a>
-          </td>
-          <td class="text-center plan-container bg-yellow text-white px-3 pb-3">
-            <p class="fw-bold text-nowrap fs-5 mb-2">от 100 000 ₽</p>
-            <a href="#" data-bs-toggle="modal" data-bs-target="#orderReport" class="btn btn-outline-light px-4`"><div class="d-block d-lg-none">Заказать</div><div class="d-none d-lg-block text-nowrap">Заказать сейчас</div></a>
-          </td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1 rounded-top-left border-bottom-3" rowspan="3"><small><b>Аналитика интереса к&nbsp;турпродуктам</b> на&nbsp;уровне</small></td>
-          <td class="border px-2 py-1"><small>регионов</small></td>
-          <td width="18%" class="text-center border"><span class="dot"></span></td>
-          <td width="36%" class="text-center border" colspan="2"><span class="dot" colspan="2"></span></td>
-          <td width="18%" class="text-center border p-3" rowspan="10">Создание аналитического отчета или выгрузка данных по&nbsp;техническому заданию</td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1"><small>городов</small></td>
-          <td class="text-center border"></td>
-          <td class="text-center border" colspan="2"><span class="dot"></span></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1 border-bottom-3" nowrap><small>точек притяжения</small></td>
-          <td class="text-center border border-bottom-3"></td>
-          <td class="text-center border border-bottom-3" colspan="2"><span class="dot"></span></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1 border-bottom-3" rowspan="2"><small><b>Аналитика целевых групп туристов</b> на&nbsp;уровне</small></td>
-          <td class="border px-2 py-1"><small>регионов</small></td>
-          <td class="text-center border"><span class="dot"></span></td>
-          <td class="text-center border" colspan="2"><span class="dot"></span></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1 border-bottom-3"><small>городов</small></td>
-          <td class="text-center border border-bottom-3"></td>
-          <td class="text-center border border-bottom-3" colspan="2"><span class="dot"></span></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1 border-bottom-3" rowspan="3"><small><b>Рейтинги по&nbsp;интересу к&nbsp;турпродуктам</b> на&nbsp;уровне</small></td>
-          <td class="border px-2 py-1"><small>регионов</small></td>
-          <td class="text-center border"><span class="dot"></span></td>
-          <td class="text-center border" colspan="2"><span class="dot"></span></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1"><small>городов</small></td>
-          <td class="text-center border"></td>
-          <td class="text-center border" colspan="2"><span class="dot"></span></td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1 border-bottom-3" nowrap><small>точек притяжения</small></td>
-          <td class="text-center border border-bottom-3"></td>
-          <td class="text-center border border-bottom-3" colspan="2"><span class="dot"></span></td>
-        </tr>
-        <tr class="border">
-          <td class="border px-2 py-1 rounded-2 rounded-bottom" colspan="2"><small><b>Рекомендации искусственного интеллекта</b></small></td>
-          <td width="21%" class="text-center border"><span class="dot"></span></td>
-          <td width="21%" class="text-center border" colspan="2"><span class="dot"></span></td>
-        </tr>
-      </table>
+  <div class="price-table">
+    <div class="table-responsive">
+      {% access_level_table request.user.current_region access_level_columns show_actions=True segment=request.user.segment show_promotion_banner=False %}
     </div>
+    {% include "user/include/price_consultation_banner.html" %}
   </div>
 {% endblock %}

@@ -7,10 +7,8 @@ from django.http import QueryDict
 from django.shortcuts import redirect
 from django.shortcuts import render
 
-from acesta.user.apps import DISCOUNTS
-from acesta.user.apps import PRICES
 from acesta.user.forms import OrderForm
-from acesta.user.models import Order
+from acesta.user.pricing import calculate_access_price
 from acesta.user.utils import get_support_form
 from acesta.user.utils import send_message
 
@@ -25,20 +23,12 @@ def price(request: HttpRequest) -> HttpResponse:
         request,
         "user/price.html",
         {
-            "price_region": Order.get_cost(
-                0.25,
-                [request.user.current_region.code],
-                [settings.TOURISM_TYPE_DEFAULT],
-            ),
-            "price_district": Order.get_cost(
-                0.25,
-                None,
-                [settings.TOURISM_TYPE_DEFAULT],
-                request.user.current_region.federal_district,
-            ),
-            "prices": PRICES,
-            "discounts": DISCOUNTS,
+            "access_level_columns": ("basic", "full", "report"),
             "support_form": get_support_form(request.user, settings.SUPPORT_REPORT),
+            "conditions_form": get_support_form(
+                request.user,
+                settings.SUPPORT_CONDITIONS,
+            ),
         },
     )
 
@@ -75,11 +65,21 @@ def new_order(request: HttpRequest) -> HttpResponse:
 
         if order_form.is_valid():
             order = order_form.save(commit=False)
-            order.cost = Order.get_cost(period, regions, tourism_types, district)
-            order.discount = Order.get_discount_sum(
-                period, regions, tourism_types, district
+            price = calculate_access_price(
+                period,
+                regions,
+                tourism_types,
+                district,
+                segment=request.user.segment,
             )
-            order.total = order.cost - order.discount
+            order.cost = price.cost
+            order.discount = price.discount_sum
+            order.total = price.total
+            order.promotion = price.promotion
+            order.promotion_percent = price.promotion_discount
+            order.promotion_discount = price.promotion_discount_sum
+            if not order.promo:
+                order.promo = price.promo_code
             order.save()
             order_form.save_m2m()
             messages.add_message(
@@ -110,12 +110,21 @@ def get_costs(request: HttpRequest) -> JsonResponse:
     :return: int
     """
     district, period, tourism_types, regions = get_order_data(request.POST)
+    price = calculate_access_price(
+        period,
+        regions,
+        tourism_types,
+        district,
+        segment=request.user.segment,
+    )
     return JsonResponse(
         {
-            "cost": Order.get_cost(period, regions, tourism_types, district),
-            "discount": Order.get_discount(period),
-            "discount_sum": Order.get_discount_sum(
-                period, regions, tourism_types, district
-            ),
+            "cost": price.cost,
+            "discount": price.period_discount,
+            "promotion_discount": price.promotion_discount,
+            "promotion_discount_sum": price.promotion_discount_sum,
+            "discount_sum": price.discount_sum,
+            "total": price.total,
+            "promo_code": price.promo_code,
         }
     )

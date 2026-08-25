@@ -1,0 +1,9 @@
+{% load text %}
+<article class="commercial-offer-feature-card commercial-offer-feature-card--{{ tone }} commercial-offer-feature-card--{{ icon }}">
+  <span class="commercial-offer-feature-card__icon" aria-hidden="true"><span></span></span>
+  <div class="commercial-offer-feature-card__body">
+    <h3>{{ title|nobreak_spaces }}</h3>
+    <span class="commercial-offer-feature-card__rule" aria-hidden="true"></span>
+    <p>{{ text|nobreak_spaces }}</p>
+  </div>
+</article>

@@ -1,0 +1,17 @@
+{% load static %}
+{% load text %}
+
+<div class="row mt-2" data-price-consultation>
+  <div class="col pe-0">
+    <div class="consultation-banner d-flex align-items-center gap-3 w-100 mt-3 mb-5">
+      <div class="heading d-flex align-items-center gap-3 flex-shrink-0">
+        <span class="icon d-inline-flex align-items-center justify-content-center flex-shrink-0" aria-hidden="true"><svg fill="var(--bs-white)" color="var(--bs-white)" width="32" height="32" class="svg-weight-s"><use href="{% static 'img/sprite.svg' %}#consultation"></use></svg></span>
+        <p class="title mb-0 text-nowrap">{{ "Нужен индивидуальный подход?"|nobreak_spaces }}</p>
+      </div>
+      <div class="action d-flex align-items-center gap-3 ms-auto">
+        <p class="message mb-0 text-end d-none d-lg-block "><span class=" d-block">{{ "Расскажите о ваших задачах,"|nobreak_spaces }}</span><span class="d-block">{{ "а мы подготовим предложение под ваш регион и цели"|nobreak_spaces }}</span></p>
+        <button type="button" class="btn btn-sm btn-outline-primary text-nowrap flex-shrink-0" data-bs-toggle="modal" data-bs-target="#individualConditions">Обсудить условия</button>
+      </div>
+    </div>
+  </div>
+</div>

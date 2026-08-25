@@ -46,6 +46,24 @@ class Order(TimeStampedModel):
         blank=True,
         null=True,
     )
+    promotion = models.ForeignKey(
+        "user.AccessPromotion",
+        verbose_name="Акция",
+        on_delete=models.SET_NULL,
+        related_name="orders",
+        blank=True,
+        null=True,
+    )
+    promotion_percent = models.PositiveSmallIntegerField(
+        "Скидка по акции, %",
+        default=0,
+    )
+    promotion_discount = models.DecimalField(
+        "Сумма скидки по акции",
+        decimal_places=2,
+        max_digits=10,
+        default=0.0,
+    )
     total = models.DecimalField("Итого", decimal_places=2, max_digits=10, default=0.0)
     federal_district = models.CharField(
         "Федеральный округ",
@@ -179,20 +197,20 @@ def recalc_sums_after_changes(sender, instance, *args, **kwargs) -> None:
     :return: None
     """
     if instance.pk:
+        from acesta.user.pricing import calculate_access_price
+
         regions_list = [region.code for region in instance.regions.all()]
-        instance.cost = Order.get_cost(
+        price = calculate_access_price(
             instance.period,
             regions_list,
             instance.tourism_types,
             instance.federal_district,
+            promotion_percent=instance.promotion_percent,
         )
-        instance.discount = Order.get_discount_sum(
-            instance.period,
-            regions_list,
-            instance.tourism_types,
-            instance.federal_district,
-        )
-        instance.total = instance.cost - instance.discount
+        instance.cost = price.cost
+        instance.promotion_discount = price.promotion_discount_sum
+        instance.discount = price.discount_sum
+        instance.total = price.total
 
         order = Order.objects.get(pk=instance.pk)
         if instance.state == settings.STATE_DONE and order.state != settings.STATE_DONE:
@@ -208,22 +226,38 @@ def recalc_sums_after_change_regions(sender, **kwargs) -> None:
     :param kwargs: dict
     :return: None
     """
-    instance = kwargs.pop("instance")
-    pk_set = kwargs.pop("pk_set")
-    instance.cost = Order.get_cost(
-        instance.period, pk_set, instance.tourism_types, instance.federal_district
+    action = kwargs.get("action")
+    if action not in ("post_add", "post_remove", "post_clear"):
+        return
+
+    instance = kwargs["instance"]
+    from acesta.user.pricing import calculate_access_price
+
+    regions_list = list(instance.regions.values_list("code", flat=True))
+    price = calculate_access_price(
+        instance.period,
+        regions_list,
+        instance.tourism_types,
+        instance.federal_district,
+        promotion_percent=instance.promotion_percent,
     )
-    instance.discount = Order.get_discount_sum(
-        instance.period, pk_set, instance.tourism_types, instance.federal_district
+    instance.cost = price.cost
+    instance.promotion_discount = price.promotion_discount_sum
+    instance.discount = price.discount_sum
+    instance.total = price.total
+    Order.objects.filter(pk=instance.pk).update(
+        cost=price.cost,
+        promotion_discount=price.promotion_discount_sum,
+        discount=price.discount_sum,
+        total=price.total,
     )
-    instance.total = instance.cost - instance.discount
     if (
         instance.state == settings.STATE_DONE
         and not (instance.modified - instance.created).microseconds
     ):
         instance.user.update_period_info(
             instance.period,
-            Region.objects.filter(pk__in=pk_set),
+            instance.regions.all(),
             instance.tourism_types,
         )
 

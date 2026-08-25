@@ -5,8 +5,8 @@
       <div class="modal-content">
         <form action="{% url 'visitor_request' %}" method="post" class="has-masked">
           <div class="modal-header bg-accent">
-            <h5 class="modal-title" id="{{ subject }}Label"><svg fill="#464646" class="me-2" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>Запрос {% if subject == REQUEST_CONSULTATION %}консультации{% else %}презентации{% endif %}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="{{ subject }}Label"><svg fill="#464646" class="svg-weight-l me-2" width="32" height="32"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>Запрос {% if subject == REQUEST_CONSULTATION %}консультации{% else %}презентации{% endif %}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
           <div class="modal-body">
             {% csrf_token %}
@@ -37,7 +37,7 @@
           </div>
           <div class="modal-footer">
             <small class="text-muted">Отправляя форму, соглашаюсь с&nbsp;<a href="{% url 'terms' %}">Условиями&nbsp;использования</a> и&nbsp;<a href="{% url 'privacy' %}">Политикой&nbsp;конфиденциальности</a></small>
-            <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Запросить</button>
+            <button type="submit" class="btn btn-lg btn-outline-primary"><svg fill="var(--acesta-primary)" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Запросить</button>
           </div>
         </form>
       </div>

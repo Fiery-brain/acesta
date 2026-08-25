@@ -1,0 +1,146 @@
+{% load static %}
+{% load text %}
+
+<div class="tariff" data-access-level-table data-access-level-columns="{{ columns|join:',' }}">
+    <table class="table">
+      <colgroup>
+        <col class="service-col">
+        <col class="level-col">
+        {% if show_basic %}<col class="basic-col">{% endif %}
+        {% if show_full %}<col class="region-col"><col class="district-col">{% endif %}
+        {% if show_report %}<col class="report-col">{% endif %}
+      </colgroup>
+      <tr class="title-row">
+        <td class="spacer" colspan="2" rowspan="{{ comparison_header_rowspan }}" aria-hidden="true"></td>
+        {% if show_basic %}
+          <td class="plan basic" align="center" valign="middle" data-access-level-heading="basic">
+            <h2>Базовый<span class="d-none d-lg-inline"> доступ</span></h2>
+          </td>
+        {% endif %}
+        {% if show_full %}
+          <td class="plan full" colspan="2" align="center" valign="middle" data-access-level-heading="full">
+            <h2>Полный<span class="d-none d-lg-inline"> доступ</span></h2>
+          </td>
+        {% endif %}
+        {% if show_report %}
+          <td class="plan report" align="center" valign="middle" data-access-level-heading="report">
+            <h2><span class="d-inline d-xxl-none">Отчеты</span><span class="d-none d-xxl-inline"> Отчеты и данные</span></h2>
+          </td>
+        {% endif %}
+      </tr>
+      <tr class="scope-row">
+        {% if show_basic %}<td class="plan basic" align="center" valign="middle"></td>{% endif %}
+        {% if show_full %}
+          <td class="plan full" align="center" valign="middle">
+            <small><b>{{ region.region_short|nobreak_spaces }}</b></small>
+          </td>
+          <td class="plan full" align="center" valign="middle">
+            <small><b>{{ district_label|nobreak_spaces }}</b></small>
+          </td>
+        {% endif %}
+        {% if show_report %}<td class="plan report" align="center" valign="middle"></td>{% endif %}
+      </tr>
+      {% if promotion and show_original_prices %}
+      <tr class="old-price-row">
+        {% if show_basic %}
+          <td class="plan basic" align="center" valign="middle"></td>
+        {% endif %}
+        {% if show_full %}
+          <td class="plan full" align="center" valign="middle">
+            {% if price_region %}<del class="old-price">от {{ price_region_original }} ₽/нед</del>{% endif %}
+          </td>
+          <td class="plan full" align="center" valign="middle">
+            <del class="old-price">от {{ price_district_original }} ₽/нед</del>
+          </td>
+        {% endif %}
+        {% if show_report %}
+          <td class="plan report" align="center" valign="middle"></td>
+        {% endif %}
+      </tr>
+      {% endif %}
+      <tr class="price-row">
+        {% if show_basic %}
+          <td class="plan basic" align="center" valign="middle">
+            <p class="price">бесплатно</p>
+          </td>
+        {% endif %}
+        {% if show_full %}
+          <td class="plan full" align="center" valign="middle">
+            <p class="price">{% if price_region %}<span><span class="from">от</span> {{ price_region }} ₽/нед</span>{% else %}0 ₽/мес{% endif %}
+              <a class="help" href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
+                <p class='mt-1 mb-1 text-nowrap'><small>Регион 0 ранга: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ prices.rank_0 }} ₽</b>/мес</small></p>
+                <p class='mb-1 text-nowrap'><small>Регион 1 ранга: <b>{{ prices.rank_1 }} ₽</b>/мес</small></p>
+                <p class='mb-1 text-nowrap'><small>Регион 2 ранга: <b>{{ prices.rank_2 }} ₽</b>/мес</small></p>
+                <p class='mb-1 text-nowrap'><small>Регион 3 ранга: <b>{{ prices.rank_3 }} ₽</b>/мес</small></p>
+                <p class='mb-1 text-nowrap'><small>Регион 4 ранга: <b>{{ prices.rank_4 }} ₽</b>/мес</small></p>
+                <hr>
+                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_6_discount }}%</b> при заказе от&nbsp;&nbsp;6&nbsp;мес</small></p>
+                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_12_discount }}%</b> при заказе от&nbsp;12&nbsp;мес</small></p>
+                ">
+                <svg aria-hidden="true" class="svg-weight-l"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>
+              </a>
+            </p>
+          </td>
+          <td class="plan full" align="center" valign="middle">
+            <p class="price"><span><span class="from">от</span> {{ price_district }} ₽/нед</span>
+              <a class="help" href="#" data-bs-toggle="tooltip" data-bs-html="true" title="
+                <p class='mb-1 text-nowrap'><small>Округ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ prices.district }} ₽</b>/мес</small></p>
+                <hr>
+                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_6_discount }}%</b> при заказе от&nbsp;&nbsp;6&nbsp;мес</small></p>
+                <p class='mb-1 text-nowrap'><small>-<b>{{ discounts.gt_12_discount }}%</b> при заказе от&nbsp;12&nbsp;мес</small></p>
+                ">
+                <svg aria-hidden="true" class="svg-weight-l"><use href="{% static 'img/sprite.svg' %}#help"></use></svg>
+              </a>
+            </p>
+          </td>
+        {% endif %}
+        {% if show_report %}
+          <td class="plan report" align="center" valign="middle">
+            <p class="price"><span class="from">от</span> 100 000 ₽{% include "user/include/access_level_table_help.html" with description="Готовый аналитический отчёт или данные для самостоятельного анализа по вашему техническому заданию" label="Отчёты и данные" %}</p>
+          </td>
+        {% endif %}
+      </tr>
+      {% if show_actions %}
+      <tr class="button-row">
+        {% if show_basic %}
+          <td class="plan basic" align="center" valign="middle"><a href="{% url 'region' %}" class="btn btn-sm btn-outline-dark" data-access-level-action="basic">Пробовать</a></td>
+        {% endif %}
+        {% if show_full %}
+          <td class="plan full" align="center" valign="middle"><a href="{% url 'user_order_region' code=region.code %}" class="btn btn-sm btn-outline-light{% if not region.rank %} opacity-0 disabled{% endif %}" data-access-level-action="full-region"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a></td>
+          <td class="plan full" align="center" valign="middle"><a href="{% url 'user_order_district' district=region.federal_district %}" class="btn btn-sm btn-outline-light" data-access-level-action="full-district"><div class="d-block d-lg-none">Открыть</div><div class="d-none d-lg-block text-nowrap">Открыть доступ</div></a></td>
+        {% endif %}
+        {% if show_report %}
+          <td class="plan report" align="center" valign="middle"><a href="#" data-bs-toggle="modal" data-bs-target="#orderReport" class="btn btn-sm btn-outline-light" data-access-level-action="report"><div class="d-block d-lg-none">Заказать</div><div class="d-none d-lg-block text-nowrap">Заказать сейчас</div></a></td>
+        {% endif %}
+      </tr>
+      {% endif %}
+      {% for feature in feature_rows %}
+        {% if feature.kind == "simple" %}
+          <tr data-access-level-feature-kind="simple">
+            <td class="service" colspan="2" valign="middle"><span class="d-flex align-items-center gap-2 w-100"><span class="service-icon{% if feature.tone %} {{ feature.tone }}{% endif %}">{% if use_pdf_icons %}<span class="glyph" aria-hidden="true"></span>{% else %}<svg aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#{{ feature.icon }}"></use></svg>{% endif %}</span><span class="service-name flex-grow-1">{{ feature.title|nobreak_spaces }}</span>{% include "user/include/access_level_table_help.html" with description=feature.description label=feature.title %}</span></td>
+            {% if show_basic %}<td align="center" valign="middle" data-access-level-feature-column="basic">{% if feature.basic %}<span class="dot"></span>{% else %}<span class="unavailable">×</span>{% endif %}</td>{% endif %}
+            {% if show_full %}<td colspan="2" align="center" valign="middle" data-access-level-feature-column="full">{% if feature.full %}<span class="dot"></span>{% else %}<span class="unavailable">×</span>{% endif %}</td>{% endif %}
+            {% if show_report and forloop.first %}<td rowspan="{{ feature_row_count }}" align="center" valign="middle" data-access-level-feature-column="report">Создание аналитического отчета или выгрузка данных по&nbsp;техническому заданию</td>{% endif %}
+          </tr>
+        {% else %}
+          {% for level in feature.levels %}
+            <tr data-access-level-feature-kind="compound">
+              {% if forloop.first %}<td class="service" rowspan="2" valign="top"><span class="d-flex align-items-start gap-2 w-100"><span class="service-icon{% if feature.tone %} {{ feature.tone }}{% endif %}">{% if use_pdf_icons %}<span class="glyph" aria-hidden="true"></span>{% else %}<svg aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#{{ feature.icon }}"></use></svg>{% endif %}</span><span class="service-name flex-grow-1">{{ feature.title|nobreak_spaces }}</span>{% include "user/include/access_level_table_help.html" with description=feature.description label=feature.title %}</span></td>{% endif %}
+              <td class="{{ level.variant }}" valign="middle"><small class="d-flex align-items-center gap-2 w-100"><span class="flex-grow-1">{{ level.title|nobreak_spaces }}</span>{% include "user/include/access_level_table_help.html" with description=level.description label=level.title %}</small></td>
+              {% if show_basic %}<td align="center" valign="middle" data-access-level-feature-column="basic">{% if level.basic %}<span class="dot"></span>{% else %}<span class="unavailable">×</span>{% endif %}</td>{% endif %}
+              {% if show_full %}<td colspan="2" align="center" valign="middle" data-access-level-feature-column="full">{% if level.full %}<span class="dot"></span>{% else %}<span class="unavailable">×</span>{% endif %}</td>{% endif %}
+              {% if show_report and forloop.parentloop.first and forloop.first %}<td rowspan="{{ feature_row_count }}" align="center" valign="middle" data-access-level-feature-column="report">Создание аналитического отчета или выгрузка данных по&nbsp;техническому заданию</td>{% endif %}
+            </tr>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      {% if show_plan_explanations %}
+        <tr class="purpose-row" data-access-level-explanations>
+          <td class="spacer" colspan="2"></td>
+          {% if show_basic %}<td align="center" valign="middle" data-access-level-explanation="basic"><div class="purpose basic">{{ plan_explanations.basic|nobreak_spaces }}</div></td>{% endif %}
+          {% if show_full %}<td colspan="2" align="center" valign="middle" data-access-level-explanation="full"><div class="purpose full">{{ plan_explanations.full|nobreak_spaces }}</div></td>{% endif %}
+          {% if show_report %}<td align="center" valign="middle" data-access-level-explanation="report"><div class="purpose report">{{ plan_explanations.report|nobreak_spaces }}</div></td>{% endif %}
+        </tr>
+      {% endif %}
+    </table>
+</div>

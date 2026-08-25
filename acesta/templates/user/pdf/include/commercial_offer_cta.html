@@ -1,0 +1,11 @@
+{% load qr static text %}
+<section class="commercial-offer-cta">
+  <span class="commercial-offer-cta__rocket" aria-hidden="true"><img class="commercial-offer-cta__rocket-ring" src="{% static 'img/pdf/commercial-offer-rocket-ring.svg' %}" alt=""><img class="commercial-offer-cta__rocket-icon" src="{% static 'img/pdf/commercial-offer-rocket.svg' %}" alt=""></span>
+  <h3>{{ "Начать просто!"|nobreak_spaces }}</h3>
+  <p class="commercial-offer-cta__lead">{{ "Выберите подходящий вариант подключения на сайте и начните работу с данными"|nobreak_spaces }}</p>
+  <img class="commercial-offer-cta__arrow" src="{% static 'img/pdf/commercial-offer-arrow.svg' %}" alt="">
+  <span class="commercial-offer-cta__separator" aria-hidden="true"></span>
+  <img class="commercial-offer-cta__consultation" src="{% static 'img/pdf/commercial-offer-consultation.svg' %}" alt="">
+  <p class="commercial-offer-cta__note"><strong>{{ "Нужны другие условия?"|nobreak_spaces }}</strong><br>{{ "Свяжитесь с нами, чтобы обсудить форматы сотрудничества"|nobreak_spaces }}</p>
+  <a class="commercial-offer-cta__qr" href="{{ application_qr_url }}" aria-label="Перейти к оформлению заявки">{% qr_svg application_qr_url %}</a>
+</section>

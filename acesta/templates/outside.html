@@ -26,7 +26,7 @@
           </li>
           <li class="nav-item">
             <a class="btn btn-lg btn-outline-accent px-4 ms-4" href="{% if url == 'account_login' %}{% url 'account_signup' %}{% elif url == 'account_signup' %}{% url 'account_login' %}{% else %}{% url 'region' %}{% endif %}" title="{% if url == 'account_login' %}Зарегистрироваться{% else %}Войти{% endif %}">
-              <svg fill="#b7072a" width="22" height="22" class="me-md-2"><use href="{% static 'img/sprite.svg' %}#{% if url == 'account_login' %}sign-up{% else %}sign-in{% endif %}"></use></svg><span class="d-none d-md-inline">{% if url == 'account_login' %}Зарегистрироваться{% else %}Войти{% endif %}</span>
+              <svg fill="#b7072a" width="24" height="24" class="svg-weight-s me-md-2"><use href="{% static 'img/sprite.svg' %}#{% if url == 'account_login' %}sign-up{% else %}sign-in{% endif %}"></use></svg><span class="d-none d-md-inline">{% if url == 'account_login' %}Зарегистрироваться{% else %}Войти{% endif %}</span>
             </a>
           </li>
         </ul>

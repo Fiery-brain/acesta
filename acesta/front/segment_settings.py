@@ -220,7 +220,7 @@ SEGMENT_CONFIG = {
         ),
         settings.SEGMENT_GUIDE: Block(
             "Экскурсовод",
-            "Создаю ии&nbsp;провожу интересные экскурсии",
+            "Создаю и&nbsp;провожу интересные экскурсии",
         ),
         settings.SEGMENT_HOSPITALITY: Block(
             "Отельер",

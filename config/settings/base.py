@@ -372,11 +372,13 @@ STATE_DONE = "done"
 SUPPORT_QUESTION = "support"
 SUPPORT_REPORT = "report"
 SUPPORT_SIGHTS = "sights"
+SUPPORT_CONDITIONS = "conditions"
 
 SUPPORT_SUBJECTS = (
     (SUPPORT_QUESTION, "Обращение в техподдержку"),
     (SUPPORT_REPORT, "Заказ отчета"),
     (SUPPORT_SIGHTS, "Новые достопримечательности"),
+    (SUPPORT_CONDITIONS, "Индивидуальные условия"),
 )
 
 REQUEST_CONSULTATION = "consultation"

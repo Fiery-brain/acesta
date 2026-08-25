@@ -1531,12 +1531,12 @@ $(function () {
             if (columnId == "qty_display") {
               $(this).html(
                 $(this).text() +
-                  '<a href="#" class="ms-1" data-interest-header-help data-bs-toggle="tooltip" title="Количество запросов туристических объектов за&nbsp;месяц"><svg fill="#939699" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg></a>'
+                  '<a href="#" class="ms-1" data-interest-header-help data-bs-toggle="tooltip" title="Количество запросов туристических объектов за&nbsp;месяц"><svg fill="var(--acesta-text-light)" color="var(--acesta-text-light)" width="22" height="22" class="svg-weight-l"><use href="/static/img/sprite.svg#help"></use></svg></a>',
               );
             } else if (columnId == "ppt_display") {
               $(this).html(
                 $(this).text() +
-                  '<a href="#" class="ms-1" data-interest-header-help data-bs-toggle="tooltip" title="Региональная популярность или&nbsp;доля, которую занимает регион в&nbsp;показах запросу туристических объектов, деленная на&nbsp;долю всех показов результатов в&nbsp;регионе. Если популярность более 100%, это означает, что в&nbsp;данном регионе существует повышенный интерес к&nbsp;этому запросу, если меньше 100% - пониженный."><svg fill="#939699" width="22" height="22"><use href="/static/img/sprite.svg#help"></use></svg></a>'
+                  '<a href="#" class="ms-1" data-interest-header-help data-bs-toggle="tooltip" title="Региональная популярность или&nbsp;доля, которую занимает регион в&nbsp;показах запросу туристических объектов, деленная на&nbsp;долю всех показов результатов в&nbsp;регионе. Если популярность более 100%, это означает, что в&nbsp;данном регионе существует повышенный интерес к&nbsp;этому запросу, если меньше 100% - пониженный."><svg fill="var(--acesta-text-light)" color="var(--acesta-text-light)" width="22" height="22" class="svg-weight-l"><use href="/static/img/sprite.svg#help"></use></svg></a>',
               );
             }
           });

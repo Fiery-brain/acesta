@@ -1,0 +1,18 @@
+<svg width="570" height="196" viewBox="0 0 570 196" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(-7.29 119.011)">
+    <path opacity=".7" d="M10.0855 76.8648C6.8618 77.0521 3.50894 77.0624 0 76.8648H10.0855C48.6552 74.6238 68.7402 47.0447 116.513 47.0447C172.2 47.0447 173.336 65.0826 258.828 65.0826C362.359 65.0826 381.183 1.5584 474.518 .0217822C519.216 -.714103 544.323 17.4402 582.755 17.4396V76.8648H10.0855Z" fill="url(#history-wave-a)"/>
+  </g>
+  <g transform="translate(-86.69 132.143)">
+    <path opacity=".33" d="M119.626 25.5074C66.6376 25.5074 49.9144 63.7132 0 63.7132H665.917L665.917 1.84745C648.12 7.02801 623.395 8.66978 596.526 8.55201C561.68 8.52223 529.646 -.470736 483.892 .0193248C388.351 1.04263 370.922 50.7911 264.944 50.7911C177.432 50.7911 176.63 25.5074 119.626 25.5074Z" fill="url(#history-wave-b)"/>
+  </g>
+  <defs>
+    <linearGradient id="history-wave-a" x1="327.411" y1="-19.168" x2="327.411" y2="88.2032" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white"/>
+      <stop offset="1" stop-color="#F0ECF5"/>
+    </linearGradient>
+    <linearGradient id="history-wave-b" x1="374.134" y1="-15.8586" x2="374.134" y2="72.9745" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white"/>
+      <stop offset="1" stop-color="#F0ECF5"/>
+    </linearGradient>
+  </defs>
+</svg>

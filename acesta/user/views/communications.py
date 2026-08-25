@@ -121,6 +121,11 @@ def support(request: HttpRequest) -> HttpResponse:
                     "Редактирование точек притяжения",
                     support_message.message,
                 )
+            elif support_message.subject == settings.SUPPORT_CONDITIONS:
+                send_message(
+                    "Запрос индивидуальных условий",
+                    support_message.message,
+                )
             else:
                 send_message("Новое сообщение в техподдержку")
 

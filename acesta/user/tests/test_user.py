@@ -350,3 +350,37 @@ class SightChangeSupportTest(CredentialsMixin, test.TestCase):
             "Редактирование точек притяжения",
             "Добавить новую точку",
         )
+
+
+class IndividualConditionsSupportTest(CredentialsMixin, test.TestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.login(**self.credentials)
+        self.user = get_user(self.client)
+
+    @mock.patch("acesta.user.views.communications.send_message")
+    def test_individual_conditions_request_has_own_subject(self, send_message):
+        response = self.client.post(
+            reverse("support"),
+            {
+                "subject": settings.SUPPORT_CONDITIONS,
+                "message": "Нужен особый формат доступа",
+            },
+            HTTP_REFERER=reverse("price"),
+        )
+
+        self.assertRedirects(response, reverse("price"))
+        support_message = Support.objects.get()
+        self.assertEqual(support_message.user, self.user)
+        self.assertEqual(
+            support_message.subject,
+            settings.SUPPORT_CONDITIONS,
+        )
+        self.assertEqual(
+            support_message.message,
+            "Нужен особый формат доступа",
+        )
+        send_message.assert_called_once_with(
+            "Запрос индивидуальных условий",
+            "Нужен особый формат доступа",
+        )

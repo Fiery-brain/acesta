@@ -5,7 +5,7 @@
   <tr data-sight-row data-sight-name="{{ sight }}">
     <td width="28" class="pe-1 ps-0">
       <button type="button" class="sight-edit-action" aria-label="Предложить изменение точки «{{ sight }}»" title="Предложить изменение" data-bs-toggle="tooltip" data-sight-edit-id="{{ sight.pk|unlocalize }}">
-        <svg width="20" height="20" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#edit"></use></svg>
+        <svg width="20" height="20" aria-hidden="true" class="svg-weight-s"><use href="{% static 'img/sprite.svg' %}#edit"></use></svg>
       </button>
     </td>
     <td width="22" class="pe-1" data-bs-toggle="tooltip" title="{{ sight.primary_group.title }}"><svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#{{ sight.primary_group.name }}"></use></svg></td>

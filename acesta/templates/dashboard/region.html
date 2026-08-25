@@ -29,8 +29,8 @@
         <div class="modal-content">
           <form action="{% url 'support' %}" method="post">
             <div class="modal-header bg-light">
-              <h5 class="modal-title" id="addSightLabel"><svg fill="#429388" class="me-2" width="24" height="24"><use href="{% static 'img/sprite.svg' %}#tourism"></use></svg>Добавление точек притяжения</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h5 class="modal-title" id="addSightLabel"><svg fill="var(--acesta-primary)" class="me-2" width="32" height="32" viewBox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#tourism"></use></svg>Добавление точек притяжения</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
             <div class="modal-body">
                 {% csrf_token %}
@@ -42,7 +42,7 @@
                 {{ support_form.subject }}
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-lg btn-outline-primary" disabled data-sight-add-submit><svg fill="#429388" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Отправить</button>
+              <button type="submit" class="btn btn-lg btn-outline-primary" disabled data-sight-add-submit><svg fill="var(--acesta-primary)" class="me-1" width="22" height="22"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>Отправить</button>
             </div>
           </form>
         </div>
@@ -58,7 +58,7 @@
 
             <div class="modal-header bg-light">
               <h5 class="modal-title" id="editSightLabel">
-                <svg fill="#429388" class="me-2" width="24" height="24" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#tourism"></use></svg>
+                <svg fill="var(--acesta-primary)" class="me-2" width="32" height="32" aria-hidden="true" viewBox="0 0 24 24"><use href="{% static 'img/sprite.svg' %}#tourism"></use></svg>
                 Изменение точки притяжения
               </h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
@@ -87,7 +87,7 @@
 
             <div class="modal-footer">
               <button type="submit" class="btn btn-lg btn-outline-primary" disabled data-sight-edit-submit>
-                <svg fill="#429388" class="me-1" width="22" height="22" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>
+                <svg fill="var(--acesta-primary)" class="me-1" width="22" height="22" aria-hidden="true"><use href="{% static 'img/sprite.svg' %}#send"></use></svg>
                 Отправить
               </button>
             </div>
@@ -127,11 +127,11 @@
         <h3 class="mb-0">Точки притяжения</h3>
         {% if request.GET.group == '' or request.GET.group %}
           <a href="{% url 'region' %}" class="btn btn-sm ms-2 d-flex flex-wrap align-content-center sight-action" role="button" data-bs-toggle="tooltip" title="Показать график" >
-            <svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#graph"></use></svg>
+            <svg width="24" height="24" class="svg-weight-m"><use href="{% static 'img/sprite.svg' %}#graph"></use></svg>
           </a>
         {% else %}
           <a href="{% url 'region' %}?group=" class="btn btn-sm ms-2 d-flex flex-wrap align-content-center sight-action" role="button" data-bs-toggle="tooltip" title="Редактировать точки притяжения" >
-            <svg width="24" height="24"><use href="{% static 'img/sprite.svg' %}#edit"></use></svg>
+            <svg width="24" height="24" class="svg-weight-m"><use href="{% static 'img/sprite.svg' %}#edit"></use></svg>
           </a>
         {% endif %}
       </div>

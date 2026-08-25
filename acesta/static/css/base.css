@@ -141,6 +141,7 @@
 
     --acesta-history:#9E81BE;
     --acesta-ai:#EA7D63;
+    --acesta-api:#4E9FD1;
 }
 .acesta-segment-theme-tourist-investor{--acesta-current-segment-color:var(--acesta-segment-tourist-investor);--acesta-current-segment-color-dark:var(--acesta-segment-tourist-investor-dark)}
 .acesta-segment-theme-tourism-product-owner{--acesta-current-segment-color:var(--acesta-segment-tourism-product-owner);--acesta-current-segment-color-dark:var(--acesta-segment-tourism-product-owner-dark)}
@@ -357,6 +358,13 @@ a[type*="button"]:hover{text-decoration:underline; opacity:1}
 .silver{background:linear-gradient(45deg, rgba(160,160,160,1) 0%,rgb(235, 235, 235) 56%, rgba(160,160,160,1) 96%);box-shadow:0 0 0 2px rgba(160,160,160,1)}
 .gold{background:linear-gradient(45deg, rgb(242, 185, 12) 0%,rgba(255,255,255,1) 56%,rgb(242, 185, 12) 96%);box-shadow:0 0 0 2px #f6cf5c}
 
+.svg-weight-xs,.svg-weight-s,.svg-weight-m,.svg-weight-l,.svg-weight-xl{pointer-events:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.svg-weight-xs{stroke-width:.2}
+.svg-weight-s{stroke-width:.3}
+.svg-weight-m{stroke-width:.4}
+.svg-weight-l{stroke-width:.5}
+.svg-weight-xl{stroke-width:.6}
+
 .table{--bs-table-hover-bg:rgba(66,147,136,.04)}
 @keyframes show{0%{opacity:.5} 100%{opacity:1}}
 div{opacity:.5;transition:opacity 1s;animation:show .75s 1;animation-fill-mode:forwards}
@@ -378,6 +386,7 @@ body{min-width:320px;width:auto !important;width:320px; color:var(--acesta-text-
 
 .dropdown-toggle::after{vertical-align:.12em}
 .dropdown-item{padding-right:2em}
+.dropdown-item svg{fill:var(--acesta-primary);color:var(--acesta-primary)}
 th{background-color:var(--acesta-bg)!important}
 .table-fixed-head thead th{ position:sticky; top:0; z-index:1}
 
@@ -558,6 +567,7 @@ input:checked {background-color:var(--acesta-light-primary);border-color:var(--a
 .footer-wave{position: relative;top:2px}
 footer .footer-wave-undefined{color:#9cd3cf}
 footer .footer-border{border-top: 1px solid #9cd3cf1f}
+footer li svg{stroke:#95f0e8}
 
 @media (max-width:832px){
     body{font-size:.85rem}
@@ -645,7 +655,7 @@ textarea.form-control{min-height: 100px;}
 .cookie-banner.is-visible{display:block}
 .cookie-banner-inner{display:grid;grid-template-columns:86px minmax(280px,1fr) minmax(180px,270px) auto;align-items:center;column-gap:32px;min-width:0;padding:28px 34px;border-radius:28px;background:rgba(238,244,244,.9);box-shadow:0 16px 48px rgba(12,73,64,.18);border:1px solid #d7e8e7;backdrop-filter: blur(18px) saturate(1.15); -webkit-backdrop-filter: blur(18px) saturate(1.15);}
 .cookie-banner-icon{display:flex;align-items:center;justify-content:center;width:86px;height:86px;border-radius:50%;color:var(--acesta-dark-primary);background:rgba(178,223,219,.55)}
-.cookie-banner-icon svg{display:block;width:56px;height:56px;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:.4;}
+.cookie-banner-icon svg{display:block;width:56px;height:56px}
 .cookie-banner-copy{min-width:0;overflow-wrap:break-word}
 .cookie-banner-copy h2{margin-bottom:6px;color:var(--acesta-text-primary);font-size:18px;line-height:1.2}
 .cookie-banner-copy p{margin:0;color:var(--acesta-text-secondary);font-size:14px;line-height:1.35}

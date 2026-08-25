@@ -8,6 +8,7 @@ user_form_fieldset = (
                 "registered",
                 "is_active",
                 "is_superuser",
+                "is_api_enabled",
             )
         },
     ),
